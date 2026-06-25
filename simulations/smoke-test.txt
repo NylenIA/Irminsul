@@ -1,0 +1,14 @@
+// Smoke test reproductible — Bennett seul, mono-cible.
+// But : vérifier que le binaire gcsim s'exécute et renvoie un DPS exploitable.
+// Builds : valeurs fictives standardisées (PAS un build optimisé).
+// gcsim : v2.43.x — patch : usage de test interne — cible : lvl100 res10%.
+options iteration=50 duration=90 swap_delay=12;
+target lvl=100 resist=0.1 pos=0,0;
+
+bennett char lvl=90/90 cons=6 talent=9,9,9;
+bennett add weapon="aquilafavonia" refine=1 lvl=90/90;
+bennett add set="noblesseoblige" count=4;
+bennett add stats hp=4780 atk=311 em=187 atk%=0.466 cr=0.311 cd=0.622;
+
+active bennett;
+bennett skill, attack;

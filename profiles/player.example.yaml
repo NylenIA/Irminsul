@@ -1,0 +1,23 @@
+# Modèle de profil joueur — copie ce fichier en `player.yaml` puis renseigne tes valeurs.
+# `player.yaml` est ignoré par Git : ton UID et tes préférences restent privés.
+player:
+  name: TonPseudo
+  uid: null            # ex. 700000000 (8 à 10 chiffres) — reste local, jamais publié
+  server: null         # europe | america | asia | sar
+  language: fr
+  platform: pc         # pc | mobile | playstation
+  fps: 60
+  average_ping_ms: null
+  skill_level: null    # debutant | intermediaire | avance | hardcore
+  goals:
+    - clear_abyss
+    - improve_account_efficiency
+  preferences:
+    favorite_characters: []
+    disliked_characters: []
+    preferred_playstyles: []
+    comfort_over_damage: false
+    allow_leaks_for_planning: false
+  constraints:
+    no_shared_weapons_between_abyss_sides: true
+    no_shared_artifacts_between_abyss_sides: true

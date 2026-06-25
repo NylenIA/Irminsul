@@ -1,0 +1,23 @@
+Irminsul AI — build Claude Code
+Date du build : 2026-06-25
+Dernière vérification/finalisation : 2026-06-26
+Version du projet : 0.1.0
+Contrôles : Ruff OK ; Pytest 36/36 OK ; serveur MCP 10 outils OK (handshake stdio vérifié)
+Environnement vérifié : Python 3.14.3, Git 2.54.0, gcsim v2.43.3 ; uv/Node absents (repli pip)
+Plateforme d'installation principale : Windows + Claude Code
+
+Notes 2026-06-25 : ajout du module de réactions (transformatives + amplifiantes),
+commande `irminsul doctor`, gestion d'erreurs Enka élargie, repli pip si uv absent.
+
+Notes 2026-06-26 (finalisation) :
+- Correctif critique launcher MCP : os.execv cassait les pipes stdio sous Windows
+  (Claude Code perdait la connexion) -> sous-processus héritant des flux.
+- gcsim retéléchargé (l'ancien binaire était tronqué/corrompu) ; gcsim_path()
+  accepte aussi un binaire au nom non canonique.
+- Indexeur : genshin-db restreint à l'anglais combat-utile (120k -> 2480 fichiers) ;
+  globbing direct des includes + plafond par source. Index = 6410 documents.
+- Sortie CLI forcée en UTF-8 ; PYTHONUTF8 dans le serveur MCP.
+- Données perso protégées (player.yaml, exports GOOD, settings.local.json gitignorés) ;
+  ajout de profiles/player.example.yaml et .gitattributes ; dépôt Git initialisé.
+- Tests ajoutés : GOOD invalide, validation UID, classement des sources, serveur MCP
+  (10 outils + handshake launcher), source indisponible, gcsim (erreurs + run réel).

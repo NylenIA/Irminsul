@@ -1,0 +1,13 @@
+# Normalise les fins de ligne pour un dépôt portable Windows/Unix.
+* text=auto
+
+# Scripts dépendants du séparateur de ligne.
+*.sh   text eol=lf
+*.ps1  text eol=crlf
+*.bat  text eol=crlf
+
+# Fichiers binaires : jamais de conversion.
+*.exe  binary
+*.db   binary
+*.png  binary
+*.jpg  binary

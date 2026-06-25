@@ -1,0 +1,22 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+!.env.example
+
+# Réglages Claude Code locaux (permissions spécifiques à la machine)
+.claude/settings.local.json
+data/sources/
+data/cache/
+data/irminsul.db
+data/irminsul.db-*
+tools/bin/
+*.log
+
+# Données personnelles du joueur (UID, profil, exports compte) — ne jamais committer
+profiles/player.yaml
+*-GOOD.json
+*.good.json
+good-export*.json

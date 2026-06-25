@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "irminsul": {
+      "command": "python",
+      "args": ["${CLAUDE_PROJECT_DIR:-.}/scripts/mcp_launch.py"],
+      "env": {
+        "IRMINSUL_PROJECT_ROOT": "${CLAUDE_PROJECT_DIR:-.}",
+        "PYTHONUTF8": "1",
+        "PYTHONIOENCODING": "utf-8"
+      },
+      "timeout": 600000
+    }
+  }
+}

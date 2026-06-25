@@ -1,0 +1,10 @@
+{
+  "agent": "irminsul-orchestrator",
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./data/cache/**)"
+    ]
+  }
+}

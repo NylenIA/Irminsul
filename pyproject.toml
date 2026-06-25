@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "irminsul-ai"
+version = "0.1.0"
+description = "Local Genshin Impact knowledge and theorycraft MCP server for Claude Code"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "httpx>=0.27,<1",
+  "mcp>=1.26,<2",
+  "platformdirs>=4.2,<5",
+  "pydantic>=2.7,<3",
+  "pyyaml>=6.0,<7",
+  "rapidfuzz>=3.9,<4",
+  "rich>=13.7,<15",
+  "tenacity>=8.2,<10",
+  "typer>=0.12,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<10",
+  "ruff>=0.6,<2",
+]
+
+[project.scripts]
+irminsul = "irminsul.cli:app"
+irminsul-mcp = "irminsul.mcp_server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/irminsul"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = [
+  "integration: nécessite un binaire ou un service externe (ex. gcsim)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# Ne pas linter les sources tierces synchronisées ni les binaires/données locales.
+extend-exclude = ["data", "tools/bin", ".venv"]

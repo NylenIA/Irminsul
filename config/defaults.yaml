@@ -1,0 +1,19 @@
+simulation:
+  enemy_level: 100
+  enemy_resistance: 0.10
+  targets: 1
+  duration_seconds: 90
+  fps: 60
+  starting_energy: realistic
+  abyss_buffs: none
+  food_buffs: none
+  retries: 1000
+
+recommendation:
+  leak_mode: opt_in
+  prefer_account_data: true
+  show_alternatives: 3
+  include_comfort_score: true
+  include_rotation_difficulty: true
+  include_energy_risk: true
+  current_data_max_age_hours: 24

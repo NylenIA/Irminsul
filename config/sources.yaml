@@ -1,0 +1,98 @@
+sources:
+  - id: kqm-tcl
+    name: KQM Theorycrafting Library
+    kind: theorycraft
+    tier: A
+    url: https://github.com/KQM-git/TCL.git
+    enabled: true
+    include:
+      - "docs/**/*.md"
+      - "newsletter/**/*.md"
+    exclude:
+      - "**/node_modules/**"
+
+  - id: gcsim
+    name: gcsim
+    kind: simulation
+    tier: A
+    url: https://github.com/genshinsim/gcsim.git
+    enabled: true
+    include:
+      - "ui/packages/docs/docs/**/*.md"
+      - "internal/characters/**/*.go"
+      - "internal/weapons/**/*.go"
+      - "internal/artifacts/**/*.go"
+    exclude:
+      - "**/node_modules/**"
+
+  - id: genshin-db
+    name: genshin-db
+    kind: live-data
+    tier: B
+    url: https://github.com/theBowja/genshin-db.git
+    enabled: true
+    # genshin-db contient ~120k JSON (12 langues x tous objets, dont les cartes TCG).
+    # On n'indexe que l'anglais (clés standard, alignées sur le format GOOD) et les
+    # catégories utiles au theorycraft combat, pour un index pertinent et rapide.
+    include:
+      - "src/data/English/characters/**/*.json"
+      - "src/data/English/weapons/**/*.json"
+      - "src/data/English/artifacts/**/*.json"
+      - "src/data/English/constellations/**/*.json"
+      - "src/data/English/talents/**/*.json"
+      - "src/data/English/materials/**/*.json"
+      - "src/data/English/enemies/**/*.json"
+      - "src/data/English/foods/**/*.json"
+      - "src/data/English/elements/**/*.json"
+      - "src/data/English/domains/**/*.json"
+    exclude:
+      - "**/node_modules/**"
+
+  - id: kqm-ginews
+    name: KQM GINews official archive
+    kind: official-archive
+    tier: A
+    url: https://github.com/KQM-git/GINews.git
+    enabled: true
+    include:
+      - "**/*.json"
+      - "**/*.md"
+      - "**/*.txt"
+    exclude:
+      - "**/node_modules/**"
+
+  - id: genshin-optimizer
+    name: Genshin Optimizer
+    kind: optimizer
+    tier: B
+    url: https://github.com/frzyc/genshin-optimizer.git
+    enabled: false
+    include:
+      - "apps/**/*.md"
+      - "libs/**/*.md"
+      - "libs/good/src/**/*.ts"
+    exclude:
+      - "**/node_modules/**"
+
+external_services:
+  - id: enka
+    name: Enka.Network
+    kind: account-showcase
+    tier: B
+    base_url: https://enka.network/api/uid/
+    rules:
+      - Respecter le TTL renvoyé par l'API.
+      - Ne jamais énumérer des UIDs.
+      - Envoyer un User-Agent identifiable.
+
+  - id: hoyolab
+    name: HoYoLAB / Genshin official
+    kind: official
+    tier: S
+    base_url: https://www.hoyolab.com/
+
+  - id: genshin-official
+    name: Genshin Impact official website
+    kind: official
+    tier: S
+    base_url: https://genshin.hoyoverse.com/
