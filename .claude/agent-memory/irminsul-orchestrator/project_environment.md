@@ -1,16 +1,26 @@
 ---
 name: project-environment
-description: Contraintes machine d'installation Irminsul AI (à revérifier, peut changer)
+description: Contraintes machine d'installation Irminsul AI (revérifié 2026-06-26)
 metadata:
   type: project
 ---
 
-État de la machine d'install au 2026-06-25 (à **revérifier** avant de s'en servir) :
+État de la machine d'install, **revérifié le 2026-06-26** :
 
-- **Python 3.14.3** présent ; **git** présent.
-- **`uv` ABSENT** et **Node/`npm` ABSENT**. Le `bootstrap.ps1` d'origine échouait donc (il exigeait `npm`/`claude` et `uv`).
-- Installation réalisée en repli : `.venv` créé via `python -m venv` + `pip install -e ".[dev]"`. Le serveur MCP, le CLI et les 12 tests tournent sous Python 3.14.
+- **Python 3.14.3** présent ; **git 2.54** présent. Dépôt Git désormais **initialisé**
+  dans le projet (1er commit fait ; `player.yaml`, exports GOOD et `settings.local.json`
+  gitignorés).
+- **`uv` ABSENT** et **Node/`npm` ABSENT** (toujours). Le chemin d'install « officiel »
+  (uv + npm/Claude Code) n'est pas exécutable tel quel ; `bootstrap.ps1` bascule sur
+  `python -m venv` + `pip install -e ".[dev]"`.
+- **gcsim v2.43.3** installé et fonctionnel (`tools/bin/gcsim.exe`). La tâche planifiée
+  Windows `IrminsulDailyUpdate` n'est **pas** installée par défaut.
+- Validation : **36 tests OK**, ruff propre, serveur MCP 10 outils (handshake stdio
+  vérifié), index local = ~6410 documents.
 
-**Why :** le chemin d'install « officiel » (uv + tâche planifiée Windows) n'est pas exécutable tel quel sur cette machine ; un repli pip a été ajouté au bootstrap.
+**Why :** ces contraintes (uv/node absents) reviennent à chaque session et changent le
+chemin d'install ; il faut les vérifier avant de supposer un outil disponible.
 
-**How to apply :** avant de supposer `uv`/`node` disponibles, vérifier (`uv --version`, `node --version`). Pour valider rapidement le projet, utiliser `./.venv/Scripts/python.exe -m pytest -q` et `... -m irminsul.cli doctor`.
+**How to apply :** avant de supposer `uv`/`node`, vérifier (`uv --version`,
+`node --version`). Pour valider vite : `./.venv/Scripts/python.exe -m pytest -q` et
+`... -m irminsul.cli doctor`. Voir [[user-profile]] et [[feedback-proactive-improvements]].
