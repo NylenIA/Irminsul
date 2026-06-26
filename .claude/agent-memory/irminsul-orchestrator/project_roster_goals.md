@@ -24,6 +24,8 @@ Builds réels notables (vitrine, 2026-06-26) :
 - **Pièges build scannés** : **Iansan lvl40 T1/1/1** (pas prête, mais Calamity Queller dessus) ; Furina/Shenhe/Yelan/Diona = **arme lvl1** ; Ayaka/HuTao/Bennett/Nahida = armes sous-montées. **Goulot = XP perso/Mora** (Hero's Wit 1, Mora 224k) ; 16 Couronnes dispo.
 - `Traveler` = `unresolvedCharacter` (Amenoma + 5 artéfacts) → exclu des recos.
 
-**Why:** ces builds réels conditionnent les recos. Sa meilleure team Mavuika sur ce compte = **Mavuika/Xilonen/Furina/Bennett (Vape)** ; alt brute = Mavuika/Xilonen/Iansan/Bennett (Iansan à monter d'abord).
+**Meta Mavuika (corrigé, cf. [[feedback-meta-research-rigor]]) :** team **plafond du jeu = Mavuika · Citlali · Iansan · Bennett** (pas Xilonen ; Citlali shred déjà la RES). Sur CE compte : Citlali non possédée + Iansan lvl40 → meilleure team **réelle** = **Mavuika · Xilonen · Furina · Bennett (Vape)**. Pour Melt sans Citlali/Escoffier : activateur Cryo possédé le moins mauvais = **Rosaria** (à monter).
+
+**Why:** ces builds réels conditionnent les recos.
 
 **How to apply:** réimporter l'Enka avant de conclure (les builds évoluent) ; gros leviers identifiés = monter l'arme de Furina (lvl1→90) et rééquilibrer le crit de Mavuika (~63 % CR en combat pour 198 % CD). Bennett/Iansan supposés possédés mais non affichés → confirmer. Sandrone = LEAK jusqu'au 2026-07-01. Lié à [[project-environment]], [[feedback-account-level-meta]], [[reference-trusted-creators]].

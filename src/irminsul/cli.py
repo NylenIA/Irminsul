@@ -19,6 +19,8 @@ from .leaks import DevelopmentStage, score_leak
 from .reaction import amplifying_multiplier, transformative_reaction
 from .source_sync import rebuild_index, search_index, sync_repositories
 from .status import system_status
+from .team_optimizer import optimize as optimize_team
+from .team_optimizer import owned_pool
 
 # Sous Windows, Python n'active pas encore le mode UTF-8 par défaut (avant 3.15) :
 # on force la sortie en UTF-8 pour que les accents et tableaux s'affichent bien
@@ -217,6 +219,21 @@ def leak_score(
 @gcsim_app.command("run")
 def gcsim_run(config: Path, open_viewer: bool = False) -> None:
     print_json(run_gcsim(config, open_viewer=open_viewer))
+
+
+@app.command("optimize-team")
+def optimize_team_cmd(
+    carry: str = typer.Argument(..., help="Nom du porteur (ex. Mavuika)."),
+    reaction: str = typer.Option(None, help="forward-melt, forward-vaporize, … (défaut : préférée du porteur)."),
+    owned_only: bool = typer.Option(False, help="Limite aux personnages du compte importé."),
+    top: int = typer.Option(5, help="Nombre d'équipes à afficher."),
+) -> None:
+    """Calcule et classe les meilleures équipes d'un porteur (modèle analytique)."""
+    pool = owned_pool() if owned_only else None
+    if owned_only and not pool:
+        console.print("[yellow]Aucun compte importé : lance `account import-good` ou retire --owned-only.[/yellow]")
+        raise typer.Exit(code=1)
+    print_json(optimize_team(carry, reaction=reaction, pool=pool, top=top))
 
 
 @app.command()
