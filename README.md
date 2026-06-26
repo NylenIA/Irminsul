@@ -53,16 +53,23 @@ Claude Code utilisera automatiquement l'agent `irminsul-orchestrator` configuré
 ## Premières commandes utiles
 
 ```text
-/genshin-account 700000000
-/genshin-import-good C:\chemin\vers\export-GOOD.json
+/genshin-import-good E:\...\genshinData_GOOD_2026_06_26_23_40.json   # importe ton compte réel
+/genshin-account                 # résumé fiable du compte importé
+/genshin-character Neuvillette    # analyse d'un perso possédé
 /genshin-team Construis mes deux meilleures équipes pour l'Abîme actuel
+/genshin-abyss                   # deux équipes simultanées sans objet partagé
 /genshin-dps Compare les rotations de mes deux équipes avec mes vrais builds
 /genshin-build Optimise mon build de Furina sans voler les artefacts de Neuvillette
+/genshin-artifacts               # classe et optimise mon stock d'artéfacts
+/genshin-weapons                 # meilleure répartition de mes armes
+/genshin-farm                    # plan de farm selon mes matériaux
+/genshin-upgrade                 # améliorations classées par rendement
 /genshin-meta Fais un rapport de la meta actuelle en séparant ST, AoE et confort
-/genshin-lore Explique l'histoire de Khaenri'ah sans spoiler les quêtes récentes
 /genshin-leaks Analyse ces leaks et classe leur fiabilité
-/genshin-verify Vérifie toutes les affirmations de cette réponse
 ```
+
+Import et exploitation du compte (Inventory Kamera / GOOD) : voir **[docs/ACCOUNT_IMPORT.md](docs/ACCOUNT_IMPORT.md)**.
+Le compte importé (`data/account/`) reste **local** et n'est jamais committé.
 
 ## Philosophie de calcul
 

@@ -35,3 +35,17 @@ def cache_dir() -> Path:
 
 def db_path() -> Path:
     return data_dir() / "irminsul.db"
+
+
+def account_dir() -> Path:
+    """Racine des données de compte du joueur (jamais committée, cf. .gitignore)."""
+    path = data_dir() / "account"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def account_subdir(name: str) -> Path:
+    """Sous-dossier de compte (raw, snapshots, current, reports, recommendations)."""
+    path = account_dir() / name
+    path.mkdir(parents=True, exist_ok=True)
+    return path

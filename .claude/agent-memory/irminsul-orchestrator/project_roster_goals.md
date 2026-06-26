@@ -18,6 +18,12 @@ Builds réels notables (vitrine, 2026-06-26) :
 - **Nicole** C0R1 : Angelos' Heptades, 4p Celestial Gift, ATK 2951, ER 175 %.
 - Autres unités possédées : **Skirk, Lohen, Flins, Ineffa, Columbina, Durin, Zibai, Linnea** (DPS/supports Cryo/Électro/Hydro/Hexerei/Lunar — beaucoup hors training, revérifier via web).
 
-**Why:** ces builds réels conditionnent les recos. Sa meilleure team Mavuika sur ce compte = **Mavuika/Xilonen/Furina/Bennett (Vape)** ; alt brute = Mavuika/Xilonen/Iansan/Bennett.
+**Import GOOD complet (Inventory Kamera v1.4.3, snapshot 2026-06-26, SHA `f42d7054…`)** : 83 persos, 350 armes, 397 artéfacts, 529 matériaux. Pipeline `irminsul.account` → vérité normalisée dans `data/account/current/*.json` (gitignored). Rapports : `data/account/reports/` + `data/account/recommendations/initial-account-analysis.md`.
+- **Possédés confirmés** : YaeMiko, Ayaka, HuTao, Raiden, Skirk (tous lvl90), Neuvillette (lvl70, **sous-investi à fort potentiel**), Nahida, Kazuha (R5 Iron Sting), **Bennett C6**, Furina, Xilonen, Lyney, Sucrose C6, Fischl C6, Columbina C2, Lohen, Flins, Ineffa.
+- **NON possédés** (ne jamais supposer) : **Citlali, Xiangling, Mualani, Kinich, Chasca, Clorinde, Arlecchino, Navia, Wriothesley, Nilou, Escoffier**.
+- **Pièges build scannés** : **Iansan lvl40 T1/1/1** (pas prête, mais Calamity Queller dessus) ; Furina/Shenhe/Yelan/Diona = **arme lvl1** ; Ayaka/HuTao/Bennett/Nahida = armes sous-montées. **Goulot = XP perso/Mora** (Hero's Wit 1, Mora 224k) ; 16 Couronnes dispo.
+- `Traveler` = `unresolvedCharacter` (Amenoma + 5 artéfacts) → exclu des recos.
+
+**Why:** ces builds réels conditionnent les recos. Sa meilleure team Mavuika sur ce compte = **Mavuika/Xilonen/Furina/Bennett (Vape)** ; alt brute = Mavuika/Xilonen/Iansan/Bennett (Iansan à monter d'abord).
 
 **How to apply:** réimporter l'Enka avant de conclure (les builds évoluent) ; gros leviers identifiés = monter l'arme de Furina (lvl1→90) et rééquilibrer le crit de Mavuika (~63 % CR en combat pour 198 % CD). Bennett/Iansan supposés possédés mais non affichés → confirmer. Sandrone = LEAK jusqu'au 2026-07-01. Lié à [[project-environment]], [[feedback-account-level-meta]], [[reference-trusted-creators]].

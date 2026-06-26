@@ -9,10 +9,12 @@ from rich import print
 from rich.console import Console
 from rich.table import Table
 
+from .account import build_overview, import_good, load_current, render_validation_md
 from .damage import calculate_direct_hit
 from .enka import fetch_showcase
 from .gcsim import gcsim_path, run_gcsim
 from .good import inspect_good_export
+from .paths import account_subdir
 from .leaks import DevelopmentStage, score_leak
 from .reaction import amplifying_multiplier, transformative_reaction
 from .source_sync import rebuild_index, search_index, sync_repositories
@@ -83,6 +85,43 @@ def import_enka(uid: str, force: bool = False) -> None:
 def inspect_good(path: Path) -> None:
     """Inspecte un export GOOD de Genshin Optimizer."""
     print_json(inspect_good_export(path))
+
+
+@account_app.command("import-good")
+def import_good_cmd(
+    path: Path,
+    snapshot_date: str = typer.Option(None, help="Date du snapshot, défaut = aujourd'hui (YYYY-MM-DD)."),
+    force: bool = typer.Option(False, help="Force la re-création du snapshot même si déjà importé."),
+    write_report: bool = typer.Option(True, help="Écrit le rapport de validation markdown."),
+) -> None:
+    """Importe, valide, normalise et compare un export GOOD (idempotent)."""
+    result = import_good(path, snapshot_date=snapshot_date, force=force)
+    if write_report:
+        snap_date = result["snapshot"].split("__")[0]
+        report = render_validation_md(result, source_name=Path(path).name, snapshot_date=snap_date)
+        report_path = account_subdir("reports") / f"import-validation-{snap_date}.md"
+        report_path.write_text(report, encoding="utf-8")
+        result["report"] = str(report_path)
+    # On n'affiche pas tout le détail des issues pour rester lisible.
+    summary = {k: v for k, v in result.items() if k not in ("diff",)}
+    summary["validation"] = result["validation"]["counts_by_severity"]
+    print_json(summary)
+
+
+@account_app.command("summary")
+def account_summary() -> None:
+    """Affiche le profil normalisé courant (data/account/current)."""
+    profile_path = account_subdir("current") / "account-profile.json"
+    if not profile_path.exists():
+        console.print("[yellow]Aucun import. Lance d'abord `irminsul account import-good <fichier>`.[/yellow]")
+        raise typer.Exit(code=1)
+    print_json(json.loads(profile_path.read_text(encoding="utf-8")))
+
+
+@account_app.command("overview")
+def account_overview() -> None:
+    """Aperçu factuel (données scannées) : persos investis, drapeaux d'équipement, matériaux."""
+    print_json(build_overview(load_current()))
 
 
 @damage_app.command("hit")
