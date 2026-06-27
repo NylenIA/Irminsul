@@ -14,10 +14,15 @@
 ## En cours
 - Tests de non-régression de l'infra Phase 0 ; mesure avant/après ; rapport + commit de phase.
 
-## Phase 1 — démarrée
-- Toolchain vérifiée (Node OK, Rust absent). Stack : Vite+React+TS strict, Tauri 2 (CI), moteur Python conservé.
-- Frontend `app/` scaffoldé et **build validé localement** (tsc strict + vite). CI desktop + setup Rust en place.
+## Phase 1 — terminée
+- Stack : Vite+React+TS strict, **Tauri 2**, moteur Python conservé. Rust 1.96 + VS Build Tools installés.
+- **Build Windows local produit** : `irminsul.exe` + installeurs **MSI** et **NSIS** (cf. RISKS résolu). CI desktop active.
+
+## Phase 2 — en cours
+- Écran **Compte** branché au moteur GOOD réel (provenance, fraîcheur, rapport d'anomalies, non-résolus).
+- **Import par sélecteur de fichier natif** (plugin dialog, perm. minimale).
+- Fiches **Personnages / Armes / Artéfacts** (onglets, tables) sur données scannées. Aucune donnée factice.
 
 ## Prochaine action
-- Initialiser `app/src-tauri/` (coque Tauri) + activer le job CI Tauri — nécessite Rust (CI ou setup local).
-- Puis Phase 2 (données compte : brancher l'import GOOD existant à l'UI Compte).
+- Détail par personnage (artéfacts/substats, drapeaux d'investissement) ; virtualisation des longues listes.
+- Puis Phase 3 (moteur de combat : registre des mécaniques + calcul rapide dans l'app).

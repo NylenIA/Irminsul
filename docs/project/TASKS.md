@@ -14,8 +14,11 @@
 - [x] Vérifier toolchain (Node OK ; Rust absent) + licences (permissives)
 - [x] Scaffold frontend Vite+React+TS strict (`app/`) — **build validé** (tsc + vite)
 - [x] CI desktop (`.github/workflows/desktop.yml`) + setup Rust (`scripts/setup_desktop.ps1`)
-- [x] `app/src-tauri/` (coque Tauri 2 : config, permissions mini, build/dev, icônes, lib/main) — manifeste validé (`cargo metadata`), compilation/linking validés **en CI** (MSVC local absent)
+- [x] `app/src-tauri/` (coque Tauri 2) — **build release local OK** (irminsul.exe + MSI + NSIS) après install VS Build Tools
 - [ ] SQLite + migrations ; design system étendu ; logs app
 
-## Phase 2 — todo
-- [ ] Brancher l'import GOOD existant (`irminsul.account`) à l'UI Compte (provenance, fraîcheur)
+## Phase 2 — en cours
+- [x] Import GOOD branché à l'UI Compte (provenance, fraîcheur, rapport d'anomalies, non-résolus)
+- [x] Sélecteur de fichier natif (plugin dialog, permission minimale)
+- [x] Fiches Personnages / Armes / Artéfacts (onglets, tables, données scannées)
+- [ ] Détail par personnage (substats/drapeaux) ; virtualisation des longues listes
