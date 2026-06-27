@@ -1,0 +1,41 @@
+name: desktop
+
+# Build/validation de l'UI desktop. Le frontend (Node) est validé ici.
+# Le build Tauri (Rust) sera ajouté quand `app/src-tauri/` existera : la
+# validation desktop complète est donc PRÉPARÉE mais NON ENCORE EXÉCUTÉE
+# (Rust/Cargo absents de l'environnement de développement local — cf. RISKS.md).
+
+on:
+  push:
+    paths: ["app/**", ".github/workflows/desktop.yml"]
+  pull_request:
+    paths: ["app/**"]
+  workflow_dispatch:
+
+jobs:
+  frontend:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install (sans lockfile commité → install)
+        run: npm install --no-audit --no-fund
+      - name: Type-check (TS strict)
+        run: npm run typecheck
+      - name: Build
+        run: npm run build
+
+  # tauri:  # À activer quand app/src-tauri/ est créé.
+  #   runs-on: windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with: { node-version: "20" }
+  #     - uses: dtolnay/rust-toolchain@stable
+  #     - run: npm install --prefix app
+  #     - run: npm run tauri build --prefix app

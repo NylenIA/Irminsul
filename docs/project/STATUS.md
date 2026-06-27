@@ -14,5 +14,10 @@
 ## En cours
 - Tests de non-régression de l'infra Phase 0 ; mesure avant/après ; rapport + commit de phase.
 
+## Phase 1 — démarrée
+- Toolchain vérifiée (Node OK, Rust absent). Stack : Vite+React+TS strict, Tauri 2 (CI), moteur Python conservé.
+- Frontend `app/` scaffoldé et **build validé localement** (tsc strict + vite). CI desktop + setup Rust en place.
+
 ## Prochaine action
-- Valider la porte Phase 0 → démarrer Phase 1 (choix de stack vérifiés, dispo toolchain).
+- Initialiser `app/src-tauri/` (coque Tauri) + activer le job CI Tauri — nécessite Rust (CI ou setup local).
+- Puis Phase 2 (données compte : brancher l'import GOOD existant à l'UI Compte).

@@ -10,7 +10,12 @@
 - [~] Tests de non-régression infra Phase 0
 - [~] Mesure avant/après + rapport + commit de phase
 
-## Phase 1 (après la porte) — todo
-- [ ] Vérifier dispo toolchain (Node/npm/Rust/Tauri) + versions/licences
-- [ ] Si dispo : scaffold Tauri 2 + React/TS strict + Vite ; sinon CI/protocole reproductible
-- [ ] SQLite + migrations ; design system local ; sécurité/logs ; CI
+## Phase 1 — en cours
+- [x] Vérifier toolchain (Node OK ; Rust absent) + licences (permissives)
+- [x] Scaffold frontend Vite+React+TS strict (`app/`) — **build validé** (tsc + vite)
+- [x] CI desktop (`.github/workflows/desktop.yml`) + setup Rust (`scripts/setup_desktop.ps1`)
+- [ ] `app/src-tauri/` (coque Tauri) — requiert Rust (CI/local)
+- [ ] SQLite + migrations ; design system étendu ; logs app
+
+## Phase 2 — todo
+- [ ] Brancher l'import GOOD existant (`irminsul.account`) à l'UI Compte (provenance, fraîcheur)
