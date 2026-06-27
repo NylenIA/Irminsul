@@ -10,6 +10,7 @@ from rich.console import Console
 from rich.table import Table
 
 from .account import build_overview, import_good, load_current, render_validation_md
+from .audit import render_audit_md, run_audit
 from .damage import calculate_direct_hit
 from .enka import fetch_showcase
 from .gcsim import gcsim_path, run_gcsim
@@ -234,6 +235,27 @@ def optimize_team_cmd(
         console.print("[yellow]Aucun compte importé : lance `account import-good` ou retire --owned-only.[/yellow]")
         raise typer.Exit(code=1)
     print_json(optimize_team(carry, reaction=reaction, pool=pool, top=top))
+
+
+@app.command("audit")
+def audit_cmd(
+    write_report: bool = typer.Option(True, help="Écrit data/account/reports/project-audit-<date>.md."),
+) -> None:
+    """Audit complet du projet (architecture, sources, sécurité, cohérence…)."""
+    result = run_audit()
+    if write_report:
+        from datetime import date
+
+        from .paths import account_subdir
+        report = render_audit_md(result)
+        path = account_subdir("reports") / f"project-audit-{date.today().isoformat()}.md"
+        path.write_text(report, encoding="utf-8")
+        result["report"] = str(path)
+    payload = {"summary": result["summary"], "report": result.get("report"),
+               "issues": [x for x in result["findings"] if x["severity"] != "OK"]}
+    print_json(payload)
+    if result["summary"]["CRITIQUE"]:
+        raise typer.Exit(code=1)
 
 
 @app.command()
