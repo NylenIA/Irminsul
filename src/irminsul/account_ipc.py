@@ -116,6 +116,12 @@ def dispatch(method: str, params: dict[str, Any] | None = None) -> dict[str, Any
         if not path:
             raise ValueError("paramètre 'path' requis")
         return import_payload(str(path))
+    if method == "mechanics":
+        from .quickcalc import mechanics_payload
+        return mechanics_payload()
+    if method == "quick-calc":
+        from .quickcalc import quickcalc_payload
+        return quickcalc_payload(params)
     raise ValueError(f"méthode inconnue: {method}")
 
 

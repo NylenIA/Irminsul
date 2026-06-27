@@ -140,6 +140,16 @@ fn account_import_good(app: tauri::AppHandle, path: String) -> Result<String, St
     call_engine(&app, "import-good", serde_json::json!({ "path": path })).and_then(to_json_string)
 }
 
+#[tauri::command]
+fn quick_calc(app: tauri::AppHandle, params: Value) -> Result<String, String> {
+    call_engine(&app, "quick-calc", params).and_then(to_json_string)
+}
+
+#[tauri::command]
+fn mechanics(app: tauri::AppHandle) -> Result<String, String> {
+    call_engine(&app, "mechanics", serde_json::json!({})).and_then(to_json_string)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -149,7 +159,9 @@ pub fn run() {
             account_profile,
             account_overview,
             account_roster,
-            account_import_good
+            account_import_good,
+            quick_calc,
+            mechanics
         ])
         .run(tauri::generate_context!())
         .expect("erreur au démarrage de l'application Tauri");

@@ -5,6 +5,7 @@
  */
 import { useState } from "react";
 import { Account } from "./views/Account";
+import { QuickCalc } from "./views/QuickCalc";
 
 type View = "dashboard" | "account" | "teams" | "calc" | "gcsim" | "assistant";
 
@@ -46,9 +47,11 @@ export function App(): JSX.Element {
           <h1>{current?.label ?? "Irminsul"}</h1>
           {view === "account" ? (
             <Account />
+          ) : view === "calc" ? (
+            <QuickCalc />
           ) : (
             <p className="empty-state">
-              Écran en cours de construction. Les données réelles (calculs, gcsim, assistant)
+              Écran en cours de construction. Les données réelles (gcsim, assistant)
               seront branchées aux phases suivantes — aucun contenu factice n'est affiché.
             </p>
           )}

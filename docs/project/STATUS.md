@@ -24,5 +24,10 @@
 - Données dans le dossier app (`app_data_dir`), pas le dépôt ni le PATH Python.
 - **App packagée validée** (release exe + sidecar) : import → affichage → relance → restauration, sans Python (`scripts/test_packaged_app.sh`). Installeurs MSI (12 Mo) + NSIS (11 Mo) avec sidecar embarqué. CI Windows reproductible (`desktop.yml`).
 
-## Prochaine action — Phase 3
-- Registre versionné des mécaniques (`data/mechanics/source-registry.json`) + **moteur de calcul rapide** déterministe, sourcé et testé (réutilise `irminsul.damage`/`reaction`), exposé via le sidecar + un écran « Calcul rapide » avec « Voir le calcul ».
+## Phase 3 — démarrée
+- **Registre versionné des mécaniques** `data/mechanics/source-registry.json` (5 mécaniques cœur : dégâts, DEF, RES, réactions amplifiantes/transformatives ; sources KQM, statut `verified`, tests liés). Embarqué dans le sidecar (`--add-data`, `sys._MEIPASS`) → voyage avec le moteur.
+- **Moteur de calcul rapide** déterministe `irminsul.quickcalc` (réutilise `damage`/`reaction`, traçabilité) exposé via le sidecar (`quick-calc`, `mechanics`) + écran **« Calcul rapide »** avec « Voir le calcul ».
+- Tests : `test_quickcalc.py` (golden indépendant 3946.15, réaction ×2, intégrité registre, déterminisme) ; smoke sidecar quick-calc OK sans Python.
+
+## Prochaine action
+- Étendre le registre (réactions additives : aggravate/spread, bloom), exposer le calcul réaction transformative dans l'UI, brancher les stats finales du compte au calcul rapide.

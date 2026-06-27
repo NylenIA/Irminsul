@@ -12,6 +12,7 @@ Pré-requis : pip install pyinstaller (dans le venv de build).
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -39,10 +40,14 @@ def main() -> int:
     out_dir = ROOT / "app" / "src-tauri" / "binaries"
     out_dir.mkdir(parents=True, exist_ok=True)
     work = ROOT / ".irminsul" / "pyi"
+    # Registre des mécaniques embarqué dans l'exe (voyage avec le moteur).
+    registry = ROOT / "data" / "mechanics" / "source-registry.json"
+    add_data = f"{registry}{os.pathsep}data/mechanics"
     cmd = [
         sys.executable, "-m", "PyInstaller", "--onefile", "--clean", "--noconfirm",
         "--name", name,
         "--paths", str(ROOT / "src"),
+        "--add-data", add_data,
         "--distpath", str(out_dir),
         "--workpath", str(work),
         "--specpath", str(work),

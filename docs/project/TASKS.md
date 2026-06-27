@@ -25,6 +25,7 @@
 - [x] App **packagée** validée (import/affichage/relance/restauration) + CI Windows reproductible
 - [ ] (suite) détail par personnage (substats/drapeaux) ; virtualisation des longues listes
 
-## Phase 3 — todo (démarrée)
-- [ ] `data/mechanics/source-registry.json` (registre versionné : règle, sources, statut, confiance, tests)
-- [ ] Moteur de calcul rapide déterministe (réutilise damage/reaction) + commande sidecar + écran « Calcul rapide » (« Voir le calcul »)
+## Phase 3 — démarrée
+- [x] `data/mechanics/source-registry.json` (registre versionné : règle, sources, statut, confiance, tests) — embarqué dans le sidecar
+- [x] Moteur de calcul rapide déterministe (réutilise damage/reaction, traçabilité) + commandes sidecar `quick-calc`/`mechanics` + écran « Calcul rapide » (« Voir le calcul ») + golden tests
+- [ ] Réactions additives (aggravate/spread, bloom) ; calcul transformatif dans l'UI ; brancher stats finales du compte

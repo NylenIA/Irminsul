@@ -93,6 +93,25 @@ export const getRoster = (): Promise<RosterResponse> => call<RosterResponse>("ac
 export const importGood = (path: string): Promise<ImportResponse> =>
   call<ImportResponse>("account_import_good", { path });
 
+export interface DirectHit {
+  raw_base: number;
+  non_crit: number;
+  crit: number;
+  expected: number;
+  defense_multiplier: number;
+  resistance_multiplier: number;
+  expected_crit_multiplier: number;
+}
+export interface QuickCalcResult {
+  status: "ok";
+  result: DirectHit;
+  amplifying: { amplifying_multiplier: number; em_bonus: number } | null;
+  mechanics_used: string[];
+  registry_version: string;
+}
+export const quickCalc = (params: Record<string, number | string>): Promise<QuickCalcResult> =>
+  call<QuickCalcResult>("quick_calc", { params });
+
 /** Sélecteur de fichier natif (plugin dialog Tauri) pour choisir l'export GOOD. */
 export async function pickGoodFile(): Promise<string | null> {
   const selected = await open({

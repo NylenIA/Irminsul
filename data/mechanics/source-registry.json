@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "version": "2026-06-28",
+  "note": "Registre versionné des mécaniques du moteur rapide. Mécaniques de calcul CŒUR, stables entre versions du jeu (la version live n'est jamais gravée comme 'actuelle' ici). statut ∈ verified|probable|experimental|unknown.",
+  "mechanics": [
+    {
+      "id": "outgoing_damage",
+      "applies_to_versions": "core-stable",
+      "rule": "Dégâts = Base × (1 + DMG%) × CritMult × DefMult × ResMult × AmpMult ; Base = scaling × stat (+ flat). CritMult attendu = 1 + CR×CD ; crit = non_crit × (1 + CD).",
+      "sources": [
+        {"name": "KQM — Damage Formula", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/damage/damage-formula"}
+      ],
+      "code": "src/irminsul/damage.py:calculate_direct_hit",
+      "tests": ["tests/test_damage.py", "tests/test_quickcalc.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["CR plafonné à 100% pour la moyenne", "multiplicateurs strictement positifs"]
+    },
+    {
+      "id": "defense_multiplier",
+      "applies_to_versions": "core-stable",
+      "rule": "DefMult = (atkLvl + 100) / ((atkLvl + 100) + (enemyLvl + 100) × (1 − defReduction) × (1 − defIgnore)).",
+      "sources": [
+        {"name": "KQM — Defense", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/enemies/defense"}
+      ],
+      "code": "src/irminsul/damage.py:defense_multiplier",
+      "tests": ["tests/test_damage.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["réduction et ignore bornés à 0..0.99"]
+    },
+    {
+      "id": "resistance_multiplier",
+      "applies_to_versions": "core-stable",
+      "rule": "ResMult = 1 − res/2 si res < 0 ; 1 − res si 0 ≤ res < 0.75 ; 1 / (4×res + 1) si res ≥ 0.75.",
+      "sources": [
+        {"name": "KQM — Resistance", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/enemies/resistance"}
+      ],
+      "code": "src/irminsul/damage.py:resistance_multiplier",
+      "tests": ["tests/test_damage.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["RES négative (shred) : pénalité de moitié"]
+    },
+    {
+      "id": "amplifying_reaction",
+      "applies_to_versions": "core-stable",
+      "rule": "AmpMult = base × (1 + 2.78×EM/(EM+1400) + reaction_bonus). base = 2.0 (Vaporize Pyro→Hydro, Melt Pyro→Cryo) ou 1.5 (réactions inverses).",
+      "sources": [
+        {"name": "KQM — Amplifying Reactions", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/reactions/amplifying-reactions"}
+      ],
+      "code": "src/irminsul/reaction.py:amplifying_multiplier",
+      "tests": ["tests/test_reaction.py", "tests/test_quickcalc.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["EM ≥ 0", "bonus de réaction additif (ex. set Crimson Witch)"]
+    },
+    {
+      "id": "transformative_reaction",
+      "applies_to_versions": "core-stable",
+      "rule": "Dégâts = base × levelMultiplier × (1 + 16×EM/(EM+2000) + reaction_bonus) × ResMult. Pas de crit par défaut.",
+      "sources": [
+        {"name": "KQM — Transformative Reactions", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/reactions/transformative-reactions"}
+      ],
+      "code": "src/irminsul/reaction.py:transformative_reaction",
+      "tests": ["tests/test_reaction.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["levelMultiplier dépend du niveau (1446.85 au niveau 90)"]
+    }
+  ]
+}

@@ -38,6 +38,7 @@ echo "== Session 1 : import + affichage =="
 ok "$(run "{\"id\":1,\"method\":\"import-good\",\"params\":{\"path\":\"$GOODWIN\"}}")" '"ok": true' "import GOOD"
 ok "$(run '{"id":2,"method":"profile"}')" '"sha256"' "profil (provenance)"
 ok "$(run '{"id":3,"method":"roster"}')" '"characters"' "roster (personnages/armes/sets)"
+ok "$(run '{"id":31,"method":"quick-calc","params":{"scaling":2.0,"stat":2000,"crit_rate":0.5,"crit_damage":1.0,"damage_bonus":0.5}}')" '"expected"' "calcul rapide (registre embarqué)"
 
 echo "== Session 2 : RELANCE (même app-data, sans réimport) -> restauration =="
 ok "$(run '{"id":4,"method":"profile"}')" '"status": "ok"' "profil restauré"
