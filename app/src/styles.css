@@ -41,6 +41,25 @@ body { margin: 0; }
 .main { padding: 24px 28px; }
 .main h1 { margin: 0 0 12px; font-size: 22px; }
 .empty-state { color: var(--text-dim); max-width: 60ch; }
+.account section { margin: 0 0 18px; }
+.account h2 { font-size: 15px; color: var(--turquoise); margin: 0 0 6px; }
+.account dl { display: grid; grid-template-columns: 130px 1fr; gap: 2px 10px; margin: 0; }
+.account dt { color: var(--text-dim); }
+.account ul { margin: 0; padding-left: 18px; }
+.warn { color: var(--gold); }
+.error { color: #ff8b8b; }
+.import label { display: block; color: var(--text-dim); margin-bottom: 4px; }
+.import__row { display: flex; gap: 8px; }
+.import input {
+  flex: 1; padding: 8px 10px; border-radius: 8px;
+  background: #0c1626; color: var(--text); border: 1px solid #25405e;
+}
+.import button, .error + button, details button[type="submit"] {
+  padding: 8px 14px; border-radius: 8px; cursor: pointer;
+  background: var(--forest); color: var(--text); border: 1px solid var(--turquoise);
+}
+.import button:disabled { opacity: 0.5; cursor: not-allowed; }
+details summary { cursor: pointer; color: var(--text-dim); margin-top: 8px; }
 @media (max-width: 760px) { .app__body { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 @media (prefers-contrast: more) { :root { --text-dim: #cdd9ea; } }

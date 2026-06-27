@@ -4,6 +4,7 @@
  * l'import compte / le backend ne sont pas branchés en Phase 2+).
  */
 import { useState } from "react";
+import { Account } from "./views/Account";
 
 type View = "dashboard" | "account" | "teams" | "calc" | "gcsim" | "assistant";
 
@@ -43,10 +44,14 @@ export function App(): JSX.Element {
         </nav>
         <main id="main" className="main" tabIndex={-1}>
           <h1>{current?.label ?? "Irminsul"}</h1>
-          <p className="empty-state">
-            Fondation Phase 1. Les données réelles (import GOOD, calculs, gcsim, assistant)
-            seront branchées aux phases suivantes — aucun contenu factice n'est affiché.
-          </p>
+          {view === "account" ? (
+            <Account />
+          ) : (
+            <p className="empty-state">
+              Écran en cours de construction. Les données réelles (calculs, gcsim, assistant)
+              seront branchées aux phases suivantes — aucun contenu factice n'est affiché.
+            </p>
+          )}
         </main>
       </div>
     </div>
