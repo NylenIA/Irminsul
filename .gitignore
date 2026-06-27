@@ -15,6 +15,9 @@ data/irminsul.db-*
 tools/bin/
 *.log
 
+# Espace de travail Phase 0 (logs complets, mesures, index) — transitoire, régénérable
+.irminsul/
+
 # Données personnelles du joueur (UID, profil, exports compte) — ne jamais committer
 profiles/player.yaml
 *-GOOD.json
