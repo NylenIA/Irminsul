@@ -18,11 +18,11 @@
 - Stack : Vite+React+TS strict, **Tauri 2**, moteur Python conservé. Rust 1.96 + VS Build Tools installés.
 - **Build Windows local produit** : `irminsul.exe` + installeurs **MSI** et **NSIS** (cf. RISKS résolu). CI desktop active.
 
-## Phase 2 — en cours
-- Écran **Compte** branché au moteur GOOD réel (provenance, fraîcheur, rapport d'anomalies, non-résolus).
-- **Import par sélecteur de fichier natif** (plugin dialog, perm. minimale).
-- Fiches **Personnages / Armes / Artéfacts** (onglets, tables) sur données scannées. Aucune donnée factice.
+## Phase 2 — terminée (app distribuable)
+- Écran **Compte** branché au moteur GOOD réel (provenance, fraîcheur, anomalies, non-résolus) + sélecteur natif + fiches Personnages/Armes/Artéfacts. Aucune donnée factice.
+- **Sidecar moteur autonome** (PyInstaller onefile, stdlib only) embarqué via `externalBin`, exécuté par Rust (protocole stdin/stdout borné : id, erreurs typées, timeout+kill, taille max). **Python NON requis** chez l'utilisateur.
+- Données dans le dossier app (`app_data_dir`), pas le dépôt ni le PATH Python.
+- **App packagée validée** (release exe + sidecar) : import → affichage → relance → restauration, sans Python (`scripts/test_packaged_app.sh`). Installeurs MSI (12 Mo) + NSIS (11 Mo) avec sidecar embarqué. CI Windows reproductible (`desktop.yml`).
 
-## Prochaine action
-- Détail par personnage (artéfacts/substats, drapeaux d'investissement) ; virtualisation des longues listes.
-- Puis Phase 3 (moteur de combat : registre des mécaniques + calcul rapide dans l'app).
+## Prochaine action — Phase 3
+- Registre versionné des mécaniques (`data/mechanics/source-registry.json`) + **moteur de calcul rapide** déterministe, sourcé et testé (réutilise `irminsul.damage`/`reaction`), exposé via le sidecar + un écran « Calcul rapide » avec « Voir le calcul ».

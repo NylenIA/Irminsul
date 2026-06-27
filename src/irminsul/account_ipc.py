@@ -1,32 +1,26 @@
-"""Pont IPC « moteur compte » pour l'app desktop : sortie **JSON pure** (sans rich).
+"""Pont « moteur compte » : fonctions *_payload() renvoyant des dicts JSON-ables.
 
-Le frontend (via une commande Tauri) appelle `python -m irminsul.account_ipc <cmd>`.
-Contrat stable, machine-lisible, avec provenance et fraîcheur. Ne renvoie jamais de
-donnée factice : si aucun compte n'est importé, renvoie `{"status": "empty"}`.
-
-Commandes : `profile` · `overview` · `import-good <chemin>`.
+Réutilisées par : le CLI argv (`python -m irminsul.account_ipc <cmd>`, pratique en
+dev/tests) et par le **sidecar** stdin/stdout (`irminsul.sidecar`). Aucune donnée
+factice : si aucun compte n'est importé → `{"status": "empty"}`.
 """
 
 from __future__ import annotations
 
 import json
 import sys
+from typing import Any
 
 from .account import build_overview, import_good, load_current
 
 
-def _emit(obj: object) -> None:
-    sys.stdout.write(json.dumps(obj, ensure_ascii=False, default=str))
-
-
-def cmd_profile() -> None:
+def profile_payload() -> dict[str, Any]:
     try:
         cur = load_current()
     except FileNotFoundError:
-        _emit({"status": "empty", "message": "Aucun compte importé."})
-        return
+        return {"status": "empty", "message": "Aucun compte importé."}
     p = cur["account-profile"]
-    _emit({
+    return {
         "status": "ok",
         "profile": {
             "snapshot_date": p.get("snapshot_date"),
@@ -38,25 +32,22 @@ def cmd_profile() -> None:
             "unresolved": p.get("unresolved_character_keys", []),
             "provenance_note": p.get("provenance_note"),
         },
-    })
+    }
 
 
-def cmd_overview() -> None:
+def overview_payload() -> dict[str, Any]:
     try:
         cur = load_current()
     except FileNotFoundError:
-        _emit({"status": "empty"})
-        return
-    _emit({"status": "ok", "overview": build_overview(cur)})
+        return {"status": "empty"}
+    return {"status": "ok", "overview": build_overview(cur)}
 
 
-def cmd_roster() -> None:
-    """Inventaire compact pour les fiches (personnages / armes / artéfacts)."""
+def roster_payload() -> dict[str, Any]:
     try:
         cur = load_current()
     except FileNotFoundError:
-        _emit({"status": "empty"})
-        return
+        return {"status": "empty"}
     chars = cur["characters"]["characters"]
     weapons = cur["weapons"]["weapons"]
     arts = cur["artifacts"]["artifacts"]
@@ -72,15 +63,11 @@ def cmd_roster() -> None:
             set_counts[sk] = set_counts.get(sk, 0) + 1
         dominant = max(set_counts.items(), key=lambda x: x[1])[0] if set_counts else None
         character_list.append({
-            "key": key,
-            "level": c.get("level"),
-            "ascension": c.get("ascension"),
-            "constellation": c.get("constellation"),
-            "talents": c.get("talents") or {},
+            "key": key, "level": c.get("level"), "ascension": c.get("ascension"),
+            "constellation": c.get("constellation"), "talents": c.get("talents") or {},
             "weapon": ({"key": w["key"], "level": w["level"], "refinement": w["refinement"]}
                        if w else None),
-            "artifacts": len(art_ids),
-            "dominant_set": dominant,
+            "artifacts": len(art_ids), "dominant_set": dominant,
         })
 
     weapon_list = sorted(
@@ -98,53 +85,54 @@ def cmd_roster() -> None:
     artifact_sets = [{"setKey": k, **v} for k, v in
                      sorted(set_summary.items(), key=lambda x: -x[1]["total"])]
 
-    _emit({"status": "ok", "roster": {
+    return {"status": "ok", "roster": {
         "counts": cur["account-profile"]["counts"],
-        "characters": character_list,
-        "weapons": weapon_list,
-        "artifact_sets": artifact_sets,
-    }})
+        "characters": character_list, "weapons": weapon_list, "artifact_sets": artifact_sets,
+    }}
 
 
-def cmd_import(path: str) -> None:
+def import_payload(path: str) -> dict[str, Any]:
     res = import_good(path)
     v = res["validation"]
-    _emit({
-        "status": "ok",
-        "import": {
-            "sha256": res["sha256"],
-            "snapshot": res["snapshot"],
-            "idempotent_skip": res["idempotent_skip"],
-            "counts": res["counts"],
-            "validation": v["counts_by_severity"],
-            "unresolved": v["unresolved_characters"],
-            "duplicate_weapon_ids": bool(v["duplicate_weapon_ids"]),
-        },
-    })
+    return {"status": "ok", "import": {
+        "sha256": res["sha256"], "snapshot": res["snapshot"],
+        "idempotent_skip": res["idempotent_skip"], "counts": res["counts"],
+        "validation": v["counts_by_severity"], "unresolved": v["unresolved_characters"],
+        "duplicate_weapon_ids": bool(v["duplicate_weapon_ids"]),
+    }}
+
+
+# Table de dispatch partagée (CLI + sidecar).
+def dispatch(method: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+    params = params or {}
+    if method == "profile":
+        return profile_payload()
+    if method == "overview":
+        return overview_payload()
+    if method == "roster":
+        return roster_payload()
+    if method == "import-good":
+        path = params.get("path")
+        if not path:
+            raise ValueError("paramètre 'path' requis")
+        return import_payload(str(path))
+    raise ValueError(f"méthode inconnue: {method}")
 
 
 def main(argv: list[str]) -> int:
+    """CLI argv (dev/tests) : `account_ipc <profile|overview|roster|import-good CHEMIN>`."""
     if not argv:
-        _emit({"error": "usage: account_ipc <profile|overview|import-good CHEMIN>"})
+        sys.stdout.write(json.dumps({"error": "usage: <profile|overview|roster|import-good CHEMIN>"}))
         return 2
-    cmd = argv[0]
+    method = argv[0]
+    params = {"path": argv[1]} if method == "import-good" and len(argv) > 1 else {}
     try:
-        if cmd == "profile":
-            cmd_profile()
-        elif cmd == "overview":
-            cmd_overview()
-        elif cmd == "roster":
-            cmd_roster()
-        elif cmd == "import-good":
-            if len(argv) < 2:
-                _emit({"error": "chemin requis"})
-                return 2
-            cmd_import(argv[1])
-        else:
-            _emit({"error": f"commande inconnue: {cmd}"})
-            return 2
-    except Exception as exc:  # noqa: BLE001 — surfacer proprement au frontend, sans masquer
-        _emit({"error": str(exc), "type": type(exc).__name__})
+        sys.stdout.write(json.dumps(dispatch(method, params), ensure_ascii=False, default=str))
+    except ValueError as exc:
+        sys.stdout.write(json.dumps({"error": str(exc)}))
+        return 2
+    except Exception as exc:  # noqa: BLE001
+        sys.stdout.write(json.dumps({"error": str(exc), "type": type(exc).__name__}))
         return 1
     return 0
 

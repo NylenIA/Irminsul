@@ -17,8 +17,14 @@
 - [x] `app/src-tauri/` (coque Tauri 2) — **build release local OK** (irminsul.exe + MSI + NSIS) après install VS Build Tools
 - [ ] SQLite + migrations ; design system étendu ; logs app
 
-## Phase 2 — en cours
+## Phase 2 — terminée
 - [x] Import GOOD branché à l'UI Compte (provenance, fraîcheur, rapport d'anomalies, non-résolus)
 - [x] Sélecteur de fichier natif (plugin dialog, permission minimale)
 - [x] Fiches Personnages / Armes / Artéfacts (onglets, tables, données scannées)
-- [ ] Détail par personnage (substats/drapeaux) ; virtualisation des longues listes
+- [x] **Sidecar Python autonome** (PyInstaller) embarqué (externalBin), protocole borné, Python non requis
+- [x] App **packagée** validée (import/affichage/relance/restauration) + CI Windows reproductible
+- [ ] (suite) détail par personnage (substats/drapeaux) ; virtualisation des longues listes
+
+## Phase 3 — todo (démarrée)
+- [ ] `data/mechanics/source-registry.json` (registre versionné : règle, sources, statut, confiance, tests)
+- [ ] Moteur de calcul rapide déterministe (réutilise damage/reaction) + commande sidecar + écran « Calcul rapide » (« Voir le calcul »)
