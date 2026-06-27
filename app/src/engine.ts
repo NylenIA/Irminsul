@@ -1,6 +1,7 @@
 /** Couche typée vers le moteur Python via commandes Tauri (cf. src-tauri/lib.rs).
  * Le moteur renvoie du JSON pur ; ici on le type et on gère les états réels. */
 import { invoke } from "@tauri-apps/api/core";
+import { open } from "@tauri-apps/plugin-dialog";
 
 export interface AccountCounts {
   characters: number;
@@ -58,6 +59,46 @@ async function call<T>(cmd: string, args?: Record<string, unknown>): Promise<T> 
   return JSON.parse(raw) as T;
 }
 
+export interface RosterCharacter {
+  key: string;
+  level: number | null;
+  ascension: number | null;
+  constellation: number | null;
+  talents: { auto?: number; skill?: number; burst?: number };
+  weapon: { key: string; level: number | null; refinement: number | null } | null;
+  artifacts: number;
+  dominant_set: string | null;
+}
+export interface RosterWeapon {
+  key: string;
+  level: number | null;
+  refinement: number | null;
+  location: string | null;
+}
+export interface RosterSet {
+  setKey: string;
+  total: number;
+  equipped: number;
+}
+export interface Roster {
+  counts: AccountCounts;
+  characters: RosterCharacter[];
+  weapons: RosterWeapon[];
+  artifact_sets: RosterSet[];
+}
+export type RosterResponse = { status: "ok"; roster: Roster } | { status: "empty" };
+
 export const getProfile = (): Promise<ProfileResponse> => call<ProfileResponse>("account_profile");
+export const getRoster = (): Promise<RosterResponse> => call<RosterResponse>("account_roster");
 export const importGood = (path: string): Promise<ImportResponse> =>
   call<ImportResponse>("account_import_good", { path });
+
+/** Sélecteur de fichier natif (plugin dialog Tauri) pour choisir l'export GOOD. */
+export async function pickGoodFile(): Promise<string | null> {
+  const selected = await open({
+    multiple: false,
+    directory: false,
+    filters: [{ name: "Export GOOD", extensions: ["json"] }],
+  });
+  return typeof selected === "string" ? selected : null;
+}

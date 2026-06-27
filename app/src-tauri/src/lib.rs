@@ -58,6 +58,11 @@ fn account_overview() -> Result<String, String> {
 }
 
 #[tauri::command]
+fn account_roster() -> Result<String, String> {
+    run_engine(&["roster"])
+}
+
+#[tauri::command]
 fn account_import_good(path: String) -> Result<String, String> {
     run_engine(&["import-good", &path])
 }
@@ -65,10 +70,12 @@ fn account_import_good(path: String) -> Result<String, String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             app_info,
             account_profile,
             account_overview,
+            account_roster,
             account_import_good
         ])
         .run(tauri::generate_context!())

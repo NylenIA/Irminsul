@@ -50,6 +50,62 @@ def cmd_overview() -> None:
     _emit({"status": "ok", "overview": build_overview(cur)})
 
 
+def cmd_roster() -> None:
+    """Inventaire compact pour les fiches (personnages / armes / artéfacts)."""
+    try:
+        cur = load_current()
+    except FileNotFoundError:
+        _emit({"status": "empty"})
+        return
+    chars = cur["characters"]["characters"]
+    weapons = cur["weapons"]["weapons"]
+    arts = cur["artifacts"]["artifacts"]
+
+    character_list = []
+    for key, c in sorted(chars.items()):
+        wid = c.get("weapon")
+        w = weapons.get(wid) if wid else None
+        art_ids = [a for a in (c.get("artifacts") or {}).values() if a in arts]
+        set_counts: dict[str, int] = {}
+        for a in art_ids:
+            sk = arts[a]["setKey"]
+            set_counts[sk] = set_counts.get(sk, 0) + 1
+        dominant = max(set_counts.items(), key=lambda x: x[1])[0] if set_counts else None
+        character_list.append({
+            "key": key,
+            "level": c.get("level"),
+            "ascension": c.get("ascension"),
+            "constellation": c.get("constellation"),
+            "talents": c.get("talents") or {},
+            "weapon": ({"key": w["key"], "level": w["level"], "refinement": w["refinement"]}
+                       if w else None),
+            "artifacts": len(art_ids),
+            "dominant_set": dominant,
+        })
+
+    weapon_list = sorted(
+        ({"key": w["key"], "level": w["level"], "refinement": w["refinement"],
+          "location": w["location"]} for w in weapons.values()),
+        key=lambda x: (x["location"] is None, x["key"]),
+    )
+
+    set_summary: dict[str, dict[str, int]] = {}
+    for a in arts.values():
+        s = set_summary.setdefault(a["setKey"], {"total": 0, "equipped": 0})
+        s["total"] += 1
+        if a["location"]:
+            s["equipped"] += 1
+    artifact_sets = [{"setKey": k, **v} for k, v in
+                     sorted(set_summary.items(), key=lambda x: -x[1]["total"])]
+
+    _emit({"status": "ok", "roster": {
+        "counts": cur["account-profile"]["counts"],
+        "characters": character_list,
+        "weapons": weapon_list,
+        "artifact_sets": artifact_sets,
+    }})
+
+
 def cmd_import(path: str) -> None:
     res = import_good(path)
     v = res["validation"]
@@ -77,6 +133,8 @@ def main(argv: list[str]) -> int:
             cmd_profile()
         elif cmd == "overview":
             cmd_overview()
+        elif cmd == "roster":
+            cmd_roster()
         elif cmd == "import-good":
             if len(argv) < 2:
                 _emit({"error": "chemin requis"})

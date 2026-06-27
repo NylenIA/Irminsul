@@ -63,6 +63,22 @@ def test_import_then_profile_and_overview(tmp_path: Path, account_root: Path) ->
     assert ov["overview"]["totals"]["characters"] == 1
 
 
+def test_roster_lists_characters_weapons_sets(tmp_path: Path, account_root: Path) -> None:
+    good = _good(tmp_path / "acc_GOOD.json")
+    _run(["import-good", str(good)])
+    code, out = _run(["roster"])
+    assert code == 0 and out["status"] == "ok"
+    r = out["roster"]
+    assert r["characters"][0]["key"] == "Furina"
+    assert r["characters"][0]["weapon"]["key"] == "FavoniusSword"
+    assert any(w["key"] == "FavoniusSword" for w in r["weapons"])
+
+
+def test_roster_empty_without_import(account_root: Path) -> None:
+    code, out = _run(["roster"])
+    assert code == 0 and out["status"] == "empty"
+
+
 def test_unknown_command_returns_error() -> None:
     code, out = _run(["nope"])
     assert code == 2 and "error" in out

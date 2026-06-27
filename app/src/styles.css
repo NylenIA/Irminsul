@@ -60,6 +60,21 @@ body { margin: 0; }
 }
 .import button:disabled { opacity: 0.5; cursor: not-allowed; }
 details summary { cursor: pointer; color: var(--text-dim); margin-top: 8px; }
+.provenance p { margin: 8px 0; }
+.import-report { color: var(--text-dim); }
+.tabs { display: flex; gap: 6px; margin: 6px 0 12px; border-bottom: 1px solid #25405e; }
+.tab {
+  padding: 8px 12px; background: transparent; color: var(--text-dim);
+  border: 0; border-bottom: 2px solid transparent; cursor: pointer;
+}
+.tab:hover { color: var(--text); }
+.tab.is-active { color: var(--text); border-bottom-color: var(--turquoise); }
+.tab:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.scroll { max-height: 60vh; overflow: auto; border: 1px solid #1d2a3a; border-radius: 8px; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th, .table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #18283c; }
+.table thead th { position: sticky; top: 0; background: var(--bg-elev); color: var(--text-dim); }
+.table tbody tr:hover { background: #0e1b2e; }
 @media (max-width: 760px) { .app__body { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 @media (prefers-contrast: more) { :root { --text-dim: #cdd9ea; } }
