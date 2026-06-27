@@ -14,7 +14,7 @@
 - [x] Vérifier toolchain (Node OK ; Rust absent) + licences (permissives)
 - [x] Scaffold frontend Vite+React+TS strict (`app/`) — **build validé** (tsc + vite)
 - [x] CI desktop (`.github/workflows/desktop.yml`) + setup Rust (`scripts/setup_desktop.ps1`)
-- [ ] `app/src-tauri/` (coque Tauri) — requiert Rust (CI/local)
+- [x] `app/src-tauri/` (coque Tauri 2 : config, permissions mini, build/dev, icônes, lib/main) — manifeste validé (`cargo metadata`), compilation/linking validés **en CI** (MSVC local absent)
 - [ ] SQLite + migrations ; design system étendu ; logs app
 
 ## Phase 2 — todo

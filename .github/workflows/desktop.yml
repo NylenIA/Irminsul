@@ -1,9 +1,10 @@
 name: desktop
 
-# Build/validation de l'UI desktop. Le frontend (Node) est validé ici.
-# Le build Tauri (Rust) sera ajouté quand `app/src-tauri/` existera : la
-# validation desktop complète est donc PRÉPARÉE mais NON ENCORE EXÉCUTÉE
-# (Rust/Cargo absents de l'environnement de développement local — cf. RISKS.md).
+# Build/validation de l'UI desktop.
+# - frontend : validé localement ET en CI (Node).
+# - tauri : compilation/linking validés EN CI (runner windows-latest = MSVC C++
+#   Build Tools présents). En dev local sans VS Build Tools, `cargo check`/build
+#   échouent au linker (cf. RISKS.md / docs/project) — la CI est la voie de validation.
 
 on:
   push:
@@ -23,19 +24,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Install (sans lockfile commité → install)
-        run: npm install --no-audit --no-fund
+      - run: npm install --no-audit --no-fund
       - name: Type-check (TS strict)
         run: npm run typecheck
-      - name: Build
+      - name: Build frontend
         run: npm run build
 
-  # tauri:  # À activer quand app/src-tauri/ est créé.
-  #   runs-on: windows-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with: { node-version: "20" }
-  #     - uses: dtolnay/rust-toolchain@stable
-  #     - run: npm install --prefix app
-  #     - run: npm run tauri build --prefix app
+  tauri:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "app/src-tauri -> target"
+      - run: npm install --no-audit --no-fund
+      - name: Tauri build (compilation + linking, sans bundler)
+        run: npx tauri build --no-bundle
