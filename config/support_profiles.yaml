@@ -1,0 +1,26 @@
+# Base de profils pour l'optimiseur d'équipes (`irminsul.team_optimizer`).
+#
+# But : permettre de CALCULER la meilleure équipe d'un porteur en sommant les
+# buffs des supports dans la formule de dégâts réutilisée (calculate_direct_hit).
+# C'est un modèle ANALYTIQUE transparent (plafond de buffs), pas un gcsim : il
+# sert à générer/classer des candidats, gcsim valide ensuite le top.
+#
+# Ce fichier ÉTEND/REMPLACE le seed intégré au module (merge par clé). Ajoute tes
+# propres porteurs/supports ici pour contribuer à de nouvelles metas.
+#
+# Champs buffs (décimaux) : atk_pct, atk_flat, dmg_bonus, crit_rate, crit_dmg,
+# em, res_shred, def_shred. Méta : element, region, fighting_spirit (bool),
+# enables (réactions activées via son élément), applies_aura (applique une aura
+# gênante hors réaction), on_field (porteur on-field, ne peut pas être support).
+
+carries: {}   # surcharges de porteurs (sinon seed intégré)
+
+supports: {}  # surcharges/ajouts de supports (sinon seed intégré)
+
+# Exemple d'extension (décommenter pour personnaliser) :
+# supports:
+#   Iansan:
+#     buffs: { atk_pct: 0.30, atk_flat: 700, dmg_bonus: 0.25 }
+#     element: electro
+#     region: natlan
+#     fighting_spirit: true

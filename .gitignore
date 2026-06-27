@@ -18,5 +18,10 @@ tools/bin/
 # Données personnelles du joueur (UID, profil, exports compte) — ne jamais committer
 profiles/player.yaml
 *-GOOD.json
+*_GOOD_*.json
 *.good.json
 good-export*.json
+
+# Compte joueur importé (brut, normalisé, snapshots, rapports, recommandations).
+# Tout data/account/ contient des données personnelles dérivées → jamais sur GitHub.
+data/account/
