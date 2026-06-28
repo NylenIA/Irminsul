@@ -15,7 +15,6 @@ import argparse
 import json
 import subprocess
 import sys
-from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,6 +48,14 @@ def main() -> int:
     commit_date = _git(["show", "-s", "--format=%cI", "HEAD"], source)
     remote = _git(["remote", "get-url", "origin"], source) or "https://github.com/theBowja/genshin-db"
 
+    # REPRODUCTIBILITÉ : l'horodatage dérive du COMMIT source (pas de date.today()),
+    # pour que la même source produise un fichier byte-identique.
+    extracted_at = commit_date[:10] if commit_date else ""
+    reproducible = bool(commit and commit_date)
+    if not reproducible:
+        print("[extract_basestats] AVERTISSEMENT : source sans commit git → provenance "
+              "non reproductible (confiance abaissée).", file=sys.stderr)
+
     provenance = {
         "source": "genshin-db",
         "source_repo": "theBowja/genshin-db",
@@ -59,7 +66,9 @@ def main() -> int:
             "src/data/curve/characters.json",
             "src/data/stats/characters.json",
         ],
-        "extracted_at": date.today().isoformat(),
+        "extracted_at": extracted_at,
+        "reproducible": reproducible,
+        "confidence": "high" if reproducible else "medium",
     }
 
     payload = extract_from_genshin_db(source, provenance)

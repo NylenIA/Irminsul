@@ -12,7 +12,9 @@
       "src/data/curve/characters.json",
       "src/data/stats/characters.json"
     ],
-    "extracted_at": "2026-06-28",
+    "extracted_at": "2026-05-20",
+    "reproducible": true,
+    "confidence": "high",
     "formula": "stat(niveau, ascension) = base × courbe[niveau] + promotion[ascension]",
     "formula_sources": [
       {
@@ -26,7 +28,6 @@
         "url": "https://github.com/theBowja/genshin-db"
       }
     ],
-    "confidence": "high",
     "character_count": 119,
     "ascension_value_units": "valeurs converties en unités d'affichage : pourcentages ×100, Maîtrise brute"
   },

@@ -57,6 +57,39 @@ def test_determinism_and_monotonicity() -> None:
     assert charstats.artifact_stat_totals(base) == charstats.artifact_stat_totals(base)  # déterministe
 
 
+def test_substat_non_finite_flagged_not_summed() -> None:
+    # C3 (revue Codex) : substat NaN/non-numérique ignorée + signalée, jamais sommée.
+    arts = [{"setKey": "S", "slotKey": "flower", "rarity": 5, "level": 20, "mainStatKey": "hp",
+             "substats": [{"key": "atk_", "value": float("nan")},
+                          {"key": "critRate_", "value": "abc"},
+                          {"key": "critDMG_", "value": 7.0}]}]
+    out = charstats.artifact_stat_totals(arts)
+    assert "atk_" not in out["totals"]            # NaN non sommée
+    assert out["totals"]["critDMG_"] == 7.0       # valide conservée
+    assert len(out["anomalies"]) == 2             # NaN + non-numérique signalés
+
+
+def test_uncomputed_main_marks_final_stat_incomplete() -> None:
+    # C4 (revue Codex) : une stat principale d'artéfact non calculée se répercute sur
+    # la complétude de la stat finale concernée (honnêteté, pas d'omission silencieuse).
+    from irminsul import basestats
+    base = basestats.character_base_stats("Furina", 90, 6).to_dict()
+    uncomputed = [{"mainStatKey": "atk_", "rarity": 4, "level": 16, "set": "S", "slot": "sands"}]
+    fs = charstats.compute_final_stats(base, {"atk_": 10.0}, uncomputed)
+    assert "atk_" in fs["artifact_main_incomplete"]
+    assert any("non calculée" in m for m in fs["atk"]["missing"])
+
+
+def test_final_stats_never_emit_nan() -> None:
+    # C3 : même avec un total corrompu, aucune stat finale ne sort NaN/inf.
+    from irminsul import basestats
+    base = basestats.character_base_stats("Furina", 90, 6).to_dict()
+    fs = charstats.compute_final_stats(base, {"atk_": float("nan"), "critRate_": float("inf")})
+    import math
+    assert fs["atk"]["value"] is None or math.isfinite(fs["atk"]["value"])
+    assert fs["crit_rate_"]["value"] is None or math.isfinite(fs["crit_rate_"]["value"])
+
+
 # --- Intégration via le dispatch (compte importé temporaire) --- #
 @pytest.fixture()
 def imported(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

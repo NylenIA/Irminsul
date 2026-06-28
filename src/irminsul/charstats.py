@@ -9,6 +9,7 @@ ainsi que les effets conditionnels d'arme/set/constellation. On n'invente rien.
 
 from __future__ import annotations
 
+import math
 from collections import defaultdict
 from typing import Any
 
@@ -45,11 +46,25 @@ def artifact_stat_totals(artifacts: list[dict[str, Any]]) -> dict[str, Any]:
     sont listées comme non calculées (jamais approximées)."""
     totals: dict[str, float] = defaultdict(float)
     uncomputed: list[dict[str, Any]] = []
+    anomalies: list[dict[str, Any]] = []
     for a in artifacts:
         for s in a.get("substats") or []:
             key = s.get("key")
-            if key:
-                totals[key] += float(s.get("value", 0) or 0)
+            if not key:
+                continue
+            try:
+                val = float(s.get("value", 0) or 0)
+            except (TypeError, ValueError):
+                anomalies.append({"set": a.get("setKey"), "slot": a.get("slotKey"),
+                                  "key": key, "value": s.get("value"),
+                                  "reason": "substat non numérique (ignorée, jamais inventée)"})
+                continue
+            if not math.isfinite(val):
+                anomalies.append({"set": a.get("setKey"), "slot": a.get("slotKey"),
+                                  "key": key, "value": s.get("value"),
+                                  "reason": "substat NaN/infinie (ignorée — donnée corrompue)"})
+                continue
+            totals[key] += val
         mk = a.get("mainStatKey")
         if not mk:
             continue
@@ -62,7 +77,7 @@ def artifact_stat_totals(artifacts: list[dict[str, Any]]) -> dict[str, Any]:
                 "reason": "stat principale non calculée (table limitée au 5★ niveau 20)",
             })
     return {"totals": {k: round(v, 2) for k, v in totals.items()},
-            "uncomputed_main": uncomputed}
+            "uncomputed_main": uncomputed, "anomalies": anomalies}
 
 
 def _provenance(cur: dict[str, Any]) -> dict[str, Any]:
@@ -96,12 +111,27 @@ UNSUPPORTED = [
 _WEAPON_PENDING = ("arme non incluse (ATQ de base + stat secondaire) — tâche suivante : "
                    "les stats finales ci-dessous sont partielles, hors arme")
 
+# Stat principale d'artéfact (clé GOOD) → cellule de stat finale impactée.
+_MAIN_TO_CELL = {
+    "hp": "hp", "hp_": "hp", "atk": "atk", "atk_": "atk", "def": "def", "def_": "def",
+    "critRate_": "crit_rate_", "critDMG_": "crit_dmg_", "eleMas": "eleMas", "enerRech_": "enerRech_",
+}
 
-def compute_final_stats(base: dict[str, Any], art_totals: dict[str, float]) -> dict[str, Any]:
+
+def compute_final_stats(
+    base: dict[str, Any],
+    art_totals: dict[str, float],
+    uncomputed_main: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     """Combine stats de BASE perso (exactes) + artéfacts + stat d'ascension, en
-    marquant chaque stat comme INCOMPLÈTE tant que l'arme n'est pas branchée.
-    On n'invente rien : la part manquante (arme) est explicitement listée."""
-    t: dict[str, float] = {k: float(v) for k, v in art_totals.items()}
+    marquant chaque stat comme INCOMPLÈTE tant que l'arme n'est pas branchée ET en
+    signalant toute stat principale d'artéfact non calculée (honnêteté : la part
+    manquante — arme ou main d'artéfact — est explicitement listée, jamais inventée)."""
+    t: dict[str, float] = {}
+    for k, v in art_totals.items():
+        fv = float(v)
+        if math.isfinite(fv):  # garde anti NaN/inf (corruption en amont)
+            t[k] = fv
     ak = base["ascension_stat_key"]
     t[ak] = round(t.get(ak, 0.0) + float(base["ascension_stat_value"]), 2)
 
@@ -114,8 +144,24 @@ def compute_final_stats(base: dict[str, Any], art_totals: dict[str, float]) -> d
     em = t.get("eleMas", 0.0)
     ener = 100.0 + t.get("enerRech_", 0.0)
 
-    def cell(value: float, missing: list[str]) -> dict[str, Any]:
-        return {"value": round(value, 2), "complete": False, "missing": missing}
+    # C4 : répercuter les stats PRINCIPALES d'artéfact non calculées sur les bonnes cellules.
+    extra_missing: dict[str, list[str]] = defaultdict(list)
+    main_incomplete: list[str] = []
+    for u in uncomputed_main or []:
+        mk = u.get("mainStatKey")
+        main_incomplete.append(str(mk))
+        cell_key = _MAIN_TO_CELL.get(mk)
+        if cell_key:
+            extra_missing[cell_key].append(
+                f"stat principale d'artéfact non calculée ({mk}, {u.get('rarity')}★ niv{u.get('level')})"
+            )
+
+    def cell(name: str, value: float, missing: list[str]) -> dict[str, Any]:
+        full = list(missing) + extra_missing.get(name, [])
+        out = round(value, 2)
+        if not math.isfinite(out):  # ne jamais émettre NaN/inf
+            return {"value": None, "complete": False, "missing": full + ["valeur non finie rejetée"]}
+        return {"value": out, "complete": False, "missing": full}
 
     dmg_bonus = {k: round(v, 2) for k, v in t.items()
                  if k.endswith("_dmg_") or k == "heal_"}
@@ -124,13 +170,14 @@ def compute_final_stats(base: dict[str, Any], art_totals: dict[str, float]) -> d
         "complete": False,
         "note": _WEAPON_PENDING,
         "ascension_stat_applied": {"key": ak, "value": base["ascension_stat_value"]},
-        "hp": cell(final_hp, ["stat secondaire d'arme si PV%"]),
-        "atk": cell(final_atk, ["ATQ de base de l'arme", "stat secondaire d'arme si ATQ%"]),
-        "def": cell(final_def, ["stat secondaire d'arme si DÉF%"]),
-        "crit_rate_": cell(crit_rate, ["stat secondaire d'arme si Taux Crit"]),
-        "crit_dmg_": cell(crit_dmg, ["stat secondaire d'arme si Dégâts Crit"]),
-        "eleMas": cell(em, ["stat secondaire d'arme si Maîtrise"]),
-        "enerRech_": cell(ener, ["stat secondaire d'arme si Recharge"]),
+        "artifact_main_incomplete": main_incomplete,
+        "hp": cell("hp", final_hp, ["stat secondaire d'arme si PV%"]),
+        "atk": cell("atk", final_atk, ["ATQ de base de l'arme", "stat secondaire d'arme si ATQ%"]),
+        "def": cell("def", final_def, ["stat secondaire d'arme si DÉF%"]),
+        "crit_rate_": cell("crit_rate_", crit_rate, ["stat secondaire d'arme si Taux Crit"]),
+        "crit_dmg_": cell("crit_dmg_", crit_dmg, ["stat secondaire d'arme si Dégâts Crit"]),
+        "eleMas": cell("eleMas", em, ["stat secondaire d'arme si Maîtrise"]),
+        "enerRech_": cell("enerRech_", ener, ["stat secondaire d'arme si Recharge"]),
         "dmg_bonus": dmg_bonus,
     }
 
@@ -157,7 +204,8 @@ def character_payload(key: str) -> dict[str, Any]:
     final_stats: dict[str, Any] | None = None
     unsupported = list(UNSUPPORTED)
     if base_stats.get("supported"):
-        final_stats = compute_final_stats(base_stats, art_stats["totals"])
+        final_stats = compute_final_stats(
+            base_stats, art_stats["totals"], art_stats.get("uncomputed_main"))
     else:
         unsupported.append({
             "item": "stats de base du personnage (PV/ATQ/DÉF)",

@@ -108,24 +108,56 @@ def test_payload_shape_supported() -> None:
     assert p["def"] == 876.15  # "defense" exposé sous la clé "def"
 
 
+# Progression (niveau, ascension) RÉALISTE (valide en jeu), incluant les frontières
+# d'ascension (même niveau, ascension +1).
+REALISTIC_PROGRESSION = [
+    (1, 0), (20, 0), (20, 1), (40, 1), (40, 2), (50, 2), (50, 3), (60, 3),
+    (60, 4), (70, 4), (70, 5), (80, 5), (80, 6), (90, 6),
+]
+
+
 # --- Propriétés (déterministes, sans hypothesis) --- #
 @pytest.mark.parametrize("key", ["HuTao", "KamisatoAyaka", "Bennett", "Nahida"])
-def test_property_monotonic_in_level(key: str) -> None:
+def test_property_monotonic_along_progression(key: str) -> None:
     prev_hp = prev_atk = prev_def = -1.0
-    for lvl in (1, 20, 40, 60, 80, 90):
-        b = bs.character_base_stats(key, lvl, 0)
+    for lvl, asc in REALISTIC_PROGRESSION:
+        b = bs.character_base_stats(key, lvl, asc)
         assert b.hp > prev_hp and b.atk > prev_atk and b.defense > prev_def
         prev_hp, prev_atk, prev_def = b.hp, b.atk, b.defense
 
 
-def test_property_ascension_only_increases_stats() -> None:
-    # À niveau égal, monter d'ascension n'abaisse jamais une stat de base.
-    prev = (-1.0, -1.0, -1.0)
-    for asc in range(0, 7):
-        b = bs.character_base_stats("HuTao", 90, asc)
-        cur = (b.hp, b.atk, b.defense)
-        assert all(c >= p for c, p in zip(cur, prev))
-        prev = cur
+def test_property_ascension_increase_at_boundary() -> None:
+    # À un niveau-frontière valable pour deux ascensions, monter d'ascension augmente.
+    for lvl, lo, hi in [(20, 0, 1), (40, 1, 2), (50, 2, 3), (60, 3, 4), (70, 4, 5), (80, 5, 6)]:
+        a = bs.character_base_stats("HuTao", lvl, lo)
+        b = bs.character_base_stats("HuTao", lvl, hi)
+        assert b.hp > a.hp and b.atk > a.atk and b.defense > a.defense
+
+
+def test_impossible_level_ascension_pair_rejected() -> None:
+    # C1 (revue Codex) : niv 90 à l'ascension 0 est IMPOSSIBLE en jeu → erreur explicite.
+    with pytest.raises(ValueError, match="impossible"):
+        bs.character_base_stats("HuTao", 90, 0)
+    with pytest.raises(ValueError, match="impossible"):
+        bs.character_base_stats("HuTao", 1, 6)
+    # paires valides aux frontières acceptées.
+    assert bs.character_base_stats("HuTao", 80, 5).hp > 0
+    assert bs.character_base_stats("HuTao", 80, 6).hp > 0
+
+
+def test_traveler_unknown_variant_not_silently_aether() -> None:
+    # C2 (revue Codex) : une variante Voyageur INCONNUE ne doit pas être rattachée à aether.
+    assert bs.normalize_key("TravelerNonsense") == "travelernonsense"
+    assert bs.character_base_stats_payload("TravelerNonsense", 90, 6)["supported"] is False
+    # les variantes connues restent rattachées.
+    assert bs.normalize_key("TravelerCryo") == "aether"
+
+
+def test_provenance_reproducible_flag() -> None:
+    # C6 (revue Codex) : la provenance est marquée reproductible (horodatage dérivé du commit).
+    prov = bs.load_basestats()["provenance"]
+    assert prov.get("reproducible") is True
+    assert prov["extracted_at"] == prov["source_commit_date"][:10]
 
 
 def test_property_deterministic_and_non_negative() -> None:

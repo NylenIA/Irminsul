@@ -139,6 +139,7 @@ export interface ArtifactStats {
     mainStatKey: string;
     reason: string;
   }>;
+  anomalies?: Array<{ set: string; slot: string; key: string; value: unknown; reason: string }>;
 }
 export interface BaseStatsProvenance {
   source?: string;
@@ -163,7 +164,7 @@ export interface BaseStats {
   confidence?: string;
 }
 export interface FinalStatCell {
-  value: number;
+  value: number | null;
   complete: boolean;
   missing: string[];
 }
@@ -171,6 +172,7 @@ export interface FinalStats {
   complete: boolean;
   note: string;
   ascension_stat_applied: { key: string; value: number };
+  artifact_main_incomplete: string[];
   hp: FinalStatCell;
   atk: FinalStatCell;
   def: FinalStatCell;

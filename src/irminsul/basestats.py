@@ -19,6 +19,7 @@ source brute vit dans `tools/extract_basestats.py` et appelle `extract_from_gens
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
 from dataclasses import asdict, dataclass
@@ -32,6 +33,15 @@ from .paths import project_root
 MIN_LEVEL = 1
 MAX_LEVEL = 90
 MAX_ASCENSION = 6
+
+# Plage de niveau valide pour chaque palier d'ascension (mécanique du jeu : ascender
+# débloque le palier suivant au même niveau). Sert à REJETER les paires impossibles
+# (ex. niveau 90 à l'ascension 0) au lieu de calculer une valeur fausse.
+ASCENSION_LEVEL_FLOOR = (1, 20, 40, 50, 60, 70, 80)
+ASCENSION_LEVEL_CAP = (20, 40, 50, 60, 70, 80, 90)
+
+# Variantes de Voyageur partageant les stats de base (= aether, vérifié == lumine).
+_TRAVELER_ELEMENTS = {"anemo", "geo", "electro", "dendro", "hydro", "pyro", "cryo"}
 
 # Stat d'ascension genshin-db (FIGHT_PROP_*) → clé GOOD (convention d'affichage Irminsul).
 SPECIALIZED_TO_GOOD: dict[str, str] = {
@@ -74,12 +84,17 @@ def normalize_key(good_key: str) -> str:
     """Clé GOOD (ex. ``KamisatoAyaka``, ``TravelerElectro``) → clé genshin-db.
 
     Règle : minuscule + suppression des non-alphanumériques. Cas spécial Voyageur :
-    toutes les variantes ``Traveler*`` (et ``Aether``/``Lumine``) partagent les mêmes
-    stats de base → on les rattache à ``aether`` (identique à ``lumine``, vérifié).
+    ``Aether``/``Lumine``/``Traveler`` et ``Traveler<Élément connu>`` → ``aether``
+    (stats identiques, vérifié). Une variante INCONNUE (ex. ``TravelerXyz``) n'est PAS
+    rattachée à aether : elle reste telle quelle et sera signalée non prise en charge.
     """
     norm = re.sub(r"[^a-z0-9]", "", str(good_key).lower())
-    if norm.startswith("traveler") or norm in {"aether", "lumine", "traveller"}:
+    if norm in {"aether", "lumine", "traveler", "traveller"}:
         return "aether"
+    if norm.startswith("traveler"):
+        suffix = norm[len("traveler"):]
+        if suffix in _TRAVELER_ELEMENTS:
+            return "aether"
     return norm
 
 
@@ -186,6 +201,14 @@ def character_base_stats(key: str, level: int, ascension: int) -> CharacterBaseS
         raise ValueError(f"niveau hors bornes (1..90): {level}")
     if not (0 <= ascension <= MAX_ASCENSION):
         raise ValueError(f"ascension hors bornes (0..6): {ascension}")
+    # Rejet des paires (niveau, ascension) IMPOSSIBLES en jeu (ex. niv 90 à l'asc 0) :
+    # on ne calcule pas une valeur fausse sur des données incohérentes.
+    lo, hi = ASCENSION_LEVEL_FLOOR[ascension], ASCENSION_LEVEL_CAP[ascension]
+    if not (lo <= level <= hi):
+        raise ValueError(
+            f"paire niveau/ascension impossible: niveau {level} à l'ascension "
+            f"{ascension} (plage attendue {lo}..{hi})"
+        )
 
     data = load_basestats()
     rk = normalize_key(key)
@@ -206,6 +229,11 @@ def character_base_stats(key: str, level: int, ascension: int) -> CharacterBaseS
 
     asc_key = char["ascension_stat"]
     asc_val = float(char["promotion"][ascension]["ascension"])
+
+    # Garde-fou : aucune stat de base ne doit être NaN/infinie (donnée corrompue).
+    for label, value in (("PV", hp), ("ATQ", atk), ("DÉF", df), ("ascension", asc_val)):
+        if not math.isfinite(value):
+            raise ValueError(f"valeur de base non finie ({label}) pour {key!r} — données corrompues")
 
     prov = dict(data.get("provenance", {}))
     prov["formula"] = data.get("provenance", {}).get(

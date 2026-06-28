@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from dataclasses import asdict, dataclass
 
 
@@ -60,6 +61,13 @@ def calculate_direct_hit(
     Percentages are decimals: 250% scaling = 2.5, 46.6% bonus = 0.466.
     Reaction multiplier is supplied explicitly to avoid guessing trigger direction.
     """
+    # Rejet explicite des entrées non finies (NaN/inf) : nan<0 vaut False, donc une
+    # garde de signe seule laisserait passer NaN et propagerait un résultat invalide.
+    _inputs = (scaling, scaling_stat, flat_base_damage, damage_bonus, crit_rate,
+               crit_damage, enemy_resistance, defense_reduction, defense_ignore,
+               amplifying_reaction_multiplier, reaction_bonus, vulnerability_multiplier)
+    if not all(math.isfinite(x) for x in _inputs):
+        raise ValueError("entrées non finies (NaN/inf) refusées")
     if scaling < 0 or scaling_stat < 0:
         raise ValueError("scaling and scaling_stat must be non-negative")
     if amplifying_reaction_multiplier <= 0 or vulnerability_multiplier <= 0:

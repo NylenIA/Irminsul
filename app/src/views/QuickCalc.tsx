@@ -63,7 +63,11 @@ export function QuickCalc(): JSX.Element {
   async function selectCharacter(key: string): Promise<void> {
     setSelected(key);
     setCharInfo(null);
-    if (!key) return;
+    if (!key) {
+      // Désélection : ne pas conserver une ATQ préremplie devenue obsolète.
+      setF((p) => ({ ...p, stat: DEFAULTS.stat }));
+      return;
+    }
     try {
       const r = await getCharacterStats(key);
       if (r.status === "ok") {
@@ -72,22 +76,26 @@ export function QuickCalc(): JSX.Element {
         const fs = ci.final_stats;
         if (fs) {
           // Base perso (exacte, sourcée) + ascension + artéfacts — mais HORS arme.
+          const atk = fs.atk.value;
           setF((p) => ({
             ...p,
-            crit_rate: (fs.crit_rate_.value / 100).toFixed(3),
-            crit_damage: (fs.crit_dmg_.value / 100).toFixed(3),
-            em: String(Math.round(fs.eleMas.value)),
+            crit_rate: ((fs.crit_rate_.value ?? 0) / 100).toFixed(3),
+            crit_damage: ((fs.crit_dmg_.value ?? 0) / 100).toFixed(3),
+            em: String(Math.round(fs.eleMas.value ?? 0)),
             // ATQ partielle (hors arme) : point de départ sourcé, à corriger.
-            stat: String(Math.round(fs.atk.value)),
+            // value peut être null si rejetée (non finie) → champ vidé, jamais "NaN".
+            stat: atk != null && Number.isFinite(atk) ? String(Math.round(atk)) : "",
           }));
         } else {
           // Repli HONNÊTE : artéfacts uniquement (+ base crit fixe), perso hors source.
+          // On VIDE l'ATQ (pas de base calculée) pour éviter une valeur périmée.
           const t = ci.artifact_stats.totals;
           setF((p) => ({
             ...p,
             crit_rate: (((t.critRate_ ?? 0) + 5) / 100).toFixed(3),
             crit_damage: (((t.critDMG_ ?? 0) + 50) / 100).toFixed(3),
             em: String(Math.round(t.eleMas ?? 0)),
+            stat: "",
           }));
         }
       } else if (r.status === "not_found") {

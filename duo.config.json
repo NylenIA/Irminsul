@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "agents": {
+    "claude": {
+      "command": "claude",
+      "args": [],
+      "model": null,
+      "maxTurns": 12
+    },
+    "codex": {
+      "command": "codex",
+      "args": [],
+      "model": null
+    }
+  },
+  "workflow": {
+    "implementer": "auto",
+    "repairCycles": 1
+  },
+  "safety": {
+    "codexSandbox": "workspace-write",
+    "skipGitRepoCheck": false,
+    "maxHandoffChars": 24000
+  }
+}

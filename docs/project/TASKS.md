@@ -37,7 +37,9 @@
 ## Phase 3 — prochaine session (ordre imposé, cf. `docs/project/HANDOFF.md`)
 - [x] 1. **Stats de base perso** live, versionnées et sourcées → `src/irminsul/basestats.py` (courbes genshin-db
       extraites/committées + provenance) ; `charstats` calcule auto base + stats finales (marquées INCOMPLÈTES
-      tant que l'arme n'est pas branchée) ; sidecar/app packagée re-validés sans Python ; 147 tests
+      tant que l'arme n'est pas branchée) ; sidecar/app packagée re-validés sans Python ; 158 tests
+- [x] 1b. **Revue Codex** (Duo) base perso → `changes-required` ; correctifs C1–C6 (validation niveau/ascension,
+      Voyageur, NaN/inf, incomplétudes artéfact, ATQ UI, provenance reproductible) appliqués + tests. Contre-revue = **quota Codex** (en attente).
 - [ ] 2. Courbes/stats **d'armes** (← EN COURS ENSUITE : débloque ATQ finale complète → retrait saisie ATQ)
 - [ ] 3. **Multiplicateurs de talents** par niveau
 - [ ] 4. **Stats finales auto** (sans saisie ATQ/scaling pour cas pris en charge)
