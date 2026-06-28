@@ -204,6 +204,28 @@ export interface FinalStats {
   enerRech_: FinalStatCell;
   dmg_bonus: Record<string, number>;
 }
+export interface TalentAttribute {
+  label: string;
+  params: string[];
+  is_percent: boolean;
+  is_damage: boolean;
+  value: number | null;
+}
+export interface TalentSlotDetail {
+  supported: boolean;
+  reason?: string;
+  slot?: string;
+  role?: string;
+  name?: string | null;
+  level?: number;
+  attributes?: TalentAttribute[];
+}
+export interface TalentsDetail {
+  normal: TalentSlotDetail;
+  skill: TalentSlotDetail;
+  burst: TalentSlotDetail;
+  any_supported: boolean;
+}
 export interface CharacterInfo {
   key: string;
   level: number | null;
@@ -216,6 +238,7 @@ export interface CharacterInfo {
   base_stats: BaseStats;
   weapon_base_stats: WeaponBaseStats;
   final_stats: FinalStats | null;
+  talents_detail: TalentsDetail;
   unsupported: Array<{ item: string; reason: string }>;
   provenance: { snapshot_date: string | null; source: string | null; sha256: string | null; good_version: number | null };
 }

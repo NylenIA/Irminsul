@@ -182,6 +182,20 @@ def test_characters_and_character_stats(imported: None) -> None:
     assert any("conditionnel" in u["reason"] for u in char["unsupported"])
 
 
+def test_talents_detail_in_payload(imported: None) -> None:
+    # Multiplicateurs de talents exposés AU NIVEAU RÉEL (Furina : auto 1, skill/burst 6).
+    char = dispatch("character-stats", {"key": "Furina"})["character"]
+    td = char["talents_detail"]
+    assert td["any_supported"] is True
+    assert td["burst"]["supported"] is True and td["burst"]["level"] == 6
+    assert td["normal"]["level"] == 1
+    labels = [a["label"] for a in td["burst"]["attributes"]]
+    assert "Skill DMG" in labels  # libellé exact du jeu
+    # une valeur de multiplicateur est fournie (décimale, finie).
+    skill_dmg = next(a for a in td["burst"]["attributes"] if a["label"] == "Skill DMG")
+    assert skill_dmg["value"] is not None and 0 < skill_dmg["value"] < 100
+
+
 def test_unsupported_base_falls_back_honestly(
     imported: None, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -13,7 +13,7 @@ import math
 from collections import defaultdict
 from typing import Any
 
-from . import basestats, weaponstats
+from . import basestats, talentstats, weaponstats
 from .account import load_current
 
 # Valeurs EXACTES des stats principales d'artéfact 5★ au niveau 20 (publiques,
@@ -102,8 +102,9 @@ UNSUPPORTED = [
     {"item": "passif d'arme & effets conditionnels (set 4p, constellation, talents passifs)",
      "reason": "non implémentés (situationnels) — hors stats de base ; ne pas présenter comme actifs. "
                "Les stats finales correspondent à l'écran du personnage en jeu (hors buffs conditionnels)."},
-    {"item": "multiplicateur de talent automatique",
-     "reason": "à saisir manuellement (scaling) tant que la table de talents n'est pas branchée"},
+    {"item": "passifs de talent (1er/4e) & buffs conditionnels de talent",
+     "reason": "les MULTIPLICATEURS de talent sont fournis (cf. talents_detail, libellés du jeu) ; "
+               "les passifs/buffs conditionnels ne sont pas appliqués automatiquement"},
 ]
 
 # Stat principale d'artéfact (clé GOOD) → cellule de stat finale impactée.
@@ -225,6 +226,22 @@ def compute_final_stats(
     }
 
 
+def character_talents_detail(key: str, talents: dict[str, Any]) -> dict[str, Any]:
+    """Attributs de talents étiquetés AU NIVEAU RÉEL du perso (auto/skill/burst →
+    combat1/2/3). Permet de remplacer la saisie manuelle du `scaling` par un choix
+    sourcé (libellé exact du jeu). Non pris en charge → signalé, jamais inventé."""
+    mapping = {"normal": talents.get("auto"), "skill": talents.get("skill"),
+               "burst": talents.get("burst")}
+    out: dict[str, Any] = {}
+    for slot, lvl in mapping.items():
+        if lvl:
+            out[slot] = talentstats.talent_attributes(key, slot, int(lvl))
+        else:
+            out[slot] = {"supported": False, "reason": "niveau de talent inconnu (GOOD incomplet)"}
+    out["any_supported"] = any(v.get("supported") for v in out.values() if isinstance(v, dict))
+    return out
+
+
 def character_payload(key: str) -> dict[str, Any]:
     try:
         cur = load_current()
@@ -280,6 +297,7 @@ def character_payload(key: str) -> dict[str, Any]:
             "base_stats": base_stats,
             "weapon_base_stats": weapon_bs,
             "final_stats": final_stats,
+            "talents_detail": character_talents_detail(key, c.get("talents") or {}),
             "unsupported": unsupported,
             "provenance": _provenance(cur),
         },

@@ -46,6 +46,9 @@ export function QuickCalc(): JSX.Element {
   const [characters, setCharacters] = useState<string[]>([]);
   const [selected, setSelected] = useState("");
   const [charInfo, setCharInfo] = useState<CharacterInfo | null>(null);
+  // Talent sélectionné ("slot::label") et bascule "scaling manuel".
+  const [talentSel, setTalentSel] = useState("");
+  const [manualScaling, setManualScaling] = useState(false);
   // Jeton de requête : ignore les réponses obsolètes (sélections concurrentes).
   const reqIdRef = useRef(0);
 
@@ -66,6 +69,7 @@ export function QuickCalc(): JSX.Element {
     const reqId = ++reqIdRef.current;
     setSelected(key);
     setCharInfo(null);
+    setTalentSel("");
     // Réinitialisation IMMÉDIATE de l'ATQ (avant l'await) : aucune valeur périmée
     // réutilisable pendant la requête ; sélection vide → défaut manuel.
     setF((p) => ({ ...p, stat: key ? "" : DEFAULTS.stat }));
@@ -148,6 +152,57 @@ export function QuickCalc(): JSX.Element {
         value={f[key]}
         onChange={(ev) => set(key, ev.target.value)}
       />
+    </label>
+  );
+
+  const talentsSupported = !!charInfo?.talents_detail?.any_supported;
+
+  function applyTalent(value: string): void {
+    setTalentSel(value);
+    if (!value || !charInfo) return;
+    const [slot, label] = value.split("::");
+    const sd = charInfo.talents_detail[slot as "normal" | "skill" | "burst"];
+    const attr = sd.attributes?.find((a) => a.label === label);
+    if (attr && attr.value != null) set("scaling", String(attr.value));
+  }
+
+  const SLOT_LABELS: Array<["normal" | "skill" | "burst", string]> = [
+    ["normal", "Attaque normale"], ["skill", "Compétence"], ["burst", "Déchaînement"],
+  ];
+
+  // Sélecteur de talent (remplace la saisie manuelle du scaling pour les talents pris en charge).
+  const talentPicker = (): JSX.Element => (
+    <label className="qc-field">
+      <span>Multiplicateur de talent (à ton niveau de talent réel)</span>
+      <select value={talentSel} onChange={(ev) => applyTalent(ev.target.value)}>
+        <option value="">— choisir un talent (libellé du jeu) —</option>
+        {SLOT_LABELS.map(([slot, lbl]) => {
+          const sd = charInfo?.talents_detail[slot];
+          if (!sd?.supported || !sd.attributes) return null;
+          return (
+            <optgroup key={slot} label={`${lbl} (niv ${sd.level})`}>
+              {sd.attributes
+                .filter((a) => a.is_damage && a.value != null)
+                .map((a) => (
+                  <option key={`${slot}::${a.label}`} value={`${slot}::${a.label}`}>
+                    {a.label} — {((a.value as number) * 100).toFixed(1)}%
+                  </option>
+                ))}
+            </optgroup>
+          );
+        })}
+      </select>
+    </label>
+  );
+
+  const manualToggle = (): JSX.Element => (
+    <label className="qc-toggle">
+      <input
+        type="checkbox"
+        checked={manualScaling}
+        onChange={(ev) => setManualScaling(ev.target.checked)}
+      />
+      <span>scaling manuel (talent non listé / valeur personnalisée)</span>
     </label>
   );
 
@@ -241,7 +296,17 @@ export function QuickCalc(): JSX.Element {
           void compute();
         }}
       >
-        {field("Multiplicateur talent (ex. 2.0)", "scaling")}
+        {talentsSupported && !manualScaling ? (
+          <>
+            {talentPicker()}
+            {manualToggle()}
+          </>
+        ) : (
+          <>
+            {field("Multiplicateur talent (ex. 2.0)", "scaling")}
+            {talentsSupported ? manualToggle() : null}
+          </>
+        )}
         {charInfo?.final_stats?.atk.complete
           ? null
           : field(
