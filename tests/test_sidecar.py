@@ -95,3 +95,14 @@ def test_large_good_file(tmp_path: Path, account_root: Path) -> None:
     assert good.stat().st_size > 20_000
     out = _call({"id": "big", "method": "import-good", "params": {"path": str(good)}})
     assert out["ok"] is True and out["result"]["import"]["counts"]["characters"] == 400
+
+
+def test_enc_rejects_non_finite_no_invalid_json() -> None:
+    # R2/C3.2 : filet final — _enc refuse NaN/inf (allow_nan=False) au lieu de produire
+    # un JSON non conforme (rejeté par JS). Une fuite éventuelle devient une erreur propre.
+    with pytest.raises(ValueError):
+        sidecar._enc({"x": float("nan")})
+    with pytest.raises(ValueError):
+        sidecar._enc({"x": float("inf")})
+    # cas normal : sérialisation OK.
+    assert sidecar._enc({"ok": True, "v": 1.5})

@@ -229,9 +229,12 @@ def character_base_stats(key: str, level: int, ascension: int) -> CharacterBaseS
 
     asc_key = char["ascension_stat"]
     asc_val = float(char["promotion"][ascension]["ascension"])
+    base_cr = float(char.get("base_crit_rate_", 5.0))
+    base_cd = float(char.get("base_crit_dmg_", 50.0))
 
     # Garde-fou : aucune stat de base ne doit être NaN/infinie (donnée corrompue).
-    for label, value in (("PV", hp), ("ATQ", atk), ("DÉF", df), ("ascension", asc_val)):
+    for label, value in (("PV", hp), ("ATQ", atk), ("DÉF", df), ("ascension", asc_val),
+                         ("Taux Crit base", base_cr), ("Dégâts Crit base", base_cd)):
         if not math.isfinite(value):
             raise ValueError(f"valeur de base non finie ({label}) pour {key!r} — données corrompues")
 
@@ -246,8 +249,8 @@ def character_base_stats(key: str, level: int, ascension: int) -> CharacterBaseS
         hp=round(hp, 2),
         atk=round(atk, 2),
         defense=round(df, 2),
-        crit_rate_=round(float(char.get("base_crit_rate_", 5.0)), 2),
-        crit_dmg_=round(float(char.get("base_crit_dmg_", 50.0)), 2),
+        crit_rate_=round(base_cr, 2),
+        crit_dmg_=round(base_cd, 2),
         ascension_stat_key=asc_key,
         ascension_stat_value=round(asc_val, 4),
         curves=dict(char["curve"]),

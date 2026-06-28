@@ -64,8 +64,9 @@ def calculate_direct_hit(
     # Rejet explicite des entrées non finies (NaN/inf) : nan<0 vaut False, donc une
     # garde de signe seule laisserait passer NaN et propagerait un résultat invalide.
     _inputs = (scaling, scaling_stat, flat_base_damage, damage_bonus, crit_rate,
-               crit_damage, enemy_resistance, defense_reduction, defense_ignore,
-               amplifying_reaction_multiplier, reaction_bonus, vulnerability_multiplier)
+               crit_damage, attacker_level, enemy_level, enemy_resistance,
+               defense_reduction, defense_ignore, amplifying_reaction_multiplier,
+               reaction_bonus, vulnerability_multiplier)
     if not all(math.isfinite(x) for x in _inputs):
         raise ValueError("entrées non finies (NaN/inf) refusées")
     if scaling < 0 or scaling_stat < 0:

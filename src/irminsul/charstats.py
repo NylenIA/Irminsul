@@ -55,13 +55,14 @@ def artifact_stat_totals(artifacts: list[dict[str, Any]]) -> dict[str, Any]:
             try:
                 val = float(s.get("value", 0) or 0)
             except (TypeError, ValueError):
+                # value sérialisée en str → JSON toujours valide (jamais de NaN brut en sortie).
                 anomalies.append({"set": a.get("setKey"), "slot": a.get("slotKey"),
-                                  "key": key, "value": s.get("value"),
+                                  "key": key, "value": str(s.get("value")),
                                   "reason": "substat non numérique (ignorée, jamais inventée)"})
                 continue
             if not math.isfinite(val):
                 anomalies.append({"set": a.get("setKey"), "slot": a.get("slotKey"),
-                                  "key": key, "value": s.get("value"),
+                                  "key": key, "value": str(s.get("value")),
                                   "reason": "substat NaN/infinie (ignorée — donnée corrompue)"})
                 continue
             totals[key] += val
@@ -183,6 +184,13 @@ def compute_final_stats(
     dmg_bonus = {k: round(v, 2) for k, v in t.items()
                  if k.endswith("_dmg_") or k == "heal_"}
 
+    def _finite_or_none(x: Any) -> float | None:
+        try:
+            f = float(x)
+        except (TypeError, ValueError):
+            return None
+        return round(f, 4) if math.isfinite(f) else None
+
     all_complete = weapon_supported and not main_incomplete
     return {
         "complete": all_complete,
@@ -190,9 +198,10 @@ def compute_final_stats(
                 "stats finales PARTIELLES : " + "; ".join(weapon_missing + (
                     ["stat principale d'artéfact non calculée"] if main_incomplete else [])),
         "weapon": {"supported": weapon_supported, "key": weapon.get("key"),
-                   "base_atk": round(weapon_atk, 2) if weapon_supported else None,
+                   "base_atk": _finite_or_none(weapon_atk) if weapon_supported else None,
                    "secondary_stat_key": sec_key,
-                   "secondary_stat_value": weapon.get("secondary_stat_value") if weapon_supported else None},
+                   "secondary_stat_value": _finite_or_none(weapon.get("secondary_stat_value"))
+                   if weapon_supported else None},
         "ascension_stat_applied": {"key": ak, "value": base["ascension_stat_value"]},
         "artifact_main_incomplete": main_incomplete,
         "hp": cell("hp", final_hp),

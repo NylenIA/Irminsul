@@ -26,13 +26,17 @@
 - Sidecar autonome SANS Python (données embarquées) ✅ · App packagée (exe+MSI+NSIS) : import→perso→stats de base→calcul→relance ✅
 - Données `character-basestats.json` régénérées et **reproductibles** (2 extractions identiques) ✅
 
-## Contre-revue Codex — EN ATTENTE (quota)
-- Lancée via `duo run` (session R2) sur le diff des correctifs. **Bloquée par la limite d'usage du
-  compte Codex** : `You've hit your usage limit … try again at 7:07 PM` (contrainte externe, pas un
-  défaut de code). Log : `.irminsul/logs/duo_R2_counterreview.log`.
-- **Impact fusion** : C3 (validation numérique) étant sécurité-critique, la règle §7 interdit la
-  fusion avant contre-revue indépendante. → **PR #3 NON fusionnable** tant que la contre-revue Codex
-  n'est pas faite (à relancer après réinitialisation du quota). Indépendamment, le parcours auto
-  complet (ATQ via arme) n'est de toute façon pas encore atteint.
-- **Garanties intermédiaires** (en l'absence de Codex) : chaque correctif a été reproduit par Claude,
-  couvert par des tests de non-régression (158 verts), et revalidé en app packagée sans Python.
+## Contre-revue Codex R2 — FAITE (2026-06-28, après réinit quota)
+Session `2026-06-28T19-40-06-350Z-f19fe51b`, lecture seule (aucun fichier modifié).
+**Verdict : changes-required** — C1, C2, C4, C6 confirmés **OK** ; **résidus réels** sur C3 et C5
+(reproduits par Claude, tous corrigés) :
+
+| Résidu | Sévérité | Reproduction | Correction | Test |
+|--------|----------|--------------|-----------|------|
+| C3.1 base Crit non gardé (NaN renvoyé) | faible | `base_crit_rate_=NaN` renvoyé sans erreur | garde finie étendue à base CR/CD (`basestats.py`) | `test_base_crit_non_finite_rejected` |
+| C3.2 anomalies stockent NaN brut → JSON invalide (JS) | moyen | `json.dumps(..., allow_nan=False)` échoue | valeur d'anomalie sérialisée en `str` + **`allow_nan=False` dans `sidecar._enc`** (filet final) | `test_anomalies_value_is_json_safe`, `test_enc_rejects_non_finite_no_invalid_json` |
+| C3.3 métadonnées d'arme ré-émises sans garde | faible | `secondary_stat_value` non finie possible | `_finite_or_none` sur base_atk/secondaire (`charstats.py`) | couvert par `test_final_stats_never_emit_nan` |
+| C3.4 `calculate_direct_hit` ignore `attacker_level`/`enemy_level` | moyen | `attacker_level=NaN` → résultat NaN | niveaux ajoutés à la garde finie (`damage.py`) | `test_rejects_non_finite_levels` |
+| C5 course async ATQ (valeur périmée pendant l'await / réponse obsolète) | moyen | ATQ précédente réutilisable pendant la requête ; réponse ancienne écrase la courante | réinit. immédiate avant `await` + jeton de requête (`QuickCalc.tsx`) | typecheck + revue |
+
+**Validation après résidus** : Ruff + **181 tests** ; `tsc` strict. Contre-revue finale (R2b) à confirmer.

@@ -1,7 +1,7 @@
 /** Calcul rapide déterministe (Phase 3) : l'utilisateur saisit ses stats, le moteur
  * renvoie le résultat + le détail (« Voir le calcul ») avec traçabilité du registre.
  * Aucune donnée de jeu factice : les champs sont des entrées éditables. */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getCharacters,
   getCharacterStats,
@@ -46,6 +46,8 @@ export function QuickCalc(): JSX.Element {
   const [characters, setCharacters] = useState<string[]>([]);
   const [selected, setSelected] = useState("");
   const [charInfo, setCharInfo] = useState<CharacterInfo | null>(null);
+  // Jeton de requête : ignore les réponses obsolètes (sélections concurrentes).
+  const reqIdRef = useRef(0);
 
   function set<K extends keyof Fields>(k: K, v: string): void {
     setF((p) => ({ ...p, [k]: v }));
@@ -61,15 +63,16 @@ export function QuickCalc(): JSX.Element {
   }, []);
 
   async function selectCharacter(key: string): Promise<void> {
+    const reqId = ++reqIdRef.current;
     setSelected(key);
     setCharInfo(null);
-    if (!key) {
-      // Désélection : ne pas conserver une ATQ préremplie devenue obsolète.
-      setF((p) => ({ ...p, stat: DEFAULTS.stat }));
-      return;
-    }
+    // Réinitialisation IMMÉDIATE de l'ATQ (avant l'await) : aucune valeur périmée
+    // réutilisable pendant la requête ; sélection vide → défaut manuel.
+    setF((p) => ({ ...p, stat: key ? "" : DEFAULTS.stat }));
+    if (!key) return;
     try {
       const r = await getCharacterStats(key);
+      if (reqId !== reqIdRef.current) return; // réponse obsolète : une sélection plus récente a eu lieu
       if (r.status === "ok") {
         const ci = r.character;
         setCharInfo(ci);
@@ -102,6 +105,7 @@ export function QuickCalc(): JSX.Element {
         setErr(`Personnage introuvable : ${r.key}`);
       }
     } catch (e) {
+      if (reqId !== reqIdRef.current) return;
       setErr(String(e));
     }
   }

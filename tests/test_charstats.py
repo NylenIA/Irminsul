@@ -80,6 +80,16 @@ def test_uncomputed_main_marks_final_stat_incomplete() -> None:
     assert any("non calculée" in m for m in fs["atk"]["missing"])
 
 
+def test_anomalies_value_is_json_safe() -> None:
+    # R2/C3.2 : la valeur d'anomalie est sérialisée en str → JSON strict (allow_nan=False) valide,
+    # jamais de NaN brut qui casserait le parse côté JS.
+    out = charstats.artifact_stat_totals([{
+        "setKey": "S", "slotKey": "flower", "rarity": 5, "level": 20, "mainStatKey": "hp",
+        "substats": [{"key": "atk_", "value": float("nan")}, {"key": "critRate_", "value": "abc"}]}])
+    assert all(isinstance(an["value"], str) for an in out["anomalies"])
+    json.dumps(out, allow_nan=False)  # ne lève pas
+
+
 def test_final_stats_never_emit_nan() -> None:
     # C3 : même avec un total corrompu, aucune stat finale ne sort NaN/inf.
     from irminsul import basestats

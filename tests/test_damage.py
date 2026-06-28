@@ -66,3 +66,11 @@ def test_property_outputs_always_finite_nonnegative() -> None:
                              crit_rate=0.7, crit_damage=1.4, enemy_resistance=-0.2)
     for v in (r.raw_base, r.non_crit, r.crit, r.expected):
         assert math.isfinite(v) and v >= 0
+
+
+def test_rejects_non_finite_levels() -> None:
+    # R2/C3.4 : les niveaux attaquant/ennemi doivent aussi être finis.
+    with pytest.raises(ValueError):
+        calculate_direct_hit(scaling=2.0, scaling_stat=1000, attacker_level=float("nan"))
+    with pytest.raises(ValueError):
+        calculate_direct_hit(scaling=2.0, scaling_stat=1000, enemy_level=float("inf"))

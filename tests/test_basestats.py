@@ -153,6 +153,17 @@ def test_traveler_unknown_variant_not_silently_aether() -> None:
     assert bs.normalize_key("TravelerCryo") == "aether"
 
 
+def test_base_crit_non_finite_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+    # R2/C3.1 : un Taux/Dégâts Crit de base corrompu (NaN) doit être rejeté, pas renvoyé.
+    import copy
+    data = copy.deepcopy(bs.load_basestats())
+    k = next(iter(data["characters"]))
+    data["characters"][k]["base_crit_rate_"] = float("nan")
+    monkeypatch.setattr(bs, "load_basestats", lambda: data)
+    with pytest.raises(ValueError, match="non finie"):
+        bs.character_base_stats(k, 90, 6)
+
+
 def test_provenance_reproducible_flag() -> None:
     # C6 (revue Codex) : la provenance est marquée reproductible (horodatage dérivé du commit).
     prov = bs.load_basestats()["provenance"]
