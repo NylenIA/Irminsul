@@ -14,6 +14,9 @@
 - Stack retenue : **Vite + React 18 + TypeScript strict** (frontend), **Tauri 2** (coque desktop, IPC/stdio — pas de serveur HTTP exposé), **moteur Python existant conservé** comme service local typé (sidecar empaqueté plus tard). Licences permissives (MIT / Apache-2.0).
 - Frontend scaffold `app/` **build validé** : `tsc --noEmit` (strict) + `vite build` OK. `node_modules/`, `dist/` gitignorés.
 
+## CI / tests
+- Le test d'intégration MCP `test_launcher_stdio_handshake` cible une **régression stdio Windows** (`os.execv`) → `skipif` hors Windows (sur ubuntu CI il n'est pas pertinent et renvoyait 0 outil). Le **contrat « 10 outils » reste vérifié toutes plateformes** par `test_mcp_exposes_exactly_ten_tools` (unitaire). `validate.sh` (Windows) exécute la suite complète, intégration comprise.
+
 ## Phase 2 — sidecar moteur (distribuable)
 - **Empaquetage** : PyInstaller **onefile** (moteur = stdlib uniquement → bundle petit/fiable). Sortie `irminsul-sidecar-<triple>.exe` via `tools/build_sidecar.py`. Embarqué par Tauri **`externalBin`** ; `app/src-tauri/binaries/` **gitignoré** (régénéré par le script/CI, binaire lourd).
 - **Exécution** : Rust spawn direct du sidecar (std::process + `wait-timeout`), **pas** de plugin shell → surface minimale (le frontend n'exécute aucun process arbitraire, seulement nos commandes `account_*`). `CREATE_NO_WINDOW` sous Windows.

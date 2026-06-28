@@ -48,12 +48,17 @@ def test_search_empty_query_returns_empty() -> None:
 
 
 @pytest.mark.integration
+@pytest.mark.skipif(
+    sys.platform != "win32",
+    reason="régression stdio spécifique à Windows (os.execv) ; cible réelle = Windows",
+)
 def test_launcher_stdio_handshake() -> None:
     """Le serveur démarre via scripts/mcp_launch.py et répond en JSON-RPC stdio.
 
     Régression : sous Windows, os.execv cassait l'héritage des pipes stdio et le
     client MCP (Claude Code) perdait la connexion. Le launcher doit répondre à
-    `initialize` puis `tools/list` avec 10 outils.
+    `initialize` puis `tools/list` avec 10 outils. Le contrat « 10 outils » est
+    aussi couvert (toutes plateformes) par test_mcp_exposes_exactly_ten_tools.
     """
     venv_python = PROJECT_ROOT / ".venv" / (
         "Scripts/python.exe" if sys.platform == "win32" else "bin/python"

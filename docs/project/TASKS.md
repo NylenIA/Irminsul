@@ -25,7 +25,12 @@
 - [x] App **packagée** validée (import/affichage/relance/restauration) + CI Windows reproductible
 - [ ] (suite) détail par personnage (substats/drapeaux) ; virtualisation des longues listes
 
-## Phase 3 — démarrée
-- [x] `data/mechanics/source-registry.json` (registre versionné : règle, sources, statut, confiance, tests) — embarqué dans le sidecar
-- [x] Moteur de calcul rapide déterministe (réutilise damage/reaction, traçabilité) + commandes sidecar `quick-calc`/`mechanics` + écran « Calcul rapide » (« Voir le calcul ») + golden tests
-- [ ] Réactions additives (aggravate/spread, bloom) ; calcul transformatif dans l'UI ; brancher stats finales du compte
+## Livraison
+- [x] CI verte (frontend/desktop/test) — test handshake MCP scopé Windows ; PR #2 fusionnée (squash) dans `main`.
+
+## Phase 3 — sur `feat/combat-engine-phase3`
+- [x] `data/mechanics/source-registry.json` (registre versionné) embarqué dans le sidecar
+- [x] Calcul rapide déterministe + commandes sidecar `quick-calc`/`mechanics` + écran « Calcul rapide » + golden tests
+- [ ] Réactions **additives** (Aggravation/Propagation, live) + **transformatrices** dans l'UI
+- [ ] Stats finales réelles du compte → calculateur ; sélection perso/talent/niveau/ennemi/réaction/buffs/crit
+- [ ] Détail explicable complet ; golden + propriétés + non-régression ; comparaison références indépendantes
