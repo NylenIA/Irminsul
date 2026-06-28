@@ -1,6 +1,6 @@
 # STATUS
 
-**Phase courante : 0 — Fondation d'efficacité des tokens** (porte de passage avant Phase 1).
+**Phase courante : 3 — Moteur de combat** (sur `feat/combat-engine-phase3`, PR #3). Phases 0-2 livrées (PR #2 fusionnée dans `main`).
 
 ## Fait
 - Spec autoritative placée (`docs/project/MASTER_SPEC.md`).
@@ -24,15 +24,12 @@
 - Données dans le dossier app (`app_data_dir`), pas le dépôt ni le PATH Python.
 - **App packagée validée** (release exe + sidecar) : import → affichage → relance → restauration, sans Python (`scripts/test_packaged_app.sh`). Installeurs MSI (12 Mo) + NSIS (11 Mo) avec sidecar embarqué. CI Windows reproductible (`desktop.yml`).
 
-## Phase 3 — démarrée
-- **Registre versionné des mécaniques** `data/mechanics/source-registry.json` (5 mécaniques cœur : dégâts, DEF, RES, réactions amplifiantes/transformatives ; sources KQM, statut `verified`, tests liés). Embarqué dans le sidecar (`--add-data`, `sys._MEIPASS`) → voyage avec le moteur.
-- **Moteur de calcul rapide** déterministe `irminsul.quickcalc` (réutilise `damage`/`reaction`, traçabilité) exposé via le sidecar (`quick-calc`, `mechanics`) + écran **« Calcul rapide »** avec « Voir le calcul ».
-- Tests : `test_quickcalc.py` (golden indépendant 3946.15, réaction ×2, intégrité registre, déterminisme) ; smoke sidecar quick-calc OK sans Python.
+## Phase 3 — en cours (PR #3)
+- **Registre versionné** `data/mechanics/source-registry.json` embarqué dans le sidecar (voyage avec le moteur). Mécaniques `verified` (dégâts, DEF, RES, amplifiantes, additives, transformatives, stats principales d'artéfact 5★) ; `unknown` signalées (stats de base perso, réactions Lunaires). live ≠ unknown ≠ leaks.
+- **Calcul rapide** déterministe (`quickcalc`) : réactions **amplifiantes + additives (Aggravation/Propagation) + transformatrices**, détail explicable (entrées, stat, multiplicateurs, réaction, DEF, RES, crit, dégâts finaux, version+source+confiance).
+- **Connecté au compte** (`charstats`) : sélection d'un personnage importé → stats **exactes issues des artéfacts** (substats réels + table 5★ niv.20) + provenance ; UI préremplit crit/EM, affiche le build et les éléments **non pris en charge** (base perso/arme, effets conditionnels, multiplicateur de talent auto) — sans rien inventer.
+- **Validé** : 118 tests Python (goldens indépendants, propriétés, non-régression, intégration), Ruff, frontend `tsc` strict, `cargo check`. **App packagée** re-validée sans Python : import → personnage → stats → calcul → relance/restauration (`scripts/test_packaged_app.sh`).
 
-## Livraison PR #2
-- Checks GitHub : `frontend` ✅, `desktop` ✅ (build + sidecar testé sans Python), `test` ✅ après scoping du test d'intégration MCP (handshake stdio) à Windows — contrat « 10 outils » couvert toutes plateformes par le test unitaire. PR #2 fusionnée dans `main` (squash).
-
-## Prochaine action — Phase 3 (branche `feat/combat-engine-phase3`)
-- Réactions **additives** (Aggravation/Propagation et réactions live), **transformatrices** + affichage dans « Calcul rapide ».
-- Brancher les **stats finales réelles** des persos importés ; sélection perso/talent/niveau/ennemi/réaction/buffs/crit ; détail explicable complet (entrées, stat, multiplicateur, bonus, réaction, DEF, RES, crit, dégâts, version mécanique, source, confiance).
-- Golden + tests de propriétés + non-régression ; comparaison à des références indépendantes ; mécaniques manquantes signalées, jamais inventées ; live ≠ leaks.
+## Prochaine action — Phase 3 (suite)
+- Multiplicateur de **talent automatique** (brancher la table de talents) ; **stats de base perso/arme** quand les courbes sont disponibles ; **buffs pris en charge** (Bennett/VV…) ; sélection ennemi/niveau plus fine.
+- Quand le parcours import→perso→stats→calcul est jugé pleinement fonctionnel et CI verte : fusion PR #3.

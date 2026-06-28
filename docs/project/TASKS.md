@@ -28,9 +28,11 @@
 ## Livraison
 - [x] CI verte (frontend/desktop/test) — test handshake MCP scopé Windows ; PR #2 fusionnée (squash) dans `main`.
 
-## Phase 3 — sur `feat/combat-engine-phase3`
+## Phase 3 — sur `feat/combat-engine-phase3` (PR #3)
 - [x] `data/mechanics/source-registry.json` (registre versionné) embarqué dans le sidecar
-- [x] Calcul rapide déterministe + commandes sidecar `quick-calc`/`mechanics` + écran « Calcul rapide » + golden tests
-- [ ] Réactions **additives** (Aggravation/Propagation, live) + **transformatrices** dans l'UI
-- [ ] Stats finales réelles du compte → calculateur ; sélection perso/talent/niveau/ennemi/réaction/buffs/crit
-- [ ] Détail explicable complet ; golden + propriétés + non-régression ; comparaison références indépendantes
+- [x] Calcul rapide déterministe + commandes sidecar + écran « Calcul rapide » + golden tests
+- [x] Réactions **additives** (Aggravation/Propagation) + **transformatrices** dans l'UI
+- [x] Connexion compte : sélection perso importé → stats **artéfacts exactes** + provenance ; non-pris-en-charge signalé
+- [x] Détail explicable complet ; golden + propriétés + non-régression ; références indépendantes (table 5★)
+- [ ] Multiplicateur de talent auto ; stats de base perso/arme (courbes) ; buffs pris en charge ; ennemi/niveau fin
+- [ ] Fusion PR #3 quand parcours import→perso→stats→calcul pleinement fonctionnel + CI verte
