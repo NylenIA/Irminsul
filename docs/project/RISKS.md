@@ -10,3 +10,5 @@
 | Comptage de tokens = estimation locale (~chars/4) | imprécision | utiliser l'endpoint officiel de comptage avant opérations proches d'une limite (Phase 5) |
 | Test handshake MCP stdio sensible à l'OS (0 outil sur ubuntu) | faux rouge CI | `skipif` Windows-only (régression `os.execv` propre à Windows) ; contrat outils couvert par un test unitaire toutes plateformes |
 | Sidecar onefile : surcoût d'extraction par appel | latence légère | acceptable pour ops compte/calcul ponctuelles ; mode serveur long-vécu envisageable si besoin (mesurer avant d'optimiser) |
+| Stats de base perso/arme absentes de la source locale (genshin-db raw sans courbes intégrées) | stats finales non auto | next session : extraire `data/.../curve` + valeurs de base, versionner+sourcer ; en attendant, ATQ/scaling saisis manuellement (étiquetés). Ne jamais approximer. |
+| Dérive de version (coefficients/valeurs qui changent au patch) | données obsolètes | résoudre la version live au moment de la recherche ; ne pas graver « actuel » ; statut+date+source par mécanique dans le registre. |

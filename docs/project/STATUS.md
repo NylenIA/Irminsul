@@ -30,6 +30,9 @@
 - **Connecté au compte** (`charstats`) : sélection d'un personnage importé → stats **exactes issues des artéfacts** (substats réels + table 5★ niv.20) + provenance ; UI préremplit crit/EM, affiche le build et les éléments **non pris en charge** (base perso/arme, effets conditionnels, multiplicateur de talent auto) — sans rien inventer.
 - **Validé** : 118 tests Python (goldens indépendants, propriétés, non-régression, intégration), Ruff, frontend `tsc` strict, `cargo check`. **App packagée** re-validée sans Python : import → personnage → stats → calcul → relance/restauration (`scripts/test_packaged_app.sh`).
 
-## Prochaine action — Phase 3 (suite)
-- Multiplicateur de **talent automatique** (brancher la table de talents) ; **stats de base perso/arme** quand les courbes sont disponibles ; **buffs pris en charge** (Bennett/VV…) ; sélection ennemi/niveau plus fine.
-- Quand le parcours import→perso→stats→calcul est jugé pleinement fonctionnel et CI verte : fusion PR #3.
+## Livraison PR #3
+- **CI verte** (frontend ✅, desktop ✅ sidecar sans Python, test ✅), CLEAN/MERGEABLE. Dernier commit `eff0097`. **NON fusionnée** (critère : parcours automatique stats finales, cf. HANDOFF).
+
+## Prochaine action — Phase 3 (suite) → voir `docs/project/HANDOFF.md`
+- **Prochain fichier** : `src/irminsul/basestats.py` (+ courbes `data/sources/genshin-db/src/data/curve`).
+- **Prochaine tâche** : stats de **base perso live, versionnées et sourcées** → calcul **auto** des stats finales (sans saisie ATQ). Puis : courbes d'armes, multiplicateurs de talents, stats finales auto, buffs/sets/constellations conditionnels, ennemi, tests, re-validation packagée.

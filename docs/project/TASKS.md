@@ -34,5 +34,13 @@
 - [x] Réactions **additives** (Aggravation/Propagation) + **transformatrices** dans l'UI
 - [x] Connexion compte : sélection perso importé → stats **artéfacts exactes** + provenance ; non-pris-en-charge signalé
 - [x] Détail explicable complet ; golden + propriétés + non-régression ; références indépendantes (table 5★)
-- [ ] Multiplicateur de talent auto ; stats de base perso/arme (courbes) ; buffs pris en charge ; ennemi/niveau fin
-- [ ] Fusion PR #3 quand parcours import→perso→stats→calcul pleinement fonctionnel + CI verte
+## Phase 3 — prochaine session (ordre imposé, cf. `docs/project/HANDOFF.md`)
+- [ ] 1. **Stats de base perso** live, versionnées et sourcées → `src/irminsul/basestats.py` (courbes `data/.../curve`)
+- [ ] 2. Courbes/stats **d'armes**
+- [ ] 3. **Multiplicateurs de talents** par niveau
+- [ ] 4. **Stats finales auto** (sans saisie ATQ/scaling pour cas pris en charge)
+- [ ] 5. **Buffs/sets/armes/constellations conditionnels** (conditions explicables)
+- [ ] 6. Sélection **ennemi** améliorée
+- [ ] 7. Golden + property + non-régression
+- [ ] 8. **Re-valider le parcours packagé sans Python**
+- [ ] Fusion PR #3 quand le parcours stats finales est **automatique** (persos/talents pris en charge) + CI verte
