@@ -138,3 +138,27 @@ def test_extract_weapons_synthetic(tmp_path: Path) -> None:
     assert w["secondary_stat"] == "critDMG_" and w["max_level"] == 90 and w["max_ascension"] == 6
     # secondaire à 90 (courbe linéaire = 90) : 0.05 × 90 = 4.5 (décimal) → ×100 = 450 en convention GOOD.
     assert out["curves"]["GROW_CURVE_CRITICAL_101"]["90"] == 90.0
+
+
+# Golden ÉLARGI (revue R3) : 10 armes recoupées indépendamment au wiki en jeu
+# (épée/arc/catalyseur/lance/claymore ; CR/CD/ATQ%/ER/EM/Phys/DÉF%/HP% ; rareté 1-5★).
+GOLDEN_INDEP = [
+    ("DullBlade", 70, 4, 185.43, None, 0.0),
+    ("SilverSword", 70, 4, 243.23, None, 0.0),
+    ("BlackTassel", 90, 6, 354.38, "hp_", 46.9199),
+    ("PrototypeArchaic", 90, 6, 564.78, "atk_", 27.564),
+    ("FavoniusLance", 90, 6, 564.78, "enerRech_", 30.6268),
+    ("MappaMare", 90, 6, 564.78, "eleMas", 110.256),
+    ("SnowTombedStarsilver", 90, 6, 564.78, "physical_dmg_", 34.4858),
+    ("Whiteblind", 90, 6, 509.61, "def_", 51.7284),
+    ("SkywardHarp", 90, 6, 674.33, "critRate_", 22.0512),
+    ("MistsplitterReforged", 90, 6, 674.33, "critDMG_", 44.1024),
+]
+
+
+@pytest.mark.parametrize("key,lvl,asc,atk,sec_key,sec_val", GOLDEN_INDEP)
+def test_golden_independent_ingame(key, lvl, asc, atk, sec_key, sec_val) -> None:
+    w = ws.weapon_base_stats(key, lvl, asc)
+    assert w.base_atk == atk
+    assert w.secondary_stat_key == sec_key
+    assert w.secondary_stat_value == sec_val

@@ -21,11 +21,12 @@
 | T1 | Stats de base **perso** (basestats) | Claude | Codex | feat/combat-engine-phase3 | ✅ implémenté (5167954) + correctifs revue (C1–C6) |
 | P1 | Confidentialité mémoire d'agent (§5.1) | Claude | — | feat/combat-engine-phase3 | ✅ untrack+gitignore (39cf48f) ; purge reflog local = **attente autorisation** |
 | R1 | Revue indépendante diff PR #3 (base stats) | Codex | Claude | lecture seule | ✅ **changes-required** → 6 constats, tous corrigés (`docs/reviews/CODEX_PR3_BASESTATS_REVIEW.md`) |
-| R2 | Contre-revue Codex des correctifs | Codex | Claude | lecture seule | ⛔ **bloquée : quota Codex** (réessayer après réinit) → gate de fusion |
-| T2 | Stats de base **armes** (weaponstats) | Claude | Codex | feat/combat-engine-phase3 | ✅ implémenté (236 armes, croisé en jeu) ; registre `probable` ; **contre-revue Codex en attente quota** |
-| T3 | Stats finales auto complètes (ATQ arme) | Claude | Codex | feat/combat-engine-phase3 | ✅ ATQ finale `complete=true` (perso+arme+artéfacts) ; champ ATQ UI masqué auto |
-| R3 | Revue Codex stats d'armes (golden indép.) | Codex | Claude | lecture seule | ⛔ **en attente quota** (mission prête : `docs/project/duo/current-task.md`) |
-| T4 | Multiplicateurs de talents | Claude | Codex | feat/combat-engine-phase3 | ⏳ prochain |
+| R2 | Contre-revue Codex des correctifs | Codex | Claude | lecture seule | ✅ **changes-required** → résidus C3/C5 corrigés (commit `cfa13a6`), 181 tests |
+| T2 | Stats de base **armes** (weaponstats) | Claude | Codex | feat/combat-engine-phase3 | ✅ implémenté (236 armes) ; registre `probable` |
+| T3 | Stats finales auto complètes (ATQ arme) | Claude | Codex | feat/combat-engine-phase3 | ✅ ATQ finale `complete=true` ; champ ATQ UI masqué auto ; durci (R3 #4) |
+| R3 | Revue Codex stats d'armes (golden indép.) | Codex | Claude | lecture seule | ✅ **changes-required** : 10 armes croisées wiki OK ; #4/#5 corrigés (`docs/reviews/CODEX_PR3_WEAPONSTATS_REVIEW.md`), 202 tests |
+| T4 | Multiplicateurs de talents | Claude | Codex | feat/combat-engine-phase3 | 🟡 module + données committés (`67a3b80`, 123 persos) ; **câblage charstats/UI + revue R4 = à faire** |
+| P2 | Purge confidentialité (UID reflog local) | Claude | — | local | ✅ 5 commits dangling purgés ; ⚠ **UID dans le message du commit publié `39cf48f` → décision force-push requise** |
 
 ## Correctifs §5 (triage)
 - **5.1 Confidentialité mémoire → traité** (P1) ; purge historique local (commits pendants) en attente d'accord.

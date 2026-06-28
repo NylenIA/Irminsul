@@ -119,10 +119,11 @@
     {
       "id": "weapon_base_stats",
       "applies_to_versions": "core-stable",
-      "rule": "ATQ de base d'arme = base × courbe_atk[niveau] + promotion[ascension] ; stat secondaire = base_secondary × courbe_secondary[niveau] (SANS ascension). Caps de niveau selon rareté (1-2★ → niv 70). Extraites de genshin-db, versionnées et committées dans data/mechanics/weapon-basestats.json (embarqué dans le sidecar). Branchées dans charstats.compute_final_stats → ATQ finale COMPLÈTE (final_stats.atk.complete=true).",
+      "rule": "ATQ de base d'arme = base × courbe_atk[niveau] + promotion[ascension] ; stat secondaire = base_secondary × courbe_secondary[niveau] (SANS ascension). Caps de niveau selon rareté (1-2★ → niv 70). Extraites de genshin-db, versionnées et committées dans data/mechanics/weapon-basestats.json (embarqué). Branchées dans charstats.compute_final_stats : final_stats.atk.complete=true SEULEMENT si l'arme est valide (ATQ de base finie) ET aucune main d'artéfact manquante → correspond alors à l'écran du jeu (hors buffs conditionnels), PAS à une stat de combat finale.",
       "sources": [
         {"name": "genshin-db (theBowja) — game data, commit acd86e05 (2026-05-20)", "type": "B", "url": "https://github.com/theBowja/genshin-db"},
-        {"name": "KQM — Weapon Stats / Scaling", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/character/stats"}
+        {"name": "KQM — Combat mechanics (library)", "type": "B", "url": "https://library.keqingmains.com/"},
+        {"name": "Genshin Impact Wiki (Fandom) — tables d'armes (références indépendantes)", "type": "C", "url": "https://genshin-impact.fandom.com/wiki/Weapon"}
       ],
       "code": "src/irminsul/weaponstats.py:weapon_base_stats",
       "tests": ["tests/test_weaponstats.py", "tests/test_charstats.py"],
@@ -130,11 +131,12 @@
       "status": "probable",
       "confidence": "high",
       "edge_cases": [
-        "236 armes ; valeurs croisées EN JEU (Mistsplitter 674 / Crit DMG 44.1%, Wolf's Gravestone 608 / ATQ% 49.6%, The Catch 509 / Recharge 45.9%)",
+        "236 armes ; 10 valeurs recoupées INDÉPENDAMMENT au wiki en jeu lors de la revue Codex R3 (Dull Blade, Silver Sword, Black Tassel, Prototype Archaic, Favonius Lance, Mappa Mare, Snow-Tombed, Whiteblind, Skyward Harp, Mistsplitter)",
         "FIGHT_PROP_NONE = arme sans stat secondaire",
         "1-2★ plafonnées au niveau 70 (ascension max 4) — paires hors plage rejetées",
+        "payload arme {supported:true} mais ATQ absente/non finie → exclu, jamais complete=true (durci suite R3)",
         "passifs d'arme (conditionnels) NON inclus — hors stats de base",
-        "status=probable : contre-revue Codex indépendante requise pour passer 'verified' (en attente quota)"
+        "status=probable : pour passer 'verified' → contre-revue R3 OK + durcir l'extraction (hash des entrées + contrôle de propreté du checkout source)"
       ]
     },
     {

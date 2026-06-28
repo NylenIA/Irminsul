@@ -135,14 +135,27 @@ def compute_final_stats(
     t[ak] = round(t.get(ak, 0.0) + float(base["ascension_stat_value"]), 2)
 
     # --- Contribution de l'ARME (ATQ de base + stat secondaire) --- #
+    # R3/#4 : NE JAMAIS faire confiance aveuglément au payload. 'supported' ne suffit pas :
+    # on EXIGE une ATQ de base finie (et une secondaire finie si une clé secondaire existe).
+    # Sinon → dégradation explicite (pas de 0 silencieux, pas de complete=true mensonger).
     weapon = weapon or {}
     weapon_supported = bool(weapon.get("supported"))
-    weapon_atk = float(weapon.get("base_atk", 0.0) or 0.0) if weapon_supported else 0.0
+
+    def _num(x: Any) -> float | None:
+        try:
+            f = float(x)
+        except (TypeError, ValueError):
+            return None
+        return f if math.isfinite(f) else None
+
+    weapon_atk_val = _num(weapon.get("base_atk")) if weapon_supported else None
     sec_key = weapon.get("secondary_stat_key") if weapon_supported else None
-    if sec_key:
-        sec_val = float(weapon.get("secondary_stat_value", 0.0) or 0.0)
-        if math.isfinite(sec_val):
-            t[sec_key] = round(t.get(sec_key, 0.0) + sec_val, 2)
+    sec_val = _num(weapon.get("secondary_stat_value")) if weapon_supported else None
+    # Arme « valide » = prise en charge ET ATQ de base finie ET (pas de secondaire OU secondaire finie).
+    weapon_valid = weapon_supported and weapon_atk_val is not None and (sec_key is None or sec_val is not None)
+    weapon_atk = weapon_atk_val if weapon_valid else 0.0
+    if weapon_valid and sec_key and sec_val is not None:
+        t[sec_key] = round(t.get(sec_key, 0.0) + sec_val, 2)
 
     hp_pct, atk_pct, def_pct = t.get("hp_", 0.0), t.get("atk_", 0.0), t.get("def_", 0.0)
     final_hp = base["hp"] * (1 + hp_pct / 100) + t.get("hp", 0.0)
@@ -166,16 +179,21 @@ def compute_final_stats(
                 f"stat principale d'artéfact non calculée ({mk}, {u.get('rarity')}★ niv{u.get('level')})"
             )
 
-    # Arme absente/non prise en charge : sa stat secondaire est INCONNUE → toute cellule
-    # peut être affectée (et l'ATQ manque sa base d'arme) → marquer incomplet partout.
+    # Arme non valide (absente, non prise en charge, ou métadonnées invalides) : sa stat
+    # secondaire est INCONNUE et l'ATQ manque sa base → marquer incomplet partout (jamais
+    # de complete=true mensonger, jamais de 0 silencieux présenté comme réel).
     weapon_missing: list[str] = []
-    if not weapon_supported:
-        weapon_missing.append(
-            weapon.get("reason") or "arme non prise en charge (ATQ de base + stat secondaire inconnus)")
+    if not weapon_valid:
+        if weapon_supported:
+            weapon_missing.append(
+                "métadonnées d'arme invalides (ATQ de base absente/non finie) — non incluses")
+        else:
+            weapon_missing.append(
+                weapon.get("reason") or "arme non prise en charge (ATQ de base + stat secondaire inconnus)")
 
     def cell(name: str, value: float) -> dict[str, Any]:
         miss = list(weapon_missing) + extra_missing.get(name, [])
-        complete = weapon_supported and not extra_missing.get(name)
+        complete = weapon_valid and not extra_missing.get(name)
         out = round(value, 2)
         if not math.isfinite(out):  # ne jamais émettre NaN/inf
             return {"value": None, "complete": False, "missing": miss + ["valeur non finie rejetée"]}
@@ -184,24 +202,16 @@ def compute_final_stats(
     dmg_bonus = {k: round(v, 2) for k, v in t.items()
                  if k.endswith("_dmg_") or k == "heal_"}
 
-    def _finite_or_none(x: Any) -> float | None:
-        try:
-            f = float(x)
-        except (TypeError, ValueError):
-            return None
-        return round(f, 4) if math.isfinite(f) else None
-
-    all_complete = weapon_supported and not main_incomplete
+    all_complete = weapon_valid and not main_incomplete
     return {
         "complete": all_complete,
         "note": _COMPLETE_NOTE if all_complete else
                 "stats finales PARTIELLES : " + "; ".join(weapon_missing + (
                     ["stat principale d'artéfact non calculée"] if main_incomplete else [])),
-        "weapon": {"supported": weapon_supported, "key": weapon.get("key"),
-                   "base_atk": _finite_or_none(weapon_atk) if weapon_supported else None,
+        "weapon": {"supported": weapon_supported, "valid": weapon_valid, "key": weapon.get("key"),
+                   "base_atk": round(weapon_atk_val, 2) if weapon_atk_val is not None else None,
                    "secondary_stat_key": sec_key,
-                   "secondary_stat_value": _finite_or_none(weapon.get("secondary_stat_value"))
-                   if weapon_supported else None},
+                   "secondary_stat_value": round(sec_val, 4) if sec_val is not None else None},
         "ascension_stat_applied": {"key": ak, "value": base["ascension_stat_value"]},
         "artifact_main_incomplete": main_incomplete,
         "hp": cell("hp", final_hp),

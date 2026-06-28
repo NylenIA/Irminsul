@@ -90,6 +90,27 @@ def test_anomalies_value_is_json_safe() -> None:
     json.dumps(out, allow_nan=False)  # ne lève pas
 
 
+def test_invalid_weapon_payload_not_silently_complete() -> None:
+    # R3/#4 : un payload arme {supported:true} mais sans base_atk (ou NaN/inf) ne doit JAMAIS
+    # devenir 0 silencieux ni rester `complete`. L'arme invalide est exclue + signalée.
+    import math
+
+    from irminsul import basestats
+    base = basestats.character_base_stats("Furina", 90, 6).to_dict()
+
+    fs = charstats.compute_final_stats(base, {}, None, {"supported": True, "key": "X"})
+    assert fs["complete"] is False
+    assert fs["atk"]["complete"] is False and fs["weapon"]["valid"] is False
+    assert fs["atk"]["value"] == round(base["atk"], 2)  # ATQ d'arme NON ajoutée (pas de 0 "réel")
+
+    fs2 = charstats.compute_final_stats(base, {}, None, {
+        "supported": True, "key": "X", "base_atk": float("nan"),
+        "secondary_stat_key": "atk_", "secondary_stat_value": float("inf")})
+    assert fs2["complete"] is False and fs2["weapon"]["valid"] is False
+    assert fs2["weapon"]["base_atk"] is None and fs2["weapon"]["secondary_stat_value"] is None
+    assert fs2["atk"]["value"] is None or math.isfinite(fs2["atk"]["value"])
+
+
 def test_final_stats_never_emit_nan() -> None:
     # C3 : même avec un total corrompu, aucune stat finale ne sort NaN/inf.
     from irminsul import basestats
