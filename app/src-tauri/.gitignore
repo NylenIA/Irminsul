@@ -1,0 +1,5 @@
+# Artefacts de compilation Rust / Tauri (régénérables, jamais committés)
+/target/
+/gen/
+# Sidecar empaqueté (binaire lourd, régénéré par tools/build_sidecar.py ou la CI)
+/binaries/

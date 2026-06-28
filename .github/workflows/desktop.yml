@@ -1,0 +1,67 @@
+name: desktop
+
+# Build/validation de l'app desktop sur runner Windows (reproductible).
+# - frontend : type-check strict + build (Node).
+# - sidecar  : exécutable autonome PyInstaller, testé SANS Python sur le PATH.
+# - tauri    : compilation/linking/bundle (MSVC présent sur windows-latest).
+
+on:
+  push:
+    paths: ["app/**", "src/irminsul/**", "tools/**", ".github/workflows/desktop.yml"]
+  pull_request:
+    paths: ["app/**", "src/irminsul/**", "tools/**"]
+  workflow_dispatch:
+
+jobs:
+  frontend:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm run build
+
+  desktop:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "app/src-tauri -> target"
+
+      - name: Build sidecar autonome (PyInstaller)
+        run: |
+          python -m pip install --upgrade pip pyinstaller
+          python tools/build_sidecar.py
+
+      - name: Test sidecar SANS Python (install propre)
+        shell: bash
+        run: bash scripts/test_sidecar_clean.sh
+
+      - name: Tauri build (exe + MSI + NSIS, sidecar embarqué)
+        working-directory: app
+        run: |
+          npm install --no-audit --no-fund
+          npx tauri build
+
+      - name: Publier les installeurs
+        uses: actions/upload-artifact@v4
+        with:
+          name: irminsul-windows-installers
+          path: |
+            app/src-tauri/target/release/bundle/msi/*.msi
+            app/src-tauri/target/release/bundle/nsis/*-setup.exe
+          if-no-files-found: error

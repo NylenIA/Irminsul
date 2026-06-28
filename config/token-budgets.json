@@ -1,0 +1,42 @@
+{
+  "_comment": "Seuils SOUPLES de tokens/contexte (MASTER_SPEC §5.4). Ils déclenchent sélection du contexte, cache, compression ou avertissement — JAMAIS un arrêt silencieux, l'omission d'une source, la réduction d'un test critique ou un résultat approximatif. Le travail PEUT dépasser un seuil si la qualité l'exige.",
+  "version": 1,
+  "permanent_context": {
+    "claude_md_max_lines": 200,
+    "claude_md_target_lines": 120,
+    "permanent_tokens_warn": 2500
+  },
+  "tool_output": {
+    "inline_max_lines": 40,
+    "full_output_dir": ".irminsul/logs/",
+    "large_output_reduce_target_pct": 70,
+    "preserve_exit_code": true,
+    "preserve_unique_errors": true
+  },
+  "file_reads": {
+    "peek_before_read_bytes": 32768,
+    "never_inline_full": ["GOOD", "sqlite", "lockfiles", "generated", "builds",
+      "logs", "large_gcsim_results", "data/account/**", "data/sources/**", "*.db"]
+  },
+  "scenario_data": {
+    "reduce_target_pct": 50
+  },
+  "research": {
+    "default_level": 1,
+    "max_level": 3,
+    "escalate_on": ["contradiction", "leak", "uncertain_mechanic", "critical_decision",
+      "very_recent", "explicit_request"]
+  },
+  "model_routing": {
+    "explore_mechanical": "economy",
+    "default_dev": "balanced",
+    "hard_architecture_security_theorycraft_debug": "advanced",
+    "escalate_on_low_confidence": true
+  },
+  "hard_guarantees": {
+    "no_secret_in_git_or_logs": true,
+    "no_full_good_to_model": true,
+    "no_result_modification_for_budget": true,
+    "no_test_reduction_for_budget": true
+  }
+}
