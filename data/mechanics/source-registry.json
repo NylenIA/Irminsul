@@ -104,16 +104,31 @@
     {
       "id": "character_base_stats",
       "applies_to_versions": "core-stable",
-      "rule": "NON CALCULÉ — PV/ATQ/DÉF de base du personnage et de l'arme nécessitent les courbes de croissance + ascension, absentes de la source locale. À saisir depuis le jeu (stat finale) ; ne pas inventer.",
+      "rule": "PV/ATQ/DÉF de base perso = base × courbe[niveau] + promotion[ascension]. Stat d'ascension (Crit/ATQ%/EM…) = promotion[ascension]. Courbes (GROW_CURVE_*_S4/S5) et valeurs de base/ascension extraites de genshin-db, versionnées et committées dans data/mechanics/character-basestats.json (provenance : commit + date).",
       "sources": [
-        {"name": "à brancher (genshin-db curves / officiel)", "type": "C", "url": ""}
+        {"name": "genshin-db (theBowja) — game data, commit acd86e05 (2026-05-20)", "type": "B", "url": "https://github.com/theBowja/genshin-db"},
+        {"name": "KQM — Character Stats / Scaling", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/character/stats"}
+      ],
+      "code": "src/irminsul/basestats.py:character_base_stats",
+      "tests": ["tests/test_basestats.py", "tests/test_charstats.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["119 persos couverts ; clés hors source signalées non prises en charge", "Voyageur : variantes Traveler* → aether (= lumine)", "niveau 1..90, ascension 0..6 ; hors bornes = erreur explicite", "valeurs validées en jeu : Ayaka HP 12858, Hu Tao HP 15552 / ATQ 106.4"]
+    },
+    {
+      "id": "weapon_base_stats",
+      "applies_to_versions": "core-stable",
+      "rule": "NON ENCORE CALCULÉ (tâche suivante) — ATQ de base de l'arme (courbe + ascension) et stat secondaire. Tant que non branché, les stats FINALES (surtout ATQ) sont INCOMPLÈTES et marquées comme telles ; ne pas inventer.",
+      "sources": [
+        {"name": "à brancher : genshin-db curve/weapons.json + stats/weapons.json", "type": "B", "url": "https://github.com/theBowja/genshin-db"}
       ],
       "code": "",
       "tests": [],
       "verified_at": "",
       "status": "unknown",
       "confidence": "low",
-      "edge_cases": ["signaler comme non pris en charge ; ne pas approximer"]
+      "edge_cases": ["final_stats.*.complete reste false jusqu'au branchement de l'arme", "ne pas retirer la saisie ATQ manuelle tant que complete=false"]
     },
     {
       "id": "lunar_reactions",

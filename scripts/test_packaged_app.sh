@@ -41,7 +41,10 @@ ok "$(run '{"id":3,"method":"roster"}')" '"characters"' "roster (personnages/arm
 ok "$(run '{"id":31,"method":"quick-calc","params":{"scaling":2.0,"stat":2000,"crit_rate":0.5,"crit_damage":1.0,"damage_bonus":0.5}}')" '"expected"' "calcul rapide (registre embarqué)"
 ok "$(run '{"id":32,"method":"characters"}')" '"characters"' "liste personnages importés"
 FIRST="$(run '{"id":33,"method":"characters"}' | grep -oE '"characters": \["[^"]+' | grep -oE '[A-Za-z]+$' | head -1)"
-ok "$(run "{\"id\":34,\"method\":\"character-stats\",\"params\":{\"key\":\"$FIRST\"}}")" '"artifact_stats"' "stats finales perso (artéfacts + provenance)"
+CS="$(run "{\"id\":34,\"method\":\"character-stats\",\"params\":{\"key\":\"$FIRST\"}}")"
+ok "$CS" '"artifact_stats"' "stats perso (artéfacts + provenance)"
+ok "$CS" '"base_stats"' "stats de BASE perso (courbes genshin-db embarquées)"
+ok "$CS" '"supported": true' "base perso calculée automatiquement (sans Python)"
 
 echo "== Session 2 : RELANCE (même app-data, sans réimport) -> restauration =="
 ok "$(run '{"id":4,"method":"profile"}')" '"status": "ok"' "profil restauré"

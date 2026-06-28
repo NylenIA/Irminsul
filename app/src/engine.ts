@@ -140,6 +140,46 @@ export interface ArtifactStats {
     reason: string;
   }>;
 }
+export interface BaseStatsProvenance {
+  source?: string;
+  source_commit?: string;
+  source_commit_date?: string;
+  formula?: string;
+  confidence?: string;
+}
+export interface BaseStats {
+  supported: boolean;
+  reason?: string;
+  hp?: number;
+  atk?: number;
+  def?: number;
+  crit_rate_?: number;
+  crit_dmg_?: number;
+  ascension_stat_key?: string;
+  ascension_stat_value?: number;
+  level?: number;
+  ascension?: number;
+  provenance?: BaseStatsProvenance;
+  confidence?: string;
+}
+export interface FinalStatCell {
+  value: number;
+  complete: boolean;
+  missing: string[];
+}
+export interface FinalStats {
+  complete: boolean;
+  note: string;
+  ascension_stat_applied: { key: string; value: number };
+  hp: FinalStatCell;
+  atk: FinalStatCell;
+  def: FinalStatCell;
+  crit_rate_: FinalStatCell;
+  crit_dmg_: FinalStatCell;
+  eleMas: FinalStatCell;
+  enerRech_: FinalStatCell;
+  dmg_bonus: Record<string, number>;
+}
 export interface CharacterInfo {
   key: string;
   level: number | null;
@@ -149,6 +189,8 @@ export interface CharacterInfo {
   weapon: { key: string; level: number | null; refinement: number | null } | null;
   artifacts: Array<{ setKey: string; slotKey: string; rarity: number; level: number; mainStatKey: string }>;
   artifact_stats: ArtifactStats;
+  base_stats: BaseStats;
+  final_stats: FinalStats | null;
   unsupported: Array<{ item: string; reason: string }>;
   provenance: { snapshot_date: string | null; source: string | null; sha256: string | null; good_version: number | null };
 }

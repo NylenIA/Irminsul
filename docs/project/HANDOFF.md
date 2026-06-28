@@ -6,7 +6,7 @@
 - **Branche** : `feat/combat-engine-phase3` (NE PAS en créer d'autre).
 - **PR** : **#3** → https://github.com/NylenIA/Irminsul/pull/3 (OPEN, **NON fusionnée**).
 - **Base** : `main` = `bfb6a04` (PR #2 fusionnée : Phases 0-2).
-- **Dernier commit** : `eff0097`.
+- **Dernier commit** : voir `git log` (stats de base perso ajoutées après `25e00ab`).
 - **CI PR #3** : ✅ verte (frontend, desktop avec sidecar testé sans Python, test).
 
 ## Fonctions réellement terminées (validées)
@@ -16,6 +16,7 @@
   - **Calcul rapide** (`quickcalc`) : réactions **amplifiantes + additives (Aggravation/Propagation) + transformatrices**, détail explicable (entrées, stat, multiplicateurs, réaction, DEF, RES, crit, dégâts finaux, **version+source+confiance**).
   - **Connexion compte** (`charstats`) : sélection perso importé → **stats exactes des artéfacts** (substats réels + table 5★ niv.20) + provenance ; UI préremplit crit/EM ; éléments **non pris en charge** affichés.
   - Sidecar : méthodes `characters`, `character-stats`, `quick-calc`, `mechanics` ; commandes Tauri correspondantes.
+  - **Stats de base perso** (`src/irminsul/basestats.py`) : PV/ATQ/DÉF par niveau+ascension = `base × courbe[niv] + promotion[asc]` ; courbes + valeurs **extraites** de genshin-db (`tools/extract_basestats.py`) vers `data/mechanics/character-basestats.json` **committé + embarqué** dans le sidecar (provenance : commit `acd86e05`, formule, confiance). 119 persos, Voyageur→aether, hors-source signalé. `charstats` calcule auto base + **stats finales** (`final_stats`, chaque stat `complete:false` tant que l'arme n'est pas branchée). UI : panneau base sourcée + préremplissage hors arme ; champ ATQ masqué auto quand `atk.complete`.
 
 ## Tests exécutés (tous verts)
 - `bash scripts/validate.sh` → **Ruff + 118 tests Python**.
@@ -23,7 +24,8 @@
 - Parcours packagé sans Python : `bash scripts/test_packaged_app.sh` (import→perso→stats→calcul→relance/restauration) ; `bash scripts/test_sidecar_clean.sh`.
 
 ## Limitations EXACTES (signalées, jamais inventées)
-1. **Stats de base perso/arme NON calculées** (courbes absentes de la source locale) → l'utilisateur saisit l'ATQ finale.
+1. **Stats de base perso = OK** (calculées, sourcées). **Stats de base d'ARME = NON calculées** (tâche suivante) →
+   l'ATQ finale reste INCOMPLÈTE (`final_stats.*.complete = false`) ; saisie ATQ manuelle conservée tant que `atk.complete` est faux.
 2. **Multiplicateur de talent manuel** (table de talents non branchée) → saisie du `scaling`.
 3. **Buffs / sets 4p / passifs d'arme / constellations conditionnels NON appliqués**.
 4. Table des **stats principales d'artéfact limitée au 5★ niveau 20** (autres rareté/niveau → listées « non calculées »).
@@ -46,16 +48,16 @@ bash scripts/test_packaged_app.sh         # parcours packagé sans Python
 ```
 
 ## PROCHAINE tâche (ordre imposé, même branche/PR #3)
-**Prochain fichier** : créer `src/irminsul/basestats.py` (+ extraction des courbes depuis
-`data/sources/genshin-db/src/data/curve` et des valeurs de base personnage/arme).
-**Prochaine tâche** : (1) intégrer des **stats de base perso live, versionnées et sourcées**
-(HP/ATQ/DÉF par niveau+ascension) — d'abord vérifier `data/curve` + la source des valeurs de
-base, encoder/parser avec **provenance + version**, ajouter au registre en `verified` ; puis
-brancher dans `charstats` pour **calculer automatiquement** les stats finales des persos pris en charge.
+**(1) Stats de base perso = FAIT** (`basestats.py`, extraction committée, registre `verified`, branché dans `charstats`, packagé re-validé).
 
-Puis dans l'ordre : (2) courbes/stats **d'armes** ; (3) **multiplicateurs de talents** par niveau ;
-(4) **stats finales auto** (sans saisie ATQ/scaling pour les cas pris en charge) ; (5) **buffs/sets/
-armes/constellations conditionnels** avec conditions explicables ; (6) sélection **ennemi** améliorée ;
+**Prochain fichier/tâche** : **(2) stats de base d'ARME** — extraire `data/sources/genshin-db/src/data/curve/weapons.json`
++ `stats/weapons.json` (même patron que `tools/extract_basestats.py` → `data/mechanics/weapon-basestats.json`
+committé + embarqué + provenance) ; brancher l'**ATQ de base + stat secondaire** de l'arme dans `charstats.compute_final_stats`
+pour rendre l'**ATQ finale COMPLÈTE** (`final_stats.atk.complete = true`) → la saisie ATQ manuelle disparaît
+alors automatiquement dans l'UI (déjà conditionnée à `atk.complete`). Passer `weapon_base_stats` en `verified`.
+
+Puis dans l'ordre : (3) **multiplicateurs de talents** par niveau ; (4) **stats finales auto** complètes ;
+(5) **buffs/sets/armes/constellations conditionnels** avec conditions explicables ; (6) sélection **ennemi** améliorée ;
 (7) golden + property + non-régression ; (8) **re-valider le parcours packagé sans Python**.
 
 ## Critère de fusion PR #3 (ne pas fusionner avant)

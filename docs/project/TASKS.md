@@ -35,8 +35,10 @@
 - [x] Connexion compte : sélection perso importé → stats **artéfacts exactes** + provenance ; non-pris-en-charge signalé
 - [x] Détail explicable complet ; golden + propriétés + non-régression ; références indépendantes (table 5★)
 ## Phase 3 — prochaine session (ordre imposé, cf. `docs/project/HANDOFF.md`)
-- [ ] 1. **Stats de base perso** live, versionnées et sourcées → `src/irminsul/basestats.py` (courbes `data/.../curve`)
-- [ ] 2. Courbes/stats **d'armes**
+- [x] 1. **Stats de base perso** live, versionnées et sourcées → `src/irminsul/basestats.py` (courbes genshin-db
+      extraites/committées + provenance) ; `charstats` calcule auto base + stats finales (marquées INCOMPLÈTES
+      tant que l'arme n'est pas branchée) ; sidecar/app packagée re-validés sans Python ; 147 tests
+- [ ] 2. Courbes/stats **d'armes** (← EN COURS ENSUITE : débloque ATQ finale complète → retrait saisie ATQ)
 - [ ] 3. **Multiplicateurs de talents** par niveau
 - [ ] 4. **Stats finales auto** (sans saisie ATQ/scaling pour cas pris en charge)
 - [ ] 5. **Buffs/sets/armes/constellations conditionnels** (conditions explicables)

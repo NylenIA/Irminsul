@@ -67,18 +67,29 @@ export function QuickCalc(): JSX.Element {
     try {
       const r = await getCharacterStats(key);
       if (r.status === "ok") {
-        setCharInfo(r.character);
-        const t = r.character.artifact_stats.totals;
-        // Préremplissage HONNÊTE : artéfacts uniquement (+ base crit fixe), hors arme/ascension.
-        const cr = ((t.critRate_ ?? 0) + 5) / 100;
-        const cd = ((t.critDMG_ ?? 0) + 50) / 100;
-        const em = t.eleMas ?? 0;
-        setF((p) => ({
-          ...p,
-          crit_rate: cr.toFixed(3),
-          crit_damage: cd.toFixed(3),
-          em: String(Math.round(em)),
-        }));
+        const ci = r.character;
+        setCharInfo(ci);
+        const fs = ci.final_stats;
+        if (fs) {
+          // Base perso (exacte, sourcée) + ascension + artéfacts — mais HORS arme.
+          setF((p) => ({
+            ...p,
+            crit_rate: (fs.crit_rate_.value / 100).toFixed(3),
+            crit_damage: (fs.crit_dmg_.value / 100).toFixed(3),
+            em: String(Math.round(fs.eleMas.value)),
+            // ATQ partielle (hors arme) : point de départ sourcé, à corriger.
+            stat: String(Math.round(fs.atk.value)),
+          }));
+        } else {
+          // Repli HONNÊTE : artéfacts uniquement (+ base crit fixe), perso hors source.
+          const t = ci.artifact_stats.totals;
+          setF((p) => ({
+            ...p,
+            crit_rate: (((t.critRate_ ?? 0) + 5) / 100).toFixed(3),
+            crit_damage: (((t.critDMG_ ?? 0) + 50) / 100).toFixed(3),
+            em: String(Math.round(t.eleMas ?? 0)),
+          }));
+        }
       } else if (r.status === "not_found") {
         setErr(`Personnage introuvable : ${r.key}`);
       }
@@ -153,10 +164,28 @@ export function QuickCalc(): JSX.Element {
                 {charInfo.talents.auto ?? "?"}/{charInfo.talents.skill ?? "?"}/{charInfo.talents.burst ?? "?"} ·{" "}
                 {charInfo.weapon ? `${charInfo.weapon.key} R${charInfo.weapon.refinement ?? "?"}` : "sans arme"}
               </p>
-              <p className="qc-prov">
-                Crit/EM préremplis depuis les artéfacts (hors base/arme/ascension). Provenance :{" "}
-                {charInfo.provenance.source ?? "—"} · snapshot {charInfo.provenance.snapshot_date ?? "—"}.
-              </p>
+              {charInfo.base_stats.supported && charInfo.final_stats ? (
+                <div className="char-base">
+                  <p>
+                    <strong>Base perso (niv {charInfo.level ?? "?"}, asc {charInfo.ascension ?? "?"}) :</strong>{" "}
+                    PV {Math.round(charInfo.base_stats.hp ?? 0).toLocaleString("fr-FR")} · ATQ{" "}
+                    {Math.round(charInfo.base_stats.atk ?? 0)} · DÉF {Math.round(charInfo.base_stats.def ?? 0)}
+                    {charInfo.base_stats.ascension_stat_key
+                      ? ` · ascension ${charInfo.base_stats.ascension_stat_key} +${charInfo.base_stats.ascension_stat_value}`
+                      : ""}
+                  </p>
+                  <p className="qc-prov">
+                    Stats de base sourcées genshin-db (commit{" "}
+                    {charInfo.base_stats.provenance?.source_commit?.slice(0, 8) ?? "—"}), confiance{" "}
+                    {charInfo.base_stats.confidence ?? "—"}. ⚠ {charInfo.final_stats.note}
+                  </p>
+                </div>
+              ) : (
+                <p className="qc-prov">
+                  Crit/EM préremplis depuis les artéfacts (hors base/arme/ascension). Provenance :{" "}
+                  {charInfo.provenance.source ?? "—"} · snapshot {charInfo.provenance.snapshot_date ?? "—"}.
+                </p>
+              )}
               <details>
                 <summary>Non pris en charge (ne pas considérer comme actif)</summary>
                 <ul className="qc-mechanics">
@@ -183,7 +212,15 @@ export function QuickCalc(): JSX.Element {
         }}
       >
         {field("Multiplicateur talent (ex. 2.0)", "scaling")}
-        {field("ATQ finale (depuis le jeu — base non calculée)", "stat", "1")}
+        {charInfo?.final_stats?.atk.complete
+          ? null
+          : field(
+              charInfo?.final_stats
+                ? "ATQ (base perso + artéfacts, HORS arme — corrige avec le jeu)"
+                : "ATQ finale (depuis le jeu)",
+              "stat",
+              "1",
+            )}
         {field("Taux crit (0–1)", "crit_rate")}
         {field("Dégâts crit (ex. 1.0)", "crit_damage")}
         {field("Bonus de dégâts (0–…)", "damage_bonus")}

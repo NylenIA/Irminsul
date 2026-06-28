@@ -90,7 +90,40 @@ def test_characters_and_character_stats(imported: None) -> None:
     assert char["artifact_stats"]["totals"]["critDMG_"] == 62.2  # main circlet 5★ L20
     assert char["artifact_stats"]["totals"]["critRate_"] == 7.0  # substat
     assert char["provenance"]["sha256"]                          # provenance présente
-    assert any("base" in u["item"] for u in char["unsupported"])  # base signalée non prise en charge
+
+    # Stats de BASE désormais calculées automatiquement (sourcées genshin-db).
+    base = char["base_stats"]
+    assert base["supported"] is True
+    assert round(base["hp"]) == 15307           # Furina L90A6, valeur jeu
+    assert base["provenance"]["source_commit"]  # versionnée + sourcée
+    assert base["ascension_stat_key"] == "critRate_"
+
+    # Stats finales auto, mais marquées INCOMPLÈTES (arme pas encore branchée).
+    fs = char["final_stats"]
+    assert fs is not None and fs["complete"] is False
+    # crit DMG = 50 base + 62.2 (main artéfact) ; crit Rate = 5 + 7 (substat) + 19.2 (ascension)
+    assert fs["crit_dmg_"]["value"] == 112.2
+    assert fs["crit_rate_"]["value"] == 31.2
+    assert fs["atk"]["complete"] is False and "ATQ de base de l'arme" in fs["atk"]["missing"]
+
+    # L'ARME reste explicitement non prise en charge (et non inventée).
+    assert any("arme" in u["item"] for u in char["unsupported"])
+
+
+def test_unsupported_base_falls_back_honestly(
+    imported: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Si un perso est absent de la source de base : pas de stats finales inventées,
+    # repli sur la saisie manuelle, signalé explicitement.
+    from irminsul import basestats
+    monkeypatch.setattr(
+        basestats, "character_base_stats_payload",
+        lambda *a, **k: {"supported": False, "reason": "absent de la source (test)"},
+    )
+    char = dispatch("character-stats", {"key": "Furina"})["character"]
+    assert char["base_stats"]["supported"] is False
+    assert char["final_stats"] is None
+    assert any("stats de base" in u["item"] for u in char["unsupported"])
 
 
 def test_character_not_found(imported: None) -> None:
