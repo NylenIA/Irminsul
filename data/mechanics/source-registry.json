@@ -60,6 +60,20 @@
       "edge_cases": ["EM ≥ 0", "bonus de réaction additif (ex. set Crimson Witch)"]
     },
     {
+      "id": "additive_reaction",
+      "applies_to_versions": "core-stable",
+      "rule": "Bonus additif = coef × levelMultiplier × (1 + 5×EM/(EM+1200) + reaction_bonus) ; ajouté aux dégâts de BASE du talent (puis DMG%/crit/DEF/RES s'appliquent). coef = 1.15 (Aggravation/Electro), 1.25 (Propagation/Dendro). L'EM ne snapshot pas.",
+      "sources": [
+        {"name": "KQM — Additive Reactions", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/elemental-effects/additive-reactions"}
+      ],
+      "code": "src/irminsul/reaction.py:additive_reaction",
+      "tests": ["tests/test_reaction.py", "tests/test_quickcalc.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["bonus injecté via flat_base_damage du coup déclencheur", "EM ≥ 0"]
+    },
+    {
       "id": "transformative_reaction",
       "applies_to_versions": "core-stable",
       "rule": "Dégâts = base × levelMultiplier × (1 + 16×EM/(EM+2000) + reaction_bonus) × ResMult. Pas de crit par défaut.",
@@ -72,6 +86,20 @@
       "status": "verified",
       "confidence": "high",
       "edge_cases": ["levelMultiplier dépend du niveau (1446.85 au niveau 90)"]
+    },
+    {
+      "id": "lunar_reactions",
+      "applies_to_versions": "récent (Nod-Krai)",
+      "rule": "NON IMPLÉMENTÉ — réactions Lunaires (Lunar-Charged/Bloom…) récentes ; coefficients et conditions non confirmés de façon fiable. À ne pas calculer tant que les valeurs ne sont pas vérifiées sur sources primaires/A.",
+      "sources": [
+        {"name": "à confirmer (officiel / KQM)", "type": "D", "url": ""}
+      ],
+      "code": "",
+      "tests": [],
+      "verified_at": "",
+      "status": "unknown",
+      "confidence": "low",
+      "edge_cases": ["ne pas inventer ; signaler l'incertitude ; séparer live et leaks"]
     }
   ]
 }

@@ -102,11 +102,28 @@ export interface DirectHit {
   resistance_multiplier: number;
   expected_crit_multiplier: number;
 }
+export interface MechanicSource {
+  name: string;
+  type: string;
+  url?: string;
+}
+export interface MechanicDetail {
+  id: string;
+  status: string;
+  confidence: string;
+  sources: MechanicSource[];
+  verified_at?: string | null;
+}
 export interface QuickCalcResult {
   status: "ok";
   result: DirectHit;
   amplifying: { amplifying_multiplier: number; em_bonus: number } | null;
+  additive: { base_bonus_damage: number; em_bonus: number; base_multiplier: number } | null;
+  transformative:
+    | { reaction: string; damage: number; base_multiplier: number; em_bonus: number }
+    | null;
   mechanics_used: string[];
+  mechanics_detail: MechanicDetail[];
   registry_version: string;
 }
 export const quickCalc = (params: Record<string, number | string>): Promise<QuickCalcResult> =>

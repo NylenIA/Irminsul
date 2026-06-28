@@ -20,7 +20,15 @@ const DEFAULTS: Fields = {
   damage_bonus: "0.0", resistance: "0.1", reaction: "", em: "0",
 };
 
-const REACTIONS = ["", "forward-vaporize", "reverse-vaporize", "forward-melt", "reverse-melt"];
+const REACTION_GROUPS: ReadonlyArray<{ label: string; items: string[] }> = [
+  { label: "Amplifiantes", items: ["forward-vaporize", "reverse-vaporize", "forward-melt", "reverse-melt"] },
+  { label: "Additives", items: ["aggravate", "spread"] },
+  {
+    label: "Transformatrices",
+    items: ["overloaded", "superconduct", "electro-charged", "swirl", "bloom",
+      "hyperbloom", "burgeon", "burning", "shattered"],
+  },
+];
 
 export function QuickCalc(): JSX.Element {
   const [f, setF] = useState<Fields>(DEFAULTS);
@@ -96,8 +104,13 @@ export function QuickCalc(): JSX.Element {
         <label className="qc-field">
           <span>Réaction</span>
           <select value={f.reaction} onChange={(ev) => set("reaction", ev.target.value)}>
-            {REACTIONS.map((r) => (
-              <option key={r || "none"} value={r}>{r || "aucune"}</option>
+            <option value="">aucune</option>
+            {REACTION_GROUPS.map((g) => (
+              <optgroup key={g.label} label={g.label}>
+                {g.items.map((r) => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </label>
@@ -110,27 +123,62 @@ export function QuickCalc(): JSX.Element {
       {res && (
         <div className="qc-result">
           <p>
-            <strong>Attendu (moyenne) :</strong> {Math.round(res.result.expected).toLocaleString("fr-FR")} ·{" "}
+            <strong>Dégâts finaux (moyenne) :</strong> {Math.round(res.result.expected).toLocaleString("fr-FR")} ·{" "}
             non-crit {Math.round(res.result.non_crit).toLocaleString("fr-FR")} ·{" "}
             crit {Math.round(res.result.crit).toLocaleString("fr-FR")}
           </p>
+          {res.additive && (
+            <p className="warn">
+              Bonus additif (intégré à la base) : +{Math.round(res.additive.base_bonus_damage).toLocaleString("fr-FR")}
+            </p>
+          )}
+          {res.transformative && (
+            <p className="warn">
+              Réaction transformatrice : {Math.round(res.transformative.damage).toLocaleString("fr-FR")} dégâts
+              {" "}(instance séparée, sans crit)
+            </p>
+          )}
           <button type="button" className="link" onClick={() => setShow((s) => !s)}>
             {show ? "Masquer le calcul" : "Voir le calcul"}
           </button>
           {show && (
-            <dl className="qc-detail">
-              <dt>Multiplicateur DEF</dt><dd>{res.result.defense_multiplier.toFixed(4)}</dd>
-              <dt>Multiplicateur RES</dt><dd>{res.result.resistance_multiplier.toFixed(4)}</dd>
-              <dt>Multiplicateur crit attendu</dt><dd>{res.result.expected_crit_multiplier.toFixed(4)}</dd>
-              {res.amplifying && (
-                <>
-                  <dt>Réaction (amplifiante)</dt>
-                  <dd>×{res.amplifying.amplifying_multiplier.toFixed(3)} (bonus EM {res.amplifying.em_bonus.toFixed(3)})</dd>
-                </>
-              )}
-              <dt>Mécaniques utilisées</dt><dd>{res.mechanics_used.join(", ")}</dd>
-              <dt>Registre</dt><dd>v{res.registry_version} (sources KQM, statut vérifié)</dd>
-            </dl>
+            <div className="qc-detail-wrap">
+              <dl className="qc-detail">
+                <dt>Base (stat × multiplicateur + additif)</dt><dd>{Math.round(res.result.raw_base).toLocaleString("fr-FR")}</dd>
+                <dt>Multiplicateur DEF</dt><dd>{res.result.defense_multiplier.toFixed(4)}</dd>
+                <dt>Multiplicateur RES</dt><dd>{res.result.resistance_multiplier.toFixed(4)}</dd>
+                <dt>Multiplicateur crit attendu</dt><dd>{res.result.expected_crit_multiplier.toFixed(4)}</dd>
+                {res.amplifying && (
+                  <>
+                    <dt>Réaction amplifiante</dt>
+                    <dd>×{res.amplifying.amplifying_multiplier.toFixed(3)} (bonus EM {res.amplifying.em_bonus.toFixed(3)})</dd>
+                  </>
+                )}
+                {res.additive && (
+                  <>
+                    <dt>Réaction additive</dt>
+                    <dd>coef {res.additive.base_multiplier} · bonus EM {res.additive.em_bonus.toFixed(3)}</dd>
+                  </>
+                )}
+                {res.transformative && (
+                  <>
+                    <dt>Réaction transformatrice</dt>
+                    <dd>{res.transformative.reaction} · coef {res.transformative.base_multiplier} · bonus EM {res.transformative.em_bonus.toFixed(3)}</dd>
+                  </>
+                )}
+              </dl>
+              <p className="qc-prov">Registre v{res.registry_version} — mécaniques, sources et confiance :</p>
+              <ul className="qc-mechanics">
+                {res.mechanics_detail.map((m) => (
+                  <li key={m.id}>
+                    <strong>{m.id}</strong> — statut {m.status}, confiance {m.confidence}
+                    {m.sources.length > 0
+                      ? ` · ${m.sources.map((s) => `${s.name} (rang ${s.type})`).join(", ")}`
+                      : ""}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       )}

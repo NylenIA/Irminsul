@@ -86,6 +86,10 @@ details summary { cursor: pointer; color: var(--text-dim); margin-top: 8px; }
 .qc-result .link { background: none; border: 0; color: var(--turquoise); cursor: pointer; padding: 0; text-decoration: underline; }
 .qc-detail { display: grid; grid-template-columns: 220px 1fr; gap: 2px 10px; margin-top: 8px; font-size: 13px; }
 .qc-detail dt { color: var(--text-dim); }
+.qc-detail-wrap { margin-top: 8px; }
+.qc-prov { color: var(--text-dim); margin: 10px 0 4px; font-size: 13px; }
+.qc-mechanics { margin: 0; padding-left: 18px; font-size: 12px; color: var(--text-dim); }
+.qc-mechanics strong { color: var(--turquoise); }
 @media (max-width: 760px) { .app__body { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 @media (prefers-contrast: more) { :root { --text-dim: #cdd9ea; } }
