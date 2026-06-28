@@ -1,8 +1,15 @@
 /** Calcul rapide déterministe (Phase 3) : l'utilisateur saisit ses stats, le moteur
  * renvoie le résultat + le détail (« Voir le calcul ») avec traçabilité du registre.
  * Aucune donnée de jeu factice : les champs sont des entrées éditables. */
-import { useState } from "react";
-import { isDesktop, quickCalc, type QuickCalcResult } from "../engine";
+import { useEffect, useState } from "react";
+import {
+  getCharacters,
+  getCharacterStats,
+  isDesktop,
+  quickCalc,
+  type CharacterInfo,
+  type QuickCalcResult,
+} from "../engine";
 
 interface Fields {
   scaling: string;
@@ -36,9 +43,48 @@ export function QuickCalc(): JSX.Element {
   const [err, setErr] = useState<string | null>(null);
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [characters, setCharacters] = useState<string[]>([]);
+  const [selected, setSelected] = useState("");
+  const [charInfo, setCharInfo] = useState<CharacterInfo | null>(null);
 
   function set<K extends keyof Fields>(k: K, v: string): void {
     setF((p) => ({ ...p, [k]: v }));
+  }
+
+  useEffect(() => {
+    if (!isDesktop()) return;
+    void getCharacters()
+      .then((r) => {
+        if (r.status === "ok") setCharacters(r.characters);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  async function selectCharacter(key: string): Promise<void> {
+    setSelected(key);
+    setCharInfo(null);
+    if (!key) return;
+    try {
+      const r = await getCharacterStats(key);
+      if (r.status === "ok") {
+        setCharInfo(r.character);
+        const t = r.character.artifact_stats.totals;
+        // Préremplissage HONNÊTE : artéfacts uniquement (+ base crit fixe), hors arme/ascension.
+        const cr = ((t.critRate_ ?? 0) + 5) / 100;
+        const cd = ((t.critDMG_ ?? 0) + 50) / 100;
+        const em = t.eleMas ?? 0;
+        setF((p) => ({
+          ...p,
+          crit_rate: cr.toFixed(3),
+          crit_damage: cd.toFixed(3),
+          em: String(Math.round(em)),
+        }));
+      } else if (r.status === "not_found") {
+        setErr(`Personnage introuvable : ${r.key}`);
+      }
+    } catch (e) {
+      setErr(String(e));
+    }
   }
 
   async function compute(): Promise<void> {
@@ -85,9 +131,50 @@ export function QuickCalc(): JSX.Element {
   return (
     <div className="quickcalc">
       <p className="empty-state">
-        Calcul déterministe d'un coup direct. Saisis tes stats réelles ; le détail et les
-        sources sont affichés via « Voir le calcul ».
+        Calcul déterministe d'un coup direct. Sélectionne un personnage importé (préremplit
+        crit/EM depuis tes artéfacts) ou saisis tes stats. Détail et sources via « Voir le calcul ».
       </p>
+
+      {characters.length > 0 && (
+        <div className="char-pick">
+          <label className="qc-field">
+            <span>Personnage (importé du compte)</span>
+            <select value={selected} onChange={(ev) => void selectCharacter(ev.target.value)}>
+              <option value="">— choisir —</option>
+              {characters.map((k) => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+          </label>
+          {charInfo && (
+            <div className="char-info">
+              <p>
+                C{charInfo.constellation ?? "?"} · niv {charInfo.level ?? "?"} · talents{" "}
+                {charInfo.talents.auto ?? "?"}/{charInfo.talents.skill ?? "?"}/{charInfo.talents.burst ?? "?"} ·{" "}
+                {charInfo.weapon ? `${charInfo.weapon.key} R${charInfo.weapon.refinement ?? "?"}` : "sans arme"}
+              </p>
+              <p className="qc-prov">
+                Crit/EM préremplis depuis les artéfacts (hors base/arme/ascension). Provenance :{" "}
+                {charInfo.provenance.source ?? "—"} · snapshot {charInfo.provenance.snapshot_date ?? "—"}.
+              </p>
+              <details>
+                <summary>Non pris en charge (ne pas considérer comme actif)</summary>
+                <ul className="qc-mechanics">
+                  {charInfo.unsupported.map((u) => (
+                    <li key={u.item}><strong>{u.item}</strong> — {u.reason}</li>
+                  ))}
+                  {charInfo.artifact_stats.uncomputed_main.map((m, i) => (
+                    <li key={`uc-${i}`}>
+                      stat principale {m.mainStatKey} ({m.set} {m.slot}, {m.rarity}★ niv{m.level}) — {m.reason}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </div>
+          )}
+        </div>
+      )}
+
       <form
         className="qc-grid"
         onSubmit={(ev) => {
@@ -96,7 +183,7 @@ export function QuickCalc(): JSX.Element {
         }}
       >
         {field("Multiplicateur talent (ex. 2.0)", "scaling")}
-        {field("Stat (ATK/HP/DEF)", "stat", "1")}
+        {field("ATQ finale (depuis le jeu — base non calculée)", "stat", "1")}
         {field("Taux crit (0–1)", "crit_rate")}
         {field("Dégâts crit (ex. 1.0)", "crit_damage")}
         {field("Bonus de dégâts (0–…)", "damage_bonus")}
@@ -167,6 +254,13 @@ export function QuickCalc(): JSX.Element {
                   </>
                 )}
               </dl>
+              {charInfo && (
+                <p className="qc-prov">
+                  Données du compte utilisées : {charInfo.key} (C{charInfo.constellation ?? "?"}, niv{" "}
+                  {charInfo.level ?? "?"}) — crit/EM issus des artéfacts ; SHA{" "}
+                  {charInfo.provenance.sha256 ? `${charInfo.provenance.sha256.slice(0, 8)}…` : "—"}.
+                </p>
+              )}
               <p className="qc-prov">Registre v{res.registry_version} — mécaniques, sources et confiance :</p>
               <ul className="qc-mechanics">
                 {res.mechanics_detail.map((m) => (

@@ -39,6 +39,9 @@ ok "$(run "{\"id\":1,\"method\":\"import-good\",\"params\":{\"path\":\"$GOODWIN\
 ok "$(run '{"id":2,"method":"profile"}')" '"sha256"' "profil (provenance)"
 ok "$(run '{"id":3,"method":"roster"}')" '"characters"' "roster (personnages/armes/sets)"
 ok "$(run '{"id":31,"method":"quick-calc","params":{"scaling":2.0,"stat":2000,"crit_rate":0.5,"crit_damage":1.0,"damage_bonus":0.5}}')" '"expected"' "calcul rapide (registre embarqué)"
+ok "$(run '{"id":32,"method":"characters"}')" '"characters"' "liste personnages importés"
+FIRST="$(run '{"id":33,"method":"characters"}' | grep -oE '"characters": \["[^"]+' | grep -oE '[A-Za-z]+$' | head -1)"
+ok "$(run "{\"id\":34,\"method\":\"character-stats\",\"params\":{\"key\":\"$FIRST\"}}")" '"artifact_stats"' "stats finales perso (artéfacts + provenance)"
 
 echo "== Session 2 : RELANCE (même app-data, sans réimport) -> restauration =="
 ok "$(run '{"id":4,"method":"profile"}')" '"status": "ok"' "profil restauré"

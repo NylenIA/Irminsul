@@ -1,0 +1,106 @@
+"""Tests des statistiques de personnage dérivées du GOOD (artéfacts exacts,
+stats de base signalées non calculées)."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pytest
+
+from irminsul import charstats
+from irminsul.account_ipc import dispatch
+
+
+def test_main_stat_table_matches_independent_reference() -> None:
+    # Référence indépendante : valeurs publiques 5★ niveau 20 (in-game / GO).
+    t = charstats.MAIN_STAT_5STAR_L20
+    assert t["atk_"] == 46.6 and t["def_"] == 58.3
+    assert t["critRate_"] == 31.1 and t["critDMG_"] == 62.2
+    assert t["eleMas"] == 187.0 and t["enerRech_"] == 51.8
+    assert t["hp"] == 4780.0 and t["atk"] == 311.0
+    assert t["pyro_dmg_"] == 46.6 and t["physical_dmg_"] == 58.3
+
+
+def test_artifact_totals_golden() -> None:
+    arts = [
+        {"setKey": "S", "slotKey": "flower", "rarity": 5, "level": 20, "mainStatKey": "hp",
+         "substats": [{"key": "critRate_", "value": 3.5}]},
+        {"setKey": "S", "slotKey": "circlet", "rarity": 5, "level": 20, "mainStatKey": "atk_",
+         "substats": [{"key": "critRate_", "value": 7.0}, {"key": "critDMG_", "value": 14.0}]},
+    ]
+    out = charstats.artifact_stat_totals(arts)
+    t = out["totals"]
+    assert t["hp"] == 4780.0          # main 5★ L20
+    assert t["atk_"] == 46.6
+    assert t["critRate_"] == 10.5     # 3.5 + 7.0 substats
+    assert t["critDMG_"] == 14.0
+    assert out["uncomputed_main"] == []
+
+
+def test_non_l20_main_is_flagged_not_invented() -> None:
+    arts = [{"setKey": "S", "slotKey": "sands", "rarity": 4, "level": 16, "mainStatKey": "atk_",
+             "substats": []}]
+    out = charstats.artifact_stat_totals(arts)
+    assert "atk_" not in out["totals"]       # pas approximé
+    assert out["uncomputed_main"] and out["uncomputed_main"][0]["mainStatKey"] == "atk_"
+
+
+def test_determinism_and_monotonicity() -> None:
+    base = [{"setKey": "S", "slotKey": "sands", "rarity": 5, "level": 20, "mainStatKey": "atk_",
+             "substats": [{"key": "critRate_", "value": 3.1}]}]
+    more = [{"setKey": "S", "slotKey": "sands", "rarity": 5, "level": 20, "mainStatKey": "atk_",
+             "substats": [{"key": "critRate_", "value": 3.1}, {"key": "critRate_", "value": 3.9}]}]
+    a = charstats.artifact_stat_totals(base)["totals"]["critRate_"]
+    b = charstats.artifact_stat_totals(more)["totals"]["critRate_"]
+    assert b > a  # plus de substats crit ⇒ plus de CR
+    assert charstats.artifact_stat_totals(base) == charstats.artifact_stat_totals(base)  # déterministe
+
+
+# --- Intégration via le dispatch (compte importé temporaire) --- #
+@pytest.fixture()
+def imported(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = tmp_path / "proj"
+    root.mkdir()
+    monkeypatch.setenv("IRMINSUL_PROJECT_ROOT", str(root))
+    good = tmp_path / "acc_GOOD.json"
+    good.write_text(json.dumps({
+        "format": "GOOD", "version": 3, "source": "Inventory_Kamera",
+        "characters": [{"key": "Furina", "level": 90, "constellation": 0, "ascension": 6,
+                        "talent": {"auto": 1, "skill": 6, "burst": 6}}],
+        "weapons": [{"key": "FavoniusSword", "level": 90, "ascension": 6, "refinement": 1,
+                     "location": "Furina", "lock": True, "id": 0}],
+        "artifacts": [{"setKey": "GoldenTroupe", "slotKey": "circlet", "rarity": 5,
+                       "mainStatKey": "critDMG_", "level": 20,
+                       "substats": [{"key": "critRate_", "value": 7.0}], "location": "Furina"}],
+        "materials": {"Mora": 1000},
+    }), encoding="utf-8")
+    dispatch("import-good", {"path": str(good)})
+
+
+def test_characters_and_character_stats(imported: None) -> None:
+    chars = dispatch("characters")
+    assert chars["status"] == "ok" and "Furina" in chars["characters"]
+
+    cs = dispatch("character-stats", {"key": "Furina"})
+    assert cs["status"] == "ok"
+    char = cs["character"]
+    assert char["level"] == 90
+    assert char["weapon"]["key"] == "FavoniusSword"
+    assert char["artifact_stats"]["totals"]["critDMG_"] == 62.2  # main circlet 5★ L20
+    assert char["artifact_stats"]["totals"]["critRate_"] == 7.0  # substat
+    assert char["provenance"]["sha256"]                          # provenance présente
+    assert any("base" in u["item"] for u in char["unsupported"])  # base signalée non prise en charge
+
+
+def test_character_not_found(imported: None) -> None:
+    out = dispatch("character-stats", {"key": "Inconnu"})
+    assert out["status"] == "not_found"
+
+
+def test_character_stats_empty_without_import(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = tmp_path / "empty"
+    root.mkdir()
+    monkeypatch.setenv("IRMINSUL_PROJECT_ROOT", str(root))
+    assert dispatch("characters")["status"] == "empty"
+    assert dispatch("character-stats", {"key": "X"})["status"] == "empty"

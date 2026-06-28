@@ -129,6 +129,40 @@ export interface QuickCalcResult {
 export const quickCalc = (params: Record<string, number | string>): Promise<QuickCalcResult> =>
   call<QuickCalcResult>("quick_calc", { params });
 
+export interface ArtifactStats {
+  totals: Record<string, number>;
+  uncomputed_main: Array<{
+    set: string;
+    slot: string;
+    rarity: number;
+    level: number;
+    mainStatKey: string;
+    reason: string;
+  }>;
+}
+export interface CharacterInfo {
+  key: string;
+  level: number | null;
+  ascension: number | null;
+  constellation: number | null;
+  talents: { auto?: number; skill?: number; burst?: number };
+  weapon: { key: string; level: number | null; refinement: number | null } | null;
+  artifacts: Array<{ setKey: string; slotKey: string; rarity: number; level: number; mainStatKey: string }>;
+  artifact_stats: ArtifactStats;
+  unsupported: Array<{ item: string; reason: string }>;
+  provenance: { snapshot_date: string | null; source: string | null; sha256: string | null; good_version: number | null };
+}
+export type CharactersResponse = { status: "ok"; characters: string[] } | { status: "empty" };
+export type CharacterStatsResponse =
+  | { status: "ok"; character: CharacterInfo }
+  | { status: "empty" }
+  | { status: "not_found"; key: string };
+
+export const getCharacters = (): Promise<CharactersResponse> =>
+  call<CharactersResponse>("account_characters");
+export const getCharacterStats = (key: string): Promise<CharacterStatsResponse> =>
+  call<CharacterStatsResponse>("character_stats", { key });
+
 /** Sélecteur de fichier natif (plugin dialog Tauri) pour choisir l'export GOOD. */
 export async function pickGoodFile(): Promise<string | null> {
   const selected = await open({

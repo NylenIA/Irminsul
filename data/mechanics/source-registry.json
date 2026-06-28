@@ -88,6 +88,34 @@
       "edge_cases": ["levelMultiplier dépend du niveau (1446.85 au niveau 90)"]
     },
     {
+      "id": "artifact_main_stats",
+      "applies_to_versions": "core-stable",
+      "rule": "Stats principales d'artéfact 5★ niveau 20 (valeurs fixes) : ATK% 46.6, HP% 46.6, DEF% 58.3, EM 187, ER% 51.8, CR% 31.1, CD% 62.2, Heal% 35.9, DMG élém. 46.6, DMG phys. 58.3, HP plat 4780, ATK plat 311. Substats = valeurs réelles du GOOD.",
+      "sources": [
+        {"name": "Genshin Optimizer / in-game (valeurs publiques)", "type": "B", "url": "https://frzyc.github.io/genshin-optimizer/"}
+      ],
+      "code": "src/irminsul/charstats.py:artifact_stat_totals",
+      "tests": ["tests/test_charstats.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["table limitée au 5★ niveau 20 ; autres rareté/niveau signalés comme non calculés"]
+    },
+    {
+      "id": "character_base_stats",
+      "applies_to_versions": "core-stable",
+      "rule": "NON CALCULÉ — PV/ATQ/DÉF de base du personnage et de l'arme nécessitent les courbes de croissance + ascension, absentes de la source locale. À saisir depuis le jeu (stat finale) ; ne pas inventer.",
+      "sources": [
+        {"name": "à brancher (genshin-db curves / officiel)", "type": "C", "url": ""}
+      ],
+      "code": "",
+      "tests": [],
+      "verified_at": "",
+      "status": "unknown",
+      "confidence": "low",
+      "edge_cases": ["signaler comme non pris en charge ; ne pas approximer"]
+    },
+    {
       "id": "lunar_reactions",
       "applies_to_versions": "récent (Nod-Krai)",
       "rule": "NON IMPLÉMENTÉ — réactions Lunaires (Lunar-Charged/Bloom…) récentes ; coefficients et conditions non confirmés de façon fiable. À ne pas calculer tant que les valeurs ne sont pas vérifiées sur sources primaires/A.",
