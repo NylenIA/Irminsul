@@ -44,7 +44,7 @@ def main() -> int:
     # registre des mécaniques + stats de base perso (versionnées, sourcées).
     mechanics_dir = ROOT / "data" / "mechanics"
     add_data_args: list[str] = []
-    for fname in ("source-registry.json", "character-basestats.json"):
+    for fname in ("source-registry.json", "character-basestats.json", "weapon-basestats.json"):
         f = mechanics_dir / fname
         if not f.exists():
             print(f"[build_sidecar] ERREUR: donnée requise absente: {f}")

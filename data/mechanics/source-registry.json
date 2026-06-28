@@ -119,16 +119,23 @@
     {
       "id": "weapon_base_stats",
       "applies_to_versions": "core-stable",
-      "rule": "NON ENCORE CALCULÉ (tâche suivante) — ATQ de base de l'arme (courbe + ascension) et stat secondaire. Tant que non branché, les stats FINALES (surtout ATQ) sont INCOMPLÈTES et marquées comme telles ; ne pas inventer.",
+      "rule": "ATQ de base d'arme = base × courbe_atk[niveau] + promotion[ascension] ; stat secondaire = base_secondary × courbe_secondary[niveau] (SANS ascension). Caps de niveau selon rareté (1-2★ → niv 70). Extraites de genshin-db, versionnées et committées dans data/mechanics/weapon-basestats.json (embarqué dans le sidecar). Branchées dans charstats.compute_final_stats → ATQ finale COMPLÈTE (final_stats.atk.complete=true).",
       "sources": [
-        {"name": "à brancher : genshin-db curve/weapons.json + stats/weapons.json", "type": "B", "url": "https://github.com/theBowja/genshin-db"}
+        {"name": "genshin-db (theBowja) — game data, commit acd86e05 (2026-05-20)", "type": "B", "url": "https://github.com/theBowja/genshin-db"},
+        {"name": "KQM — Weapon Stats / Scaling", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/character/stats"}
       ],
-      "code": "",
-      "tests": [],
+      "code": "src/irminsul/weaponstats.py:weapon_base_stats",
+      "tests": ["tests/test_weaponstats.py", "tests/test_charstats.py"],
       "verified_at": "",
-      "status": "unknown",
-      "confidence": "low",
-      "edge_cases": ["final_stats.*.complete reste false jusqu'au branchement de l'arme", "ne pas retirer la saisie ATQ manuelle tant que complete=false"]
+      "status": "probable",
+      "confidence": "high",
+      "edge_cases": [
+        "236 armes ; valeurs croisées EN JEU (Mistsplitter 674 / Crit DMG 44.1%, Wolf's Gravestone 608 / ATQ% 49.6%, The Catch 509 / Recharge 45.9%)",
+        "FIGHT_PROP_NONE = arme sans stat secondaire",
+        "1-2★ plafonnées au niveau 70 (ascension max 4) — paires hors plage rejetées",
+        "passifs d'arme (conditionnels) NON inclus — hors stats de base",
+        "status=probable : contre-revue Codex indépendante requise pour passer 'verified' (en attente quota)"
+      ]
     },
     {
       "id": "lunar_reactions",

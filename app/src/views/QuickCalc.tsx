@@ -182,10 +182,28 @@ export function QuickCalc(): JSX.Element {
                       ? ` · ascension ${charInfo.base_stats.ascension_stat_key} +${charInfo.base_stats.ascension_stat_value}`
                       : ""}
                   </p>
+                  {charInfo.final_stats.weapon.supported ? (
+                    <p>
+                      <strong>Arme :</strong> {charInfo.final_stats.weapon.key} — ATQ base{" "}
+                      {Math.round(charInfo.final_stats.weapon.base_atk ?? 0)}
+                      {charInfo.final_stats.weapon.secondary_stat_key
+                        ? ` · ${charInfo.final_stats.weapon.secondary_stat_key} +${charInfo.final_stats.weapon.secondary_stat_value}`
+                        : ""}
+                      {" → "}
+                      <strong>
+                        ATQ finale{" "}
+                        {charInfo.final_stats.atk.value != null
+                          ? Math.round(charInfo.final_stats.atk.value)
+                          : "?"}
+                      </strong>
+                    </p>
+                  ) : (
+                    <p className="warn">Arme non calculée : {charInfo.final_stats.weapon.key ?? "—"} (ATQ saisie manuellement)</p>
+                  )}
                   <p className="qc-prov">
-                    Stats de base sourcées genshin-db (commit{" "}
-                    {charInfo.base_stats.provenance?.source_commit?.slice(0, 8) ?? "—"}), confiance{" "}
-                    {charInfo.base_stats.confidence ?? "—"}. ⚠ {charInfo.final_stats.note}
+                    {charInfo.final_stats.complete ? "✓ " : "⚠ "}
+                    {charInfo.final_stats.note} · sources genshin-db (commit{" "}
+                    {charInfo.base_stats.provenance?.source_commit?.slice(0, 8) ?? "—"}).
                   </p>
                 </div>
               ) : (

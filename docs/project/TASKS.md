@@ -40,9 +40,11 @@
       tant que l'arme n'est pas branchée) ; sidecar/app packagée re-validés sans Python ; 158 tests
 - [x] 1b. **Revue Codex** (Duo) base perso → `changes-required` ; correctifs C1–C6 (validation niveau/ascension,
       Voyageur, NaN/inf, incomplétudes artéfact, ATQ UI, provenance reproductible) appliqués + tests. Contre-revue = **quota Codex** (en attente).
-- [ ] 2. Courbes/stats **d'armes** (← EN COURS ENSUITE : débloque ATQ finale complète → retrait saisie ATQ)
-- [ ] 3. **Multiplicateurs de talents** par niveau
-- [ ] 4. **Stats finales auto** (sans saisie ATQ/scaling pour cas pris en charge)
+- [x] 2. Courbes/stats **d'armes** (`weaponstats`, 236 armes, croisé en jeu) → registre `probable` ;
+      contre-revue Codex en attente quota. 177 tests.
+- [ ] 3. **Multiplicateurs de talents** par niveau (← PROCHAIN)
+- [x] 4. **Stats finales auto** : ATQ finale `complete=true` (perso+arme+artéfacts) ; saisie ATQ masquée
+      auto quand `atk.complete`. (Reste : `scaling` talent manuel tant que la table de talents n'est pas branchée.)
 - [ ] 5. **Buffs/sets/armes/constellations conditionnels** (conditions explicables)
 - [ ] 6. Sélection **ennemi** améliorée
 - [ ] 7. Golden + property + non-régression

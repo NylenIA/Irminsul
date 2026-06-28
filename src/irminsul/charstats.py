@@ -13,7 +13,7 @@ import math
 from collections import defaultdict
 from typing import Any
 
-from . import basestats
+from . import basestats, weaponstats
 from .account import load_current
 
 # Valeurs EXACTES des stats principales d'artéfact 5★ au niveau 20 (publiques,
@@ -95,21 +95,15 @@ def characters_payload() -> dict[str, Any]:
 
 
 # Ce qui n'est volontairement PAS (encore) pris en charge (signalé, jamais présenté
-# comme actif). NB : les stats de BASE du personnage sont désormais calculées
-# automatiquement (cf. basestats) ; il reste l'arme, les conditionnels et les talents.
+# comme actif). NB : les stats de BASE perso ET arme sont calculées (cf. basestats /
+# weaponstats) ; il reste les passifs/effets CONDITIONNELS et les multiplicateurs de talent.
 UNSUPPORTED = [
-    {"item": "stat principale (ATQ de base) & passif d'arme",
-     "reason": "base d'arme non encore calculée (tâche suivante) ; passif conditionnel non implémenté → "
-               "les stats finales restent INCOMPLÈTES tant que l'arme n'est pas branchée"},
-    {"item": "effets conditionnels de set (4p), constellation, talents passifs",
-     "reason": "non implémentés — ne pas présenter comme actifs"},
+    {"item": "passif d'arme & effets conditionnels (set 4p, constellation, talents passifs)",
+     "reason": "non implémentés (situationnels) — hors stats de base ; ne pas présenter comme actifs. "
+               "Les stats finales correspondent à l'écran du personnage en jeu (hors buffs conditionnels)."},
     {"item": "multiplicateur de talent automatique",
      "reason": "à saisir manuellement (scaling) tant que la table de talents n'est pas branchée"},
 ]
-
-# Marqueur unique : tout ce qui manque encore pour des stats finales COMPLÈTES.
-_WEAPON_PENDING = ("arme non incluse (ATQ de base + stat secondaire) — tâche suivante : "
-                   "les stats finales ci-dessous sont partielles, hors arme")
 
 # Stat principale d'artéfact (clé GOOD) → cellule de stat finale impactée.
 _MAIN_TO_CELL = {
@@ -117,16 +111,20 @@ _MAIN_TO_CELL = {
     "critRate_": "crit_rate_", "critDMG_": "crit_dmg_", "eleMas": "eleMas", "enerRech_": "enerRech_",
 }
 
+_COMPLETE_NOTE = ("stats finales = écran du personnage en jeu (base perso + arme + artéfacts) ; "
+                  "hors buffs CONDITIONNELS (passifs d'arme/set/constellation), appliqués au calcul, pas à la fiche")
+
 
 def compute_final_stats(
     base: dict[str, Any],
     art_totals: dict[str, float],
     uncomputed_main: list[dict[str, Any]] | None = None,
+    weapon: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Combine stats de BASE perso (exactes) + artéfacts + stat d'ascension, en
-    marquant chaque stat comme INCOMPLÈTE tant que l'arme n'est pas branchée ET en
-    signalant toute stat principale d'artéfact non calculée (honnêteté : la part
-    manquante — arme ou main d'artéfact — est explicitement listée, jamais inventée)."""
+    """Combine base perso (exacte) + ARME (ATQ de base + stat secondaire) + artéfacts +
+    stat d'ascension. Une stat est `complete` quand l'arme est prise en charge ET qu'aucune
+    stat principale d'artéfact ne manque → elle correspond alors à l'écran du jeu (hors buffs
+    conditionnels). Tout ce qui manque est listé ; rien n'est inventé."""
     t: dict[str, float] = {}
     for k, v in art_totals.items():
         fv = float(v)
@@ -135,9 +133,20 @@ def compute_final_stats(
     ak = base["ascension_stat_key"]
     t[ak] = round(t.get(ak, 0.0) + float(base["ascension_stat_value"]), 2)
 
+    # --- Contribution de l'ARME (ATQ de base + stat secondaire) --- #
+    weapon = weapon or {}
+    weapon_supported = bool(weapon.get("supported"))
+    weapon_atk = float(weapon.get("base_atk", 0.0) or 0.0) if weapon_supported else 0.0
+    sec_key = weapon.get("secondary_stat_key") if weapon_supported else None
+    if sec_key:
+        sec_val = float(weapon.get("secondary_stat_value", 0.0) or 0.0)
+        if math.isfinite(sec_val):
+            t[sec_key] = round(t.get(sec_key, 0.0) + sec_val, 2)
+
     hp_pct, atk_pct, def_pct = t.get("hp_", 0.0), t.get("atk_", 0.0), t.get("def_", 0.0)
     final_hp = base["hp"] * (1 + hp_pct / 100) + t.get("hp", 0.0)
-    final_atk = base["atk"] * (1 + atk_pct / 100) + t.get("atk", 0.0)
+    # ATQ% s'applique à (ATQ base perso + ATQ base ARME) ; ATQ plate des artéfacts ajoutée après.
+    final_atk = (base["atk"] + weapon_atk) * (1 + atk_pct / 100) + t.get("atk", 0.0)
     final_def = base["def"] * (1 + def_pct / 100) + t.get("def", 0.0)
     crit_rate = base["crit_rate_"] + t.get("critRate_", 0.0)
     crit_dmg = base["crit_dmg_"] + t.get("critDMG_", 0.0)
@@ -156,28 +165,43 @@ def compute_final_stats(
                 f"stat principale d'artéfact non calculée ({mk}, {u.get('rarity')}★ niv{u.get('level')})"
             )
 
-    def cell(name: str, value: float, missing: list[str]) -> dict[str, Any]:
-        full = list(missing) + extra_missing.get(name, [])
+    # Arme absente/non prise en charge : sa stat secondaire est INCONNUE → toute cellule
+    # peut être affectée (et l'ATQ manque sa base d'arme) → marquer incomplet partout.
+    weapon_missing: list[str] = []
+    if not weapon_supported:
+        weapon_missing.append(
+            weapon.get("reason") or "arme non prise en charge (ATQ de base + stat secondaire inconnus)")
+
+    def cell(name: str, value: float) -> dict[str, Any]:
+        miss = list(weapon_missing) + extra_missing.get(name, [])
+        complete = weapon_supported and not extra_missing.get(name)
         out = round(value, 2)
         if not math.isfinite(out):  # ne jamais émettre NaN/inf
-            return {"value": None, "complete": False, "missing": full + ["valeur non finie rejetée"]}
-        return {"value": out, "complete": False, "missing": full}
+            return {"value": None, "complete": False, "missing": miss + ["valeur non finie rejetée"]}
+        return {"value": out, "complete": complete, "missing": miss}
 
     dmg_bonus = {k: round(v, 2) for k, v in t.items()
                  if k.endswith("_dmg_") or k == "heal_"}
 
+    all_complete = weapon_supported and not main_incomplete
     return {
-        "complete": False,
-        "note": _WEAPON_PENDING,
+        "complete": all_complete,
+        "note": _COMPLETE_NOTE if all_complete else
+                "stats finales PARTIELLES : " + "; ".join(weapon_missing + (
+                    ["stat principale d'artéfact non calculée"] if main_incomplete else [])),
+        "weapon": {"supported": weapon_supported, "key": weapon.get("key"),
+                   "base_atk": round(weapon_atk, 2) if weapon_supported else None,
+                   "secondary_stat_key": sec_key,
+                   "secondary_stat_value": weapon.get("secondary_stat_value") if weapon_supported else None},
         "ascension_stat_applied": {"key": ak, "value": base["ascension_stat_value"]},
         "artifact_main_incomplete": main_incomplete,
-        "hp": cell("hp", final_hp, ["stat secondaire d'arme si PV%"]),
-        "atk": cell("atk", final_atk, ["ATQ de base de l'arme", "stat secondaire d'arme si ATQ%"]),
-        "def": cell("def", final_def, ["stat secondaire d'arme si DÉF%"]),
-        "crit_rate_": cell("crit_rate_", crit_rate, ["stat secondaire d'arme si Taux Crit"]),
-        "crit_dmg_": cell("crit_dmg_", crit_dmg, ["stat secondaire d'arme si Dégâts Crit"]),
-        "eleMas": cell("eleMas", em, ["stat secondaire d'arme si Maîtrise"]),
-        "enerRech_": cell("enerRech_", ener, ["stat secondaire d'arme si Recharge"]),
+        "hp": cell("hp", final_hp),
+        "atk": cell("atk", final_atk),
+        "def": cell("def", final_def),
+        "crit_rate_": cell("crit_rate_", crit_rate),
+        "crit_dmg_": cell("crit_dmg_", crit_dmg),
+        "eleMas": cell("eleMas", em),
+        "enerRech_": cell("enerRech_", ener),
         "dmg_bonus": dmg_bonus,
     }
 
@@ -201,11 +225,19 @@ def character_payload(key: str) -> dict[str, Any]:
     # Stats de BASE live, versionnées et sourcées (genshin-db) — calculées automatiquement.
     base_stats = basestats.character_base_stats_payload(
         key, c.get("level") or 1, c.get("ascension") or 0)
+    # Stats de BASE d'arme (genshin-db) — calculées automatiquement, sourcées, versionnées.
+    if w:
+        weapon_bs = weaponstats.weapon_base_stats_payload(
+            w["key"], w.get("level") or 1, w.get("ascension") or 0)
+        weapon_bs.setdefault("key", w["key"])
+    else:
+        weapon_bs = {"supported": False, "reason": "aucune arme équipée", "key": None}
+
     final_stats: dict[str, Any] | None = None
     unsupported = list(UNSUPPORTED)
     if base_stats.get("supported"):
         final_stats = compute_final_stats(
-            base_stats, art_stats["totals"], art_stats.get("uncomputed_main"))
+            base_stats, art_stats["totals"], art_stats.get("uncomputed_main"), weapon_bs)
     else:
         unsupported.append({
             "item": "stats de base du personnage (PV/ATQ/DÉF)",
@@ -227,6 +259,7 @@ def character_payload(key: str) -> dict[str, Any]:
                            "level": a["level"], "mainStatKey": a["mainStatKey"]} for a in equipped],
             "artifact_stats": art_stats,
             "base_stats": base_stats,
+            "weapon_base_stats": weapon_bs,
             "final_stats": final_stats,
             "unsupported": unsupported,
             "provenance": _provenance(cur),

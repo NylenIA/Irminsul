@@ -168,9 +168,30 @@ export interface FinalStatCell {
   complete: boolean;
   missing: string[];
 }
+export interface WeaponBaseStats {
+  supported: boolean;
+  reason?: string;
+  key?: string | null;
+  base_atk?: number;
+  secondary_stat_key?: string | null;
+  secondary_stat_value?: number;
+  level?: number;
+  ascension?: number;
+  max_level?: number;
+  max_ascension?: number;
+  provenance?: BaseStatsProvenance;
+  confidence?: string;
+}
 export interface FinalStats {
   complete: boolean;
   note: string;
+  weapon: {
+    supported: boolean;
+    key: string | null;
+    base_atk: number | null;
+    secondary_stat_key: string | null;
+    secondary_stat_value: number | null;
+  };
   ascension_stat_applied: { key: string; value: number };
   artifact_main_incomplete: string[];
   hp: FinalStatCell;
@@ -192,6 +213,7 @@ export interface CharacterInfo {
   artifacts: Array<{ setKey: string; slotKey: string; rarity: number; level: number; mainStatKey: string }>;
   artifact_stats: ArtifactStats;
   base_stats: BaseStats;
+  weapon_base_stats: WeaponBaseStats;
   final_stats: FinalStats | null;
   unsupported: Array<{ item: string; reason: string }>;
   provenance: { snapshot_date: string | null; source: string | null; sha256: string | null; good_version: number | null };

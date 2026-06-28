@@ -44,7 +44,8 @@ FIRST="$(run '{"id":33,"method":"characters"}' | grep -oE '"characters": \["[^"]
 CS="$(run "{\"id\":34,\"method\":\"character-stats\",\"params\":{\"key\":\"$FIRST\"}}")"
 ok "$CS" '"artifact_stats"' "stats perso (artéfacts + provenance)"
 ok "$CS" '"base_stats"' "stats de BASE perso (courbes genshin-db embarquées)"
-ok "$CS" '"supported": true' "base perso calculée automatiquement (sans Python)"
+ok "$CS" '"weapon_base_stats"' "stats de BASE d'arme (courbes genshin-db embarquées)"
+ok "$CS" '"complete": true' "ATQ finale COMPLÈTE auto (perso+arme+artéfacts, sans Python)"
 
 echo "== Session 2 : RELANCE (même app-data, sans réimport) -> restauration =="
 ok "$(run '{"id":4,"method":"profile"}')" '"status": "ok"' "profil restauré"

@@ -131,16 +131,24 @@ def test_characters_and_character_stats(imported: None) -> None:
     assert base["provenance"]["source_commit"]  # versionnée + sourcée
     assert base["ascension_stat_key"] == "critRate_"
 
-    # Stats finales auto, mais marquées INCOMPLÈTES (arme pas encore branchée).
+    # Stats d'arme désormais calculées (FavoniusSword) → ATQ finale COMPLÈTE.
+    wbs = char["weapon_base_stats"]
+    assert wbs["supported"] is True and wbs["base_atk"] == 454.36  # Favonius L90A6 (valeur jeu)
+    assert wbs["secondary_stat_key"] == "enerRech_"
+
     fs = char["final_stats"]
-    assert fs is not None and fs["complete"] is False
+    assert fs is not None and fs["complete"] is True
     # crit DMG = 50 base + 62.2 (main artéfact) ; crit Rate = 5 + 7 (substat) + 19.2 (ascension)
     assert fs["crit_dmg_"]["value"] == 112.2
     assert fs["crit_rate_"]["value"] == 31.2
-    assert fs["atk"]["complete"] is False and "ATQ de base de l'arme" in fs["atk"]["missing"]
+    # ATQ finale = base perso 243.96 + base arme 454.36 (pas d'ATQ%) → complète.
+    assert fs["atk"]["complete"] is True and fs["atk"]["missing"] == []
+    assert fs["atk"]["value"] == 698.32
+    # Recharge = 100 base + 61.25 (stat secondaire Favonius).
+    assert fs["enerRech_"]["value"] == 161.25
 
-    # L'ARME reste explicitement non prise en charge (et non inventée).
-    assert any("arme" in u["item"] for u in char["unsupported"])
+    # Passifs/conditionnels restent explicitement non pris en charge (jamais inventés).
+    assert any("conditionnel" in u["reason"] for u in char["unsupported"])
 
 
 def test_unsupported_base_falls_back_honestly(

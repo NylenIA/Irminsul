@@ -24,9 +24,11 @@
 - Parcours packagé sans Python : `bash scripts/test_packaged_app.sh` (import→perso→stats→calcul→relance/restauration) ; `bash scripts/test_sidecar_clean.sh`.
 
 ## Limitations EXACTES (signalées, jamais inventées)
-1. **Stats de base perso = OK** (calculées, sourcées). **Stats de base d'ARME = NON calculées** (tâche suivante) →
-   l'ATQ finale reste INCOMPLÈTE (`final_stats.*.complete = false`) ; saisie ATQ manuelle conservée tant que `atk.complete` est faux.
-2. **Multiplicateur de talent manuel** (table de talents non branchée) → saisie du `scaling`.
+1. **Stats de base perso ET arme = OK** (calculées, sourcées, croisées en jeu). ATQ finale **complète**
+   (`final_stats.atk.complete=true`) pour perso+arme pris en charge ; saisie ATQ masquée auto. Reste :
+   `weapon_base_stats` = **`probable`** (contre-revue Codex indépendante requise pour `verified`, quota en attente).
+2. **Multiplicateur de talent manuel** (table de talents non branchée) → saisie du `scaling`. ← PROCHAIN
+3. **Passifs d'arme / sets 4p / constellations CONDITIONNELS** non appliqués (situationnels, hors fiche).
 3. **Buffs / sets 4p / passifs d'arme / constellations conditionnels NON appliqués**.
 4. Table des **stats principales d'artéfact limitée au 5★ niveau 20** (autres rareté/niveau → listées « non calculées »).
 5. **Réactions Lunaires** (Nod-Krai) = `unknown`, refusées par le calcul.
@@ -50,13 +52,15 @@ bash scripts/test_packaged_app.sh         # parcours packagé sans Python
 ## PROCHAINE tâche (ordre imposé, même branche/PR #3)
 **(1) Stats de base perso = FAIT** (`basestats.py`, extraction committée, registre `verified`, branché dans `charstats`, packagé re-validé).
 
-**Prochain fichier/tâche** : **(2) stats de base d'ARME** — extraire `data/sources/genshin-db/src/data/curve/weapons.json`
-+ `stats/weapons.json` (même patron que `tools/extract_basestats.py` → `data/mechanics/weapon-basestats.json`
-committé + embarqué + provenance) ; brancher l'**ATQ de base + stat secondaire** de l'arme dans `charstats.compute_final_stats`
-pour rendre l'**ATQ finale COMPLÈTE** (`final_stats.atk.complete = true`) → la saisie ATQ manuelle disparaît
-alors automatiquement dans l'UI (déjà conditionnée à `atk.complete`). Passer `weapon_base_stats` en `verified`.
+**(2) Stats de base d'ARME = FAIT** (`weaponstats.py` + `tools/extract_weapon_basestats.py` →
+`data/mechanics/weapon-basestats.json`, 236 armes, embarqué) ; branché dans `compute_final_stats`
+→ **ATQ finale complète** ; registre `weapon_base_stats` = `probable` (→ `verified` après contre-revue Codex, quota en attente).
 
-Puis dans l'ordre : (3) **multiplicateurs de talents** par niveau ; (4) **stats finales auto** complètes ;
+**Prochain fichier/tâche** : **(3) multiplicateurs de talents** — extraire `data/sources/genshin-db/src/data/stats/talents.json`
+(par niveau de talent 1..15) vers `data/mechanics/` (committé + embarqué + provenance), distinguer NA/skill/burst,
+brancher dans le calcul pour **retirer la saisie manuelle du `scaling`** pour les talents pris en charge (signaler le reste).
+
+Puis dans l'ordre : (4) **stats finales auto** complètes [FAIT pour ATQ] ;
 (5) **buffs/sets/armes/constellations conditionnels** avec conditions explicables ; (6) sélection **ennemi** améliorée ;
 (7) golden + property + non-régression ; (8) **re-valider le parcours packagé sans Python**.
 

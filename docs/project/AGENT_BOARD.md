@@ -22,9 +22,10 @@
 | P1 | Confidentialité mémoire d'agent (§5.1) | Claude | — | feat/combat-engine-phase3 | ✅ untrack+gitignore (39cf48f) ; purge reflog local = **attente autorisation** |
 | R1 | Revue indépendante diff PR #3 (base stats) | Codex | Claude | lecture seule | ✅ **changes-required** → 6 constats, tous corrigés (`docs/reviews/CODEX_PR3_BASESTATS_REVIEW.md`) |
 | R2 | Contre-revue Codex des correctifs | Codex | Claude | lecture seule | ⛔ **bloquée : quota Codex** (réessayer après réinit) → gate de fusion |
-| T2 | Stats de base **armes** (weaponstats) | Claude | Codex | feat/combat-engine-phase3 | ⏳ en cours (revue Codex différée jusqu'au quota) |
-| T3 | Stats finales auto complètes (ATQ arme) | Claude | Codex | feat/combat-engine-phase3 | ⏳ dépend de T2 |
-| T4 | Multiplicateurs de talents | Claude | Codex | feat/combat-engine-phase3 | ⏳ après T2/T3 |
+| T2 | Stats de base **armes** (weaponstats) | Claude | Codex | feat/combat-engine-phase3 | ✅ implémenté (236 armes, croisé en jeu) ; registre `probable` ; **contre-revue Codex en attente quota** |
+| T3 | Stats finales auto complètes (ATQ arme) | Claude | Codex | feat/combat-engine-phase3 | ✅ ATQ finale `complete=true` (perso+arme+artéfacts) ; champ ATQ UI masqué auto |
+| R3 | Revue Codex stats d'armes (golden indép.) | Codex | Claude | lecture seule | ⛔ **en attente quota** (mission prête : `docs/project/duo/current-task.md`) |
+| T4 | Multiplicateurs de talents | Claude | Codex | feat/combat-engine-phase3 | ⏳ prochain |
 
 ## Correctifs §5 (triage)
 - **5.1 Confidentialité mémoire → traité** (P1) ; purge historique local (commits pendants) en attente d'accord.
