@@ -25,8 +25,11 @@
 | T2 | Stats de base **armes** (weaponstats) | Claude | Codex | feat/combat-engine-phase3 | ✅ implémenté (236 armes) ; registre `probable` |
 | T3 | Stats finales auto complètes (ATQ arme) | Claude | Codex | feat/combat-engine-phase3 | ✅ ATQ finale `complete=true` ; champ ATQ UI masqué auto ; durci (R3 #4) |
 | R3 | Revue Codex stats d'armes (golden indép.) | Codex | Claude | lecture seule | ✅ **changes-required** : 10 armes croisées wiki OK ; #4/#5 corrigés (`docs/reviews/CODEX_PR3_WEAPONSTATS_REVIEW.md`), 202 tests |
-| T4 | Multiplicateurs de talents | Claude | Codex | feat/combat-engine-phase3 | 🟡 module + données committés (`67a3b80`, 123 persos) ; **câblage charstats/UI + revue R4 = à faire** |
-| P2 | Purge confidentialité (UID reflog local) | Claude | — | local | ✅ 5 commits dangling purgés ; ⚠ **UID dans le message du commit publié `39cf48f` → décision force-push requise** |
+| T4 | Multiplicateurs de talents (module + câblage) | Claude | Codex | feat/combat-engine-phase3 | ✅ module (`67a3b80`) + **câblage charstats/UI** (`048eca2`) : sélecteur de talent remplace la saisie `scaling` ; 225 tests |
+| T5 | Durcissement extraction armes + `verified` | Claude | Codex | feat/combat-engine-phase3 | ✅ hash+dirty-check ; **weapon_base_stats = `verified`** (`e83faf5`) sur base R3 indép. |
+| R4 | Revue Codex talents (golden indép.) | Codex | Claude | lecture seule | ⛔ **bloquée : quota Codex** (réessayer ~03:58) → gate de fusion talents |
+| P2 | Purge UID (reflog + message commit publié) | Claude | — | feat (réécriture) | ✅ **RÉSOLU** : option A — réécriture messages `feat` (`filter-branch`+`--force-with-lease`, arbre identique), UID purgé local+distant ; `main`/tags intacts |
+| INC | Incident suppression `engine.ts` | Claude | — | feat | ✅ restauré (`dd71f19`) ; isolation Codex read-only + test intégrité (`a314356`) ; scheduler désactivé |
 
 ## Correctifs §5 (triage)
 - **5.1 Confidentialité mémoire → traité** (P1) ; purge historique local (commits pendants) en attente d'accord.

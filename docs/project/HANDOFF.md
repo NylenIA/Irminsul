@@ -52,17 +52,17 @@ bash scripts/test_packaged_app.sh         # parcours packagé sans Python
 ## PROCHAINE tâche (ordre imposé, même branche/PR #3)
 **(1) Stats de base perso = FAIT** (`basestats.py`, extraction committée, registre `verified`, branché dans `charstats`, packagé re-validé).
 
-**(2) Stats de base d'ARME = FAIT** (`weaponstats.py` + `tools/extract_weapon_basestats.py` →
-`data/mechanics/weapon-basestats.json`, 236 armes, embarqué) ; branché dans `compute_final_stats`
-→ **ATQ finale complète** ; registre `weapon_base_stats` = `probable` (→ `verified` après contre-revue Codex, quota en attente).
+**(2) Stats de base d'ARME = FAIT** (`weaponstats.py`, 236 armes, embarqué) ; branché → **ATQ finale complète** ;
+registre `weapon_base_stats` = **`verified`** (R3 indépendant OK + extraction reproductible : SHA256 + checkout propre).
 
-**Prochain fichier/tâche** : **(3) multiplicateurs de talents** — extraire `data/sources/genshin-db/src/data/stats/talents.json`
-(par niveau de talent 1..15) vers `data/mechanics/` (committé + embarqué + provenance), distinguer NA/skill/burst,
-brancher dans le calcul pour **retirer la saisie manuelle du `scaling`** pour les talents pris en charge (signaler le reste).
+**(3) Multiplicateurs de talents = FAIT** (`talentstats.py` + `tools/extract_talent_multipliers.py` →
+`data/mechanics/talent-multipliers.json`, 123 persos ; libellés exacts du jeu param→label ; Voyageur par élément).
+**Câblé** dans `charstats` (`talents_detail` au niveau réel) + UI (sélecteur remplaçant la saisie `scaling`).
+**Revue Codex R4 = à relancer dès quota** (gate de fusion talents). Statuer `talent_multipliers` `verified` après R4.
 
-Puis dans l'ordre : (4) **stats finales auto** complètes [FAIT pour ATQ] ;
-(5) **buffs/sets/armes/constellations conditionnels** avec conditions explicables ; (6) sélection **ennemi** améliorée ;
-(7) golden + property + non-régression ; (8) **re-valider le parcours packagé sans Python**.
+**Prochain fichier/tâche** : **(5) buffs/sets/passifs d'arme/constellations CONDITIONNELS** — chaque effet avec
+condition explicite, état actif/inactif, source+version+tests, et explication dans « Voir le calcul ».
+Puis (6) sélection **ennemi** améliorée. Confidentialité + incident `engine.ts` = traités (cf. `docs/reviews/`).
 
 ## Critère de fusion PR #3 (ne pas fusionner avant)
 Parcours **automatique** pour persos/talents pris en charge :
