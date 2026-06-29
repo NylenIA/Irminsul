@@ -127,8 +127,8 @@
       ],
       "code": "src/irminsul/weaponstats.py:weapon_base_stats",
       "tests": ["tests/test_weaponstats.py", "tests/test_charstats.py"],
-      "verified_at": "",
-      "status": "probable",
+      "verified_at": "2026-06-29",
+      "status": "verified",
       "confidence": "high",
       "edge_cases": [
         "236 armes ; 10 valeurs recoupées INDÉPENDAMMENT au wiki en jeu lors de la revue Codex R3 (Dull Blade, Silver Sword, Black Tassel, Prototype Archaic, Favonius Lance, Mappa Mare, Snow-Tombed, Whiteblind, Skyward Harp, Mistsplitter)",
@@ -136,7 +136,7 @@
         "1-2★ plafonnées au niveau 70 (ascension max 4) — paires hors plage rejetées",
         "payload arme {supported:true} mais ATQ absente/non finie → exclu, jamais complete=true (durci suite R3)",
         "passifs d'arme (conditionnels) NON inclus — hors stats de base",
-        "status=probable : pour passer 'verified' → contre-revue R3 OK + durcir l'extraction (hash des entrées + contrôle de propreté du checkout source)"
+        "PROMU 'verified' 2026-06-29 : revue indépendante R3 OK + extraction reproductible (SHA256 des entrées + contrôle de propreté du checkout : source_dirty=false, reproducible=true)"
       ]
     },
     {

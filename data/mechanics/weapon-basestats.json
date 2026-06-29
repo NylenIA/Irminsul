@@ -12,6 +12,11 @@
       "src/data/curve/weapons.json",
       "src/data/stats/weapons.json"
     ],
+    "source_file_sha256": {
+      "src/data/curve/weapons.json": "e218ac6769da7ccf4a1e194fe628cccd9f05153447ef6a3acc00dbcacbd94389",
+      "src/data/stats/weapons.json": "873022843f02fbfffef110cbdda9bea0a1ab51b5e3643bd126abb632c375f201"
+    },
+    "source_dirty": false,
     "extracted_at": "2026-05-20",
     "reproducible": true,
     "confidence": "high",

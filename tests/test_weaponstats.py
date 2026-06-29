@@ -114,6 +114,15 @@ def test_provenance_reproducible_and_count() -> None:
     assert len(ws.supported_weapons()) == prov["weapon_count"] >= 200
 
 
+def test_provenance_hardened_hashes_and_clean_checkout() -> None:
+    # Durcissement R3 : hash SHA256 des fichiers source + checkout propre → reproductible vérifiable.
+    prov = ws.load_weaponstats()["provenance"]
+    assert prov.get("source_dirty") is False
+    h = prov.get("source_file_sha256") or {}
+    assert "src/data/stats/weapons.json" in h and "src/data/curve/weapons.json" in h
+    assert all(len(v) == 64 for v in h.values())  # SHA256 hex
+
+
 # --- Extraction sur source SYNTHÉTIQUE (pas la donnée gitignorée) --- #
 def test_extract_weapons_synthetic(tmp_path: Path) -> None:
     sd = tmp_path / "src" / "data"

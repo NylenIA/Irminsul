@@ -12,6 +12,7 @@ Usage : python tools/extract_weapon_basestats.py [--source data/sources/genshin-
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -49,10 +50,18 @@ def main() -> int:
     remote = _git(["remote", "get-url", "origin"], source) or "https://github.com/theBowja/genshin-db"
 
     extracted_at = commit_date[:10] if commit_date else ""
-    reproducible = bool(commit and commit_date)
+    # Durcissement (revue R3) : hash SHA256 des fichiers source + contrôle de PROPRETÉ du
+    # checkout. 'reproducible' n'est vrai que si commit connu ET checkout propre (sinon la
+    # sortie ne peut pas être reconstruite à partir du seul commit).
+    src_rel = ["src/data/curve/weapons.json", "src/data/stats/weapons.json"]
+    file_sha256 = {rel: hashlib.sha256((source / rel).read_bytes()).hexdigest() for rel in src_rel}
+    porcelain = _git(["status", "--porcelain", "--", *src_rel], source)
+    source_dirty = bool(porcelain)
+    reproducible = bool(commit and commit_date) and not source_dirty
     if not reproducible:
-        print("[extract_weapon_basestats] AVERTISSEMENT : source sans commit git → "
-              "provenance non reproductible (confiance abaissée).", file=sys.stderr)
+        print("[extract_weapon_basestats] AVERTISSEMENT : provenance NON reproductible "
+              f"(commit={'ok' if commit else 'absent'}, checkout {'sale' if source_dirty else 'propre'}) "
+              "→ confiance abaissée.", file=sys.stderr)
 
     provenance = {
         "source": "genshin-db",
@@ -60,10 +69,9 @@ def main() -> int:
         "source_url": remote.replace(".git", ""),
         "source_commit": commit,
         "source_commit_date": commit_date,
-        "extracted_from": [
-            "src/data/curve/weapons.json",
-            "src/data/stats/weapons.json",
-        ],
+        "extracted_from": src_rel,
+        "source_file_sha256": file_sha256,
+        "source_dirty": source_dirty,
         "extracted_at": extracted_at,
         "reproducible": reproducible,
         "confidence": "high" if reproducible else "medium",
