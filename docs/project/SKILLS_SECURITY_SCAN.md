@@ -49,3 +49,10 @@ secrets) · scripts **sans** `subprocess`/réseau · taille raisonnable.
 ## Emplacement (isolé)
 `C:/Users/akuon/IA Genshin/duo-agents-fork/.claude/skills/` — **séparé** du dépôt Irminsul (PR #3 non polluée).
 Quarantaine + venv outil : `.irminsul/skilltools/` (gitignoré).
+
+## MAJ 2026-06-29 — suite ui-ux-pro-max (uipro init) + override d'installation
+`uipro init --ai claude` (CLI 2.9.0) a généré **7 skills** dans `.claude/skills/` du fork (scope vérifié :
+**aucune écriture hors `.claude/skills`**) : ui-ux-pro-max, design, design-system, ui-styling, brand,
+banner-design, slides. Scan : scores élevés **heuristiques** (AR2 « actions autonomes ») mais **aucune
+exfiltration ni secret manifeste** (grep URLs externes/clés = 0). Conformément à l'override §2/§3, **installés
+complets**. Trace de risque conservée dans la machine de confiance (`.duo/skill-activity/state.json`).

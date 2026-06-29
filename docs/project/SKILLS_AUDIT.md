@@ -67,3 +67,12 @@ Option d'assainissement (SKILL.md sans `scripts/`) proposée pour réintégrer s
 - Évalués : 9 skills à SKILL.md + 1 CLI (ui-ux-pro-max). **Installés : 4 (LOW). Différés : 5. Rejetés as-is : 1.**
 - Outils ajoutés (gitignorés/hors dépôt) : SkillSpector (`.irminsul/skilltools/`), espace Duo `../duo-agents-fork/`.
 - Prochaine action : vetting/assainissement des différés à l'ouverture de la branche refonte ; ui-ux-pro-max en sandbox dédiée.
+
+## MAJ 2026-06-29 — installation COMPLÈTE autorisée (override utilisateur)
+L'utilisateur a explicitement autorisé (§2/§3) l'installation des **versions originales complètes** de tous les
+skills, **malgré les scores SkillSpector**, scripts/tests/outils **conservés** (non neutralisés). Les scores
+servent désormais à la **traçabilité** (machine de confiance §7), pas au blocage.
+- **16 skills installés** dans `duo-agents-fork/.claude/skills/` (isolé, hors PR #3). Versions épinglées :
+  alirezarezvani @`4a3c05b`, anthropics @`01f1617`, microsoft @`fddb721`, ui-ux-pro-max-cli `2.9.0`.
+- `code-reviewer` (CRITICAL) : installé complet ; reste en `qualifying` jusqu'à **revue manuelle** (seuil CRITICAL §7).
+- Télémétrie + validation runtime : `SKILLS_RUNTIME_VALIDATION.md`, `SKILLS_ACTIVITY_REPORT.md`. Limites §4 inchangées.
