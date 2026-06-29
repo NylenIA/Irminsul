@@ -43,6 +43,27 @@
    (ex. `frontend-review`, `tauri-security-review`) chargé à la demande, sans dépendance externe.
 3. Pour le design system : décider `shadcn` vs composants maison **dans la branche refonte** (impact dépendances).
 
+## Installation du pack ciblé (2026-06-29) — gated par SkillSpector
+> Scanner **NVIDIA SkillSpector v2.3.7** installé (venv `uv`/Py3.13, statique, sans clé API). Détail :
+> `docs/project/SKILLS_SECURITY_SCAN.md`. Emplacement isolé : `../duo-agents-fork/.claude/skills/` (hors PR #3).
+
+| Skill | Source @ ver/commit | Licence | SkillSpector | Rôle | Déclencheurs | Décision | Restrictions |
+|---|---|---|---|---|---|---|---|
+| frontend-design | anthropics/claude-code @01f1617 | Anthropic (LICENSE.md) | LOW 13 | création/implémentation visuelle | tâches design UI | **installé** | — |
+| frontend-design-review | microsoft/skills @fddb721 | MIT | LOW 0 | revue UI/UX, a11y, cohérence | après implémentation UI | **installé** | — |
+| senior-architect | alirezarezvani @4a3c05b | MIT | LOW 12 | frontières de modules, archi | début d'incrément | **installé** | scripts présents (non exécutés) |
+| senior-qa | alirezarezvani @4a3c05b | MIT | LOW 17 | stratégie tests, cas limites | phase tests | **installé** | « secrets » = exemples de tests |
+| senior-frontend | alirezarezvani @4a3c05b | MIT | MEDIUM 47 | archi React/TS, perf front | — | **différé** | score élevé (scripts/capacités) |
+| tdd-guide | alirezarezvani @4a3c05b | MIT | MEDIUM 21 | tests avant correctifs | — | **différé** | idem |
+| senior-backend | alirezarezvani @4a3c05b | MIT | HIGH 52 | backend/événements Duo | — | **différé** | shell/scripts non déclarés |
+| senior-security | alirezarezvani @4a3c05b | MIT | HIGH 57 | threat model, IPC, secrets | — | **différé** | idem |
+| code-reviewer | alirezarezvani @4a3c05b | MIT | **CRITICAL 100** | revue finale de diff | — | **rejeté (as-is)** | scripts subprocess sans permissions |
+| ui-ux-pro-max | npm `ui-ux-pro-max-cli` 2.9.0 (mrgoonie) | (non déclarée) | non scannable statiquement | direction UX/UI, palettes, design system | — | **différé** | CLI réseau + token GitHub ; généré au runtime |
+
+**Substituts pour les différés/rejetés** : revue/backend/sécurité assurées par **Codex (read-only) + Claude** (déjà en place).
+Option d'assainissement (SKILL.md sans `scripts/`) proposée pour réintégrer senior-backend/security/code-reviewer si tu le souhaites.
+
 ## Statut
-- Évalués : 7 familles de skills. **Installés : 0. Rejetés : 2. Différés (à vérifier) : 5.**
-- Prochaine action skills : vetting repo-par-repo des candidats `deferred-to-vet` à l'ouverture de la branche refonte.
+- Évalués : 9 skills à SKILL.md + 1 CLI (ui-ux-pro-max). **Installés : 4 (LOW). Différés : 5. Rejetés as-is : 1.**
+- Outils ajoutés (gitignorés/hors dépôt) : SkillSpector (`.irminsul/skilltools/`), espace Duo `../duo-agents-fork/`.
+- Prochaine action : vetting/assainissement des différés à l'ouverture de la branche refonte ; ui-ux-pro-max en sandbox dédiée.
