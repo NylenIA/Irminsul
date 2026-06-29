@@ -28,3 +28,11 @@ good-export*.json
 # Compte joueur importé (brut, normalisé, snapshots, rapports, recommandations).
 # Tout data/account/ contient des données personnelles dérivées → jamais sur GitHub.
 data/account/
+
+# Monorepo web (apps/web, packages/*) — Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+.turbo/

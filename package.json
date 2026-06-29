@@ -1,0 +1,13 @@
+{
+  "name": "irminsul-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Monorepo Irminsul — apps web (Next.js) + desktop (Tauri) + packages partagés. Le moteur Python reste sous services/engine (préservé).",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}
