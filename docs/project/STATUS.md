@@ -1,6 +1,6 @@
 # STATUS
 
-**Phase courante : 0 — Fondation d'efficacité des tokens** (porte de passage avant Phase 1).
+**Phase courante : 3 — Moteur de combat** (sur `feat/combat-engine-phase3`, PR #3). Phases 0-2 livrées (PR #2 fusionnée dans `main`).
 
 ## Fait
 - Spec autoritative placée (`docs/project/MASTER_SPEC.md`).
@@ -24,15 +24,24 @@
 - Données dans le dossier app (`app_data_dir`), pas le dépôt ni le PATH Python.
 - **App packagée validée** (release exe + sidecar) : import → affichage → relance → restauration, sans Python (`scripts/test_packaged_app.sh`). Installeurs MSI (12 Mo) + NSIS (11 Mo) avec sidecar embarqué. CI Windows reproductible (`desktop.yml`).
 
-## Phase 3 — démarrée
-- **Registre versionné des mécaniques** `data/mechanics/source-registry.json` (5 mécaniques cœur : dégâts, DEF, RES, réactions amplifiantes/transformatives ; sources KQM, statut `verified`, tests liés). Embarqué dans le sidecar (`--add-data`, `sys._MEIPASS`) → voyage avec le moteur.
-- **Moteur de calcul rapide** déterministe `irminsul.quickcalc` (réutilise `damage`/`reaction`, traçabilité) exposé via le sidecar (`quick-calc`, `mechanics`) + écran **« Calcul rapide »** avec « Voir le calcul ».
-- Tests : `test_quickcalc.py` (golden indépendant 3946.15, réaction ×2, intégrité registre, déterminisme) ; smoke sidecar quick-calc OK sans Python.
+## Phase 3 — en cours (PR #3)
+- **Registre versionné** `data/mechanics/source-registry.json` embarqué dans le sidecar (voyage avec le moteur). Mécaniques `verified` (dégâts, DEF, RES, amplifiantes, additives, transformatives, stats principales d'artéfact 5★, **stats de base perso**) ; `unknown` signalées (**stats de base d'arme** = tâche suivante, réactions Lunaires). live ≠ unknown ≠ leaks.
+- **Stats de base perso** (`basestats`) : PV/ATQ/DÉF par niveau+ascension via courbes genshin-db **extraites et committées** (`data/mechanics/character-basestats.json`, provenance commit `acd86e05` + formule + confiance, embarqué dans le sidecar). 119 persos ; Voyageur → aether ; clés hors source signalées non prises en charge ; valeurs validées en jeu (Ayaka 12858, Hu Tao 15552/106). Branché dans `charstats` : base + **stats finales auto**, chaque stat marquée `complete:false` tant que l'arme n'est pas branchée (rien d'inventé).
+- **Calcul rapide** déterministe (`quickcalc`) : réactions **amplifiantes + additives (Aggravation/Propagation) + transformatrices**, détail explicable (entrées, stat, multiplicateurs, réaction, DEF, RES, crit, dégâts finaux, version+source+confiance).
+- **Connecté au compte** (`charstats`) : sélection d'un personnage importé → stats **exactes issues des artéfacts** (substats réels + table 5★ niv.20) + provenance ; UI préremplit crit/EM, affiche le build et les éléments **non pris en charge** (base perso/arme, effets conditionnels, multiplicateur de talent auto) — sans rien inventer.
+- **Stats de base d'ARME** (`weaponstats`, 236 armes) : ATQ de base + stat secondaire par niveau+ascension (`base × courbe + promotion` ; secondaire sans ascension), extraites/committées (`data/mechanics/weapon-basestats.json`, embarquées), croisées EN JEU (Mistsplitter 674/44.1%, Wolf's 608/49.6%, The Catch 509/45.9%). Caps de rareté (1-2★ → niv 70). Registre `weapon_base_stats` = **`probable`** (contre-revue Codex requise pour `verified`).
+- **Parcours AUTOMATIQUE complet** : import GOOD → perso → arme+artéfacts → **stats finales (`complete=true`)** = écran du jeu (hors buffs conditionnels). Le champ de saisie ATQ se **masque automatiquement** quand `final_stats.atk.complete`.
+- **Validé** : **226 tests Python** (goldens indépendants vs jeu, propriétés, robustesse NaN/inf, non-régression, intégration), Ruff, frontend `tsc` strict + `vite build`, **`cargo test` (5)**. **App packagée** re-validée sans Python : import → perso → **base perso+arme** → **ATQ finale complète** → calcul → relance/restauration (`scripts/test_packaged_app.sh`, `test_sidecar_clean.sh`).
+- **Talents** (`talentstats`, 123 persos) : multiplicateurs par niveau étiquetés (libellés exacts du jeu, param→label), Voyageur par élément. **Câblés** dans `charstats` (`talents_detail` au niveau réel) + UI (sélecteur qui remplace la saisie `scaling` pour les talents pris en charge).
+- **Registre** : `weapon_base_stats` = **`verified`** (2026-06-29) après revue indépendante R3 (10 armes croisées au wiki en jeu) + extraction reproductible (SHA256 + checkout propre). `character_base_stats` verified ; `talent_multipliers`/réactions Lunaires à statuer.
+- **Revues Codex (via Duo)** : R1 (base perso), R2 (correctifs), R3 (armes) → tous `changes-required`, **constats corrigés** (C1–C6 + résidus + #4/#5 ; voir `docs/reviews/`). **R4 (talents) bloquée par quota Codex** → gate de fusion talents en attente.
+- **Confidentialité** : mémoire d'agent gitignorée ; vrai UID **retiré** (réécriture des messages limitée à `feat`, `--force-with-lease`, arbre identique ; local+distant propres ; `main`/tags intacts). Repo privé.
+- **Incident** `engine.ts` (supprimé hors mission) : restauré ; **isolation Codex read-only** + test d'intégrité dépôt ; scheduler Duo **désactivé**. Cf. `docs/reviews/INCIDENT_engine_ts.md`.
 
-## Livraison PR #2
-- Checks GitHub : `frontend` ✅, `desktop` ✅ (build + sidecar testé sans Python), `test` ✅ après scoping du test d'intégration MCP (handshake stdio) à Windows — contrat « 10 outils » couvert toutes plateformes par le test unitaire. PR #2 fusionnée dans `main` (squash).
+## Livraison PR #3
+- **CI verte** (frontend ✅, desktop ✅ sidecar sans Python, test ✅), CLEAN/MERGEABLE. Dernier commit `eff0097`. **NON fusionnée** (critère : parcours automatique stats finales, cf. HANDOFF).
 
-## Prochaine action — Phase 3 (branche `feat/combat-engine-phase3`)
-- Réactions **additives** (Aggravation/Propagation et réactions live), **transformatrices** + affichage dans « Calcul rapide ».
-- Brancher les **stats finales réelles** des persos importés ; sélection perso/talent/niveau/ennemi/réaction/buffs/crit ; détail explicable complet (entrées, stat, multiplicateur, bonus, réaction, DEF, RES, crit, dégâts, version mécanique, source, confiance).
-- Golden + tests de propriétés + non-régression ; comparaison à des références indépendantes ; mécaniques manquantes signalées, jamais inventées ; live ≠ leaks.
+## Prochaine action — Phase 3 (suite) → voir `docs/project/HANDOFF.md`
+- **Fait** : base perso + arme (`verified`) ; ATQ finale complète ; talents (module + câblage UI) ; correctifs revues R1–R3 ; confidentialité + incident `engine.ts`.
+- **Bloquant fusion** : **revue Codex R4 (talents)** en attente quota (~03:58) ; CI GitHub à confirmer verte ; pas de défaut critique/élevé ouvert.
+- **Ensuite** : buffs/sets/passifs d'arme/constellations **conditionnels** (avec conditions explicables), sélection **ennemi** améliorée, puis statuer `talent_multipliers` en `verified` après R4.

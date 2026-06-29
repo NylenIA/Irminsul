@@ -32,6 +32,13 @@ AMPLIFYING_BASE = {
     "reverse-melt": 1.5,
 }
 
+# Coefficients des réactions ADDITIVES (source : mécaniques KQM).
+# Le bonus s'AJOUTE aux dégâts de base du talent (puis DMG%/crit/DEF/RES s'appliquent).
+ADDITIVE_BASE = {
+    "aggravate": 1.15,
+    "spread": 1.25,
+}
+
 
 def transformative_em_bonus(elemental_mastery: float) -> float:
     """Bonus de Maîtrise pour une réaction transformative (formule KQM)."""
@@ -43,6 +50,12 @@ def amplifying_em_bonus(elemental_mastery: float) -> float:
     """Bonus de Maîtrise pour une réaction amplifiante (formule KQM)."""
     em = max(elemental_mastery, 0.0)
     return 2.78 * em / (em + 1400)
+
+
+def additive_em_bonus(elemental_mastery: float) -> float:
+    """Bonus de Maîtrise pour une réaction additive (Aggravation/Propagation, KQM)."""
+    em = max(elemental_mastery, 0.0)
+    return 5.0 * em / (em + 1200)
 
 
 @dataclass(slots=True)
@@ -66,6 +79,19 @@ class AmplifyingResult:
     em_bonus: float
     extra_bonus: float
     amplifying_multiplier: float
+
+    def to_dict(self) -> dict[str, float | str]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class AdditiveResult:
+    reaction: str
+    base_multiplier: float
+    level_multiplier: float
+    em_bonus: float
+    extra_bonus: float
+    base_bonus_damage: float
 
     def to_dict(self) -> dict[str, float | str]:
         return asdict(self)
@@ -136,4 +162,38 @@ def amplifying_multiplier(
         em_bonus=round(em_bonus, 4),
         extra_bonus=round(extra, 4),
         amplifying_multiplier=round(multiplier, 4),
+    )
+
+
+def additive_reaction(
+    *,
+    reaction: str,
+    elemental_mastery: float = 0.0,
+    level_multiplier: float = LEVEL_MULTIPLIER_LV90,
+    reaction_bonus: float = 0.0,
+) -> AdditiveResult:
+    """Bonus de base additif d'une réaction Aggravation/Propagation (KQM).
+
+    base_bonus_damage = coef × level_multiplier × (1 + 5·EM/(EM+1200) + reaction_bonus).
+    Ce montant s'AJOUTE aux dégâts de base du talent ; il est ensuite affecté par
+    DMG%, crit, DEF et RES (à injecter via `flat_base_damage`). L'EM ne snapshot pas.
+    """
+    key = reaction.strip().lower()
+    if key not in ADDITIVE_BASE:
+        raise ValueError(
+            f"Réaction additive inconnue : {reaction!r}. Options : {', '.join(sorted(ADDITIVE_BASE))}"
+        )
+    if level_multiplier <= 0:
+        raise ValueError("level_multiplier doit être positif")
+    base = ADDITIVE_BASE[key]
+    em_bonus = additive_em_bonus(elemental_mastery)
+    extra = max(reaction_bonus, 0.0)
+    bonus = base * level_multiplier * (1 + em_bonus + extra)
+    return AdditiveResult(
+        reaction=key,
+        base_multiplier=base,
+        level_multiplier=level_multiplier,
+        em_bonus=round(em_bonus, 4),
+        extra_bonus=round(extra, 4),
+        base_bonus_damage=round(bonus, 2),
     )

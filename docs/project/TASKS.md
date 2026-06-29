@@ -28,9 +28,25 @@
 ## Livraison
 - [x] CI verte (frontend/desktop/test) — test handshake MCP scopé Windows ; PR #2 fusionnée (squash) dans `main`.
 
-## Phase 3 — sur `feat/combat-engine-phase3`
+## Phase 3 — sur `feat/combat-engine-phase3` (PR #3)
 - [x] `data/mechanics/source-registry.json` (registre versionné) embarqué dans le sidecar
-- [x] Calcul rapide déterministe + commandes sidecar `quick-calc`/`mechanics` + écran « Calcul rapide » + golden tests
-- [ ] Réactions **additives** (Aggravation/Propagation, live) + **transformatrices** dans l'UI
-- [ ] Stats finales réelles du compte → calculateur ; sélection perso/talent/niveau/ennemi/réaction/buffs/crit
-- [ ] Détail explicable complet ; golden + propriétés + non-régression ; comparaison références indépendantes
+- [x] Calcul rapide déterministe + commandes sidecar + écran « Calcul rapide » + golden tests
+- [x] Réactions **additives** (Aggravation/Propagation) + **transformatrices** dans l'UI
+- [x] Connexion compte : sélection perso importé → stats **artéfacts exactes** + provenance ; non-pris-en-charge signalé
+- [x] Détail explicable complet ; golden + propriétés + non-régression ; références indépendantes (table 5★)
+## Phase 3 — prochaine session (ordre imposé, cf. `docs/project/HANDOFF.md`)
+- [x] 1. **Stats de base perso** live, versionnées et sourcées → `src/irminsul/basestats.py` (courbes genshin-db
+      extraites/committées + provenance) ; `charstats` calcule auto base + stats finales (marquées INCOMPLÈTES
+      tant que l'arme n'est pas branchée) ; sidecar/app packagée re-validés sans Python ; 158 tests
+- [x] 1b. **Revue Codex** (Duo) base perso → `changes-required` ; correctifs C1–C6 (validation niveau/ascension,
+      Voyageur, NaN/inf, incomplétudes artéfact, ATQ UI, provenance reproductible) appliqués + tests. Contre-revue = **quota Codex** (en attente).
+- [x] 2. Courbes/stats **d'armes** (`weaponstats`, 236 armes, croisé en jeu) → registre `probable` ;
+      contre-revue Codex en attente quota. 177 tests.
+- [ ] 3. **Multiplicateurs de talents** par niveau (← PROCHAIN)
+- [x] 4. **Stats finales auto** : ATQ finale `complete=true` (perso+arme+artéfacts) ; saisie ATQ masquée
+      auto quand `atk.complete`. (Reste : `scaling` talent manuel tant que la table de talents n'est pas branchée.)
+- [ ] 5. **Buffs/sets/armes/constellations conditionnels** (conditions explicables)
+- [ ] 6. Sélection **ennemi** améliorée
+- [ ] 7. Golden + property + non-régression
+- [ ] 8. **Re-valider le parcours packagé sans Python**
+- [ ] Fusion PR #3 quand le parcours stats finales est **automatique** (persos/talents pris en charge) + CI verte

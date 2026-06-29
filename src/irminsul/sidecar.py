@@ -24,7 +24,9 @@ PROTOCOL_VERSION = 1
 
 
 def _enc(obj: dict[str, Any]) -> bytes:
-    return json.dumps(obj, ensure_ascii=False, default=str).encode("utf-8")
+    # allow_nan=False : filet final anti-corruption — aucune valeur NaN/inf ne peut
+    # produire un JSON non conforme (JS rejette NaN). Une fuite → erreur propre, pas du JSON invalide.
+    return json.dumps(obj, ensure_ascii=False, default=str, allow_nan=False).encode("utf-8")
 
 
 def handle(data: bytes) -> bytes:

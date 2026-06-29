@@ -150,6 +150,16 @@ fn mechanics(app: tauri::AppHandle) -> Result<String, String> {
     call_engine(&app, "mechanics", serde_json::json!({})).and_then(to_json_string)
 }
 
+#[tauri::command]
+fn account_characters(app: tauri::AppHandle) -> Result<String, String> {
+    call_engine(&app, "characters", serde_json::json!({})).and_then(to_json_string)
+}
+
+#[tauri::command]
+fn character_stats(app: tauri::AppHandle, key: String) -> Result<String, String> {
+    call_engine(&app, "character-stats", serde_json::json!({ "key": key })).and_then(to_json_string)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -161,7 +171,9 @@ pub fn run() {
             account_roster,
             account_import_good,
             quick_calc,
-            mechanics
+            mechanics,
+            account_characters,
+            character_stats
         ])
         .run(tauri::generate_context!())
         .expect("erreur au démarrage de l'application Tauri");

@@ -6,6 +6,7 @@ import pytest
 
 from irminsul import quickcalc
 from irminsul.account_ipc import dispatch
+from irminsul.reaction import additive_reaction
 
 
 def test_registry_integrity() -> None:
@@ -55,6 +56,59 @@ def test_dispatch_mechanics_and_quickcalc() -> None:
     out = dispatch("quick-calc", {"scaling": 1.5, "stat": 1800})
     assert out["status"] == "ok" and out["result"]["expected"] > 0
     assert out["registry_version"]
+
+
+def test_additive_base_bonus_golden() -> None:
+    # Golden indépendant : coef × 1446.85 × (1 + 5·EM/(EM+1200)).
+    # Aggravation EM0 : 1.15×1446.85 = 1663.88 ; Propagation : 1.25×1446.85 = 1808.56.
+    assert additive_reaction(reaction="aggravate").base_bonus_damage == pytest.approx(1663.88, abs=1.0)
+    assert additive_reaction(reaction="spread").base_bonus_damage == pytest.approx(1808.56, abs=1.0)
+    # EM 200 : facteur (1 + 1000/1400) = 1.7143.
+    assert additive_reaction(reaction="aggravate", elemental_mastery=200).base_bonus_damage == pytest.approx(
+        1663.88 * 1.7143, rel=1e-3
+    )
+
+
+def test_additive_monotonic_in_em() -> None:
+    lo = additive_reaction(reaction="spread", elemental_mastery=0).base_bonus_damage
+    hi = additive_reaction(reaction="spread", elemental_mastery=300).base_bonus_damage
+    assert hi > lo  # propriété : plus d'EM ⇒ plus de bonus
+
+
+def test_quickcalc_additive_adds_to_base() -> None:
+    no = quickcalc.quickcalc_payload({"scaling": 2.0, "stat": 2000})["result"]["expected"]
+    agg = quickcalc.quickcalc_payload({"scaling": 2.0, "stat": 2000, "reaction": "aggravate", "em": 100})
+    assert agg["additive"] is not None
+    assert "additive_reaction" in agg["mechanics_used"]
+    assert agg["result"]["expected"] > no  # le bonus additif augmente les dégâts
+
+
+def test_quickcalc_transformative_block() -> None:
+    out = quickcalc.quickcalc_payload({"scaling": 0.0, "stat": 0.0, "reaction": "overloaded"})
+    assert out["transformative"] is not None
+    # Golden : 2.0 × 1446.85 × (1+0) × ResMult(0.1)=0.9 = 2604.33.
+    assert out["transformative"]["damage"] == pytest.approx(2604.33, abs=1.0)
+    assert "transformative_reaction" in out["mechanics_used"]
+
+
+def test_mechanics_detail_carries_source_and_confidence() -> None:
+    out = quickcalc.quickcalc_payload({"scaling": 1.0, "stat": 1000, "reaction": "forward-vaporize"})
+    ids = {m["id"] for m in out["mechanics_detail"]}
+    assert {"outgoing_damage", "amplifying_reaction"} <= ids
+    for m in out["mechanics_detail"]:
+        assert m["status"] in quickcalc.VALID_STATUS and m["sources"] and "confidence" in m
+
+
+def test_registry_flags_uncertain_lunar_as_unknown() -> None:
+    reg = quickcalc.load_registry()
+    ids = {m["id"]: m for m in reg["mechanics"]}
+    assert "additive_reaction" in ids and ids["additive_reaction"]["status"] == "verified"
+    assert "lunar_reactions" in ids and ids["lunar_reactions"]["status"] == "unknown"  # incertitude signalée
+
+
+def test_unknown_reaction_rejected() -> None:
+    with pytest.raises(ValueError):
+        quickcalc.quickcalc_payload({"scaling": 1.0, "stat": 1000, "reaction": "lunar-charged"})
 
 
 def test_determinism() -> None:

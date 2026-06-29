@@ -28,3 +28,12 @@ good-export*.json
 # Compte joueur importé (brut, normalisé, snapshots, rapports, recommandations).
 # Tout data/account/ contient des données personnelles dérivées → jamais sur GitHub.
 data/account/
+
+# Outils de collaboration locaux (Duo / Codex) — sessions et artefacts transitoires.
+.duo/
+.agents/
+.codex/
+
+# Mémoire d'agent Claude (UID, roster, préférences privées du joueur) → LOCALE uniquement.
+# Ne jamais committer : contient des données personnelles. Cf. docs/project/DECISIONS.md.
+.claude/agent-memory/

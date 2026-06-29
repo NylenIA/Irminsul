@@ -1,8 +1,15 @@
 /** Calcul rapide déterministe (Phase 3) : l'utilisateur saisit ses stats, le moteur
  * renvoie le résultat + le détail (« Voir le calcul ») avec traçabilité du registre.
  * Aucune donnée de jeu factice : les champs sont des entrées éditables. */
-import { useState } from "react";
-import { isDesktop, quickCalc, type QuickCalcResult } from "../engine";
+import { useEffect, useRef, useState } from "react";
+import {
+  getCharacters,
+  getCharacterStats,
+  isDesktop,
+  quickCalc,
+  type CharacterInfo,
+  type QuickCalcResult,
+} from "../engine";
 
 interface Fields {
   scaling: string;
@@ -20,7 +27,15 @@ const DEFAULTS: Fields = {
   damage_bonus: "0.0", resistance: "0.1", reaction: "", em: "0",
 };
 
-const REACTIONS = ["", "forward-vaporize", "reverse-vaporize", "forward-melt", "reverse-melt"];
+const REACTION_GROUPS: ReadonlyArray<{ label: string; items: string[] }> = [
+  { label: "Amplifiantes", items: ["forward-vaporize", "reverse-vaporize", "forward-melt", "reverse-melt"] },
+  { label: "Additives", items: ["aggravate", "spread"] },
+  {
+    label: "Transformatrices",
+    items: ["overloaded", "superconduct", "electro-charged", "swirl", "bloom",
+      "hyperbloom", "burgeon", "burning", "shattered"],
+  },
+];
 
 export function QuickCalc(): JSX.Element {
   const [f, setF] = useState<Fields>(DEFAULTS);
@@ -28,9 +43,75 @@ export function QuickCalc(): JSX.Element {
   const [err, setErr] = useState<string | null>(null);
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [characters, setCharacters] = useState<string[]>([]);
+  const [selected, setSelected] = useState("");
+  const [charInfo, setCharInfo] = useState<CharacterInfo | null>(null);
+  // Talent sélectionné ("slot::label") et bascule "scaling manuel".
+  const [talentSel, setTalentSel] = useState("");
+  const [manualScaling, setManualScaling] = useState(false);
+  // Jeton de requête : ignore les réponses obsolètes (sélections concurrentes).
+  const reqIdRef = useRef(0);
 
   function set<K extends keyof Fields>(k: K, v: string): void {
     setF((p) => ({ ...p, [k]: v }));
+  }
+
+  useEffect(() => {
+    if (!isDesktop()) return;
+    void getCharacters()
+      .then((r) => {
+        if (r.status === "ok") setCharacters(r.characters);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  async function selectCharacter(key: string): Promise<void> {
+    const reqId = ++reqIdRef.current;
+    setSelected(key);
+    setCharInfo(null);
+    setTalentSel("");
+    // Réinitialisation IMMÉDIATE de l'ATQ (avant l'await) : aucune valeur périmée
+    // réutilisable pendant la requête ; sélection vide → défaut manuel.
+    setF((p) => ({ ...p, stat: key ? "" : DEFAULTS.stat }));
+    if (!key) return;
+    try {
+      const r = await getCharacterStats(key);
+      if (reqId !== reqIdRef.current) return; // réponse obsolète : une sélection plus récente a eu lieu
+      if (r.status === "ok") {
+        const ci = r.character;
+        setCharInfo(ci);
+        const fs = ci.final_stats;
+        if (fs) {
+          // Base perso (exacte, sourcée) + ascension + artéfacts — mais HORS arme.
+          const atk = fs.atk.value;
+          setF((p) => ({
+            ...p,
+            crit_rate: ((fs.crit_rate_.value ?? 0) / 100).toFixed(3),
+            crit_damage: ((fs.crit_dmg_.value ?? 0) / 100).toFixed(3),
+            em: String(Math.round(fs.eleMas.value ?? 0)),
+            // ATQ partielle (hors arme) : point de départ sourcé, à corriger.
+            // value peut être null si rejetée (non finie) → champ vidé, jamais "NaN".
+            stat: atk != null && Number.isFinite(atk) ? String(Math.round(atk)) : "",
+          }));
+        } else {
+          // Repli HONNÊTE : artéfacts uniquement (+ base crit fixe), perso hors source.
+          // On VIDE l'ATQ (pas de base calculée) pour éviter une valeur périmée.
+          const t = ci.artifact_stats.totals;
+          setF((p) => ({
+            ...p,
+            crit_rate: (((t.critRate_ ?? 0) + 5) / 100).toFixed(3),
+            crit_damage: (((t.critDMG_ ?? 0) + 50) / 100).toFixed(3),
+            em: String(Math.round(t.eleMas ?? 0)),
+            stat: "",
+          }));
+        }
+      } else if (r.status === "not_found") {
+        setErr(`Personnage introuvable : ${r.key}`);
+      }
+    } catch (e) {
+      if (reqId !== reqIdRef.current) return;
+      setErr(String(e));
+    }
   }
 
   async function compute(): Promise<void> {
@@ -74,12 +155,140 @@ export function QuickCalc(): JSX.Element {
     </label>
   );
 
+  const talentsSupported = !!charInfo?.talents_detail?.any_supported;
+
+  function applyTalent(value: string): void {
+    setTalentSel(value);
+    if (!value || !charInfo) return;
+    const [slot, label] = value.split("::");
+    const sd = charInfo.talents_detail[slot as "normal" | "skill" | "burst"];
+    const attr = sd.attributes?.find((a) => a.label === label);
+    if (attr && attr.value != null) set("scaling", String(attr.value));
+  }
+
+  const SLOT_LABELS: Array<["normal" | "skill" | "burst", string]> = [
+    ["normal", "Attaque normale"], ["skill", "Compétence"], ["burst", "Déchaînement"],
+  ];
+
+  // Sélecteur de talent (remplace la saisie manuelle du scaling pour les talents pris en charge).
+  const talentPicker = (): JSX.Element => (
+    <label className="qc-field">
+      <span>Multiplicateur de talent (à ton niveau de talent réel)</span>
+      <select value={talentSel} onChange={(ev) => applyTalent(ev.target.value)}>
+        <option value="">— choisir un talent (libellé du jeu) —</option>
+        {SLOT_LABELS.map(([slot, lbl]) => {
+          const sd = charInfo?.talents_detail[slot];
+          if (!sd?.supported || !sd.attributes) return null;
+          return (
+            <optgroup key={slot} label={`${lbl} (niv ${sd.level})`}>
+              {sd.attributes
+                .filter((a) => a.is_damage && a.value != null)
+                .map((a) => (
+                  <option key={`${slot}::${a.label}`} value={`${slot}::${a.label}`}>
+                    {a.label} — {((a.value as number) * 100).toFixed(1)}%
+                  </option>
+                ))}
+            </optgroup>
+          );
+        })}
+      </select>
+    </label>
+  );
+
+  const manualToggle = (): JSX.Element => (
+    <label className="qc-toggle">
+      <input
+        type="checkbox"
+        checked={manualScaling}
+        onChange={(ev) => setManualScaling(ev.target.checked)}
+      />
+      <span>scaling manuel (talent non listé / valeur personnalisée)</span>
+    </label>
+  );
+
   return (
     <div className="quickcalc">
       <p className="empty-state">
-        Calcul déterministe d'un coup direct. Saisis tes stats réelles ; le détail et les
-        sources sont affichés via « Voir le calcul ».
+        Calcul déterministe d'un coup direct. Sélectionne un personnage importé (préremplit
+        crit/EM depuis tes artéfacts) ou saisis tes stats. Détail et sources via « Voir le calcul ».
       </p>
+
+      {characters.length > 0 && (
+        <div className="char-pick">
+          <label className="qc-field">
+            <span>Personnage (importé du compte)</span>
+            <select value={selected} onChange={(ev) => void selectCharacter(ev.target.value)}>
+              <option value="">— choisir —</option>
+              {characters.map((k) => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+          </label>
+          {charInfo && (
+            <div className="char-info">
+              <p>
+                C{charInfo.constellation ?? "?"} · niv {charInfo.level ?? "?"} · talents{" "}
+                {charInfo.talents.auto ?? "?"}/{charInfo.talents.skill ?? "?"}/{charInfo.talents.burst ?? "?"} ·{" "}
+                {charInfo.weapon ? `${charInfo.weapon.key} R${charInfo.weapon.refinement ?? "?"}` : "sans arme"}
+              </p>
+              {charInfo.base_stats.supported && charInfo.final_stats ? (
+                <div className="char-base">
+                  <p>
+                    <strong>Base perso (niv {charInfo.level ?? "?"}, asc {charInfo.ascension ?? "?"}) :</strong>{" "}
+                    PV {Math.round(charInfo.base_stats.hp ?? 0).toLocaleString("fr-FR")} · ATQ{" "}
+                    {Math.round(charInfo.base_stats.atk ?? 0)} · DÉF {Math.round(charInfo.base_stats.def ?? 0)}
+                    {charInfo.base_stats.ascension_stat_key
+                      ? ` · ascension ${charInfo.base_stats.ascension_stat_key} +${charInfo.base_stats.ascension_stat_value}`
+                      : ""}
+                  </p>
+                  {charInfo.final_stats.weapon.supported ? (
+                    <p>
+                      <strong>Arme :</strong> {charInfo.final_stats.weapon.key} — ATQ base{" "}
+                      {Math.round(charInfo.final_stats.weapon.base_atk ?? 0)}
+                      {charInfo.final_stats.weapon.secondary_stat_key
+                        ? ` · ${charInfo.final_stats.weapon.secondary_stat_key} +${charInfo.final_stats.weapon.secondary_stat_value}`
+                        : ""}
+                      {" → "}
+                      <strong>
+                        ATQ finale{" "}
+                        {charInfo.final_stats.atk.value != null
+                          ? Math.round(charInfo.final_stats.atk.value)
+                          : "?"}
+                      </strong>
+                    </p>
+                  ) : (
+                    <p className="warn">Arme non calculée : {charInfo.final_stats.weapon.key ?? "—"} (ATQ saisie manuellement)</p>
+                  )}
+                  <p className="qc-prov">
+                    {charInfo.final_stats.complete ? "✓ " : "⚠ "}
+                    {charInfo.final_stats.note} · sources genshin-db (commit{" "}
+                    {charInfo.base_stats.provenance?.source_commit?.slice(0, 8) ?? "—"}).
+                  </p>
+                </div>
+              ) : (
+                <p className="qc-prov">
+                  Crit/EM préremplis depuis les artéfacts (hors base/arme/ascension). Provenance :{" "}
+                  {charInfo.provenance.source ?? "—"} · snapshot {charInfo.provenance.snapshot_date ?? "—"}.
+                </p>
+              )}
+              <details>
+                <summary>Non pris en charge (ne pas considérer comme actif)</summary>
+                <ul className="qc-mechanics">
+                  {charInfo.unsupported.map((u) => (
+                    <li key={u.item}><strong>{u.item}</strong> — {u.reason}</li>
+                  ))}
+                  {charInfo.artifact_stats.uncomputed_main.map((m, i) => (
+                    <li key={`uc-${i}`}>
+                      stat principale {m.mainStatKey} ({m.set} {m.slot}, {m.rarity}★ niv{m.level}) — {m.reason}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </div>
+          )}
+        </div>
+      )}
+
       <form
         className="qc-grid"
         onSubmit={(ev) => {
@@ -87,8 +296,26 @@ export function QuickCalc(): JSX.Element {
           void compute();
         }}
       >
-        {field("Multiplicateur talent (ex. 2.0)", "scaling")}
-        {field("Stat (ATK/HP/DEF)", "stat", "1")}
+        {talentsSupported && !manualScaling ? (
+          <>
+            {talentPicker()}
+            {manualToggle()}
+          </>
+        ) : (
+          <>
+            {field("Multiplicateur talent (ex. 2.0)", "scaling")}
+            {talentsSupported ? manualToggle() : null}
+          </>
+        )}
+        {charInfo?.final_stats?.atk.complete
+          ? null
+          : field(
+              charInfo?.final_stats
+                ? "ATQ (base perso + artéfacts, HORS arme — corrige avec le jeu)"
+                : "ATQ finale (depuis le jeu)",
+              "stat",
+              "1",
+            )}
         {field("Taux crit (0–1)", "crit_rate")}
         {field("Dégâts crit (ex. 1.0)", "crit_damage")}
         {field("Bonus de dégâts (0–…)", "damage_bonus")}
@@ -96,8 +323,13 @@ export function QuickCalc(): JSX.Element {
         <label className="qc-field">
           <span>Réaction</span>
           <select value={f.reaction} onChange={(ev) => set("reaction", ev.target.value)}>
-            {REACTIONS.map((r) => (
-              <option key={r || "none"} value={r}>{r || "aucune"}</option>
+            <option value="">aucune</option>
+            {REACTION_GROUPS.map((g) => (
+              <optgroup key={g.label} label={g.label}>
+                {g.items.map((r) => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </label>
@@ -110,27 +342,69 @@ export function QuickCalc(): JSX.Element {
       {res && (
         <div className="qc-result">
           <p>
-            <strong>Attendu (moyenne) :</strong> {Math.round(res.result.expected).toLocaleString("fr-FR")} ·{" "}
+            <strong>Dégâts finaux (moyenne) :</strong> {Math.round(res.result.expected).toLocaleString("fr-FR")} ·{" "}
             non-crit {Math.round(res.result.non_crit).toLocaleString("fr-FR")} ·{" "}
             crit {Math.round(res.result.crit).toLocaleString("fr-FR")}
           </p>
+          {res.additive && (
+            <p className="warn">
+              Bonus additif (intégré à la base) : +{Math.round(res.additive.base_bonus_damage).toLocaleString("fr-FR")}
+            </p>
+          )}
+          {res.transformative && (
+            <p className="warn">
+              Réaction transformatrice : {Math.round(res.transformative.damage).toLocaleString("fr-FR")} dégâts
+              {" "}(instance séparée, sans crit)
+            </p>
+          )}
           <button type="button" className="link" onClick={() => setShow((s) => !s)}>
             {show ? "Masquer le calcul" : "Voir le calcul"}
           </button>
           {show && (
-            <dl className="qc-detail">
-              <dt>Multiplicateur DEF</dt><dd>{res.result.defense_multiplier.toFixed(4)}</dd>
-              <dt>Multiplicateur RES</dt><dd>{res.result.resistance_multiplier.toFixed(4)}</dd>
-              <dt>Multiplicateur crit attendu</dt><dd>{res.result.expected_crit_multiplier.toFixed(4)}</dd>
-              {res.amplifying && (
-                <>
-                  <dt>Réaction (amplifiante)</dt>
-                  <dd>×{res.amplifying.amplifying_multiplier.toFixed(3)} (bonus EM {res.amplifying.em_bonus.toFixed(3)})</dd>
-                </>
+            <div className="qc-detail-wrap">
+              <dl className="qc-detail">
+                <dt>Base (stat × multiplicateur + additif)</dt><dd>{Math.round(res.result.raw_base).toLocaleString("fr-FR")}</dd>
+                <dt>Multiplicateur DEF</dt><dd>{res.result.defense_multiplier.toFixed(4)}</dd>
+                <dt>Multiplicateur RES</dt><dd>{res.result.resistance_multiplier.toFixed(4)}</dd>
+                <dt>Multiplicateur crit attendu</dt><dd>{res.result.expected_crit_multiplier.toFixed(4)}</dd>
+                {res.amplifying && (
+                  <>
+                    <dt>Réaction amplifiante</dt>
+                    <dd>×{res.amplifying.amplifying_multiplier.toFixed(3)} (bonus EM {res.amplifying.em_bonus.toFixed(3)})</dd>
+                  </>
+                )}
+                {res.additive && (
+                  <>
+                    <dt>Réaction additive</dt>
+                    <dd>coef {res.additive.base_multiplier} · bonus EM {res.additive.em_bonus.toFixed(3)}</dd>
+                  </>
+                )}
+                {res.transformative && (
+                  <>
+                    <dt>Réaction transformatrice</dt>
+                    <dd>{res.transformative.reaction} · coef {res.transformative.base_multiplier} · bonus EM {res.transformative.em_bonus.toFixed(3)}</dd>
+                  </>
+                )}
+              </dl>
+              {charInfo && (
+                <p className="qc-prov">
+                  Données du compte utilisées : {charInfo.key} (C{charInfo.constellation ?? "?"}, niv{" "}
+                  {charInfo.level ?? "?"}) — crit/EM issus des artéfacts ; SHA{" "}
+                  {charInfo.provenance.sha256 ? `${charInfo.provenance.sha256.slice(0, 8)}…` : "—"}.
+                </p>
               )}
-              <dt>Mécaniques utilisées</dt><dd>{res.mechanics_used.join(", ")}</dd>
-              <dt>Registre</dt><dd>v{res.registry_version} (sources KQM, statut vérifié)</dd>
-            </dl>
+              <p className="qc-prov">Registre v{res.registry_version} — mécaniques, sources et confiance :</p>
+              <ul className="qc-mechanics">
+                {res.mechanics_detail.map((m) => (
+                  <li key={m.id}>
+                    <strong>{m.id}</strong> — statut {m.status}, confiance {m.confidence}
+                    {m.sources.length > 0
+                      ? ` · ${m.sources.map((s) => `${s.name} (rang ${s.type})`).join(", ")}`
+                      : ""}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       )}

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "agents": {
+    "claude": {
+      "command": "claude",
+      "args": [],
+      "model": null,
+      "maxTurns": 12
+    },
+    "codex": {
+      "command": "codex",
+      "args": [],
+      "model": null
+    }
+  },
+  "workflow": {
+    "implementer": "auto",
+    "repairCycles": 1
+  },
+  "safety": {
+    "codexSandbox": "read-only",
+    "skipGitRepoCheck": false,
+    "maxHandoffChars": 24000,
+    "_note": "codexSandbox=read-only : Codex sert UNIQUEMENT de reviseur independant et ne doit JAMAIS modifier les fichiers Irminsul (cf. incident engine.ts 2026-06-29, docs/reviews/INCIDENT_engine_ts.md). Pour une mission d'implementation deleguee a Codex, relever ce niveau de facon explicite et bornee, puis le rabaisser."
+  }
+}

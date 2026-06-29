@@ -48,5 +48,14 @@ echo "== roster (personnages/armes/sets) =="
 OUT_ROST="$(run '{"id":"r","method":"roster"}')"
 echo "$OUT_ROST" | grep -q '"characters"' && echo "  roster OK" || { echo "  ÉCHEC roster: $OUT_ROST"; exit 1; }
 
+echo "== character-stats (stats de base perso+ARME EMBARQUÉES, sans Python) =="
+OUT_CS="$(run '{"id":"cs","method":"character-stats","params":{"key":"Furina"}}')"
+if echo "$OUT_CS" | grep -q '"base_stats"' && echo "$OUT_CS" | grep -q '"weapon_base_stats"' \
+   && echo "$OUT_CS" | grep -q '"complete": true'; then
+  echo "  stats de base perso+arme + ATQ finale COMPLÈTE OK (genshin-db bundlé dans l'exe)"
+else
+  echo "  ÉCHEC base/arme/complete (données non embarquées ?): $OUT_CS"; exit 1
+fi
+
 rm -rf "$TMP" 2>/dev/null || true
-echo "✅ Sidecar autonome validé SANS Python (import + profil + roster)."
+echo "✅ Sidecar autonome validé SANS Python (import + profil + roster + stats de base)."
