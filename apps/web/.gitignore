@@ -4,3 +4,7 @@ out
 next-env.d.ts
 .env*.local
 *.tsbuildinfo
+.e2e/
+playwright-report/
+test-results/
+/playwright/.cache/
