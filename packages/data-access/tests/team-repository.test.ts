@@ -186,4 +186,30 @@ describe("PrismaSqliteTeamRepository (local-first)", () => {
     await expect(repo.delete(saved.id)).resolves.toBeUndefined();
     expect(await repo.getById(saved.id)).toBeNull();
   });
+
+  it("renames and duplicates a team", async () => {
+    const repo = new PrismaSqliteTeamRepository(db);
+    const saved = await repo.save(validTeam({ name: "Original" }));
+
+    const renamed = await repo.rename(saved.id, "  Renamed  ");
+    expect(renamed.name).toBe("Renamed");
+    expect((await repo.getById(saved.id))?.name).toBe("Renamed");
+
+    await expect(repo.rename(saved.id, "   ")).rejects.toBeInstanceOf(
+      TeamRepositoryValidationError,
+    );
+    await expect(repo.rename("missing-id", "X")).rejects.toBeInstanceOf(
+      TeamRepositoryValidationError,
+    );
+
+    const copy = await repo.duplicate(saved.id);
+    expect(copy.id).not.toBe(saved.id);
+    expect(copy.name).toBe("Renamed (copie)");
+    expect(copy.members.map((m) => m.character)).toEqual(
+      renamed.members.map((m) => m.character),
+    );
+    await expect(repo.duplicate("missing-id")).rejects.toBeInstanceOf(
+      TeamRepositoryValidationError,
+    );
+  });
 });
