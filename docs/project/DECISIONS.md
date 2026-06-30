@@ -23,3 +23,11 @@
 - **Protocole** : un coup par requête (robuste, isolé), stdin JSON `{id,method,params}` → stdout JSON `{id,ok,result|error}`. Bornes : taille requête (2 Mo) + réponse (32 Mo), **timeout 30 s + kill**, erreurs structurées. Aucun secret en argument (tout sur stdin). Compromis assumé : léger surcoût d'extraction onefile par appel (acceptable pour des ops compte peu fréquentes).
 - **Chemins** : sidecar résolu **à côté de l'exe** (dev = target/debug, installé = dossier app) ; données dans **`app_data_dir`** (jamais le dépôt ni le PATH Python).
 - **Tests** : Python `test_sidecar.py` (JSON invalide, méthode inconnue, requête vide/trop grande, chemin espaces/Unicode, gros GOOD) ; Rust (`parse_response`, sidecar absent, aller-retour réel, timeout) ; scripts `test_sidecar_clean.sh` (sans Python) et `test_packaged_app.sh` (import/affichage/relance/restauration sur binaires release).
+
+## Refonte web / local-first (2026-06-30) — branche `feat/irminsul-complete-redesign`
+- **D-LF1 — LOCAL-FIRST maintenant, cloud optionnel plus tard** (décision propriétaire). Données privées (compte, inventaire, calculs, simulations, préférences, logs) **restent sur la machine**. Supabase = fonctions **futures et optionnelles** (auth, sync volontaire, sauvegarde chiffrée, profils publics, partage, communauté), désactivées par défaut. Aucune donnée privée vers le cloud.
+- **D-LF2 — Architecture hybride additive** : `apps/web` (Next.js 16) ajoutée sans détruire le desktop Tauri (`app/`) ni le moteur Python. Monorepo npm (`apps/*`, `packages/*`).
+- **D-LF3 — Base de branche `main`** (pas phase3). Pont moteur enrichi absent → slice web via adaptateur `EngineClient` (mock isolé) tant que PR #3 non fusionnée.
+- **D-LF4 — Persistance locale = Prisma + SQLite** (`packages/data-access`) derrière l'interface `TeamRepository`. **Prisma 6 retenu** (moteur embarqué, `new PrismaClient()` + `url=env`) plutôt que Prisma 7 (impose un *driver adapter* + dépendance native risquée sous Windows). Reproductibilité par lockfile.
+- **D-LF5 — Sécurité deps** : pas de `npm audit fix --force` (rétrograderait Next). Scripts d'install autorisés package par package, méthode officielle.
+- **D-LF6 — Ne pas toucher** `main`, `feat/combat-engine-phase3`, `duo-agents-fork`. Pas de push/PR sans accord.

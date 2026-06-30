@@ -23,6 +23,13 @@
 - **R3** : pont moteur (`engine.ts` enrichi) seulement sur `feat/combat-engine-phase3` → web « vraies données » nécessite fusion PR #3 ou `packages/engine-client`.
 - Outillage absent : SkillSpector, `/impeccable`, pnpm.
 
+### Reprise 2026-06-30 (sans bloquer)
+- **Prisma 6 + SQLite local** (`packages/data-access`) : validate/generate/migrate **OK**, **test repository Vitest PASS** (sauvegarde→recharge→supprime une équipe). Prisma 7 écarté (driver adapter + dép. native risquée Windows).
+- **MCP next-devtools** configuré dans `.mcp.json` (irminsul préservé) — état **READY_FOR_APPROVAL** (`/mcp` = action utilisateur unique).
+- **Skills** installés + découverts : frontend-design, skill-creator, webapp-testing. Reste documenté dans `docs/skills/` + `scripts/install-approved-skills.ps1`.
+- **Continuité** : hook `SessionStart` idempotent + DECISIONS/ARCHITECTURE/QUALITY_GATES/SESSION_HANDOFF.
+- **Avancement reproductible** : **MVP 50 % · Vision 48 %** (`scripts/project_progress.py`).
+
 ### Tests à l'instant
-- Next build : PASS (vérifié). Python : 96 tests (non relancés sur cette branche ce jour — à mesurer).
+- Next build : PASS. **Prisma repository : PASS (Vitest)**. Python : 96 tests (non relancés sur cette branche ce jour — à mesurer).
 - 2 vulns modérées transitives (postcss via next) : **non corrigées** (le fix `--force` rétrograde next → cassant). Acceptées, à revoir à la mise à jour de Next.
