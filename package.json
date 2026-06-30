@@ -3,6 +3,13 @@
   "private": true,
   "version": "0.1.0",
   "description": "Monorepo Irminsul — apps web (Next.js) + desktop (Tauri) + packages partagés. Le moteur Python reste sous services/engine (préservé).",
+  "scripts": {
+    "typecheck": "npm run typecheck -w @irminsul/web",
+    "test": "npm run test -w @irminsul/data-access",
+    "test:e2e": "npm run test:e2e -w @irminsul/web",
+    "build": "npm run build -w @irminsul/web",
+    "verify": "npm run typecheck && npm run test && npm run build"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"

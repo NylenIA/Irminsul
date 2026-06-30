@@ -1,20 +1,29 @@
-# Termine l'auth Codex (navigateur) puis relance le bootstrap Duo. N'affiche aucun token.
-$ErrorActionPreference = "Stop"
-$root = (Resolve-Path "$PSScriptRoot/..").Path
+﻿Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
 
-if (-not (Get-Command codex -ErrorAction SilentlyContinue)) { Write-Error "codex absent — lancer d'abord scripts/bootstrap-codex-and-skills.ps1"; exit 1 }
+$codexCommand = Get-Command codex -ErrorAction SilentlyContinue
+if ($null -eq $codexCommand) {
+    throw 'Codex est introuvable. Relancez bootstrap-codex-and-skills.ps1.'
+}
 
-Write-Output "Lancement de l'authentification Codex (une fenetre navigateur peut s'ouvrir)..."
-codex login   # sous-commande exacte; ne pas logger la sortie sensible
+Write-Host ('Codex detecte : {0}' -f $codexCommand.Source)
+& $codexCommand.Source --version
+if ($LASTEXITCODE -ne 0) {
+    throw ('Impossible d executer Codex. Code : {0}' -f $LASTEXITCODE)
+}
 
-# Verifier le statut sans exposer de secret
-$ok = $false
-try { codex login status *> $null; $ok = ($LASTEXITCODE -eq 0) } catch { $ok = $false }
-if (-not $ok) { Write-Output "Auth non confirmee. Reessayer la fenetre, puis relancer ce script."; exit 2 }
+Write-Host ''
+Write-Host 'Connexion Codex : terminez la procedure dans le navigateur.'
+& $codexCommand.Source login
+if ($LASTEXITCODE -ne 0) {
+    throw ('La connexion Codex a echoue. Code : {0}' -f $LASTEXITCODE)
+}
 
-Write-Output "Auth OK. Test read-only (aucune modification)..."
-codex exec --cd "$root" --sandbox read-only --ask-for-approval never --json `
-  "Resume uniquement le nom de la branche Git courante et confirme n'avoir modifie aucun fichier."
+$resumeScript = Join-Path -Path $PSScriptRoot -ChildPath 'resume-duo-after-codex-login.ps1'
+if (-not (Test-Path -LiteralPath $resumeScript)) {
+    throw ('Script de reprise introuvable : {0}' -f $resumeScript)
+}
 
-Write-Output "Reprise Duo..."
-& "$PSScriptRoot/resume-duo-after-codex-login.ps1"
+Write-Host ''
+Write-Host 'Connexion Codex terminee. Lancement de la reprise Duo...'
+& $resumeScript
