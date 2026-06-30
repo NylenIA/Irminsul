@@ -1,0 +1,95 @@
+/* Irminsul — Design system « Archive astrale ».
+   Quasi-noir + graphite ; cyan désaturé (turquoise spectral) ; violet lunaire (rare) ;
+   or extrêmement contrôlé ; ivoire froid (jamais blanc pur). Profondeur par la matière,
+   pas par les effets lumineux. OKLCH pour un contraste cohérent. */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces (quasi-noir bleuté → graphite) */
+  --irm-bg: oklch(0.16 0.012 250);
+  --irm-surface-1: oklch(0.21 0.014 250);
+  --irm-surface-2: oklch(0.26 0.016 250);
+  --irm-border: oklch(0.33 0.018 250);
+  --irm-border-strong: oklch(0.42 0.02 250);
+
+  /* Texte (ivoire froid / gris bleuté) */
+  --irm-text: oklch(0.93 0.012 240);
+  --irm-text-dim: oklch(0.72 0.02 245);
+  --irm-text-faint: oklch(0.58 0.02 245);
+
+  /* Accents froids irminsul */
+  --irm-cyan: oklch(0.78 0.085 195);
+  --irm-cyan-dim: oklch(0.62 0.06 195);
+  --irm-violet: oklch(0.66 0.12 290); /* lunaire — usage rare */
+  --irm-gold: oklch(0.83 0.085 85);   /* extrêmement contrôlé */
+  --irm-danger: oklch(0.64 0.17 25);  /* tension chaude, rare */
+  --irm-focus: oklch(0.82 0.10 210);
+
+  /* Rayons / espacement / élévation */
+  --irm-r-sm: 6px;
+  --irm-r: 10px;
+  --irm-r-lg: 14px;
+  --irm-space: 8px;
+  --irm-shadow: 0 1px 0 oklch(1 0 0 / 0.03) inset, 0 8px 24px oklch(0 0 0 / 0.35);
+
+  /* Motion */
+  --irm-dur-fast: 120ms;
+  --irm-dur: 200ms;
+  --irm-dur-slow: 360ms;
+  --irm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Typo */
+  --irm-font: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --irm-mono: "Cascadia Code", ui-monospace, "SF Mono", monospace;
+}
+
+@media (prefers-contrast: more) {
+  :root { --irm-text-dim: oklch(0.82 0.02 245); --irm-border: oklch(0.45 0.02 250); }
+}
+
+.irm-root {
+  background:
+    radial-gradient(1100px 520px at 72% -12%, oklch(0.24 0.03 255) 0%, var(--irm-bg) 60%);
+  color: var(--irm-text);
+  font: 15px/1.55 var(--irm-font);
+  min-height: 100vh;
+}
+
+/* Boutons */
+.irm-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 14px; border-radius: var(--irm-r-sm);
+  font: inherit; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--irm-border-strong);
+  background: var(--irm-surface-2); color: var(--irm-text);
+  transition: border-color var(--irm-dur) var(--irm-ease),
+              background var(--irm-dur) var(--irm-ease),
+              transform var(--irm-dur-fast) var(--irm-ease);
+}
+.irm-btn:hover { border-color: var(--irm-cyan-dim); }
+.irm-btn:active { transform: translateY(1px); }
+.irm-btn:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; }
+.irm-btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+.irm-btn--primary { background: color-mix(in oklab, var(--irm-cyan) 18%, var(--irm-surface-2)); border-color: var(--irm-cyan); }
+.irm-btn--ghost { background: transparent; border-color: transparent; color: var(--irm-text-dim); }
+.irm-btn--ghost:hover { color: var(--irm-text); border-color: var(--irm-border); }
+.irm-btn--danger { border-color: var(--irm-danger); color: var(--irm-danger); background: transparent; }
+
+/* Cartes */
+.irm-card {
+  background: var(--irm-surface-1); border: 1px solid var(--irm-border);
+  border-radius: var(--irm-r); padding: 16px; box-shadow: var(--irm-shadow);
+}
+.irm-card__title { margin: 0 0 6px; font-size: 14px; letter-spacing: 0.2px; color: var(--irm-cyan); }
+
+/* États (vide / chargement / erreur) */
+.irm-state { display: grid; gap: 8px; padding: 28px 18px; text-align: center; color: var(--irm-text-dim); border: 1px dashed var(--irm-border); border-radius: var(--irm-r); }
+.irm-state__title { color: var(--irm-text); font-weight: 600; }
+.irm-state--error { border-color: color-mix(in oklab, var(--irm-danger) 50%, var(--irm-border)); color: color-mix(in oklab, var(--irm-danger) 70%, var(--irm-text-dim)); }
+.irm-spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--irm-border-strong); border-top-color: var(--irm-cyan); margin: 0 auto; animation: irm-spin 0.8s linear infinite; }
+
+@keyframes irm-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .irm-spinner { animation: none; }
+}
