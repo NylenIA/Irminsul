@@ -88,6 +88,25 @@
 .irm-state--error { border-color: color-mix(in oklab, var(--irm-danger) 50%, var(--irm-border)); color: color-mix(in oklab, var(--irm-danger) 70%, var(--irm-text-dim)); }
 .irm-spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--irm-border-strong); border-top-color: var(--irm-cyan); margin: 0 auto; animation: irm-spin 0.8s linear infinite; }
 
+/* Inputs */
+.irm-input {
+  padding: 8px 10px; border-radius: var(--irm-r-sm);
+  background: var(--irm-surface-2); color: var(--irm-text);
+  border: 1px solid var(--irm-border-strong); font: inherit; width: 100%;
+}
+.irm-input:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; }
+
+/* Dialog (native) */
+.irm-dialog {
+  color: var(--irm-text); background: var(--irm-surface-1);
+  border: 1px solid var(--irm-border-strong); border-radius: var(--irm-r);
+  padding: 18px; max-width: 420px;
+}
+.irm-dialog::backdrop { background: oklch(0 0 0 / 0.55); }
+.irm-dialog__title { margin: 0 0 6px; font-size: 16px; }
+.irm-dialog__msg { color: var(--irm-text-dim); margin: 0 0 14px; }
+.irm-dialog__actions { display: flex; gap: 8px; justify-content: flex-end; }
+
 @keyframes irm-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
