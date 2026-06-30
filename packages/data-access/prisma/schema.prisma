@@ -1,0 +1,46 @@
+// Persistance LOCAL-FIRST d'Irminsul (SQLite). Données applicatives structurées
+// (équipes sauvegardées, presets, snapshots). PAS de données Genshin brutes ici.
+// Aucune connexion cloud. Le fichier dev.db est gitignoré.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AppSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model SavedTeam {
+  id        String            @id @default(cuid())
+  name      String
+  carry     String?
+  notes     String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  members   SavedTeamMember[]
+}
+
+model SavedTeamMember {
+  id        String    @id @default(cuid())
+  teamId    String
+  team      SavedTeam @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  character String
+  role      String?
+  slot      Int
+
+  @@unique([teamId, slot])
+}
+
+model ImportSnapshot {
+  id      String   @id @default(cuid())
+  source  String
+  sha256  String?
+  takenAt DateTime @default(now())
+}
