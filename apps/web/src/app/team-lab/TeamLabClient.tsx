@@ -2,10 +2,15 @@
 
 import { useMemo, useState, useTransition, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card, EmptyState, ErrorState } from "@irminsul/ui";
+import { Button, Card, ConfirmDialog, EmptyState, ErrorState, Input } from "@irminsul/ui";
 import type { SavedTeamDTO } from "@irminsul/data-access";
 import { type CharacterSummary, ROSTER_SOURCE_LABEL } from "@/lib/roster";
-import { saveTeamAction, deleteTeamAction } from "./actions";
+import {
+  saveTeamAction,
+  deleteTeamAction,
+  renameTeamAction,
+  duplicateTeamAction,
+} from "./actions";
 
 interface SlotState {
   character: string;
@@ -32,6 +37,9 @@ export function TeamLabClient({
   const [name, setName] = useState("");
   const [search, setSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [confirmId, setConfirmId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
@@ -42,36 +50,37 @@ export function TeamLabClient({
   function updateSlot(index: number, patch: Partial<SlotState>): void {
     setSlots((prev) => prev.map((s, i) => (i === index ? { ...s, ...patch } : s)));
   }
-
-  // Personnages déjà choisis dans d'autres emplacements (exclus pour éviter les doublons).
   function takenElsewhere(index: number): Set<string> {
     return new Set(slots.filter((_, i) => i !== index).map((s) => s.character).filter(Boolean));
   }
+  function run(action: () => Promise<{ ok: true } | { ok: false; error: string }>): void {
+    setError(null);
+    startTransition(async () => {
+      const res = await action();
+      if (res.ok) router.refresh();
+      else setError(res.error);
+    });
+  }
 
   function onSave(): void {
-    setError(null);
     const members = slots
       .map((s, slot) => ({ character: s.character.trim(), role: s.role.trim() || null, slot }))
       .filter((m) => m.character.length > 0);
     const carry = members[0]?.character ?? null;
-    startTransition(async () => {
+    run(async () => {
       const res = await saveTeamAction({ name: name.trim(), carry, members });
       if (res.ok) {
         setSlots(EMPTY_SLOTS);
         setName("");
-        router.refresh();
-      } else {
-        setError(res.error);
       }
+      return res;
     });
   }
-
-  function onDelete(id: string): void {
-    setError(null);
-    startTransition(async () => {
-      const res = await deleteTeamAction(id);
-      if (res.ok) router.refresh();
-      else setError(res.error);
+  function onRenameSubmit(id: string): void {
+    run(async () => {
+      const res = await renameTeamAction(id, editName);
+      if (res.ok) setEditingId(null);
+      return res;
     });
   }
 
@@ -89,23 +98,11 @@ export function TeamLabClient({
         <div style={{ display: "grid", gap: 12 }}>
           <label style={{ display: "grid", gap: 4 }}>
             <span style={labelStyle}>Nom de l&apos;équipe</span>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ex. Sandrone Lunar-Crystallize"
-              style={inputStyle}
-            />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex. Sandrone Lunar-Crystallize" />
           </label>
-
           <label style={{ display: "grid", gap: 4 }}>
             <span style={labelStyle}>Rechercher un personnage</span>
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Filtrer la liste…"
-              style={inputStyle}
-              aria-label="Rechercher un personnage"
-            />
+            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Filtrer la liste…" aria-label="Rechercher un personnage" />
           </label>
 
           <div style={slotsGrid}>
@@ -115,26 +112,13 @@ export function TeamLabClient({
               return (
                 <fieldset key={i} style={fieldsetStyle}>
                   <legend style={{ color: "var(--irm-cyan)", fontSize: 12 }}>Emplacement {i + 1}</legend>
-                  <select
-                    value={s.character}
-                    onChange={(e) => updateSlot(i, { character: e.target.value })}
-                    style={inputStyle}
-                    aria-label={`Personnage, emplacement ${i + 1}`}
-                  >
+                  <select value={s.character} onChange={(e) => updateSlot(i, { character: e.target.value })} className="irm-input" aria-label={`Personnage, emplacement ${i + 1}`}>
                     <option value="">— vide —</option>
                     {options.map((c) => (
-                      <option key={c.id} value={c.name}>
-                        {c.element ? `${c.name} · ${c.element}` : c.name}
-                      </option>
+                      <option key={c.id} value={c.name}>{c.element ? `${c.name} · ${c.element}` : c.name}</option>
                     ))}
                   </select>
-                  <input
-                    value={s.role}
-                    onChange={(e) => updateSlot(i, { role: e.target.value })}
-                    placeholder="Rôle (optionnel)"
-                    style={{ ...inputStyle, marginTop: 6 }}
-                    aria-label={`Rôle, emplacement ${i + 1}`}
-                  />
+                  <Input value={s.role} onChange={(e) => updateSlot(i, { role: e.target.value })} placeholder="Rôle (optionnel)" style={{ marginTop: 6 }} aria-label={`Rôle, emplacement ${i + 1}`} />
                 </fieldset>
               );
             })}
@@ -160,60 +144,51 @@ export function TeamLabClient({
             Initialise la base : <code>cd packages/data-access &amp;&amp; npx prisma migrate dev</code>.
           </ErrorState>
         ) : initialTeams.length === 0 ? (
-          <EmptyState title="Aucune équipe pour l'instant">
-            Compose et sauvegarde ta première équipe ci-dessus.
-          </EmptyState>
+          <EmptyState title="Aucune équipe pour l'instant">Compose et sauvegarde ta première équipe ci-dessus.</EmptyState>
         ) : (
           initialTeams.map((t) => (
-            <Card key={t.id} title={t.name}>
+            <Card key={t.id} title={editingId === t.id ? undefined : t.name}>
+              {editingId === t.id ? (
+                <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 8 }}>
+                  <Input value={editName} onChange={(e) => setEditName(e.target.value)} aria-label={`Nouveau nom pour ${t.name}`} style={{ maxWidth: 280 }} autoFocus />
+                  <Button variant="primary" onClick={() => onRenameSubmit(t.id)} disabled={pending}>Valider</Button>
+                  <Button variant="ghost" onClick={() => setEditingId(null)} disabled={pending}>Annuler</Button>
+                </div>
+              ) : null}
               <div style={teamRow}>
                 <span style={{ color: "var(--irm-text-dim)" }}>
                   {t.members.map((m) => m.character + (m.role ? ` (${m.role})` : "")).join(" · ") || "—"}
                 </span>
-                <Button variant="danger" onClick={() => onDelete(t.id)} disabled={pending}>
-                  Supprimer
-                </Button>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <Button variant="ghost" aria-label={`Renommer ${t.name}`} onClick={() => { setEditingId(t.id); setEditName(t.name); }} disabled={pending}>Renommer</Button>
+                  <Button variant="ghost" aria-label={`Dupliquer ${t.name}`} onClick={() => run(() => duplicateTeamAction(t.id))} disabled={pending}>Dupliquer</Button>
+                  <Button variant="danger" aria-label={`Supprimer ${t.name}`} onClick={() => setConfirmId(t.id)} disabled={pending}>Supprimer</Button>
+                </div>
               </div>
             </Card>
           ))
         )}
       </section>
+
+      <ConfirmDialog
+        open={confirmId !== null}
+        title="Supprimer cette équipe ?"
+        message="Cette action est définitive et ne peut pas être annulée."
+        confirmLabel="Supprimer"
+        cancelLabel="Annuler"
+        onCancel={() => setConfirmId(null)}
+        onConfirm={() => {
+          const id = confirmId;
+          setConfirmId(null);
+          if (id) run(() => deleteTeamAction(id));
+        }}
+      />
     </main>
   );
 }
 
-const pageStyle: CSSProperties = {
-  padding: "clamp(16px, 4vw, 40px)",
-  maxWidth: 960,
-  margin: "0 auto",
-  display: "grid",
-  gap: 20,
-};
+const pageStyle: CSSProperties = { padding: "clamp(16px, 4vw, 40px)", maxWidth: 960, margin: "0 auto", display: "grid", gap: 20 };
 const labelStyle: CSSProperties = { color: "var(--irm-text-dim)", fontSize: 13 };
-const inputStyle: CSSProperties = {
-  padding: "8px 10px",
-  borderRadius: 6,
-  background: "var(--irm-surface-2)",
-  color: "var(--irm-text)",
-  border: "1px solid var(--irm-border-strong)",
-  font: "inherit",
-  width: "100%",
-};
-const slotsGrid: CSSProperties = {
-  display: "grid",
-  gap: 10,
-  gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
-};
-const fieldsetStyle: CSSProperties = {
-  border: "1px solid var(--irm-border)",
-  borderRadius: 10,
-  padding: 10,
-  margin: 0,
-};
-const teamRow: CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: 12,
-  flexWrap: "wrap",
-};
+const slotsGrid: CSSProperties = { display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))" };
+const fieldsetStyle: CSSProperties = { border: "1px solid var(--irm-border)", borderRadius: 10, padding: 10, margin: 0 };
+const teamRow: CSSProperties = { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" };

@@ -27,6 +27,8 @@ export interface TeamRepository {
   save(input: SaveTeamInput): Promise<SavedTeamDTO>;
   list(): Promise<SavedTeamDTO[]>;
   getById(id: string): Promise<SavedTeamDTO | null>;
+  rename(id: string, name: string): Promise<SavedTeamDTO>;
+  duplicate(id: string): Promise<SavedTeamDTO>;
   delete(id: string): Promise<void>;
 }
 
@@ -167,6 +169,42 @@ export class PrismaSqliteTeamRepository implements TeamRepository {
       include: { members: { orderBy: { slot: "asc" } } },
     });
     return team ? toDTO(team) : null;
+  }
+
+  async rename(id: string, name: string): Promise<SavedTeamDTO> {
+    const teamId = validateTeamId(id);
+    const newName = name.trim();
+    if (!newName) {
+      throw new TeamRepositoryValidationError("Team name is required.");
+    }
+    const existing = await this.db.savedTeam.findUnique({ where: { id: teamId } });
+    if (!existing) {
+      throw new TeamRepositoryValidationError("Team not found.");
+    }
+    const team = await this.db.savedTeam.update({
+      where: { id: teamId },
+      data: { name: newName },
+      include: { members: { orderBy: { slot: "asc" } } },
+    });
+    return toDTO(team);
+  }
+
+  async duplicate(id: string): Promise<SavedTeamDTO> {
+    const teamId = validateTeamId(id);
+    const src = await this.db.savedTeam.findUnique({
+      where: { id: teamId },
+      include: { members: { orderBy: { slot: "asc" } } },
+    });
+    if (!src) {
+      throw new TeamRepositoryValidationError("Team not found.");
+    }
+    // Réutilise save() (donc toute la validation) pour la copie.
+    return this.save({
+      name: `${src.name} (copie)`,
+      carry: src.carry,
+      notes: src.notes,
+      members: src.members.map((m) => ({ character: m.character, role: m.role, slot: m.slot })),
+    });
   }
 
   async delete(id: string): Promise<void> {
