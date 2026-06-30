@@ -1,8 +1,20 @@
+import { prisma } from "./client";
+import {
+  PrismaSqliteTeamRepository,
+  type TeamRepository,
+} from "./repositories/team-repository";
+
 export { prisma } from "./client";
 export {
   PrismaSqliteTeamRepository,
+  TeamRepositoryValidationError,
   type TeamRepository,
   type SaveTeamInput,
   type SavedTeamDTO,
   type TeamMemberInput,
 } from "./repositories/team-repository";
+
+/** Fabrique serveur du repository d'équipes (singleton Prisma). À n'importer QUE côté serveur. */
+export function getTeamRepository(): TeamRepository {
+  return new PrismaSqliteTeamRepository(prisma);
+}
