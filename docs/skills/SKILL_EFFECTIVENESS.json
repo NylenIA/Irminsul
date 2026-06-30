@@ -1,0 +1,27 @@
+{
+  "$comment": "Registre de confiance des skills. VÉRIDIQUE (preuve disque 2026-06-30). Corrige la table supposée du prompt §12.1 : 15/16 des skills 'senior-*/design/...' sont ABSENTS. Ne jamais cocher sans preuve.",
+  "updatedAt": "2026-06-30",
+  "codexDetectionPossible": false,
+  "codexReason": "Codex CLI absent (non installé). Détection/variante Codex = n/a tant que codex n'est pas installé+authentifié.",
+  "trustStates": ["absent", "untrusted", "candidate", "qualifying", "qualified", "degraded", "blocked"],
+  "skills": [
+    { "skill": "frontend-design", "version": "anthropics (fichier fourni)", "installComplete": true, "detectedClaude": true, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "candidate" },
+    { "skill": "skill-creator", "version": "anthropics/skills", "installComplete": true, "detectedClaude": true, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "candidate" },
+    { "skill": "webapp-testing", "version": "anthropics/skills", "installComplete": true, "detectedClaude": true, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "candidate" },
+    { "skill": "senior-architect", "version": "alirezarezvani (revendiqué @4a3c05b)", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "senior-backend", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "senior-security", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "senior-frontend", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "senior-qa", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "code-reviewer", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "tdd-guide", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "ui-ux-pro-max", "version": "npm ui-ux-pro-max-cli 2.9.0 (CLI présent, skill NON installé)", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "frontend-design-review", "version": "microsoft (revendiqué)", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "design", "version": "npm 2.9.0 (revendiqué)", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "design-system", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "ui-styling", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "brand", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "banner-design", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
+    { "skill": "slides", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" }
+  ]
+}
