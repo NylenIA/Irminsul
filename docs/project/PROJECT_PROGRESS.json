@@ -1,0 +1,28 @@
+{
+  "updatedAt": "2026-06-30",
+  "branch": "feat/irminsul-complete-redesign",
+  "scale": "0=absent, 25=squelette/mock/TODO, 50=happy-path peu validé, 75=intégré+testé cas majeurs, 100=prêt à livrer",
+  "method": "Score reproductible = somme(poids x score)/100. Deux pondérations: weight (vision complète), mvpWeight (MVP utilisable). Scores assignés par preuve vérifiée, pas à la main dans le rapport.",
+  "domains": [
+    { "id": "moteur_donnees_calcul", "label": "Moteur de données et calcul", "weight": 25, "mvpWeight": 30, "score": 75, "confidence": "high",
+      "evidence": "20 modules Python / 96 tests / goldens vs jeu / registre mécaniques (basestats, talentstats, weaponstats verified)", "blockers": "réactions Lunaires + gcsim nouveaux persos manquants" },
+    { "id": "integration_moteur", "label": "Intégration moteur", "weight": 15, "mvpWeight": 12, "score": 50, "confidence": "medium",
+      "evidence": "engine.ts<->sidecar Python OK (desktop, Phase 2-3)", "blockers": "packages/engine-client (web) absent" },
+    { "id": "app_web", "label": "Application web", "weight": 15, "mvpWeight": 10, "score": 25, "confidence": "high",
+      "evidence": "Next.js 16.2.9 build OK, shell honnete sans donnee factice", "blockers": "vertical slice, design system" },
+    { "id": "app_desktop", "label": "Application desktop", "weight": 10, "mvpWeight": 12, "score": 50, "confidence": "high",
+      "evidence": "Tauri MSI/NSIS produit ; vues Compte + Calcul rapide branchees", "blockers": "Tableau de bord / Equipes / gcsim / Assistant vides" },
+    { "id": "team_builder_sim", "label": "Team builder et simulation", "weight": 15, "mvpWeight": 15, "score": 25, "confidence": "medium",
+      "evidence": "team_optimizer Python deterministe existe ; gcsim partiel", "blockers": "aucune UI team builder ; wiring + validation E2E" },
+    { "id": "persistance", "label": "Persistance", "weight": 5, "mvpWeight": 8, "score": 50, "confidence": "medium",
+      "evidence": "Prisma 6 + SQLite local ; interface TeamRepository ; test repository (Vitest)", "blockers": "wiring UI ; presets/builds" },
+    { "id": "design_ux", "label": "Design system et UX", "weight": 5, "mvpWeight": 5, "score": 25, "confidence": "medium",
+      "evidence": "skill frontend-design installe ; direction 'Archive astrale' definie", "blockers": "packages/ui (tokens OKLCH + composants) a construire" },
+    { "id": "tests_qualite", "label": "Tests et qualite", "weight": 5, "mvpWeight": 4, "score": 50, "confidence": "medium",
+      "evidence": "96 tests Python ; next build ; test repository Vitest", "blockers": "E2E Playwright + a11y axe absents" },
+    { "id": "packaging", "label": "Packaging et deploiement", "weight": 3, "mvpWeight": 2, "score": 50, "confidence": "medium",
+      "evidence": "desktop MSI/NSIS (Phase 2)", "blockers": "web non deploye" },
+    { "id": "doc_continuite", "label": "Documentation et continuite", "weight": 2, "mvpWeight": 2, "score": 75, "confidence": "high",
+      "evidence": "audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF, hook SessionStart", "blockers": "hook non encore enregistre dans settings" }
+  ]
+}
