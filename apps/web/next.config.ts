@@ -10,6 +10,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Packages workspace en TS source -> transpilés par Next.
+  transpilePackages: ["@irminsul/ui", "@irminsul/data-access"],
+  // Prisma reste externe au bundle serveur (moteur natif, jamais côté client).
+  serverExternalPackages: ["@prisma/client", ".prisma/client"],
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

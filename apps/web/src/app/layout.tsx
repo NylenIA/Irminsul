@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@irminsul/ui/tokens.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export default function RootLayout({
 }): React.ReactElement {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body className="irm-root">{children}</body>
     </html>
   );
 }
