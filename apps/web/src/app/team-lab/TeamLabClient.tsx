@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useTransition, type CSSProperties } from "react";
+import { useMemo, useState, useTransition, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, EmptyState, ErrorState } from "@irminsul/ui";
 import type { SavedTeamDTO } from "@irminsul/data-access";
+import { type CharacterSummary, ROSTER_SOURCE_LABEL } from "@/lib/roster";
 import { saveTeamAction, deleteTeamAction } from "./actions";
 
 interface SlotState {
@@ -23,17 +24,28 @@ export function TeamLabClient({
   loadError,
 }: {
   initialTeams: SavedTeamDTO[];
-  roster: readonly string[];
+  roster: CharacterSummary[];
   loadError: boolean;
 }): React.ReactElement {
   const router = useRouter();
   const [slots, setSlots] = useState<SlotState[]>(EMPTY_SLOTS);
   const [name, setName] = useState("");
+  const [search, setSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return q ? roster.filter((c) => c.name.toLowerCase().includes(q)) : roster;
+  }, [roster, search]);
+
   function updateSlot(index: number, patch: Partial<SlotState>): void {
     setSlots((prev) => prev.map((s, i) => (i === index ? { ...s, ...patch } : s)));
+  }
+
+  // Personnages déjà choisis dans d'autres emplacements (exclus pour éviter les doublons).
+  function takenElsewhere(index: number): Set<string> {
+    return new Set(slots.filter((_, i) => i !== index).map((s) => s.character).filter(Boolean));
   }
 
   function onSave(): void {
@@ -85,40 +97,58 @@ export function TeamLabClient({
             />
           </label>
 
+          <label style={{ display: "grid", gap: 4 }}>
+            <span style={labelStyle}>Rechercher un personnage</span>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Filtrer la liste…"
+              style={inputStyle}
+              aria-label="Rechercher un personnage"
+            />
+          </label>
+
           <div style={slotsGrid}>
-            {slots.map((s, i) => (
-              <fieldset key={i} style={fieldsetStyle}>
-                <legend style={{ color: "var(--irm-cyan)", fontSize: 12 }}>Emplacement {i + 1}</legend>
-                <select
-                  value={s.character}
-                  onChange={(e) => updateSlot(i, { character: e.target.value })}
-                  style={inputStyle}
-                  aria-label={`Personnage, emplacement ${i + 1}`}
-                >
-                  <option value="">— vide —</option>
-                  {roster.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  value={s.role}
-                  onChange={(e) => updateSlot(i, { role: e.target.value })}
-                  placeholder="Rôle (optionnel)"
-                  style={{ ...inputStyle, marginTop: 6 }}
-                  aria-label={`Rôle, emplacement ${i + 1}`}
-                />
-              </fieldset>
-            ))}
+            {slots.map((s, i) => {
+              const taken = takenElsewhere(i);
+              const options = filtered.filter((c) => !taken.has(c.name) || c.name === s.character);
+              return (
+                <fieldset key={i} style={fieldsetStyle}>
+                  <legend style={{ color: "var(--irm-cyan)", fontSize: 12 }}>Emplacement {i + 1}</legend>
+                  <select
+                    value={s.character}
+                    onChange={(e) => updateSlot(i, { character: e.target.value })}
+                    style={inputStyle}
+                    aria-label={`Personnage, emplacement ${i + 1}`}
+                  >
+                    <option value="">— vide —</option>
+                    {options.map((c) => (
+                      <option key={c.id} value={c.name}>
+                        {c.element ? `${c.name} · ${c.element}` : c.name}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    value={s.role}
+                    onChange={(e) => updateSlot(i, { role: e.target.value })}
+                    placeholder="Rôle (optionnel)"
+                    style={{ ...inputStyle, marginTop: 6 }}
+                    aria-label={`Rôle, emplacement ${i + 1}`}
+                  />
+                </fieldset>
+              );
+            })}
           </div>
 
           {error ? <ErrorState title="Action impossible">{error}</ErrorState> : null}
 
-          <div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
             <Button variant="primary" onClick={onSave} disabled={pending}>
               {pending ? "Enregistrement…" : "Sauvegarder l'équipe"}
             </Button>
+            <span style={{ color: "var(--irm-text-faint)", fontSize: 12 }}>
+              Roster : {roster.length} personnages · source : {ROSTER_SOURCE_LABEL}
+            </span>
           </div>
         </div>
       </Card>

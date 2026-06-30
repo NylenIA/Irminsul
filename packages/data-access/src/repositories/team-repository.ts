@@ -30,6 +30,13 @@ export interface TeamRepository {
   delete(id: string): Promise<void>;
 }
 
+export class TeamRepositoryValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "TeamRepositoryValidationError";
+  }
+}
+
 interface TeamRow {
   id: string;
   name: string;
@@ -53,19 +60,89 @@ function toDTO(team: TeamRow): SavedTeamDTO {
 }
 
 /** Implémentation LOCAL-FIRST (SQLite via Prisma). */
+function normalizeOptionalText(value: string | null | undefined): string | null {
+  const normalized = value?.trim() ?? "";
+  return normalized.length > 0 ? normalized : null;
+}
+
+function validateTeamId(id: string): string {
+  const normalized = id.trim();
+  if (!normalized) {
+    throw new TeamRepositoryValidationError("Team id is required.");
+  }
+  return normalized;
+}
+
+function validateSaveTeamInput(input: SaveTeamInput): SaveTeamInput {
+  const name = input.name.trim();
+  if (!name) {
+    throw new TeamRepositoryValidationError("Team name is required.");
+  }
+
+  if (input.members.length < 1 || input.members.length > 4) {
+    throw new TeamRepositoryValidationError(
+      "A saved team must contain between 1 and 4 members.",
+    );
+  }
+
+  const usedSlots = new Set<number>();
+  const usedCharacters = new Set<string>();
+  const members = input.members.map((member) => {
+    if (!Number.isInteger(member.slot) || member.slot < 0 || member.slot > 3) {
+      throw new TeamRepositoryValidationError(
+        "Team member slot must be an integer between 0 and 3.",
+      );
+    }
+
+    if (usedSlots.has(member.slot)) {
+      throw new TeamRepositoryValidationError(
+        "Team member slots must be unique.",
+      );
+    }
+    usedSlots.add(member.slot);
+
+    const character = member.character.trim();
+    if (!character) {
+      throw new TeamRepositoryValidationError(
+        "Team member character is required.",
+      );
+    }
+    if (usedCharacters.has(character)) {
+      throw new TeamRepositoryValidationError(
+        "A character cannot occupy two slots in the same team.",
+      );
+    }
+    usedCharacters.add(character);
+
+    return {
+      character,
+      role: normalizeOptionalText(member.role),
+      slot: member.slot,
+    };
+  });
+
+  return {
+    name,
+    carry: normalizeOptionalText(input.carry),
+    notes: normalizeOptionalText(input.notes),
+    members,
+  };
+}
+
 export class PrismaSqliteTeamRepository implements TeamRepository {
   constructor(private readonly db: PrismaClient) {}
 
   async save(input: SaveTeamInput): Promise<SavedTeamDTO> {
+    const validated = validateSaveTeamInput(input);
     const team = await this.db.savedTeam.create({
       data: {
-        name: input.name,
-        carry: input.carry ?? null,
-        notes: input.notes ?? null,
+        name: validated.name,
+        carry: validated.carry,
+        notes: validated.notes,
         members: {
-          create: input.members.map((m) => ({
+          create: validated.members.map((m) => ({
             character: m.character,
-            role: m.role ?? null,
+            role: m.role,
             slot: m.slot,
           })),
         },
@@ -84,14 +161,16 @@ export class PrismaSqliteTeamRepository implements TeamRepository {
   }
 
   async getById(id: string): Promise<SavedTeamDTO | null> {
+    const teamId = validateTeamId(id);
     const team = await this.db.savedTeam.findUnique({
-      where: { id },
+      where: { id: teamId },
       include: { members: { orderBy: { slot: "asc" } } },
     });
     return team ? toDTO(team) : null;
   }
 
   async delete(id: string): Promise<void> {
-    await this.db.savedTeam.delete({ where: { id } });
+    const teamId = validateTeamId(id);
+    await this.db.savedTeam.deleteMany({ where: { id: teamId } });
   }
 }

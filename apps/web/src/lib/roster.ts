@@ -1,8 +1,17 @@
-/** Liste de départ de personnages Genshin (noms réels, AUCUNE statistique inventée).
- *  Sera remplacée par le roster réel importé du compte via `packages/engine-client`. */
-export const ROSTER = [
-  "Sandrone", "Mavuika", "Citlali", "Xilonen", "Furina", "Bennett",
-  "Nahida", "Kazuha", "Raiden Shogun", "Yelan", "Zhongli", "Kinich",
-  "Mualani", "Arlecchino", "Neuvillette", "Escoffier", "Navia", "Clorinde",
-  "Hu Tao", "Ganyu", "Kamisato Ayaka", "Nilou", "Iansan", "Chasca",
-] as const;
+import charactersData from "./characters.json";
+
+/** Contrat stable de personnage (adapter isolé). Données réelles uniquement. */
+export interface CharacterSummary {
+  id: string;
+  name: string;
+  element: string | null;
+  rarity: number | null;
+  weapon: string | null;
+  source: "scanner" | "local-data" | "engine" | "fixture";
+}
+
+/** Roster réel issu de la source LOCALE genshin-db (généré par scripts/gen-web-roster.py).
+ *  Aucune donnée inventée. À terme, fusionné/écrasé par le scan de compte (source: 'scanner'). */
+export const CHARACTERS: CharacterSummary[] = charactersData as unknown as CharacterSummary[];
+
+export const ROSTER_SOURCE_LABEL = "Données locales (genshin-db)";

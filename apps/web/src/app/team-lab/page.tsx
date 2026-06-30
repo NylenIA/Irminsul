@@ -1,5 +1,5 @@
 import { getTeamRepository, type SavedTeamDTO } from "@irminsul/data-access";
-import { ROSTER } from "@/lib/roster";
+import { CHARACTERS } from "@/lib/roster";
 import { TeamLabClient } from "./TeamLabClient";
 
 // Rendu à la requête (la base locale n'est pas interrogée au build).
@@ -13,5 +13,5 @@ export default async function TeamLabPage(): Promise<React.ReactElement> {
   } catch {
     loadError = true;
   }
-  return <TeamLabClient initialTeams={teams} roster={ROSTER} loadError={loadError} />;
+  return <TeamLabClient initialTeams={teams} roster={CHARACTERS} loadError={loadError} />;
 }
