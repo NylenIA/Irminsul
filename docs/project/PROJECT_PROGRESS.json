@@ -6,8 +6,8 @@
   "domains": [
     { "id": "moteur_donnees_calcul", "label": "Moteur de données et calcul", "weight": 25, "mvpWeight": 30, "score": 75, "confidence": "high",
       "evidence": "20 modules Python / 96 tests / goldens vs jeu / registre mécaniques (basestats, talentstats, weaponstats verified)", "blockers": "réactions Lunaires + gcsim nouveaux persos manquants" },
-    { "id": "integration_moteur", "label": "Intégration moteur", "weight": 15, "mvpWeight": 12, "score": 50, "confidence": "medium",
-      "evidence": "engine.ts<->sidecar Python OK (desktop, Phase 2-3)", "blockers": "packages/engine-client (web) absent" },
+    { "id": "integration_moteur", "label": "Intégration moteur", "weight": 15, "mvpWeight": 12, "score": 65, "confidence": "high",
+      "evidence": "ADR frontiere + packages/engine-client : contrat EngineClient + port TS fidele, parite Python prouvee (5 goldens 1e-9, 7/7 tests), provenance+hypotheses obligatoires", "blockers": "UI Team Lab pas encore cablee au calcul ; SidecarEngineClient desktop a venir" },
     { "id": "app_web", "label": "Application web", "weight": 15, "mvpWeight": 10, "score": 60, "confidence": "high",
       "evidence": "Next.js 16.2.9 ; /team-lab build+typecheck OK + E2E Playwright vert (desktop+mobile)", "blockers": "autres ecrans (dashboard, compte web)" },
     { "id": "app_desktop", "label": "Application desktop", "weight": 10, "mvpWeight": 12, "score": 50, "confidence": "high",

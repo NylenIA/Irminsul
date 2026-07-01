@@ -3,8 +3,8 @@
 > Généré par `scripts/project_progress.py` depuis `PROJECT_PROGRESS.json` le 2026-06-30. Branche `feat/irminsul-complete-redesign`. Ne pas éditer à la main.
 
 ## Scores
-- **MVP utilisable : 66%**
-- **Vision complète : 64%**
+- **MVP utilisable : 67%**
+- **Vision complète : 66%**
 - Confiance globale : moyenne (cœur moteur élevé ; surfaces web/UI récentes).
 - Échelle : 0=absent, 25=squelette/mock/TODO, 50=happy-path peu validé, 75=intégré+testé cas majeurs, 100=prêt à livrer
 
@@ -12,7 +12,7 @@
 | Domaine | Poids | PoidsMVP | Score | Confiance | Preuve | Blocages |
 |---|--:|--:|--:|---|---|---|
 | Moteur de données et calcul | 25 | 30 | 75 | high | 20 modules Python / 96 tests / goldens vs jeu / registre mécaniques (basestats, talentstats, weaponstats verified) | réactions Lunaires + gcsim nouveaux persos manquants |
-| Intégration moteur | 15 | 12 | 50 | medium | engine.ts<->sidecar Python OK (desktop, Phase 2-3) | packages/engine-client (web) absent |
+| Intégration moteur | 15 | 12 | 65 | high | ADR frontiere + packages/engine-client : contrat EngineClient + port TS fidele, parite Python prouvee (5 goldens 1e-9, 7/7 tests), provenance+hypotheses obligatoires | UI Team Lab pas encore cablee au calcul ; SidecarEngineClient desktop a venir |
 | Application web | 15 | 10 | 60 | high | Next.js 16.2.9 ; /team-lab build+typecheck OK + E2E Playwright vert (desktop+mobile) | autres ecrans (dashboard, compte web) |
 | Application desktop | 10 | 12 | 50 | high | Tauri MSI/NSIS produit ; vues Compte + Calcul rapide branchees | Tableau de bord / Equipes / gcsim / Assistant vides |
 | Team builder et simulation | 15 | 15 | 70 | medium | Team Lab complet : roster reel (118) + save/reload/rename/duplicate/delete-confirme + anti-doublon + E2E 6 vert + cross-review Codex | connexion moteur de combat (calcul DPS) ; roster synchronise au compte |

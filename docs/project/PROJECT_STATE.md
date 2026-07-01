@@ -30,6 +30,11 @@
 - **Continuité** : hook `SessionStart` idempotent + DECISIONS/ARCHITECTURE/QUALITY_GATES/SESSION_HANDOFF.
 - **Avancement reproductible** : **MVP 50 % · Vision 48 %** (`scripts/project_progress.py`).
 
+### Pilote moteur (2026-07-01, Fable)
+- **Routeur Duo livré** (fork `feat/mandatory-delegation-model-router`, commit `a36edc9` par Codex gpt-5.5, 36/36 tests ×3, revue acceptée `22e6cba`). Incident worktree récupéré via cache-tree.
+- **ADR Team Lab ↔ moteur** accepté (`docs/architecture/TEAM_LAB_COMBAT_ENGINE_ADR.md`) : frontière unique `EngineClient`, moteur Python = source de vérité.
+- **`packages/engine-client`** (`8a03790`) : contrat + portage TS fidèle de `calculate_direct_hit`, **parité prouvée** (5 goldens générés du moteur Python, 1e-9, 7/7 tests), provenance + hypothèses obligatoires.
+
 ### Tests à l'instant
-- Next build : PASS. **Prisma repository : PASS (Vitest)**. Python : 96 tests (non relancés sur cette branche ce jour — à mesurer).
+- Next build : PASS. Prisma repository : PASS (5, Vitest). E2E Playwright : 6 PASS. **engine-client : 7/7 PASS**. Duo fork : 36/36 ×3. Python : 96 tests (non relancés sur cette branche ce jour — à mesurer).
 - 2 vulns modérées transitives (postcss via next) : **non corrigées** (le fix `--force` rétrograde next → cassant). Acceptées, à revoir à la mise à jour de Next.
