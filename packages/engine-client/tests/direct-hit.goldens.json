@@ -1,0 +1,100 @@
+{
+  "source": "src/irminsul/damage.py::calculate_direct_hit (registre mechanics: verified)",
+  "generator": "scripts/gen-engine-goldens.py",
+  "cases": [
+    {
+      "inputs": {
+        "scaling": 2.0,
+        "scaling_stat": 2000,
+        "crit_rate": 0.5,
+        "crit_damage": 1.0,
+        "damage_bonus": 0.466,
+        "enemy_level": 100,
+        "attacker_level": 90,
+        "enemy_resistance": 0.1
+      },
+      "expected": {
+        "raw_base": 4000.0,
+        "non_crit": 2571.1384615384613,
+        "crit": 5142.276923076923,
+        "expected": 3856.707692307692,
+        "defense_multiplier": 0.48717948717948717,
+        "resistance_multiplier": 0.9,
+        "expected_crit_multiplier": 1.5
+      }
+    },
+    {
+      "inputs": {
+        "scaling": 1.0,
+        "scaling_stat": 1000
+      },
+      "expected": {
+        "raw_base": 1000.0,
+        "non_crit": 438.46153846153845,
+        "crit": 657.6923076923076,
+        "expected": 449.42307692307685,
+        "defense_multiplier": 0.48717948717948717,
+        "resistance_multiplier": 0.9,
+        "expected_crit_multiplier": 1.025
+      }
+    },
+    {
+      "inputs": {
+        "scaling": 3.5,
+        "scaling_stat": 2500,
+        "crit_rate": 1.0,
+        "crit_damage": 2.0,
+        "damage_bonus": 0.616,
+        "defense_reduction": 0.2,
+        "enemy_resistance": -0.05
+      },
+      "expected": {
+        "raw_base": 8750.0,
+        "non_crit": 7867.899999999999,
+        "crit": 23603.699999999997,
+        "expected": 23603.699999999997,
+        "defense_multiplier": 0.5428571428571428,
+        "resistance_multiplier": 1.025,
+        "expected_crit_multiplier": 3.0
+      }
+    },
+    {
+      "inputs": {
+        "scaling": 1.5,
+        "scaling_stat": 1800,
+        "enemy_resistance": 0.9,
+        "defense_ignore": 0.3,
+        "amplifying_reaction_multiplier": 1.5,
+        "reaction_bonus": 0.15
+      },
+      "expected": {
+        "raw_base": 2700.0,
+        "non_crit": 582.9545454545456,
+        "crit": 874.4318181818185,
+        "expected": 597.5284090909092,
+        "defense_multiplier": 0.5757575757575758,
+        "resistance_multiplier": 0.2173913043478261,
+        "expected_crit_multiplier": 1.025
+      }
+    },
+    {
+      "inputs": {
+        "scaling": 0.8,
+        "scaling_stat": 1200,
+        "flat_base_damage": 500,
+        "vulnerability_multiplier": 1.2,
+        "crit_rate": 1.4,
+        "crit_damage": 0.8
+      },
+      "expected": {
+        "raw_base": 1460.0,
+        "non_crit": 768.1846153846154,
+        "crit": 1382.7323076923078,
+        "expected": 1382.7323076923078,
+        "defense_multiplier": 0.48717948717948717,
+        "resistance_multiplier": 0.9,
+        "expected_crit_multiplier": 1.8
+      }
+    }
+  ]
+}
