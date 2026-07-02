@@ -107,6 +107,48 @@
 .irm-dialog__msg { color: var(--irm-text-dim); margin: 0 0 14px; }
 .irm-dialog__actions { display: flex; gap: 8px; justify-content: flex-end; }
 
+/* ── Aperçu moteur : effets « Archive astrale » (discrets, compositables, reduced-motion safe) ── */
+.irm-halo {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--irm-cyan) 35%, transparent),
+              0 0 24px -6px color-mix(in oklab, var(--irm-cyan) 30%, transparent);
+}
+.irm-fade-in { animation: irm-fade 0.28s var(--irm-ease) both; }
+@keyframes irm-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* Ligne d'énergie : fine bordure animée en tête de carte (aide à repérer le résultat, pas décor permanent) */
+.irm-energy-line { position: relative; overflow: hidden; }
+.irm-energy-line::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--irm-cyan), var(--irm-violet), transparent);
+  background-size: 200% 100%;
+  animation: irm-energy 2.4s linear 2; /* 2 passages puis stop : pas d'animation permanente */
+}
+@keyframes irm-energy { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* Skeleton (chargement) */
+.irm-skeleton {
+  border-radius: var(--irm-r-sm);
+  background: linear-gradient(90deg, var(--irm-surface-2) 25%, var(--irm-border) 50%, var(--irm-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: irm-shimmer 1.1s linear infinite;
+  min-height: 14px;
+}
+@keyframes irm-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* Badges (provenance / confiance / avertissement) */
+.irm-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+  border: 1px solid var(--irm-border-strong); color: var(--irm-text-dim); background: var(--irm-surface-2);
+}
+.irm-badge--verified { color: var(--irm-cyan); border-color: color-mix(in oklab, var(--irm-cyan) 55%, var(--irm-border-strong)); }
+.irm-badge--gold { color: var(--irm-gold); border-color: color-mix(in oklab, var(--irm-gold) 45%, var(--irm-border-strong)); }
+.irm-badge--warn { color: var(--irm-danger); border-color: color-mix(in oklab, var(--irm-danger) 45%, var(--irm-border-strong)); }
+
+/* Chiffres du résultat */
+.irm-figure { font: 600 22px/1.2 var(--irm-mono); color: var(--irm-text); }
+.irm-figure--hero { font-size: 30px; color: var(--irm-cyan); }
+
 @keyframes irm-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
