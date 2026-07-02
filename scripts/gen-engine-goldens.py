@@ -33,6 +33,16 @@ CASES: list[dict[str, float | int]] = [
     # Flat base damage + vulnérabilité + crit_rate clampé (entrée 1.4 -> 1.0)
     dict(scaling=0.8, scaling_stat=1200, flat_base_damage=500, vulnerability_multiplier=1.2,
          crit_rate=1.4, crit_damage=0.8),
+    # FRONTIÈRES (audit Codex) — RES = 0 exactement (branche < 0.75 -> mult 1.0)
+    dict(scaling=1.0, scaling_stat=1000, enemy_resistance=0.0),
+    # FRONTIÈRE — RES = 0.75 exactement (branche >= 0.75 -> 1/(4R+1) = 0.25)
+    dict(scaling=1.0, scaling_stat=1000, enemy_resistance=0.75),
+    # CLAMPS hauts — defense_reduction/ignore > 0.99 -> 0.99 ; crit_rate < 0 -> 0
+    dict(scaling=1.0, scaling_stat=1000, defense_reduction=1.5, defense_ignore=2.0,
+         crit_rate=-0.2),
+    # CLAMPS bas — crit_damage < 0 -> 0 ; reaction_bonus < 0 -> 0 ; def_reduction < 0 -> 0
+    dict(scaling=1.0, scaling_stat=1000, crit_damage=-0.5, reaction_bonus=-0.3,
+         defense_reduction=-0.4, amplifying_reaction_multiplier=2.0),
 ]
 
 

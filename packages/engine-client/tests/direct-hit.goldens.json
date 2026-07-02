@@ -95,6 +95,75 @@
         "resistance_multiplier": 0.9,
         "expected_crit_multiplier": 1.8
       }
+    },
+    {
+      "inputs": {
+        "scaling": 1.0,
+        "scaling_stat": 1000,
+        "enemy_resistance": 0.0
+      },
+      "expected": {
+        "raw_base": 1000.0,
+        "non_crit": 487.1794871794872,
+        "crit": 730.7692307692307,
+        "expected": 499.3589743589743,
+        "defense_multiplier": 0.48717948717948717,
+        "resistance_multiplier": 1.0,
+        "expected_crit_multiplier": 1.025
+      }
+    },
+    {
+      "inputs": {
+        "scaling": 1.0,
+        "scaling_stat": 1000,
+        "enemy_resistance": 0.75
+      },
+      "expected": {
+        "raw_base": 1000.0,
+        "non_crit": 121.7948717948718,
+        "crit": 182.69230769230768,
+        "expected": 124.83974358974358,
+        "defense_multiplier": 0.48717948717948717,
+        "resistance_multiplier": 0.25,
+        "expected_crit_multiplier": 1.025
+      }
+    },
+    {
+      "inputs": {
+        "scaling": 1.0,
+        "scaling_stat": 1000,
+        "defense_reduction": 1.5,
+        "defense_ignore": 2.0,
+        "crit_rate": -0.2
+      },
+      "expected": {
+        "raw_base": 1000.0,
+        "non_crit": 899.9052731291443,
+        "crit": 1349.8579096937165,
+        "expected": 899.9052731291443,
+        "defense_multiplier": 0.9998947479212714,
+        "resistance_multiplier": 0.9,
+        "expected_crit_multiplier": 1.0
+      }
+    },
+    {
+      "inputs": {
+        "scaling": 1.0,
+        "scaling_stat": 1000,
+        "crit_damage": -0.5,
+        "reaction_bonus": -0.3,
+        "defense_reduction": -0.4,
+        "amplifying_reaction_multiplier": 2.0
+      },
+      "expected": {
+        "raw_base": 1000.0,
+        "non_crit": 876.9230769230769,
+        "crit": 876.9230769230769,
+        "expected": 876.9230769230769,
+        "defense_multiplier": 0.48717948717948717,
+        "resistance_multiplier": 0.9,
+        "expected_crit_multiplier": 1.0
+      }
     }
   ]
 }

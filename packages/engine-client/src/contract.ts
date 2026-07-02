@@ -52,7 +52,18 @@ export interface DirectHitOutcome {
   provenance: CalculationProvenance;
 }
 
-/** Frontière stable vers le moteur. Implémentations : TS local (maintenant), sidecar Python (desktop). */
+/**
+ * Frontière stable vers le moteur. Implémentations : TS local (maintenant), sidecar Python (desktop).
+ *
+ * Invariants et normalisations (identiques au moteur Python, source de vérité) :
+ * - `scaling`/`scalingStat` ≥ 0 et multiplicateurs (`amplifyingReactionMultiplier`,
+ *   `vulnerabilityMultiplier`) > 0, sinon **RangeError** (équivalent du ValueError Python) ;
+ * - clamps silencieux : `critRate` → [0, 1] ; `critDamage` → ≥ 0 ; `reactionBonus` → ≥ 0 ;
+ *   `defenseReduction`/`defenseIgnore` → [0, 0.99] ;
+ * - résistance par branches : R < 0 → 1 − R/2 ; 0 ≤ R < 0.75 → 1 − R ; R ≥ 0.75 → 1/(4R + 1) ;
+ * - les entrées non finies (NaN/Infinity) ne sont PAS filtrées — comportement identique au
+ *   moteur Python ; la validation amont incombe à l'appelant (formulaires UI).
+ */
 export interface EngineClient {
   calculateDirectHit(input: DirectHitInput): DirectHitOutcome;
 }
@@ -61,4 +72,5 @@ export const DIRECT_HIT_ASSUMPTIONS = Object.freeze([
   "Coup isolé — pas une rotation ni un DPS d'équipe (gcsim requis pour cela).",
   "Buffs/débuffs à fournir en entrée : rien n'est déduit automatiquement.",
   "Réaction amplifiante fournie explicitement (direction du déclenchement non devinée).",
+  "Entrées hors bornes normalisées par clamps (crit 0–1, réduction DEF 0–0.99) — voir contrat.",
 ] as const);
