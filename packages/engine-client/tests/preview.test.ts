@@ -74,6 +74,33 @@ describe("buildDirectHitPreview (orchestration pure, sans formule dupliquée)", 
     expect(outOfRange.issues.join(" ")).toMatch(/critRatePct/);
   });
 
+  it("réaction amplifiante : multiplicateur injecté dans le coup + détail exposé", () => {
+    const withReaction = buildDirectHitPreview({ ...VALID, reaction: "forward-vaporize", elementalMastery: 187 });
+    const without = buildDirectHitPreview(VALID);
+    expect(withReaction.ok && without.ok).toBe(true);
+    if (!withReaction.ok || !without.ok) return;
+    expect(withReaction.preview.reaction?.type).toBe("amplifying");
+    const mult = withReaction.preview.parameters["amplifyingReactionMultiplier"]!;
+    expect(mult).toBeGreaterThan(2); // ×2 de base + bonus EM
+    expect(withReaction.preview.outcome.result.expected).toBeCloseTo(
+      without.preview.outcome.result.expected * mult, 6,
+    );
+  });
+
+  it("réaction transformative : dégâts propres, coup direct inchangé ; réaction inconnue rejetée", () => {
+    const res = buildDirectHitPreview({ ...VALID, reaction: "hyperbloom", elementalMastery: 1000 });
+    expect(res.ok).toBe(true);
+    if (!res.ok) return;
+    expect(res.preview.reaction?.type).toBe("transformative");
+    expect(res.preview.parameters["amplifyingReactionMultiplier"]).toBeUndefined();
+    if (res.preview.reaction?.type === "transformative") {
+      expect(res.preview.reaction.detail.damage).toBeGreaterThan(0);
+    }
+    const bad = buildDirectHitPreview({ ...VALID, reaction: "freeze" });
+    expect(bad.ok).toBe(false);
+    if (!bad.ok) expect(bad.kind).toBe("validation_error");
+  });
+
   it("provenance + hypothèses + confiance présentes (aucun faux DPS)", () => {
     const res = buildDirectHitPreview(VALID);
     expect(res.ok).toBe(true);

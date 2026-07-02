@@ -6,6 +6,15 @@
  */
 import { ENGINE_CONTRACT_VERSION, type DirectHitOutcome } from "./contract";
 import { LocalEngineClient } from "./direct-hit";
+import {
+  AMPLIFYING_BASE,
+  amplifyingMultiplier,
+  REACTION_PROVENANCE,
+  TRANSFORMATIVE_BASE,
+  transformativeReaction,
+  type AmplifyingResult,
+  type TransformativeResult,
+} from "./reactions";
 
 /** Entrées utilisateur en POURCENTAGES (250 = 250 %) — plus lisible côté formulaire. */
 export interface DirectHitPreviewRequest {
@@ -20,7 +29,14 @@ export interface DirectHitPreviewRequest {
   enemyLevel?: number | null;
   enemyResistancePct?: number | null;
   attackerLevel?: number | null;
+  /** Réaction optionnelle (amplifiante → multiplie le coup ; transformative → dégâts propres). */
+  reaction?: string | null;
+  elementalMastery?: number | null;
 }
+
+export type ReactionPreview =
+  | { type: "amplifying"; detail: AmplifyingResult; provenance: typeof REACTION_PROVENANCE }
+  | { type: "transformative"; detail: TransformativeResult; provenance: typeof REACTION_PROVENANCE };
 
 export interface DirectHitPreview {
   character: string;
@@ -30,6 +46,8 @@ export interface DirectHitPreview {
   defaultsUsed: string[];
   /** Paramètres effectivement utilisés (décimaux), pour affichage honnête. */
   parameters: Record<string, number>;
+  /** Détail de réaction si demandée (formule, EM, provenance dédiée). */
+  reaction?: ReactionPreview;
   confidence: {
     level: "haute";
     reason: "Formule au statut « verified » du registre des mécaniques (goldens croisés en jeu).";
@@ -98,12 +116,21 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
   if (!finiteIn(enemyLevel, 1, 200)) issues.push("enemyLevel doit être entre 1 et 200.");
   if (!finiteIn(enemyResistancePct, -100, 300)) issues.push("enemyResistancePct doit être entre -100 et 300.");
   if (!finiteIn(attackerLevel, 1, 100)) issues.push("attackerLevel doit être entre 1 et 100.");
+
+  const reactionKey = request.reaction?.trim().toLowerCase() || null;
+  const em = isMissing(request.elementalMastery) ? 0 : request.elementalMastery;
+  const isAmplifying = reactionKey !== null && reactionKey in AMPLIFYING_BASE;
+  const isTransformative = reactionKey !== null && reactionKey in TRANSFORMATIVE_BASE;
+  if (reactionKey !== null && !isAmplifying && !isTransformative) {
+    issues.push(`Réaction inconnue : ${reactionKey}.`);
+  }
+  if (!finiteIn(em, 0, 4000)) issues.push("elementalMastery doit être entre 0 et 4000.");
   if (issues.length > 0) {
     return { ok: false, kind: "validation_error", issues };
   }
 
   // 3) Conversion % → décimal, puis moteur (RangeError → engine_error typée).
-  const parameters = {
+  const engineInput = {
     scaling: scalingPct / 100,
     scalingStat,
     critRate: critRatePct / 100,
@@ -112,9 +139,26 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
     enemyLevel,
     enemyResistance: enemyResistancePct / 100,
     attackerLevel,
+    amplifyingReactionMultiplier: undefined as number | undefined,
   };
   try {
-    const outcome = new LocalEngineClient().calculateDirectHit(parameters);
+    let reactionPreview: ReactionPreview | undefined;
+    if (isAmplifying && reactionKey) {
+      const detail = amplifyingMultiplier({ reaction: reactionKey, elementalMastery: em });
+      engineInput.amplifyingReactionMultiplier = detail.amplifying_multiplier;
+      reactionPreview = { type: "amplifying", detail, provenance: REACTION_PROVENANCE };
+    } else if (isTransformative && reactionKey) {
+      const detail = transformativeReaction({
+        reaction: reactionKey,
+        elementalMastery: em,
+        enemyResistance: engineInput.enemyResistance,
+      });
+      reactionPreview = { type: "transformative", detail, provenance: REACTION_PROVENANCE };
+    }
+    const parameters: Record<string, number> = Object.fromEntries(
+      Object.entries(engineInput).filter(([, v]) => typeof v === "number"),
+    ) as Record<string, number>;
+    const outcome = new LocalEngineClient().calculateDirectHit(engineInput);
     return {
       ok: true,
       preview: {
@@ -123,6 +167,7 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
         contractVersion: ENGINE_CONTRACT_VERSION,
         defaultsUsed,
         parameters,
+        reaction: reactionPreview,
         confidence: {
           level: "haute",
           reason:
