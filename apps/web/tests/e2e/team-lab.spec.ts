@@ -57,6 +57,33 @@ test.describe("Laboratoire d'équipes", () => {
     await confirmDelete(page, renamed);
   });
 
+  test("aperçu de coup direct : calcul, provenance, hypothèses, défauts listés", async ({ page }) => {
+    await page.getByLabel("Personnage pour l'aperçu").selectOption("Bennett");
+    await page.getByPlaceholder("ex. 250").fill("250");
+    await page.getByPlaceholder("ex. 2000").fill("2000");
+    await page.getByRole("button", { name: "Calculer l'aperçu" }).click();
+
+    // Résultat + libellé honnête (coup isolé, pas un DPS).
+    const result = page.getByLabel("Résultat de l'aperçu pour Bennett");
+    await expect(result).toBeVisible();
+    await expect(result.getByText("Attendu (moyenne crit.)")).toBeVisible();
+    // Provenance + confiance visibles.
+    await expect(result.getByText("formule vérifiée")).toBeVisible();
+    await expect(result.getByText(/contrat direct-hit\//)).toBeVisible();
+    await expect(result.getByText(/confiance haute/)).toBeVisible();
+    // Défauts utilisés listés (crit/RES/niveaux non renseignés).
+    await expect(result.getByText("défauts utilisés")).toBeVisible();
+    // Hypothèses dépliables.
+    await result.getByText("Hypothèses & provenance").click();
+    await expect(result.getByText(/Coup isolé — pas une rotation/)).toBeVisible();
+  });
+
+  test("aperçu : données insuffisantes sans rien inventer", async ({ page }) => {
+    await page.getByRole("button", { name: "Calculer l'aperçu" }).click();
+    await expect(page.getByText("Données insuffisantes")).toBeVisible();
+    await expect(page.getByText(/Champs requis : Personnage/)).toBeVisible();
+  });
+
   test("accessibilité (axe) — aucune violation critique/sérieuse", async ({ page }) => {
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
     const serious = results.violations.filter(
