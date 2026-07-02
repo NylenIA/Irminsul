@@ -1,0 +1,231 @@
+{
+  "source": "src/irminsul/reaction.py (formules KQM ; niveau 90 = 1446.85)",
+  "generator": "scripts/gen-reaction-goldens.py",
+  "amplifying": [
+    {
+      "inputs": {
+        "reaction": "forward-vaporize",
+        "elemental_mastery": 0
+      },
+      "expected": {
+        "reaction": "forward-vaporize",
+        "base_multiplier": 2.0,
+        "em_bonus": 0.0,
+        "extra_bonus": 0.0,
+        "amplifying_multiplier": 2.0
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "forward-vaporize",
+        "elemental_mastery": 187
+      },
+      "expected": {
+        "reaction": "forward-vaporize",
+        "base_multiplier": 2.0,
+        "em_bonus": 0.3276,
+        "extra_bonus": 0.0,
+        "amplifying_multiplier": 2.6551
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "reverse-vaporize",
+        "elemental_mastery": 320,
+        "reaction_bonus": 0.15
+      },
+      "expected": {
+        "reaction": "reverse-vaporize",
+        "base_multiplier": 1.5,
+        "em_bonus": 0.5172,
+        "extra_bonus": 0.15,
+        "amplifying_multiplier": 2.5008
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "forward-melt",
+        "elemental_mastery": 1000
+      },
+      "expected": {
+        "reaction": "forward-melt",
+        "base_multiplier": 2.0,
+        "em_bonus": 1.1583,
+        "extra_bonus": 0.0,
+        "amplifying_multiplier": 4.3167
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "reverse-melt",
+        "elemental_mastery": 40,
+        "reaction_bonus": -0.5
+      },
+      "expected": {
+        "reaction": "reverse-melt",
+        "base_multiplier": 1.5,
+        "em_bonus": 0.0772,
+        "extra_bonus": 0.0,
+        "amplifying_multiplier": 1.6158
+      }
+    }
+  ],
+  "transformative": [
+    {
+      "inputs": {
+        "reaction": "swirl",
+        "elemental_mastery": 0
+      },
+      "expected": {
+        "reaction": "swirl",
+        "base_multiplier": 0.6,
+        "level_multiplier": 1446.85,
+        "em_bonus": 0.0,
+        "total_reaction_bonus": 0.0,
+        "resistance_multiplier": 0.9,
+        "damage": 781.3
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "swirl",
+        "elemental_mastery": 800,
+        "enemy_resistance": -0.2
+      },
+      "expected": {
+        "reaction": "swirl",
+        "base_multiplier": 0.6,
+        "level_multiplier": 1446.85,
+        "em_bonus": 4.5714,
+        "total_reaction_bonus": 4.5714,
+        "resistance_multiplier": 1.1,
+        "damage": 5320.27
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "overloaded",
+        "elemental_mastery": 187
+      },
+      "expected": {
+        "reaction": "overloaded",
+        "base_multiplier": 2.0,
+        "level_multiplier": 1446.85,
+        "em_bonus": 1.3681,
+        "total_reaction_bonus": 1.3681,
+        "resistance_multiplier": 0.9,
+        "damage": 6167.27
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "electro-charged",
+        "elemental_mastery": 320,
+        "reaction_bonus": 0.4
+      },
+      "expected": {
+        "reaction": "electro-charged",
+        "base_multiplier": 1.2,
+        "level_multiplier": 1446.85,
+        "em_bonus": 2.2069,
+        "total_reaction_bonus": 2.6069,
+        "resistance_multiplier": 0.9,
+        "damage": 5636.13
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "superconduct",
+        "elemental_mastery": 100,
+        "enemy_resistance": 0.75
+      },
+      "expected": {
+        "reaction": "superconduct",
+        "base_multiplier": 0.5,
+        "level_multiplier": 1446.85,
+        "em_bonus": 0.7619,
+        "total_reaction_bonus": 0.7619,
+        "resistance_multiplier": 0.25,
+        "damage": 318.65
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "hyperbloom",
+        "elemental_mastery": 1000,
+        "reaction_bonus": 0.4
+      },
+      "expected": {
+        "reaction": "hyperbloom",
+        "base_multiplier": 3.0,
+        "level_multiplier": 1446.85,
+        "em_bonus": 5.3333,
+        "total_reaction_bonus": 5.7333,
+        "resistance_multiplier": 0.9,
+        "damage": 26303.73
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "burgeon",
+        "elemental_mastery": 600
+      },
+      "expected": {
+        "reaction": "burgeon",
+        "base_multiplier": 3.0,
+        "level_multiplier": 1446.85,
+        "em_bonus": 3.6923,
+        "total_reaction_bonus": 3.6923,
+        "resistance_multiplier": 0.9,
+        "damage": 18330.48
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "bloom",
+        "elemental_mastery": 250,
+        "enemy_resistance": 0.0
+      },
+      "expected": {
+        "reaction": "bloom",
+        "base_multiplier": 2.0,
+        "level_multiplier": 1446.85,
+        "em_bonus": 1.7778,
+        "total_reaction_bonus": 1.7778,
+        "resistance_multiplier": 1.0,
+        "damage": 8038.06
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "burning",
+        "elemental_mastery": 0,
+        "level_multiplier": 1077.44
+      },
+      "expected": {
+        "reaction": "burning",
+        "base_multiplier": 0.25,
+        "level_multiplier": 1077.44,
+        "em_bonus": 0.0,
+        "total_reaction_bonus": 0.0,
+        "resistance_multiplier": 0.9,
+        "damage": 242.42
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "shattered",
+        "elemental_mastery": 50
+      },
+      "expected": {
+        "reaction": "shattered",
+        "base_multiplier": 1.5,
+        "level_multiplier": 1446.85,
+        "em_bonus": 0.3902,
+        "total_reaction_bonus": 0.3902,
+        "resistance_multiplier": 0.9,
+        "damage": 2715.49
+      }
+    }
+  ]
+}
