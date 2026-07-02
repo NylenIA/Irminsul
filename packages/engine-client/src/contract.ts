@@ -68,6 +68,9 @@ export interface EngineClient {
   calculateDirectHit(input: DirectHitInput): DirectHitOutcome;
 }
 
+/** Version du contrat de calcul — affichée dans l'UI ; un désaccord client/serveur = stale_contract. */
+export const ENGINE_CONTRACT_VERSION = "direct-hit/1.0";
+
 export const DIRECT_HIT_ASSUMPTIONS = Object.freeze([
   "Coup isolé — pas une rotation ni un DPS d'équipe (gcsim requis pour cela).",
   "Buffs/débuffs à fournir en entrée : rien n'est déduit automatiquement.",

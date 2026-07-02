@@ -11,6 +11,7 @@ import {
   renameTeamAction,
   duplicateTeamAction,
 } from "./actions";
+import { DirectHitPreview } from "./DirectHitPreview";
 
 interface SlotState {
   character: string;
@@ -169,6 +170,8 @@ export function TeamLabClient({
           ))
         )}
       </section>
+
+      <DirectHitPreview roster={roster} />
 
       <ConfirmDialog
         open={confirmId !== null}
