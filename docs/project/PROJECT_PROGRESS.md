@@ -3,8 +3,8 @@
 > Généré par `scripts/project_progress.py` depuis `PROJECT_PROGRESS.json` le 2026-06-30. Branche `feat/irminsul-complete-redesign`. Ne pas éditer à la main.
 
 ## Scores
-- **MVP utilisable : 67%**
-- **Vision complète : 66%**
+- **MVP utilisable : 70%**
+- **Vision complète : 70%**
 - Confiance globale : moyenne (cœur moteur élevé ; surfaces web/UI récentes).
 - Échelle : 0=absent, 25=squelette/mock/TODO, 50=happy-path peu validé, 75=intégré+testé cas majeurs, 100=prêt à livrer
 
@@ -12,12 +12,12 @@
 | Domaine | Poids | PoidsMVP | Score | Confiance | Preuve | Blocages |
 |---|--:|--:|--:|---|---|---|
 | Moteur de données et calcul | 25 | 30 | 75 | high | 20 modules Python / 96 tests / goldens vs jeu / registre mécaniques (basestats, talentstats, weaponstats verified) | réactions Lunaires + gcsim nouveaux persos manquants |
-| Intégration moteur | 15 | 12 | 65 | high | ADR frontiere + packages/engine-client : contrat EngineClient + port TS fidele, parite Python prouvee (5 goldens 1e-9, 7/7 tests), provenance+hypotheses obligatoires | UI Team Lab pas encore cablee au calcul ; SidecarEngineClient desktop a venir |
-| Application web | 15 | 10 | 60 | high | Next.js 16.2.9 ; /team-lab build+typecheck OK + E2E Playwright vert (desktop+mobile) | autres ecrans (dashboard, compte web) |
+| Intégration moteur | 15 | 12 | 75 | high | Apercu de coup direct LIVE dans Team Lab (Server Action -> LocalEngineClient), provenance+hypotheses+contrat affiches, 9 goldens 1e-9 + garde pytest, E2E 10/10 | reactions dans l'UI ; SidecarEngineClient desktop ; stats reelles du compte |
+| Application web | 15 | 10 | 65 | high | Next.js 16.2.9 ; /team-lab complet avec calcul moteur (E2E 10/10 desktop+mobile, axe vert) | autres ecrans (dashboard, compte web) |
 | Application desktop | 10 | 12 | 50 | high | Tauri MSI/NSIS produit ; vues Compte + Calcul rapide branchees | Tableau de bord / Equipes / gcsim / Assistant vides |
-| Team builder et simulation | 15 | 15 | 70 | medium | Team Lab complet : roster reel (118) + save/reload/rename/duplicate/delete-confirme + anti-doublon + E2E 6 vert + cross-review Codex | connexion moteur de combat (calcul DPS) ; roster synchronise au compte |
+| Team builder et simulation | 15 | 15 | 75 | medium | Team Lab : CRUD complet + Apercu de coup direct deterministe (E2E 10/10, aucune donnee inventee, saisie controlee) | reactions/rotations ; stats reelles du compte ; gcsim |
 | Persistance | 5 | 8 | 75 | medium | Prisma 6 + SQLite local ; TeamRepository teste (Vitest) ; cable a l'UI (Server Actions, build OK) | presets/builds ; rename/duplicate |
-| Design system et UX | 5 | 5 | 60 | medium | packages/ui : tokens OKLCH + Button/Card/States/Input/ConfirmDialog (native accessible) ; DESIGN_SYSTEM.md | Select/Tabs/Toast/CharacterPicker ; brand guide |
+| Design system et UX | 5 | 5 | 65 | medium | tokens OKLCH + primitives + effets astral (halo, energie, skeleton, badges provenance/confiance) reduced-motion safe | Select/Tabs/Toast/CharacterPicker ; brand guide |
 | Tests et qualite | 5 | 4 | 75 | high | 96 Python ; build ; 4 tests repository Vitest ; E2E Playwright 6 (save/reload/delete) ; axe a11y vert (0 critique/serieux) | couverture composants UI ; lint non cable |
 | Packaging et deploiement | 3 | 2 | 50 | medium | desktop MSI/NSIS (Phase 2) | web non deploye |
 | Documentation et continuite | 2 | 2 | 75 | high | audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF, hook SessionStart | hook non encore enregistre dans settings |
