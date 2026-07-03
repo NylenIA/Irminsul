@@ -34,6 +34,20 @@ export const AMPLIFYING_BASE = Object.freeze({
 export type TransformativeKind = keyof typeof TRANSFORMATIVE_BASE;
 export type AmplifyingKind = keyof typeof AMPLIFYING_BASE;
 
+/** Alias acceptés par le moteur Python (parité : audit Codex B/C). */
+const TRANSFORMATIVE_LOOKUP: Record<string, number> = Object.freeze({
+  ...TRANSFORMATIVE_BASE,
+  overload: 2.0,
+  shatter: 1.5,
+});
+
+export function isTransformativeKind(key: string): boolean {
+  return key in TRANSFORMATIVE_LOOKUP;
+}
+export function isAmplifyingKind(key: string): boolean {
+  return key in AMPLIFYING_BASE;
+}
+
 function roundTo(value: number, digits: number): number {
   const factor = 10 ** digits;
   return Math.round(value * factor) / factor;
@@ -75,7 +89,7 @@ export function transformativeReaction(input: {
   enemyResistance?: number;
 }): TransformativeResult {
   const key = input.reaction.trim().toLowerCase();
-  const base = TRANSFORMATIVE_BASE[key as TransformativeKind];
+  const base = TRANSFORMATIVE_LOOKUP[key];
   if (base === undefined) {
     throw new RangeError(
       `Réaction transformative inconnue : ${input.reaction}. Options : ${Object.keys(TRANSFORMATIVE_BASE).sort().join(", ")}`,

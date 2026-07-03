@@ -37,6 +37,9 @@ TRANSFORMATIVE_CASES = [
     dict(reaction="bloom", elemental_mastery=250, enemy_resistance=0.0),  # frontière RES=0
     dict(reaction="burning", elemental_mastery=0, level_multiplier=1077.44),  # niveau ≠ 90
     dict(reaction="shattered", elemental_mastery=50),
+    # Alias Python (audit Codex) : mêmes valeurs, clé renvoyée telle quelle
+    dict(reaction="overload", elemental_mastery=120),
+    dict(reaction="shatter", elemental_mastery=0),
 ]
 
 

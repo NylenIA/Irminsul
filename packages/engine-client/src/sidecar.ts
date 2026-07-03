@@ -87,14 +87,25 @@ export async function runSidecar(
       clearTimeout(timer);
       reject(new SidecarError(`lancement impossible : ${error.message}`));
     });
-    child.on("close", () => {
+    child.on("close", (code) => {
       clearTimeout(timer);
       try {
-        const parsed = JSON.parse(stdout) as { ok: boolean; result?: unknown; error?: string };
-        if (!parsed.ok) reject(new SidecarError(parsed.error ?? "erreur moteur"));
-        else resolve(parsed.result as Record<string, unknown>);
+        const parsed = JSON.parse(stdout) as {
+          ok: boolean;
+          result?: unknown;
+          error?: string;
+          engine?: string;
+        };
+        if (!parsed.ok) {
+          reject(new SidecarError(parsed.error ?? `erreur moteur (exit ${code})`));
+        } else if (parsed.engine !== "python-sidecar" || typeof parsed.result !== "object" || parsed.result === null) {
+          // Audit Codex : ne jamais résoudre un payload qui ne respecte pas le protocole.
+          reject(new SidecarError(`réponse hors protocole (engine=${parsed.engine ?? "absent"})`));
+        } else {
+          resolve(parsed.result as Record<string, unknown>);
+        }
       } catch {
-        reject(new SidecarError(`sortie non-JSON (stderr: ${stderr.slice(0, 300) || "vide"})`));
+        reject(new SidecarError(`sortie non-JSON (exit ${code}, stderr: ${stderr.slice(0, 300) || "vide"})`));
       }
     });
     child.stdin.end(JSON.stringify(request));
@@ -109,6 +120,17 @@ export class SidecarEngineClient {
       method: "calculate_direct_hit",
       params: toSnakeParams(input),
     })) as unknown as PythonDirectHit;
+    // Audit Codex : valider le schéma numérique avant de résoudre (jamais de NaN/undefined
+    // étiqueté "python-sidecar").
+    const fields: (keyof PythonDirectHit)[] = [
+      "raw_base", "non_crit", "crit", "expected",
+      "defense_multiplier", "resistance_multiplier", "expected_crit_multiplier",
+    ];
+    for (const field of fields) {
+      if (!Number.isFinite(raw[field])) {
+        throw new SidecarError(`champ manquant ou non numérique dans la réponse moteur : ${field}`);
+      }
+    }
     const result: DirectHitResult = {
       rawBase: raw.raw_base,
       nonCrit: raw.non_crit,

@@ -7,10 +7,10 @@
 import { ENGINE_CONTRACT_VERSION, type DirectHitOutcome } from "./contract";
 import { LocalEngineClient } from "./direct-hit";
 import {
-  AMPLIFYING_BASE,
   amplifyingMultiplier,
+  isAmplifyingKind,
+  isTransformativeKind,
   REACTION_PROVENANCE,
-  TRANSFORMATIVE_BASE,
   transformativeReaction,
   type AmplifyingResult,
   type TransformativeResult,
@@ -119,8 +119,8 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
 
   const reactionKey = request.reaction?.trim().toLowerCase() || null;
   const em = isMissing(request.elementalMastery) ? 0 : request.elementalMastery;
-  const isAmplifying = reactionKey !== null && reactionKey in AMPLIFYING_BASE;
-  const isTransformative = reactionKey !== null && reactionKey in TRANSFORMATIVE_BASE;
+  const isAmplifying = reactionKey !== null && isAmplifyingKind(reactionKey);
+  const isTransformative = reactionKey !== null && isTransformativeKind(reactionKey);
   if (reactionKey !== null && !isAmplifying && !isTransformative) {
     issues.push(`Réaction inconnue : ${reactionKey}.`);
   }

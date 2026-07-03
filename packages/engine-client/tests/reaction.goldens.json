@@ -226,6 +226,36 @@
         "resistance_multiplier": 0.9,
         "damage": 2715.49
       }
+    },
+    {
+      "inputs": {
+        "reaction": "overload",
+        "elemental_mastery": 120
+      },
+      "expected": {
+        "reaction": "overload",
+        "base_multiplier": 2.0,
+        "level_multiplier": 1446.85,
+        "em_bonus": 0.9057,
+        "total_reaction_bonus": 0.9057,
+        "resistance_multiplier": 0.9,
+        "damage": 4962.97
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "shatter",
+        "elemental_mastery": 0
+      },
+      "expected": {
+        "reaction": "shatter",
+        "base_multiplier": 1.5,
+        "level_multiplier": 1446.85,
+        "em_bonus": 0.0,
+        "total_reaction_bonus": 0.0,
+        "resistance_multiplier": 0.9,
+        "damage": 1953.25
+      }
     }
   ]
 }
