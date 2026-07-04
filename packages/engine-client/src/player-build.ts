@@ -13,6 +13,7 @@ export interface PlayerCharacterBuild {
   talents?: { normal?: number; skill?: number; burst?: number };
   weapon?: { id: string; refinement?: number };
   artifactSlots?: string[];
+  artifactSets?: { set: string; count: number }[];
   source: "scanner" | "local-db" | "manual" | "fixture";
   scannerName?: string;
   importedAt?: string;
@@ -35,6 +36,28 @@ interface RawProfile {
   snapshot_date?: string;
   source?: string;
   format?: string;
+}
+
+/** `a-038-ObsidianCodex-flower-0ca98fd8` → "ObsidianCodex" (nom de set réel du scan). */
+export function parseArtifactSet(ref: string | undefined): string | null {
+  if (!ref) return null;
+  const match = /^a-\d+-(.+?)-(flower|plume|sands|goblet|circlet)-[0-9a-f]+$/i.exec(ref);
+  return match ? (match[1] as string) : null;
+}
+
+/** Compte les pièces par set depuis les réfs d'artéfacts scannées (aucune invention). */
+export function parseArtifactSets(
+  artifacts: Record<string, string> | undefined,
+): { set: string; count: number }[] {
+  if (!artifacts) return [];
+  const counts = new Map<string, number>();
+  for (const ref of Object.values(artifacts)) {
+    const set = parseArtifactSet(ref);
+    if (set) counts.set(set, (counts.get(set) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([set, count]) => ({ set, count }))
+    .sort((a, b) => b.count - a.count || a.set.localeCompare(b.set));
 }
 
 /** `w-008-WolfsGravestone-r1-055aea9d` → { id: "WolfsGravestone", refinement: 1 } */
@@ -68,6 +91,7 @@ export function normalizePlayerBuild(
       : undefined,
     weapon: parseWeaponRef(raw.weapon),
     artifactSlots: raw.artifacts ? Object.keys(raw.artifacts) : undefined,
+    artifactSets: raw.artifacts ? parseArtifactSets(raw.artifacts) : undefined,
     source: "scanner",
     scannerName: profile?.source,
     importedAt: profile?.snapshot_date,
