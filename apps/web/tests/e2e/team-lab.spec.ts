@@ -126,3 +126,36 @@ test.describe("Pages essentielles (dashboard, personnages, navigation)", () => {
     }
   });
 });
+
+test.describe("Détail personnage — stats finales (moteur Python via sidecar)", () => {
+  test("affiche les stats finales OU un état d'échec honnête, avec provenance/hypothèses", async ({ page }) => {
+    // Mavuika est dans le scan de référence ; si le sidecar est indisponible → état d'erreur typé.
+    await page.goto("/characters/Mavuika");
+    await expect(page.getByRole("heading", { name: "Mavuika" })).toBeVisible();
+
+    const statsView = page.getByLabel("Stats finales de Mavuika");
+    const engineError = page.getByText("Erreur du moteur");
+    const noScan = page.getByText("Aucun scan de compte");
+    await expect(statsView.or(engineError).or(noScan)).toBeVisible({ timeout: 15000 });
+
+    // Chemin nominal : breakdown + confiance + provenance visibles ; jamais NaN/Infinity.
+    if (await statsView.isVisible()) {
+      await expect(statsView.getByText("ATQ")).toBeVisible();
+      await expect(statsView.getByText(/confiance (haute|moyenne|faible)/)).toBeVisible();
+      await expect(statsView).not.toContainText("NaN");
+      await expect(statsView).not.toContainText("Infinity");
+      await page.getByText("Hypothèses & provenance").click();
+      await expect(page.getByText(/SANS buffs conditionnels/)).toBeVisible();
+    }
+  });
+
+  test("accessibilité (axe) du détail personnage", async ({ page }) => {
+    await page.goto("/characters/Mavuika");
+    await expect(page.getByRole("heading", { name: "Mavuika" })).toBeVisible();
+    const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+    const serious = results.violations.filter(
+      (v) => v.impact === "critical" || v.impact === "serious",
+    );
+    expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
+  });
+});
