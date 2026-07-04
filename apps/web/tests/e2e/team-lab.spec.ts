@@ -159,3 +159,42 @@ test.describe("Détail personnage — stats finales (moteur Python via sidecar)"
     expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
   });
 });
+
+test.describe("Rotations — moteur chiffré (jamais de faux DPS)", () => {
+  test("calcule une rotation depuis une équipe sauvegardée, DPS seulement si complet", async ({ page }) => {
+    // Prépare une équipe avec Bennett (présent dans scan+talent+base).
+    await page.goto("/team-lab");
+    const teamName = `Rota ${Date.now()}`;
+    await page.getByPlaceholder("Ex. Sandrone Lunar-Crystallize").fill(teamName);
+    await page.getByLabel("Personnage, emplacement 1").selectOption("Bennett");
+    await page.getByRole("button", { name: "Sauvegarder l'équipe" }).click();
+    await expect(page.getByRole("heading", { name: teamName })).toBeVisible();
+
+    await page.goto("/rotations");
+    await expect(page.getByRole("heading", { name: "Rotations" })).toBeVisible();
+    await page.getByLabel("Équipe sauvegardée").selectOption({ label: teamName });
+
+    // Ajoute une attaque normale (talent par défaut combat1 / 1-Hit DMG / 10) et calcule.
+    await page.getByRole("button", { name: "+ Action" }).click();
+    await page.getByRole("button", { name: "Calculer la rotation" }).click();
+
+    const result = page.getByLabel("Résultat de la rotation");
+    await expect(result).toBeVisible({ timeout: 15000 });
+    await expect(result.getByText(/contrat rotation\//)).toBeVisible();
+    // Jamais NaN/Infinity affichés.
+    await expect(result).not.toContainText("NaN");
+    await expect(result).not.toContainText("Infinity");
+    await result.getByText("Hypothèses & provenance").click();
+    await expect(result.getByText(/coefficient de talent réel/)).toBeVisible();
+  });
+
+  test("accessibilité (axe) de /rotations", async ({ page }) => {
+    await page.goto("/rotations");
+    await expect(page.getByRole("heading", { name: "Rotations" })).toBeVisible();
+    const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+    const serious = results.violations.filter(
+      (v) => v.impact === "critical" || v.impact === "serious",
+    );
+    expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
+  });
+});
