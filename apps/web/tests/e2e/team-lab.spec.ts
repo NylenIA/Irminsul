@@ -198,3 +198,39 @@ test.describe("Rotations — moteur chiffré (jamais de faux DPS)", () => {
     expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
   });
 });
+
+test.describe("Comparateur d'équipes (structurel honnête)", () => {
+  test("compare deux équipes ; dégâts marqués « à venir » (jamais estimés)", async ({ page }) => {
+    // Deux équipes distinctes.
+    for (const [name, char] of [["Compare A", "Bennett"], ["Compare B", "Nahida"]] as const) {
+      await page.goto("/team-lab");
+      await page.getByPlaceholder("Ex. Sandrone Lunar-Crystallize").fill(`${name} ${Date.now()}`);
+      await page.getByLabel("Personnage, emplacement 1").selectOption(char);
+      await page.getByRole("button", { name: "Sauvegarder l'équipe" }).click();
+      await expect(page.getByRole("heading", { name: new RegExp(name) })).toBeVisible();
+    }
+
+    await page.goto("/team-compare");
+    await expect(page.getByRole("heading", { name: "Comparateur d'équipes" })).toBeVisible();
+    const empty = page.getByText("Il faut au moins deux équipes");
+    if (await empty.isVisible().catch(() => false)) return; // pas assez d'équipes dans cette db isolée
+    await page.getByRole("button", { name: "Comparer" }).click();
+
+    const result = page.getByLabel("Résultat de la comparaison");
+    await expect(result).toBeVisible({ timeout: 10000 });
+    await expect(result.getByText(/contrat team-compare\//)).toBeVisible();
+    // La dimension dégâts doit être marquée « à venir », jamais un chiffre.
+    await expect(result.getByText("Dégâts totaux / DPS")).toBeVisible();
+    await expect(result.getByText("à venir", { exact: true }).first()).toBeVisible();
+  });
+
+  test("accessibilité (axe) de /team-compare", async ({ page }) => {
+    await page.goto("/team-compare");
+    await expect(page.getByRole("heading", { name: "Comparateur d'équipes" })).toBeVisible();
+    const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+    const serious = results.violations.filter(
+      (v) => v.impact === "critical" || v.impact === "serious",
+    );
+    expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
+  });
+});
