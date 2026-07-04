@@ -122,6 +122,15 @@ def dispatch(method: str, params: dict[str, Any] | None = None) -> dict[str, Any
     if method == "quick-calc":
         from .quickcalc import quickcalc_payload
         return quickcalc_payload(params)
+    if method == "characters":
+        from .charstats import characters_payload
+        return characters_payload()
+    if method == "character-stats":
+        from .charstats import character_payload
+        key = params.get("key")
+        if not key:
+            raise ValueError("paramètre 'key' requis")
+        return character_payload(str(key))
     raise ValueError(f"méthode inconnue: {method}")
 
 
