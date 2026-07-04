@@ -38,10 +38,14 @@ interface RawProfile {
   format?: string;
 }
 
-/** `a-038-ObsidianCodex-flower-0ca98fd8` → "ObsidianCodex" (nom de set réel du scan). */
+/**
+ * `a-038-ObsidianCodex-flower-0ca98fd8` → "ObsidianCodex" (nom de set réel du scan).
+ * Le hash final est EXACTEMENT 8 hex (contrat `_short_hash` de src/irminsul/account.py) : un
+ * suffixe tronqué/trop long est rejeté plutôt que compté comme un vrai set (audit Codex, Low).
+ */
 export function parseArtifactSet(ref: string | undefined): string | null {
   if (!ref) return null;
-  const match = /^a-\d+-(.+?)-(flower|plume|sands|goblet|circlet)-[0-9a-f]+$/i.exec(ref);
+  const match = /^a-\d{3,}-(.+?)-(flower|plume|sands|goblet|circlet)-[0-9a-f]{8}$/i.exec(ref);
   return match ? (match[1] as string) : null;
 }
 
@@ -63,7 +67,7 @@ export function parseArtifactSets(
 /** `w-008-WolfsGravestone-r1-055aea9d` → { id: "WolfsGravestone", refinement: 1 } */
 export function parseWeaponRef(ref: string | undefined): PlayerCharacterBuild["weapon"] {
   if (!ref) return undefined;
-  const match = /^w-\d+-(.+?)-r(\d+)-[0-9a-f]+$/i.exec(ref);
+  const match = /^w-\d{3,}-(.+?)-r(\d+)-[0-9a-f]{8}$/i.exec(ref);
   if (!match) return { id: ref };
   return { id: match[1] as string, refinement: Number(match[2]) };
 }

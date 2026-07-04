@@ -52,6 +52,19 @@ describe("normalizePlayerBuild (adapter scan GOOD — aucune stat inventée)", (
     expect(parseArtifactSets({ flower: "ref-invalide" })).toEqual([]);
   });
 
+  it("rejette les réfs au hash non conforme (audit Codex : exactement 8 hex)", () => {
+    // Hash tronqué (7), trop long (9), non-hex : aucun ne doit compter comme set réel.
+    expect(parseArtifactSets({ flower: "a-038-ObsidianCodex-flower-0ca98fd" })).toEqual([]);
+    expect(parseArtifactSets({ flower: "a-038-ObsidianCodex-flower-0ca98fd8a" })).toEqual([]);
+    expect(parseArtifactSets({ flower: "a-038-ObsidianCodex-flower-zzzzzzzz" })).toEqual([]);
+    // Slot inconnu rejeté aussi.
+    expect(parseArtifactSets({ x: "a-038-ObsidianCodex-wings-0ca98fd8" })).toEqual([]);
+    // Réf arme au hash trop court → fallback { id: ref } (pas de faux raffinement).
+    expect(parseWeaponRef("w-008-WolfsGravestone-r1-0ca98fd")).toEqual({
+      id: "w-008-WolfsGravestone-r1-0ca98fd",
+    });
+  });
+
   it("retourne null si le personnage n'est pas scanné ; parseWeaponRef robuste", () => {
     expect(normalizePlayerBuild(undefined, PROFILE)).toBeNull();
     expect(parseWeaponRef(undefined)).toBeUndefined();
