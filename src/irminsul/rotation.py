@@ -33,6 +33,22 @@ def _finite(x: Any) -> bool:
     return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(float(x))
 
 
+def _validate_enemy(enemy: Any) -> dict[str, float]:
+    """Valide l'ennemi (audit Codex High #2) : champs finis et bornés avant la formule de coup.
+    Empêche NaN dans le DPS et la division par zéro dans le multiplicateur de défense."""
+    if enemy is None:
+        return {"level": 100.0, "resistance": 0.10}
+    if not isinstance(enemy, dict):
+        raise RotationValidationError("enemy doit être un objet")
+    level = enemy.get("level", 100)
+    res = enemy.get("resistance", 0.10)
+    if not _finite(level) or not (1 <= float(level) <= 200):
+        raise RotationValidationError("enemy.level invalide (1..200 requis)")
+    if not _finite(res) or not (-1.0 <= float(res) <= 3.0):
+        raise RotationValidationError("enemy.resistance invalide (-1..3 requis)")
+    return {"level": float(level), "resistance": float(res)}
+
+
 def _validate_actions(actions: list[dict[str, Any]], team: set[str]) -> None:
     if not isinstance(actions, list) or not actions:
         raise RotationValidationError("rotation vide : au moins une action requise")
@@ -40,6 +56,9 @@ def _validate_actions(actions: list[dict[str, Any]], team: set[str]) -> None:
         raise RotationValidationError(f"trop d'actions (> {MAX_ACTIONS})")
     prev_end = 0.0
     for i, a in enumerate(actions):
+        # Audit Codex Medium #3 : chaque action DOIT être un objet (pas None/str/int).
+        if not isinstance(a, dict):
+            raise RotationValidationError(f"action {i} : structure invalide (objet attendu)")
         kind = a.get("kind")
         if kind not in ALL_KINDS:
             raise RotationValidationError(f"action {i} : type inconnu {kind!r}")
@@ -74,10 +93,22 @@ def _actor_final_stats(key: str, cache: dict[str, Any]) -> dict[str, Any] | None
 
 
 def _cell(fs: dict[str, Any] | None, name: str) -> float | None:
+    """Valeur finie d'une cellule (peut être partielle — usage crit avec défaut sûr)."""
     if not fs:
         return None
     c = fs.get(name)
     if isinstance(c, dict) and _finite(c.get("value")):
+        return float(c["value"])
+    return None
+
+
+def _complete_cell(fs: dict[str, Any] | None, name: str) -> float | None:
+    """Valeur d'une cellule SEULEMENT si `complete` (audit Codex High #1) : évite un faux DPS
+    à partir de stats partielles (arme non supportée, main-stat non calculée…) avec valeurs finies."""
+    if not fs:
+        return None
+    c = fs.get(name)
+    if isinstance(c, dict) and c.get("complete") is True and _finite(c.get("value")):
         return float(c["value"])
     return None
 
@@ -110,9 +141,11 @@ def _compute_action_damage(
     else:
         warnings.append("talent (slot/label/level) non renseigné")
 
-    atk = _cell(fs, "atk")
+    # High #1 : n'utiliser l'ATQ que si la cellule est COMPLÈTE (pas seulement finie) —
+    # sinon la stat vient d'un build partiel et produirait un faux DPS marqué « complet ».
+    atk = _complete_cell(fs, "atk")
     if atk is None:
-        warnings.append("ATQ finale indisponible (stats incomplètes)")
+        warnings.append("ATQ finale indisponible ou incomplète (stats partielles)")
 
     if coeff is None or atk is None:
         return {"actorId": actor, "kind": a.get("kind"), "complete": False,
@@ -143,9 +176,12 @@ def calculate_rotation(
     """Calcule une rotation. Retour = contrat `rotation/1.0` (voir docs)."""
     if not isinstance(team, list) or not team:
         raise RotationValidationError("équipe vide")
-    team_set = {str(k) for k in team}
+    # Medium #3 : membres d'équipe strictement des chaînes (pas de coercition str(1)->"1").
+    if not all(isinstance(k, str) and k.strip() for k in team):
+        raise RotationValidationError("membres d'équipe invalides (chaînes non vides requises)")
+    team_set = set(team)
     _validate_actions(actions, team_set)
-    enemy = enemy or {}
+    enemy = _validate_enemy(enemy)  # High #2 : ennemi validé/borné avant toute formule
 
     cache: dict[str, Any] = {}
     resolved: list[dict[str, Any]] = []

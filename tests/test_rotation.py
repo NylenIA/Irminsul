@@ -1,6 +1,6 @@
 """TDD du moteur de rotations — validation stricte + calcul réel (aucun faux DPS).
 
-Persos de test présents dans le scan ∩ talent ∩ basestats (Bennett).
+Persos de test présents dans le scan ∩ talent ∩ basestats (Mavuika).
 """
 from __future__ import annotations
 
@@ -14,10 +14,12 @@ from irminsul.rotation import (
     calculate_rotation,
 )
 
-TEAM = ["Bennett"]
+# Mavuika : présente dans scan ∩ talent ∩ basestats AVEC une ATQ finale COMPLÈTE
+# (indispensable depuis le durcissement audit : un build partiel ne produit plus de DPS).
+TEAM = ["Mavuika"]
 
 
-def _na(actor="Bennett", start=0.0, dur=1.0):
+def _na(actor="Mavuika", start=0.0, dur=1.0):
     return {"actorId": actor, "kind": "normal_attack", "startTime": start, "duration": dur,
             "talentSlot": "combat1", "talentLabel": "1-Hit DMG", "talentLevel": 10}
 
@@ -42,6 +44,27 @@ class TestValidation:
     def test_acteur_hors_equipe_rejete(self) -> None:
         with pytest.raises(RotationValidationError, match="absent de"):
             calculate_rotation(TEAM, [_na(actor="Ganyu")])
+
+    def test_action_none_rejetee(self) -> None:
+        # Audit Codex Medium #3 : structure invalide → erreur typée, pas AttributeError.
+        with pytest.raises(RotationValidationError, match="structure invalide"):
+            calculate_rotation(TEAM, [None])  # type: ignore[list-item]
+
+    def test_membre_equipe_non_chaine_rejete(self) -> None:
+        # team=[1] ne doit PAS être stringifié en "1" pour laisser passer un acteur "1".
+        with pytest.raises(RotationValidationError, match="membres d'équipe"):
+            calculate_rotation([1], [{**_na(), "actorId": "1"}])  # type: ignore[list-item]
+
+    def test_enemy_resistance_nan_rejete(self) -> None:
+        # Audit Codex High #2 : ennemi non fini → erreur, jamais un NaN dans le DPS.
+        with pytest.raises(RotationValidationError, match="resistance"):
+            calculate_rotation(TEAM, [_na()], enemy={"resistance": float("nan")})
+
+    def test_enemy_level_hors_bornes_rejete(self) -> None:
+        with pytest.raises(RotationValidationError, match="level"):
+            calculate_rotation(TEAM, [_na()], enemy={"level": -290})
+        with pytest.raises(RotationValidationError, match="resistance"):
+            calculate_rotation(TEAM, [_na()], enemy={"resistance": "abc"})
 
     def test_chevauchement_rejete(self) -> None:
         acts = [_na(start=0.0, dur=2.0), _na(start=1.0, dur=1.0)]
@@ -71,11 +94,11 @@ class TestCalcul:
         assert r["duration"] == 2.0
         # DPS = total / durée, seulement car complet.
         assert r["average_damage_per_second"] == pytest.approx(r["total_damage"] / 2.0, rel=1e-6)
-        assert r["damage_by_character"]["Bennett"] == r["total_damage"]
+        assert r["damage_by_character"]["Mavuika"] == r["total_damage"]
         assert all(a["complete"] for a in r["actions"])
 
     def test_action_sans_talent_est_incomplete_sans_faux_dps(self) -> None:
-        bad = {"actorId": "Bennett", "kind": "skill", "startTime": 0.0, "duration": 1.0}
+        bad = {"actorId": "Mavuika", "kind": "skill", "startTime": 0.0, "duration": 1.0}
         r = calculate_rotation(TEAM, [bad])
         assert r["complete"] is False
         assert r["average_damage_per_second"] is None       # jamais de faux DPS
@@ -92,14 +115,29 @@ class TestCalcul:
 
     def test_swap_et_wait_comptent_la_duree_sans_degats(self) -> None:
         acts = [
-            {"actorId": "Bennett", "kind": "swap", "startTime": 0.0, "duration": 0.5},
+            {"actorId": "Mavuika", "kind": "swap", "startTime": 0.0, "duration": 0.5},
             _na(start=0.5, dur=1.0),
-            {"actorId": "Bennett", "kind": "wait", "startTime": 1.5, "duration": 0.5},
+            {"actorId": "Mavuika", "kind": "wait", "startTime": 1.5, "duration": 0.5},
         ]
         r = calculate_rotation(TEAM, acts)
         assert r["duration"] == 2.0
         assert r["complete"] is True
         assert r["total_damage"] > 0
+
+    def test_atk_incomplete_ne_produit_pas_de_faux_dps(self) -> None:
+        # Audit Codex High #1 : ATQ finie mais NON complète (build partiel) → action incomplète,
+        # aucun DPS, malgré une valeur numérique présente.
+        from irminsul.rotation import _compute_action_damage
+        fs_partiel = {
+            "complete": False,
+            "atk": {"value": 1800.0, "complete": False, "missing": ["arme non prise en charge"]},
+            "crit_rate_": {"value": 5.0, "complete": False, "missing": []},
+            "crit_dmg_": {"value": 50.0, "complete": False, "missing": []},
+        }
+        r = _compute_action_damage(_na(), fs_partiel, {"level": 100, "resistance": 0.1})
+        assert r["complete"] is False
+        assert r["damage"] is None
+        assert any("incomplète" in w or "partielles" in w for w in r["warnings"])
 
     def test_provenance_et_hypotheses_presentes(self) -> None:
         r = calculate_rotation(TEAM, [_na()])
