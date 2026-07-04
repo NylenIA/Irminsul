@@ -60,6 +60,20 @@
       "edge_cases": ["EM ≥ 0", "bonus de réaction additif (ex. set Crimson Witch)"]
     },
     {
+      "id": "additive_reaction",
+      "applies_to_versions": "core-stable",
+      "rule": "Bonus additif = coef × levelMultiplier × (1 + 5×EM/(EM+1200) + reaction_bonus) ; ajouté aux dégâts de BASE du talent (puis DMG%/crit/DEF/RES s'appliquent). coef = 1.15 (Aggravation/Electro), 1.25 (Propagation/Dendro). L'EM ne snapshot pas.",
+      "sources": [
+        {"name": "KQM — Additive Reactions", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/elemental-effects/additive-reactions"}
+      ],
+      "code": "src/irminsul/reaction.py:additive_reaction",
+      "tests": ["tests/test_reaction.py", "tests/test_quickcalc.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["bonus injecté via flat_base_damage du coup déclencheur", "EM ≥ 0"]
+    },
+    {
       "id": "transformative_reaction",
       "applies_to_versions": "core-stable",
       "rule": "Dégâts = base × levelMultiplier × (1 + 16×EM/(EM+2000) + reaction_bonus) × ResMult. Pas de crit par défaut.",
@@ -72,6 +86,72 @@
       "status": "verified",
       "confidence": "high",
       "edge_cases": ["levelMultiplier dépend du niveau (1446.85 au niveau 90)"]
+    },
+    {
+      "id": "artifact_main_stats",
+      "applies_to_versions": "core-stable",
+      "rule": "Stats principales d'artéfact 5★ niveau 20 (valeurs fixes) : ATK% 46.6, HP% 46.6, DEF% 58.3, EM 187, ER% 51.8, CR% 31.1, CD% 62.2, Heal% 35.9, DMG élém. 46.6, DMG phys. 58.3, HP plat 4780, ATK plat 311. Substats = valeurs réelles du GOOD.",
+      "sources": [
+        {"name": "Genshin Optimizer / in-game (valeurs publiques)", "type": "B", "url": "https://frzyc.github.io/genshin-optimizer/"}
+      ],
+      "code": "src/irminsul/charstats.py:artifact_stat_totals",
+      "tests": ["tests/test_charstats.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["table limitée au 5★ niveau 20 ; autres rareté/niveau signalés comme non calculés"]
+    },
+    {
+      "id": "character_base_stats",
+      "applies_to_versions": "core-stable",
+      "rule": "PV/ATQ/DÉF de base perso = base × courbe[niveau] + promotion[ascension]. Stat d'ascension (Crit/ATQ%/EM…) = promotion[ascension]. Courbes (GROW_CURVE_*_S4/S5) et valeurs de base/ascension extraites de genshin-db, versionnées et committées dans data/mechanics/character-basestats.json (provenance : commit + date).",
+      "sources": [
+        {"name": "genshin-db (theBowja) — game data, commit acd86e05 (2026-05-20)", "type": "B", "url": "https://github.com/theBowja/genshin-db"},
+        {"name": "KQM — Character Stats / Scaling", "type": "B", "url": "https://library.keqingmains.com/combat-mechanics/character/stats"}
+      ],
+      "code": "src/irminsul/basestats.py:character_base_stats",
+      "tests": ["tests/test_basestats.py", "tests/test_charstats.py"],
+      "verified_at": "2026-06-28",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": ["119 persos couverts ; clés hors source signalées non prises en charge", "Voyageur : variantes Traveler* → aether (= lumine)", "niveau 1..90, ascension 0..6 ; hors bornes = erreur explicite", "valeurs validées en jeu : Ayaka HP 12858, Hu Tao HP 15552 / ATQ 106.4"]
+    },
+    {
+      "id": "weapon_base_stats",
+      "applies_to_versions": "core-stable",
+      "rule": "ATQ de base d'arme = base × courbe_atk[niveau] + promotion[ascension] ; stat secondaire = base_secondary × courbe_secondary[niveau] (SANS ascension). Caps de niveau selon rareté (1-2★ → niv 70). Extraites de genshin-db, versionnées et committées dans data/mechanics/weapon-basestats.json (embarqué). Branchées dans charstats.compute_final_stats : final_stats.atk.complete=true SEULEMENT si l'arme est valide (ATQ de base finie) ET aucune main d'artéfact manquante → correspond alors à l'écran du jeu (hors buffs conditionnels), PAS à une stat de combat finale.",
+      "sources": [
+        {"name": "genshin-db (theBowja) — game data, commit acd86e05 (2026-05-20)", "type": "B", "url": "https://github.com/theBowja/genshin-db"},
+        {"name": "KQM — Combat mechanics (library)", "type": "B", "url": "https://library.keqingmains.com/"},
+        {"name": "Genshin Impact Wiki (Fandom) — tables d'armes (références indépendantes)", "type": "C", "url": "https://genshin-impact.fandom.com/wiki/Weapon"}
+      ],
+      "code": "src/irminsul/weaponstats.py:weapon_base_stats",
+      "tests": ["tests/test_weaponstats.py", "tests/test_charstats.py"],
+      "verified_at": "2026-06-29",
+      "status": "verified",
+      "confidence": "high",
+      "edge_cases": [
+        "236 armes ; 10 valeurs recoupées INDÉPENDAMMENT au wiki en jeu lors de la revue Codex R3 (Dull Blade, Silver Sword, Black Tassel, Prototype Archaic, Favonius Lance, Mappa Mare, Snow-Tombed, Whiteblind, Skyward Harp, Mistsplitter)",
+        "FIGHT_PROP_NONE = arme sans stat secondaire",
+        "1-2★ plafonnées au niveau 70 (ascension max 4) — paires hors plage rejetées",
+        "payload arme {supported:true} mais ATQ absente/non finie → exclu, jamais complete=true (durci suite R3)",
+        "passifs d'arme (conditionnels) NON inclus — hors stats de base",
+        "PROMU 'verified' 2026-06-29 : revue indépendante R3 OK + extraction reproductible (SHA256 des entrées + contrôle de propreté du checkout : source_dirty=false, reproducible=true)"
+      ]
+    },
+    {
+      "id": "lunar_reactions",
+      "applies_to_versions": "récent (Nod-Krai)",
+      "rule": "NON IMPLÉMENTÉ — réactions Lunaires (Lunar-Charged/Bloom…) récentes ; coefficients et conditions non confirmés de façon fiable. À ne pas calculer tant que les valeurs ne sont pas vérifiées sur sources primaires/A.",
+      "sources": [
+        {"name": "à confirmer (officiel / KQM)", "type": "D", "url": ""}
+      ],
+      "code": "",
+      "tests": [],
+      "verified_at": "",
+      "status": "unknown",
+      "confidence": "low",
+      "edge_cases": ["ne pas inventer ; signaler l'incertitude ; séparer live et leaks"]
     }
   ]
 }

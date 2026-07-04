@@ -1,0 +1,8379 @@
+{
+  "schema": 1,
+  "kind": "character-base-stats",
+  "version": "2026-05-20T21:53:46-04:00",
+  "provenance": {
+    "source": "genshin-db",
+    "source_repo": "theBowja/genshin-db",
+    "source_url": "https://github.com/theBowja/genshin-db",
+    "source_commit": "acd86e057937eb67256bb1436dba9258be746afd",
+    "source_commit_date": "2026-05-20T21:53:46-04:00",
+    "extracted_from": [
+      "src/data/curve/characters.json",
+      "src/data/stats/characters.json"
+    ],
+    "extracted_at": "2026-05-20",
+    "reproducible": true,
+    "confidence": "high",
+    "formula": "stat(niveau, ascension) = base × courbe[niveau] + promotion[ascension]",
+    "formula_sources": [
+      {
+        "name": "KQM — Character Stats / Scaling",
+        "type": "B",
+        "url": "https://library.keqingmains.com/combat-mechanics/character/stats"
+      },
+      {
+        "name": "genshin-db (theBowja) — game data",
+        "type": "B",
+        "url": "https://github.com/theBowja/genshin-db"
+      }
+    ],
+    "character_count": 119,
+    "ascension_value_units": "valeurs converties en unités d'affichage : pourcentages ×100, Maîtrise brute"
+  },
+  "curves": {
+    "GROW_CURVE_ATTACK_S4": {
+      "1": 1.0,
+      "2": 1.083,
+      "3": 1.165,
+      "4": 1.248,
+      "5": 1.33,
+      "6": 1.413,
+      "7": 1.495,
+      "8": 1.578,
+      "9": 1.661,
+      "10": 1.743,
+      "11": 1.826,
+      "12": 1.908,
+      "13": 1.991,
+      "14": 2.073,
+      "15": 2.156,
+      "16": 2.239,
+      "17": 2.321,
+      "18": 2.404,
+      "19": 2.486,
+      "20": 2.569,
+      "21": 2.651,
+      "22": 2.734,
+      "23": 2.817,
+      "24": 2.899,
+      "25": 2.982,
+      "26": 3.064,
+      "27": 3.147,
+      "28": 3.229,
+      "29": 3.312,
+      "30": 3.394,
+      "31": 3.477,
+      "32": 3.56,
+      "33": 3.642,
+      "34": 3.725,
+      "35": 3.807,
+      "36": 3.89,
+      "37": 3.972,
+      "38": 4.055,
+      "39": 4.138,
+      "40": 4.22,
+      "41": 4.303,
+      "42": 4.385,
+      "43": 4.468,
+      "44": 4.55,
+      "45": 4.633,
+      "46": 4.716,
+      "47": 4.798,
+      "48": 4.881,
+      "49": 4.963,
+      "50": 5.046,
+      "51": 5.128,
+      "52": 5.211,
+      "53": 5.294,
+      "54": 5.376,
+      "55": 5.459,
+      "56": 5.541,
+      "57": 5.624,
+      "58": 5.706,
+      "59": 5.789,
+      "60": 5.872,
+      "61": 5.954,
+      "62": 6.037,
+      "63": 6.119,
+      "64": 6.202,
+      "65": 6.284,
+      "66": 6.367,
+      "67": 6.45,
+      "68": 6.532,
+      "69": 6.615,
+      "70": 6.697,
+      "71": 6.78,
+      "72": 6.862,
+      "73": 6.945,
+      "74": 7.028,
+      "75": 7.11,
+      "76": 7.193,
+      "77": 7.275,
+      "78": 7.358,
+      "79": 7.44,
+      "80": 7.523,
+      "81": 7.606,
+      "82": 7.688,
+      "83": 7.771,
+      "84": 7.853,
+      "85": 7.936,
+      "86": 8.018,
+      "87": 8.101,
+      "88": 8.183,
+      "89": 8.266,
+      "90": 8.349
+    },
+    "GROW_CURVE_ATTACK_S5": {
+      "1": 1.0,
+      "2": 1.083,
+      "3": 1.166,
+      "4": 1.25,
+      "5": 1.333,
+      "6": 1.417,
+      "7": 1.5,
+      "8": 1.584,
+      "9": 1.668,
+      "10": 1.751,
+      "11": 1.835,
+      "12": 1.919,
+      "13": 2.003,
+      "14": 2.088,
+      "15": 2.172,
+      "16": 2.256,
+      "17": 2.341,
+      "18": 2.425,
+      "19": 2.51,
+      "20": 2.594,
+      "21": 2.679,
+      "22": 2.764,
+      "23": 2.849,
+      "24": 2.934,
+      "25": 3.019,
+      "26": 3.105,
+      "27": 3.19,
+      "28": 3.275,
+      "29": 3.361,
+      "30": 3.446,
+      "31": 3.532,
+      "32": 3.618,
+      "33": 3.704,
+      "34": 3.789,
+      "35": 3.875,
+      "36": 3.962,
+      "37": 4.048,
+      "38": 4.134,
+      "39": 4.22,
+      "40": 4.307,
+      "41": 4.393,
+      "42": 4.48,
+      "43": 4.567,
+      "44": 4.653,
+      "45": 4.74,
+      "46": 4.827,
+      "47": 4.914,
+      "48": 5.001,
+      "49": 5.089,
+      "50": 5.176,
+      "51": 5.263,
+      "52": 5.351,
+      "53": 5.438,
+      "54": 5.526,
+      "55": 5.614,
+      "56": 5.702,
+      "57": 5.79,
+      "58": 5.878,
+      "59": 5.966,
+      "60": 6.054,
+      "61": 6.142,
+      "62": 6.23,
+      "63": 6.319,
+      "64": 6.407,
+      "65": 6.496,
+      "66": 6.585,
+      "67": 6.673,
+      "68": 6.762,
+      "69": 6.851,
+      "70": 6.94,
+      "71": 7.029,
+      "72": 7.119,
+      "73": 7.208,
+      "74": 7.297,
+      "75": 7.387,
+      "76": 7.476,
+      "77": 7.566,
+      "78": 7.656,
+      "79": 7.746,
+      "80": 7.836,
+      "81": 7.926,
+      "82": 8.016,
+      "83": 8.106,
+      "84": 8.196,
+      "85": 8.286,
+      "86": 8.377,
+      "87": 8.467,
+      "88": 8.558,
+      "89": 8.649,
+      "90": 8.739
+    },
+    "GROW_CURVE_HP_S4": {
+      "1": 1.0,
+      "2": 1.083,
+      "3": 1.165,
+      "4": 1.248,
+      "5": 1.33,
+      "6": 1.413,
+      "7": 1.495,
+      "8": 1.578,
+      "9": 1.661,
+      "10": 1.743,
+      "11": 1.826,
+      "12": 1.908,
+      "13": 1.991,
+      "14": 2.073,
+      "15": 2.156,
+      "16": 2.239,
+      "17": 2.321,
+      "18": 2.404,
+      "19": 2.486,
+      "20": 2.569,
+      "21": 2.651,
+      "22": 2.734,
+      "23": 2.817,
+      "24": 2.899,
+      "25": 2.982,
+      "26": 3.064,
+      "27": 3.147,
+      "28": 3.229,
+      "29": 3.312,
+      "30": 3.394,
+      "31": 3.477,
+      "32": 3.56,
+      "33": 3.642,
+      "34": 3.725,
+      "35": 3.807,
+      "36": 3.89,
+      "37": 3.972,
+      "38": 4.055,
+      "39": 4.138,
+      "40": 4.22,
+      "41": 4.303,
+      "42": 4.385,
+      "43": 4.468,
+      "44": 4.55,
+      "45": 4.633,
+      "46": 4.716,
+      "47": 4.798,
+      "48": 4.881,
+      "49": 4.963,
+      "50": 5.046,
+      "51": 5.128,
+      "52": 5.211,
+      "53": 5.294,
+      "54": 5.376,
+      "55": 5.459,
+      "56": 5.541,
+      "57": 5.624,
+      "58": 5.706,
+      "59": 5.789,
+      "60": 5.872,
+      "61": 5.954,
+      "62": 6.037,
+      "63": 6.119,
+      "64": 6.202,
+      "65": 6.284,
+      "66": 6.367,
+      "67": 6.45,
+      "68": 6.532,
+      "69": 6.615,
+      "70": 6.697,
+      "71": 6.78,
+      "72": 6.862,
+      "73": 6.945,
+      "74": 7.028,
+      "75": 7.11,
+      "76": 7.193,
+      "77": 7.275,
+      "78": 7.358,
+      "79": 7.44,
+      "80": 7.523,
+      "81": 7.606,
+      "82": 7.688,
+      "83": 7.771,
+      "84": 7.853,
+      "85": 7.936,
+      "86": 8.018,
+      "87": 8.101,
+      "88": 8.183,
+      "89": 8.266,
+      "90": 8.349
+    },
+    "GROW_CURVE_HP_S5": {
+      "1": 1.0,
+      "2": 1.083,
+      "3": 1.166,
+      "4": 1.25,
+      "5": 1.333,
+      "6": 1.417,
+      "7": 1.5,
+      "8": 1.584,
+      "9": 1.668,
+      "10": 1.751,
+      "11": 1.835,
+      "12": 1.919,
+      "13": 2.003,
+      "14": 2.088,
+      "15": 2.172,
+      "16": 2.256,
+      "17": 2.341,
+      "18": 2.425,
+      "19": 2.51,
+      "20": 2.594,
+      "21": 2.679,
+      "22": 2.764,
+      "23": 2.849,
+      "24": 2.934,
+      "25": 3.019,
+      "26": 3.105,
+      "27": 3.19,
+      "28": 3.275,
+      "29": 3.361,
+      "30": 3.446,
+      "31": 3.532,
+      "32": 3.618,
+      "33": 3.704,
+      "34": 3.789,
+      "35": 3.875,
+      "36": 3.962,
+      "37": 4.048,
+      "38": 4.134,
+      "39": 4.22,
+      "40": 4.307,
+      "41": 4.393,
+      "42": 4.48,
+      "43": 4.567,
+      "44": 4.653,
+      "45": 4.74,
+      "46": 4.827,
+      "47": 4.914,
+      "48": 5.001,
+      "49": 5.089,
+      "50": 5.176,
+      "51": 5.263,
+      "52": 5.351,
+      "53": 5.438,
+      "54": 5.526,
+      "55": 5.614,
+      "56": 5.702,
+      "57": 5.79,
+      "58": 5.878,
+      "59": 5.966,
+      "60": 6.054,
+      "61": 6.142,
+      "62": 6.23,
+      "63": 6.319,
+      "64": 6.407,
+      "65": 6.496,
+      "66": 6.585,
+      "67": 6.673,
+      "68": 6.762,
+      "69": 6.851,
+      "70": 6.94,
+      "71": 7.029,
+      "72": 7.119,
+      "73": 7.208,
+      "74": 7.297,
+      "75": 7.387,
+      "76": 7.476,
+      "77": 7.566,
+      "78": 7.656,
+      "79": 7.746,
+      "80": 7.836,
+      "81": 7.926,
+      "82": 8.016,
+      "83": 8.106,
+      "84": 8.196,
+      "85": 8.286,
+      "86": 8.377,
+      "87": 8.467,
+      "88": 8.558,
+      "89": 8.649,
+      "90": 8.739
+    }
+  },
+  "characters": {
+    "aether": {
+      "base": {
+        "hp": 911.791,
+        "atk": 17.808,
+        "def": 57.225
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 681.15454,
+          "atk": 13.3038,
+          "def": 42.75,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1165.1328,
+          "atk": 22.7565,
+          "def": 73.125,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1810.4371,
+          "atk": 35.3601,
+          "def": 113.625,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2294.4153,
+          "atk": 44.8128,
+          "def": 144.0,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2778.3936,
+          "atk": 54.2655,
+          "def": 174.375,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3262.3718,
+          "atk": 63.7182,
+          "def": 204.75,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "aino": {
+      "base": {
+        "hp": 939.1447,
+        "atk": 20.30112,
+        "def": 50.93025
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 701.5892,
+          "atk": 15.166332,
+          "def": 38.0475,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1200.0868,
+          "atk": 25.94241,
+          "def": 65.08125,
+          "ascension": 24.0
+        },
+        {
+          "phase": 60,
+          "hp": 1864.7502,
+          "atk": 40.310513,
+          "def": 101.12625,
+          "ascension": 48.0
+        },
+        {
+          "phase": 70,
+          "hp": 2363.2478,
+          "atk": 51.086594,
+          "def": 128.16,
+          "ascension": 48.0
+        },
+        {
+          "phase": 80,
+          "hp": 2861.7454,
+          "atk": 61.86267,
+          "def": 155.19376,
+          "ascension": 72.0
+        },
+        {
+          "phase": 90,
+          "hp": 3360.243,
+          "atk": 72.63875,
+          "def": 182.2275,
+          "ascension": 96.0
+        }
+      ]
+    },
+    "albedo": {
+      "base": {
+        "hp": 1029.5856,
+        "atk": 19.551,
+        "def": 68.2062
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "geo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ROCK_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 882.77655,
+          "atk": 16.76199,
+          "def": 58.482,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1510.0126,
+          "atk": 28.671825,
+          "def": 100.035,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2346.3271,
+          "atk": 44.551605,
+          "def": 155.439,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 2973.5632,
+          "atk": 56.46144,
+          "def": 196.992,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 3600.799,
+          "atk": 68.37128,
+          "def": 238.545,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 4228.035,
+          "atk": 80.28111,
+          "def": 280.098,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "alhaitham": {
+      "base": {
+        "hp": 1039.1188,
+        "atk": 24.3922,
+        "def": 60.84711
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "dendro_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_GRASS_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 890.95044,
+          "atk": 20.912579,
+          "def": 52.1721,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1523.9941,
+          "atk": 35.771515,
+          "def": 89.24175,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2368.0525,
+          "atk": 55.58343,
+          "def": 138.66795,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 3001.0962,
+          "atk": 70.44237,
+          "def": 175.7376,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 3634.14,
+          "atk": 85.30131,
+          "def": 212.80725,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 4267.1836,
+          "atk": 100.16024,
+          "def": 249.8769,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "aloy": {
+      "base": {
+        "hp": 848.4548,
+        "atk": 18.21036,
+        "def": 52.6504
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "cryo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ICE_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 727.47327,
+          "atk": 15.612596,
+          "def": 45.144,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1244.3622,
+          "atk": 26.705757,
+          "def": 77.22,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 1933.5474,
+          "atk": 41.49664,
+          "def": 119.988,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 2450.4363,
+          "atk": 52.589798,
+          "def": 152.064,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 2967.3252,
+          "atk": 63.68296,
+          "def": 184.14,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 3484.214,
+          "atk": 74.77612,
+          "def": 216.216,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "amber": {
+      "base": {
+        "hp": 793.2582,
+        "atk": 18.6984,
+        "def": 50.358
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 592.6045,
+          "atk": 13.96899,
+          "def": 37.62,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1013.6655,
+          "atk": 23.894325,
+          "def": 64.35,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1575.0803,
+          "atk": 37.128105,
+          "def": 99.99,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 1996.1414,
+          "atk": 47.05344,
+          "def": 126.72,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2417.2024,
+          "atk": 56.978775,
+          "def": 153.45,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2838.2634,
+          "atk": 66.90411,
+          "def": 180.18,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "aratakiitto": {
+      "base": {
+        "hp": 1000.986,
+        "atk": 17.689,
+        "def": 74.66784
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 858.255,
+          "atk": 15.16561,
+          "def": 64.0224,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1468.0677,
+          "atk": 25.941175,
+          "def": 109.512,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2281.1514,
+          "atk": 40.308594,
+          "def": 170.1648,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2890.964,
+          "atk": 51.08416,
+          "def": 215.6544,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3500.7769,
+          "atk": 61.859726,
+          "def": 261.144,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4110.59,
+          "atk": 72.63529,
+          "def": 306.6336,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "arlecchino": {
+      "base": {
+        "hp": 1020.0524,
+        "atk": 26.6266,
+        "def": 59.53085
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 874.6027,
+          "atk": 22.828234,
+          "def": 51.0435,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1496.0309,
+          "atk": 39.048294,
+          "def": 87.31125,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2324.6018,
+          "atk": 60.67504,
+          "def": 135.66824,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2946.03,
+          "atk": 76.8951,
+          "def": 171.936,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3567.4585,
+          "atk": 93.115166,
+          "def": 208.20375,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4188.8867,
+          "atk": 109.33523,
+          "def": 244.4715,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "baizhu": {
+      "base": {
+        "hp": 1039.1188,
+        "atk": 14.9891,
+        "def": 38.8895
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 890.95044,
+          "atk": 12.850859,
+          "def": 33.345,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1523.9941,
+          "atk": 21.981731,
+          "def": 57.0375,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2368.0525,
+          "atk": 34.15623,
+          "def": 88.6275,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 3001.0962,
+          "atk": 43.287106,
+          "def": 112.32,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 3634.14,
+          "atk": 52.417976,
+          "def": 136.0125,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 4267.1836,
+          "atk": 61.54885,
+          "def": 159.705,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "barbara": {
+      "base": {
+        "hp": 820.6119,
+        "atk": 13.356,
+        "def": 56.0805
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 613.0391,
+          "atk": 9.97785,
+          "def": 41.895,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1048.6195,
+          "atk": 17.067375,
+          "def": 71.6625,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1629.3934,
+          "atk": 26.520075,
+          "def": 111.3525,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2064.9739,
+          "atk": 33.6096,
+          "def": 141.12,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2500.5542,
+          "atk": 40.699123,
+          "def": 170.8875,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2936.1348,
+          "atk": 47.78865,
+          "def": 200.655,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "beidou": {
+      "base": {
+        "hp": 1094.1492,
+        "atk": 18.87648,
+        "def": 54.36375
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "electro_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEC_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 817.3855,
+          "atk": 14.102028,
+          "def": 40.6125,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1398.1593,
+          "atk": 24.12189,
+          "def": 69.46875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2172.5247,
+          "atk": 37.481705,
+          "def": 107.94375,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2753.2983,
+          "atk": 47.501568,
+          "def": 136.8,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3334.0723,
+          "atk": 57.52143,
+          "def": 165.65625,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3914.8462,
+          "atk": 67.54129,
+          "def": 194.5125,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "bennett": {
+      "base": {
+        "hp": 1039.4418,
+        "atk": 16.0272,
+        "def": 64.66425
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "enerRech_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CHARGE_EFFICIENCY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 776.5162,
+          "atk": 11.97342,
+          "def": 48.3075,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1328.2513,
+          "atk": 20.48085,
+          "def": 82.63125,
+          "ascension": 6.67
+        },
+        {
+          "phase": 60,
+          "hp": 2063.8984,
+          "atk": 31.82409,
+          "def": 128.39626,
+          "ascension": 13.33
+        },
+        {
+          "phase": 70,
+          "hp": 2615.6335,
+          "atk": 40.33152,
+          "def": 162.72,
+          "ascension": 13.33
+        },
+        {
+          "phase": 80,
+          "hp": 3167.3687,
+          "atk": 48.83895,
+          "def": 197.04375,
+          "ascension": 20.0
+        },
+        {
+          "phase": 90,
+          "hp": 3719.104,
+          "atk": 57.34638,
+          "def": 231.3675,
+          "ascension": 26.669999999999998
+        }
+      ]
+    },
+    "candace": {
+      "base": {
+        "hp": 911.791,
+        "atk": 17.808,
+        "def": 57.225
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 681.15454,
+          "atk": 13.3038,
+          "def": 42.75,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1165.1328,
+          "atk": 22.7565,
+          "def": 73.125,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1810.4371,
+          "atk": 35.3601,
+          "def": 113.625,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2294.4153,
+          "atk": 44.8128,
+          "def": 144.0,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2778.3936,
+          "atk": 54.2655,
+          "def": 174.375,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3262.3718,
+          "atk": 63.7182,
+          "def": 204.75,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "charlotte": {
+      "base": {
+        "hp": 902.6731,
+        "atk": 14.51352,
+        "def": 45.78
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 674.343,
+          "atk": 10.842597,
+          "def": 34.2,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1153.4814,
+          "atk": 18.546547,
+          "def": 58.5,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1792.3328,
+          "atk": 28.818481,
+          "def": 90.9,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2271.4712,
+          "atk": 36.52243,
+          "def": 115.2,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2750.6096,
+          "atk": 44.226383,
+          "def": 139.5,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3229.748,
+          "atk": 51.930332,
+          "def": 163.8,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "chasca": {
+      "base": {
+        "hp": 762.656,
+        "atk": 26.999,
+        "def": 47.864
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 653.90857,
+          "atk": 23.14751,
+          "def": 41.04,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1118.5278,
+          "atk": 39.594425,
+          "def": 70.2,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 1738.0201,
+          "atk": 61.523643,
+          "def": 109.08,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2202.6394,
+          "atk": 77.97056,
+          "def": 138.24,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 2667.2585,
+          "atk": 94.41747,
+          "def": 167.4,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 3131.878,
+          "atk": 110.86439,
+          "def": 196.56,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "chevreuse": {
+      "base": {
+        "hp": 1002.9701,
+        "atk": 16.20528,
+        "def": 50.70135
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 749.27,
+          "atk": 12.106458,
+          "def": 37.8765,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1281.6461,
+          "atk": 20.708414,
+          "def": 64.78875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1991.4808,
+          "atk": 32.177692,
+          "def": 100.67175,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2523.857,
+          "atk": 40.779648,
+          "def": 127.584,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3056.233,
+          "atk": 49.381603,
+          "def": 154.49625,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3588.6091,
+          "atk": 57.983562,
+          "def": 181.4085,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "chiori": {
+      "base": {
+        "hp": 890.4009,
+        "atk": 25.137,
+        "def": 74.1892
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 763.43823,
+          "atk": 21.55113,
+          "def": 63.612,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1305.8812,
+          "atk": 36.863773,
+          "def": 108.81,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2029.1385,
+          "atk": 57.280636,
+          "def": 169.074,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2571.5815,
+          "atk": 72.59328,
+          "def": 214.272,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3114.0244,
+          "atk": 87.90592,
+          "def": 259.47,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 3656.4673,
+          "atk": 103.21857,
+          "def": 304.668,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "chongyun": {
+      "base": {
+        "hp": 920.90894,
+        "atk": 18.6984,
+        "def": 54.36375
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 687.9661,
+          "atk": 13.96899,
+          "def": 40.6125,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1176.7842,
+          "atk": 23.894325,
+          "def": 69.46875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1828.5415,
+          "atk": 37.128105,
+          "def": 107.94375,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2317.3596,
+          "atk": 47.05344,
+          "def": 136.8,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2806.1775,
+          "atk": 56.978775,
+          "def": 165.65625,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3294.9956,
+          "atk": 66.90411,
+          "def": 194.5125,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "citlali": {
+      "base": {
+        "hp": 905.654,
+        "atk": 9.8686,
+        "def": 59.41119
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 776.5164,
+          "atk": 8.460814,
+          "def": 50.9409,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1328.2517,
+          "atk": 14.472445,
+          "def": 87.13575,
+          "ascension": 28.8
+        },
+        {
+          "phase": 60,
+          "hp": 2063.899,
+          "atk": 22.487953,
+          "def": 135.39555,
+          "ascension": 57.6
+        },
+        {
+          "phase": 70,
+          "hp": 2615.6343,
+          "atk": 28.499584,
+          "def": 171.5904,
+          "ascension": 57.6
+        },
+        {
+          "phase": 80,
+          "hp": 3167.3696,
+          "atk": 34.511215,
+          "def": 207.78525,
+          "ascension": 86.4
+        },
+        {
+          "phase": 90,
+          "hp": 3719.105,
+          "atk": 40.522846,
+          "def": 243.9801,
+          "ascension": 115.2
+        }
+      ]
+    },
+    "clorinde": {
+      "base": {
+        "hp": 1008.61255,
+        "atk": 26.2542,
+        "def": 61.0266
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 864.79407,
+          "atk": 22.508959,
+          "def": 52.326,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1479.253,
+          "atk": 38.502167,
+          "def": 89.505,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2298.5315,
+          "atk": 59.826443,
+          "def": 139.077,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2912.9905,
+          "atk": 75.81965,
+          "def": 176.256,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3527.4495,
+          "atk": 91.81286,
+          "def": 213.435,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4141.908,
+          "atk": 107.80606,
+          "def": 250.614,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "collei": {
+      "base": {
+        "hp": 820.6119,
+        "atk": 16.73952,
+        "def": 50.358
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 613.0391,
+          "atk": 12.505572,
+          "def": 37.62,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1048.6195,
+          "atk": 21.39111,
+          "def": 64.35,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1629.3934,
+          "atk": 33.238495,
+          "def": 99.99,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2064.9739,
+          "atk": 42.12403,
+          "def": 126.72,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2500.5542,
+          "atk": 51.00957,
+          "def": 153.45,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2936.1348,
+          "atk": 59.895107,
+          "def": 180.18,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "columbina": {
+      "base": {
+        "hp": 1143.984,
+        "atk": 7.448,
+        "def": 40.0861
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 980.86285,
+          "atk": 6.38552,
+          "def": 34.371,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1677.7917,
+          "atk": 10.9226,
+          "def": 58.7925,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2607.0303,
+          "atk": 16.97204,
+          "def": 91.3545,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 3303.959,
+          "atk": 21.50912,
+          "def": 115.776,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 4000.888,
+          "atk": 26.0462,
+          "def": 140.1975,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4697.817,
+          "atk": 30.58328,
+          "def": 164.619,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "cyno": {
+      "base": {
+        "hp": 972.3864,
+        "atk": 24.7646,
+        "def": 66.88994
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 833.7334,
+          "atk": 21.231853,
+          "def": 57.3534,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1426.1229,
+          "atk": 36.317646,
+          "def": 98.1045,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2215.9756,
+          "atk": 56.432034,
+          "def": 152.4393,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2808.3652,
+          "atk": 71.51782,
+          "def": 193.1904,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3400.7546,
+          "atk": 86.603615,
+          "def": 233.9415,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 3993.1443,
+          "atk": 101.68941,
+          "def": 274.6926,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "dahlia": {
+      "base": {
+        "hp": 1048.5597,
+        "atk": 15.84912,
+        "def": 46.9245
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 783.32776,
+          "atk": 11.840382,
+          "def": 35.055,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1339.9027,
+          "atk": 20.253284,
+          "def": 59.9625,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2082.0027,
+          "atk": 31.47049,
+          "def": 93.1725,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2638.5776,
+          "atk": 39.883392,
+          "def": 118.08,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3195.1526,
+          "atk": 48.296295,
+          "def": 142.9875,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3751.7275,
+          "atk": 56.709198,
+          "def": 167.895,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "dehya": {
+      "base": {
+        "hp": 1220.2496,
+        "atk": 20.6682,
+        "def": 48.88111
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 1046.2537,
+          "atk": 17.719818,
+          "def": 41.9121,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1789.6445,
+          "atk": 30.310215,
+          "def": 71.69175,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2780.8323,
+          "atk": 47.097412,
+          "def": 111.39795,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 3524.223,
+          "atk": 59.68781,
+          "def": 141.1776,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 4267.614,
+          "atk": 72.278206,
+          "def": 170.95724,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 5011.0044,
+          "atk": 84.8686,
+          "def": 200.7369,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "diluc": {
+      "base": {
+        "hp": 1010.5192,
+        "atk": 26.068,
+        "def": 61.0266
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 866.42883,
+          "atk": 22.34932,
+          "def": 52.326,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1482.0493,
+          "atk": 38.2291,
+          "def": 89.505,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2302.8767,
+          "atk": 59.40214,
+          "def": 139.077,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2918.497,
+          "atk": 75.28192,
+          "def": 176.256,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3534.1177,
+          "atk": 91.1617,
+          "def": 213.435,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4149.7383,
+          "atk": 107.04148,
+          "def": 250.614,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "diona": {
+      "base": {
+        "hp": 802.3761,
+        "atk": 17.808,
+        "def": 50.358
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "cryo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ICE_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 599.416,
+          "atk": 13.3038,
+          "def": 37.62,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1025.3169,
+          "atk": 22.7565,
+          "def": 64.35,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1593.1847,
+          "atk": 35.3601,
+          "def": 99.99,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2019.0854,
+          "atk": 44.8128,
+          "def": 126.72,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2444.9863,
+          "atk": 54.2655,
+          "def": 153.45,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2870.8872,
+          "atk": 63.7182,
+          "def": 180.18,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "dori": {
+      "base": {
+        "hp": 1039.4418,
+        "atk": 18.6984,
+        "def": 60.6585
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 776.5162,
+          "atk": 13.96899,
+          "def": 45.315,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1328.2513,
+          "atk": 23.894325,
+          "def": 77.5125,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2063.8984,
+          "atk": 37.128105,
+          "def": 120.4425,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2615.6335,
+          "atk": 47.05344,
+          "def": 152.64,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3167.3687,
+          "atk": 56.978775,
+          "def": 184.8375,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3719.104,
+          "atk": 66.90411,
+          "def": 217.035,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "durin": {
+      "base": {
+        "hp": 967.6198,
+        "atk": 26.999,
+        "def": 64.0181
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 829.6465,
+          "atk": 23.14751,
+          "def": 54.891,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1419.1322,
+          "atk": 39.594425,
+          "def": 93.8925,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2205.113,
+          "atk": 61.523643,
+          "def": 145.8945,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2794.5986,
+          "atk": 77.97056,
+          "def": 184.896,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3384.0842,
+          "atk": 94.41747,
+          "def": 223.8975,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 3973.57,
+          "atk": 110.86439,
+          "def": 262.899,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "emilie": {
+      "base": {
+        "hp": 1056.2786,
+        "atk": 26.068,
+        "def": 56.8385
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 905.6633,
+          "atk": 22.34932,
+          "def": 48.735,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1549.161,
+          "atk": 38.2291,
+          "def": 83.3625,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2407.158,
+          "atk": 59.40214,
+          "def": 129.5325,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 3050.6555,
+          "atk": 75.28192,
+          "def": 164.16,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3694.153,
+          "atk": 91.1617,
+          "def": 198.7875,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4337.651,
+          "atk": 107.04148,
+          "def": 233.415,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "escoffier": {
+      "base": {
+        "hp": 1039.1188,
+        "atk": 26.999,
+        "def": 56.95816
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 890.95044,
+          "atk": 23.14751,
+          "def": 48.8376,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1523.9941,
+          "atk": 39.594425,
+          "def": 83.538,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2368.0525,
+          "atk": 61.523643,
+          "def": 129.8052,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 3001.0962,
+          "atk": 77.97056,
+          "def": 164.5056,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3634.14,
+          "atk": 94.41747,
+          "def": 199.206,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4267.1836,
+          "atk": 110.86439,
+          "def": 233.9064,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "eula": {
+      "base": {
+        "hp": 1029.5856,
+        "atk": 26.6266,
+        "def": 58.45391
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 882.77655,
+          "atk": 22.828234,
+          "def": 50.1201,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1510.0126,
+          "atk": 39.048294,
+          "def": 85.73175,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2346.3271,
+          "atk": 60.67504,
+          "def": 133.21394,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2973.5632,
+          "atk": 76.8951,
+          "def": 168.8256,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3600.799,
+          "atk": 93.115166,
+          "def": 204.43726,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4228.035,
+          "atk": 109.33523,
+          "def": 240.0489,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "faruzan": {
+      "base": {
+        "hp": 802.3761,
+        "atk": 16.4724,
+        "def": 52.647
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 599.416,
+          "atk": 12.306015,
+          "def": 39.33,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1025.3169,
+          "atk": 21.049763,
+          "def": 67.275,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1593.1847,
+          "atk": 32.70809,
+          "def": 104.535,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2019.0856,
+          "atk": 41.45184,
+          "def": 132.48,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2444.9863,
+          "atk": 50.195587,
+          "def": 160.425,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2870.8872,
+          "atk": 58.939335,
+          "def": 188.37,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "fischl": {
+      "base": {
+        "hp": 770.4634,
+        "atk": 20.4792,
+        "def": 49.78575
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 575.5756,
+          "atk": 15.29937,
+          "def": 37.1925,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 984.53723,
+          "atk": 26.169975,
+          "def": 63.61875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1529.8193,
+          "atk": 40.664116,
+          "def": 98.85375,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 1938.781,
+          "atk": 51.53472,
+          "def": 125.28,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2347.7427,
+          "atk": 62.405327,
+          "def": 151.70625,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2756.704,
+          "atk": 73.27593,
+          "def": 178.1325,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "flins": {
+      "base": {
+        "hp": 972.3864,
+        "atk": 27.3714,
+        "def": 62.94116
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 833.7334,
+          "atk": 23.466785,
+          "def": 53.9676,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1426.1229,
+          "atk": 40.140556,
+          "def": 92.313,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2215.9756,
+          "atk": 62.372246,
+          "def": 143.4402,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2808.3652,
+          "atk": 79.04601,
+          "def": 181.7856,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3400.7546,
+          "atk": 95.71979,
+          "def": 220.131,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 3993.1443,
+          "atk": 112.393555,
+          "def": 258.4764,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "freminet": {
+      "base": {
+        "hp": 1012.088,
+        "atk": 21.3696,
+        "def": 59.39955
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 756.08154,
+          "atk": 15.96456,
+          "def": 44.3745,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1293.2974,
+          "atk": 27.3078,
+          "def": 75.90375,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2009.5852,
+          "atk": 42.43212,
+          "def": 117.94275,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2546.801,
+          "atk": 53.77536,
+          "def": 149.472,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3084.0168,
+          "atk": 65.1186,
+          "def": 181.00125,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3621.2327,
+          "atk": 76.46184,
+          "def": 212.5305,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "furina": {
+      "base": {
+        "hp": 1191.65,
+        "atk": 18.9924,
+        "def": 54.14615
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 1021.7321,
+          "atk": 16.283075,
+          "def": 46.4265,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1747.6997,
+          "atk": 27.85263,
+          "def": 79.41375,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2715.6565,
+          "atk": 43.2787,
+          "def": 123.39675,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 3441.624,
+          "atk": 54.848255,
+          "def": 156.384,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 4167.592,
+          "atk": 66.41781,
+          "def": 189.37125,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4893.559,
+          "atk": 77.987366,
+          "def": 222.3585,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "gaming": {
+      "base": {
+        "hp": 957.38055,
+        "atk": 25.28736,
+        "def": 58.94175
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 715.2123,
+          "atk": 18.891396,
+          "def": 44.0325,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1223.3894,
+          "atk": 32.31423,
+          "def": 75.31875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1900.959,
+          "atk": 50.21134,
+          "def": 117.03375,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2409.1362,
+          "atk": 63.634174,
+          "def": 148.32,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2917.3132,
+          "atk": 77.05701,
+          "def": 179.60625,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3425.4905,
+          "atk": 90.47984,
+          "def": 210.8925,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "ganyu": {
+      "base": {
+        "hp": 762.656,
+        "atk": 26.068,
+        "def": 49.0606
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 653.90857,
+          "atk": 22.34932,
+          "def": 42.066,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1118.5278,
+          "atk": 38.2291,
+          "def": 71.955,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 1738.0201,
+          "atk": 59.40214,
+          "def": 111.807,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2202.6394,
+          "atk": 75.28192,
+          "def": 141.696,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 2667.2585,
+          "atk": 91.1617,
+          "def": 171.585,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 3131.878,
+          "atk": 107.04148,
+          "def": 201.474,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "gorou": {
+      "base": {
+        "hp": 802.3761,
+        "atk": 15.31488,
+        "def": 54.36375
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "geo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ROCK_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 599.416,
+          "atk": 11.441268,
+          "def": 40.6125,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1025.3169,
+          "atk": 19.57059,
+          "def": 69.46875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1593.1847,
+          "atk": 30.409685,
+          "def": 107.94375,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2019.0856,
+          "atk": 38.53901,
+          "def": 136.8,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2444.9863,
+          "atk": 46.66833,
+          "def": 165.65625,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2870.8872,
+          "atk": 54.797653,
+          "def": 194.5125,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "hutao": {
+      "base": {
+        "hp": 1210.7164,
+        "atk": 8.2859,
+        "def": 68.2062
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 1038.0798,
+          "atk": 7.103891,
+          "def": 58.482,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1775.6628,
+          "atk": 12.151393,
+          "def": 100.035,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2759.107,
+          "atk": 18.881393,
+          "def": 155.439,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 3496.69,
+          "atk": 23.928896,
+          "def": 196.992,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 4234.273,
+          "atk": 28.976398,
+          "def": 238.545,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4971.856,
+          "atk": 34.0239,
+          "def": 280.098,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "iansan": {
+      "base": {
+        "hp": 893.5552,
+        "atk": 21.54768,
+        "def": 53.505375
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 667.5315,
+          "atk": 16.097597,
+          "def": 39.97125,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1141.8302,
+          "atk": 27.535364,
+          "def": 68.37187,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1774.2284,
+          "atk": 42.78572,
+          "def": 106.23937,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2248.527,
+          "atk": 54.223488,
+          "def": 134.64,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2722.8257,
+          "atk": 65.661255,
+          "def": 163.04062,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3197.1245,
+          "atk": 77.09902,
+          "def": 191.44125,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "ifa": {
+      "base": {
+        "hp": 845.2303,
+        "atk": 14.95872,
+        "def": 50.758575
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 631.4303,
+          "atk": 11.175192,
+          "def": 37.91925,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1080.0781,
+          "atk": 19.11546,
+          "def": 64.86188,
+          "ascension": 24.0
+        },
+        {
+          "phase": 60,
+          "hp": 1678.2753,
+          "atk": 29.702484,
+          "def": 100.78538,
+          "ascension": 48.0
+        },
+        {
+          "phase": 70,
+          "hp": 2126.923,
+          "atk": 37.642754,
+          "def": 127.728,
+          "ascension": 48.0
+        },
+        {
+          "phase": 80,
+          "hp": 2575.5708,
+          "atk": 45.58302,
+          "def": 154.67062,
+          "ascension": 72.0
+        },
+        {
+          "phase": 90,
+          "hp": 3024.2188,
+          "atk": 53.52329,
+          "def": 181.61325,
+          "ascension": 96.0
+        }
+      ]
+    },
+    "illuga": {
+      "base": {
+        "hp": 1002.9701,
+        "atk": 16.0272,
+        "def": 68.2122
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 749.27,
+          "atk": 11.97342,
+          "def": 50.958,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1281.6461,
+          "atk": 20.48085,
+          "def": 87.165,
+          "ascension": 24.0
+        },
+        {
+          "phase": 60,
+          "hp": 1991.4808,
+          "atk": 31.82409,
+          "def": 135.441,
+          "ascension": 48.0
+        },
+        {
+          "phase": 70,
+          "hp": 2523.857,
+          "atk": 40.33152,
+          "def": 171.648,
+          "ascension": 48.0
+        },
+        {
+          "phase": 80,
+          "hp": 3056.233,
+          "atk": 48.83895,
+          "def": 207.855,
+          "ascension": 72.0
+        },
+        {
+          "phase": 90,
+          "hp": 3588.6091,
+          "atk": 57.34638,
+          "def": 244.062,
+          "ascension": 96.0
+        }
+      ]
+    },
+    "ineffa": {
+      "base": {
+        "hp": 981.9196,
+        "atk": 25.6956,
+        "def": 64.43691
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 841.9073,
+          "atk": 22.030045,
+          "def": 55.2501,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1440.1045,
+          "atk": 37.68297,
+          "def": 94.50675,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2237.701,
+          "atk": 58.55354,
+          "def": 146.84895,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2835.8982,
+          "atk": 74.20647,
+          "def": 186.1056,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3434.0955,
+          "atk": 89.85939,
+          "def": 225.36224,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4032.2927,
+          "atk": 105.512314,
+          "def": 264.6189,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "jahoda": {
+      "base": {
+        "hp": 808.7586,
+        "atk": 18.6984,
+        "def": 48.64125
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "heal_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HEAL_ADD",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 604.1841,
+          "atk": 13.96899,
+          "def": 36.3375,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1033.4728,
+          "atk": 23.894325,
+          "def": 62.15625,
+          "ascension": 4.62
+        },
+        {
+          "phase": 60,
+          "hp": 1605.8577,
+          "atk": 37.128105,
+          "def": 96.58125,
+          "ascension": 9.229999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 2035.1465,
+          "atk": 47.05344,
+          "def": 122.4,
+          "ascension": 9.229999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 2464.435,
+          "atk": 56.978775,
+          "def": 148.21875,
+          "ascension": 13.850000000000001
+        },
+        {
+          "phase": 90,
+          "hp": 2893.7239,
+          "atk": 66.90411,
+          "def": 174.0375,
+          "ascension": 18.459999999999997
+        }
+      ]
+    },
+    "jean": {
+      "base": {
+        "hp": 1143.984,
+        "atk": 18.62,
+        "def": 59.83
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "heal_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HEAL_ADD",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 980.86285,
+          "atk": 15.9638,
+          "def": 51.3,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1677.7917,
+          "atk": 27.3065,
+          "def": 87.75,
+          "ascension": 5.54
+        },
+        {
+          "phase": 60,
+          "hp": 2607.0303,
+          "atk": 42.4301,
+          "def": 136.35,
+          "ascension": 11.08
+        },
+        {
+          "phase": 70,
+          "hp": 3303.959,
+          "atk": 53.7728,
+          "def": 172.8,
+          "ascension": 11.08
+        },
+        {
+          "phase": 80,
+          "hp": 4000.888,
+          "atk": 65.1155,
+          "def": 209.25,
+          "ascension": 16.619999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4697.817,
+          "atk": 76.4582,
+          "def": 245.7,
+          "ascension": 22.15
+        }
+      ]
+    },
+    "kachina": {
+      "base": {
+        "hp": 989.2932,
+        "atk": 18.16416,
+        "def": 66.438225
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "geo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ROCK_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 739.0527,
+          "atk": 13.569876,
+          "def": 49.63275,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1264.1691,
+          "atk": 23.21163,
+          "def": 84.898125,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1964.3242,
+          "atk": 36.067303,
+          "def": 131.91862,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2489.4407,
+          "atk": 45.709057,
+          "def": 167.184,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3014.5571,
+          "atk": 55.35081,
+          "def": 202.44937,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3539.6733,
+          "atk": 64.99256,
+          "def": 237.71475,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "kaedeharakazuha": {
+      "base": {
+        "hp": 1039.1188,
+        "atk": 23.0888,
+        "def": 62.8215
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 890.95044,
+          "atk": 19.795113,
+          "def": 53.865,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1523.9941,
+          "atk": 33.86006,
+          "def": 92.1375,
+          "ascension": 28.8
+        },
+        {
+          "phase": 60,
+          "hp": 2368.0525,
+          "atk": 52.613323,
+          "def": 143.1675,
+          "ascension": 57.6
+        },
+        {
+          "phase": 70,
+          "hp": 3001.0962,
+          "atk": 66.67827,
+          "def": 181.44,
+          "ascension": 57.6
+        },
+        {
+          "phase": 80,
+          "hp": 3634.14,
+          "atk": 80.74322,
+          "def": 219.7125,
+          "ascension": 86.4
+        },
+        {
+          "phase": 90,
+          "hp": 4267.1836,
+          "atk": 94.80817,
+          "def": 257.985,
+          "ascension": 115.2
+        }
+      ]
+    },
+    "kaeya": {
+      "base": {
+        "hp": 975.6164,
+        "atk": 18.6984,
+        "def": 66.381
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "enerRech_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CHARGE_EFFICIENCY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 728.8354,
+          "atk": 13.96899,
+          "def": 49.59,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1246.6921,
+          "atk": 23.894325,
+          "def": 84.825,
+          "ascension": 6.67
+        },
+        {
+          "phase": 60,
+          "hp": 1937.1677,
+          "atk": 37.128105,
+          "def": 131.805,
+          "ascension": 13.33
+        },
+        {
+          "phase": 70,
+          "hp": 2455.0244,
+          "atk": 47.05344,
+          "def": 167.04,
+          "ascension": 13.33
+        },
+        {
+          "phase": 80,
+          "hp": 2972.881,
+          "atk": 56.978775,
+          "def": 202.275,
+          "ascension": 20.0
+        },
+        {
+          "phase": 90,
+          "hp": 3490.7378,
+          "atk": 66.90411,
+          "def": 237.51,
+          "ascension": 26.669999999999998
+        }
+      ]
+    },
+    "kamisatoayaka": {
+      "base": {
+        "hp": 1000.986,
+        "atk": 26.6266,
+        "def": 61.0266
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 858.255,
+          "atk": 22.828234,
+          "def": 52.326,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1468.0677,
+          "atk": 39.048294,
+          "def": 89.505,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2281.1514,
+          "atk": 60.67504,
+          "def": 139.077,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2890.964,
+          "atk": 76.8951,
+          "def": 176.256,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3500.7769,
+          "atk": 93.115166,
+          "def": 213.435,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4110.59,
+          "atk": 109.33523,
+          "def": 250.614,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "kamisatoayato": {
+      "base": {
+        "hp": 1067.7184,
+        "atk": 23.275,
+        "def": 59.83
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 915.472,
+          "atk": 19.95475,
+          "def": 51.3,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1565.939,
+          "atk": 34.133125,
+          "def": 87.75,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2433.2283,
+          "atk": 53.037624,
+          "def": 136.35,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 3083.695,
+          "atk": 67.216,
+          "def": 172.8,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3734.162,
+          "atk": 81.39438,
+          "def": 209.25,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4384.629,
+          "atk": 95.57275,
+          "def": 245.7,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "kaveh": {
+      "base": {
+        "hp": 1002.9701,
+        "atk": 19.5888,
+        "def": 62.9475
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 749.27,
+          "atk": 14.63418,
+          "def": 47.025,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1281.6461,
+          "atk": 25.03215,
+          "def": 80.4375,
+          "ascension": 24.0
+        },
+        {
+          "phase": 60,
+          "hp": 1991.4808,
+          "atk": 38.89611,
+          "def": 124.9875,
+          "ascension": 48.0
+        },
+        {
+          "phase": 70,
+          "hp": 2523.857,
+          "atk": 49.29408,
+          "def": 158.4,
+          "ascension": 48.0
+        },
+        {
+          "phase": 80,
+          "hp": 3056.233,
+          "atk": 59.69205,
+          "def": 191.8125,
+          "ascension": 72.0
+        },
+        {
+          "phase": 90,
+          "hp": 3588.6091,
+          "atk": 70.09002,
+          "def": 225.225,
+          "ascension": 96.0
+        }
+      ]
+    },
+    "keqing": {
+      "base": {
+        "hp": 1020.0524,
+        "atk": 25.137,
+        "def": 62.2232
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 874.6027,
+          "atk": 21.55113,
+          "def": 53.352,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1496.0309,
+          "atk": 36.863773,
+          "def": 91.26,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2324.6018,
+          "atk": 57.280636,
+          "def": 141.804,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2946.03,
+          "atk": 72.59328,
+          "def": 179.712,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3567.4585,
+          "atk": 87.90592,
+          "def": 217.62,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4188.8867,
+          "atk": 103.21857,
+          "def": 255.528,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "kinich": {
+      "base": {
+        "hp": 1000.986,
+        "atk": 25.8818,
+        "def": 62.40269
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 858.255,
+          "atk": 22.189682,
+          "def": 53.5059,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1468.0677,
+          "atk": 37.956036,
+          "def": 91.52325,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2281.1514,
+          "atk": 58.97784,
+          "def": 142.21304,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2890.964,
+          "atk": 74.744194,
+          "def": 180.2304,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3500.7769,
+          "atk": 90.510544,
+          "def": 218.24776,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4110.59,
+          "atk": 106.2769,
+          "def": 256.2651,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "kirara": {
+      "base": {
+        "hp": 1021.20593,
+        "atk": 18.6984,
+        "def": 45.78
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 762.8931,
+          "atk": 13.96899,
+          "def": 34.2,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1304.9487,
+          "atk": 23.894325,
+          "def": 58.5,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2027.6896,
+          "atk": 37.128105,
+          "def": 90.9,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2569.745,
+          "atk": 47.05344,
+          "def": 115.2,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3111.8008,
+          "atk": 56.978775,
+          "def": 139.5,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3653.8564,
+          "atk": 66.90411,
+          "def": 163.8,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "klee": {
+      "base": {
+        "hp": 800.7888,
+        "atk": 24.206,
+        "def": 47.864
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "pyro_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_FIRE_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 686.604,
+          "atk": 20.75294,
+          "def": 41.04,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1174.4542,
+          "atk": 35.49845,
+          "def": 70.2,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 1824.9211,
+          "atk": 55.15913,
+          "def": 109.08,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 2312.7712,
+          "atk": 69.90464,
+          "def": 138.24,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 2800.6216,
+          "atk": 84.65015,
+          "def": 167.4,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 3288.4717,
+          "atk": 99.39566,
+          "def": 196.56,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "kujousara": {
+      "base": {
+        "hp": 802.3761,
+        "atk": 16.38336,
+        "def": 52.647
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 599.416,
+          "atk": 12.239496,
+          "def": 39.33,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1025.3169,
+          "atk": 20.93598,
+          "def": 67.275,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1593.1847,
+          "atk": 32.531292,
+          "def": 104.535,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2019.0856,
+          "atk": 41.227776,
+          "def": 132.48,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2444.9863,
+          "atk": 49.92426,
+          "def": 160.425,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2870.8872,
+          "atk": 58.620743,
+          "def": 188.37,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "kukishinobu": {
+      "base": {
+        "hp": 1030.3239,
+        "atk": 17.808,
+        "def": 62.9475
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 769.70465,
+          "atk": 13.3038,
+          "def": 47.025,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1316.6001,
+          "atk": 22.7565,
+          "def": 80.4375,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2045.794,
+          "atk": 35.3601,
+          "def": 124.9875,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2592.6895,
+          "atk": 44.8128,
+          "def": 158.4,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3139.5847,
+          "atk": 54.2655,
+          "def": 191.8125,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3686.4802,
+          "atk": 63.7182,
+          "def": 225.225,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "lanyan": {
+      "base": {
+        "hp": 775.02234,
+        "atk": 21.01344,
+        "def": 48.64125
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 578.9814,
+          "atk": 15.698484,
+          "def": 36.3375,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 990.36285,
+          "atk": 26.85267,
+          "def": 62.15625,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1538.8716,
+          "atk": 41.72492,
+          "def": 96.58125,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 1950.253,
+          "atk": 52.879105,
+          "def": 122.4,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2361.6345,
+          "atk": 64.03329,
+          "def": 148.21875,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2773.016,
+          "atk": 75.18748,
+          "def": 174.0375,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "lauma": {
+      "base": {
+        "hp": 829.3884,
+        "atk": 19.84892,
+        "def": 52.0521
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 711.12555,
+          "atk": 17.01741,
+          "def": 44.631,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1216.3989,
+          "atk": 29.108728,
+          "def": 76.3425,
+          "ascension": 28.8
+        },
+        {
+          "phase": 60,
+          "hp": 1890.0969,
+          "atk": 45.230488,
+          "def": 118.6245,
+          "ascension": 57.6
+        },
+        {
+          "phase": 70,
+          "hp": 2395.3704,
+          "atk": 57.321804,
+          "def": 150.336,
+          "ascension": 57.6
+        },
+        {
+          "phase": 80,
+          "hp": 2900.6438,
+          "atk": 69.413124,
+          "def": 182.0475,
+          "ascension": 86.4
+        },
+        {
+          "phase": 90,
+          "hp": 3405.9172,
+          "atk": 81.50444,
+          "def": 213.759,
+          "ascension": 115.2
+        }
+      ]
+    },
+    "layla": {
+      "base": {
+        "hp": 930.0268,
+        "atk": 18.16416,
+        "def": 54.936
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 694.77765,
+          "atk": 13.569876,
+          "def": 41.04,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1188.4354,
+          "atk": 23.21163,
+          "def": 70.2,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1846.6459,
+          "atk": 36.067303,
+          "def": 109.08,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2340.3037,
+          "atk": 45.709057,
+          "def": 138.24,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2833.9614,
+          "atk": 55.35081,
+          "def": 167.4,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3327.6194,
+          "atk": 64.99256,
+          "def": 196.56,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "linnea": {
+      "base": {
+        "hp": 770.28253,
+        "atk": 11.172,
+        "def": 70.5994
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 660.44763,
+          "atk": 9.57828,
+          "def": 60.534,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1129.7131,
+          "atk": 16.3839,
+          "def": 103.545,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 1755.4003,
+          "atk": 25.45806,
+          "def": 160.893,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2224.6658,
+          "atk": 32.26368,
+          "def": 203.904,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 2693.9312,
+          "atk": 39.0693,
+          "def": 246.915,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 3163.1965,
+          "atk": 45.87492,
+          "def": 289.926,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "lisa": {
+      "base": {
+        "hp": 802.3761,
+        "atk": 19.41072,
+        "def": 48.069
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 599.416,
+          "atk": 14.501142,
+          "def": 35.91,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1025.3169,
+          "atk": 24.804585,
+          "def": 61.425,
+          "ascension": 24.0
+        },
+        {
+          "phase": 60,
+          "hp": 1593.1847,
+          "atk": 38.542507,
+          "def": 95.445,
+          "ascension": 48.0
+        },
+        {
+          "phase": 70,
+          "hp": 2019.0856,
+          "atk": 48.84595,
+          "def": 120.96,
+          "ascension": 48.0
+        },
+        {
+          "phase": 80,
+          "hp": 2444.9863,
+          "atk": 59.149395,
+          "def": 146.475,
+          "ascension": 72.0
+        },
+        {
+          "phase": 90,
+          "hp": 2870.8872,
+          "atk": 69.452835,
+          "def": 171.99,
+          "ascension": 96.0
+        }
+      ]
+    },
+    "lohen": {
+      "base": {
+        "hp": 1000.986,
+        "atk": 26.8128,
+        "def": 61.0266
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 858.255,
+          "atk": 22.987871,
+          "def": 52.326,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1468.0677,
+          "atk": 39.32136,
+          "def": 89.505,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2281.1514,
+          "atk": 61.099342,
+          "def": 139.077,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2890.964,
+          "atk": 77.43283,
+          "def": 176.256,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3500.7769,
+          "atk": 93.76632,
+          "def": 213.435,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4110.59,
+          "atk": 110.09981,
+          "def": 250.614,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "lumine": {
+      "base": {
+        "hp": 911.791,
+        "atk": 17.808,
+        "def": 57.225
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 681.15454,
+          "atk": 13.3038,
+          "def": 42.75,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1165.1328,
+          "atk": 22.7565,
+          "def": 73.125,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1810.4371,
+          "atk": 35.3601,
+          "def": 113.625,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2294.4153,
+          "atk": 44.8128,
+          "def": 144.0,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2778.3936,
+          "atk": 54.2655,
+          "def": 174.375,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3262.3718,
+          "atk": 63.7182,
+          "def": 204.75,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "lynette": {
+      "base": {
+        "hp": 1039.4418,
+        "atk": 19.41072,
+        "def": 59.685677
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "anemo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_WIND_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 776.5162,
+          "atk": 14.501142,
+          "def": 44.58825,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1328.2513,
+          "atk": 24.804585,
+          "def": 76.26938,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2063.8984,
+          "atk": 38.542507,
+          "def": 118.51087,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2615.6335,
+          "atk": 48.84595,
+          "def": 150.192,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3167.3687,
+          "atk": 59.149395,
+          "def": 181.87312,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3719.104,
+          "atk": 69.452835,
+          "def": 213.55424,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "lyney": {
+      "base": {
+        "hp": 857.988,
+        "atk": 24.7646,
+        "def": 41.881
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 735.64716,
+          "atk": 21.231853,
+          "def": 35.91,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1258.3438,
+          "atk": 36.317646,
+          "def": 61.425,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 1955.2726,
+          "atk": 56.432034,
+          "def": 95.445,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2477.9692,
+          "atk": 71.51782,
+          "def": 120.96,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3000.666,
+          "atk": 86.603615,
+          "def": 146.475,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 3523.3625,
+          "atk": 101.68941,
+          "def": 171.99,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "manekin": {
+      "base": {
+        "hp": 911.791,
+        "atk": 17.808,
+        "def": 57.225
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 681.15454,
+          "atk": 13.3038,
+          "def": 42.75,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1165.1328,
+          "atk": 22.7565,
+          "def": 73.125,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1810.4371,
+          "atk": 35.3601,
+          "def": 113.625,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2294.4153,
+          "atk": 44.8128,
+          "def": 144.0,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2778.3936,
+          "atk": 54.2655,
+          "def": 174.375,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3262.3718,
+          "atk": 63.7182,
+          "def": 204.75,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "manekina": {
+      "base": {
+        "hp": 911.791,
+        "atk": 17.808,
+        "def": 57.225
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 681.15454,
+          "atk": 13.3038,
+          "def": 42.75,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1165.1328,
+          "atk": 22.7565,
+          "def": 73.125,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1810.4371,
+          "atk": 35.3601,
+          "def": 113.625,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2294.4153,
+          "atk": 44.8128,
+          "def": 144.0,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2778.3936,
+          "atk": 54.2655,
+          "def": 174.375,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3262.3718,
+          "atk": 63.7182,
+          "def": 204.75,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "mavuika": {
+      "base": {
+        "hp": 977.153,
+        "atk": 27.93,
+        "def": 61.6249
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 837.8203,
+          "atk": 23.9457,
+          "def": 52.839,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1433.1138,
+          "atk": 40.95975,
+          "def": 90.3825,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2226.8384,
+          "atk": 63.64515,
+          "def": 140.4405,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2822.1316,
+          "atk": 80.6592,
+          "def": 177.984,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3417.425,
+          "atk": 97.67325,
+          "def": 215.5275,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4012.7185,
+          "atk": 114.6873,
+          "def": 253.071,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "mika": {
+      "base": {
+        "hp": 1048.5597,
+        "atk": 18.6984,
+        "def": 59.800125
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 783.32776,
+          "atk": 13.96899,
+          "def": 44.67375,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1339.9027,
+          "atk": 23.894325,
+          "def": 76.41563,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2082.0027,
+          "atk": 37.128105,
+          "def": 118.73813,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2638.5776,
+          "atk": 47.05344,
+          "def": 150.48,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3195.1526,
+          "atk": 56.978775,
+          "def": 182.22188,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3751.7275,
+          "atk": 66.90411,
+          "def": 213.96375,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "mona": {
+      "base": {
+        "hp": 810.322,
+        "atk": 22.344,
+        "def": 50.8555
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "enerRech_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CHARGE_EFFICIENCY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 694.77783,
+          "atk": 19.15656,
+          "def": 43.605,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1188.4358,
+          "atk": 32.7678,
+          "def": 74.5875,
+          "ascension": 8.0
+        },
+        {
+          "phase": 60,
+          "hp": 1846.6464,
+          "atk": 50.91612,
+          "def": 115.8975,
+          "ascension": 16.0
+        },
+        {
+          "phase": 70,
+          "hp": 2340.3042,
+          "atk": 64.52736,
+          "def": 146.88,
+          "ascension": 16.0
+        },
+        {
+          "phase": 80,
+          "hp": 2833.9622,
+          "atk": 78.1386,
+          "def": 177.8625,
+          "ascension": 24.0
+        },
+        {
+          "phase": 90,
+          "hp": 3327.62,
+          "atk": 91.74984,
+          "def": 208.845,
+          "ascension": 32.0
+        }
+      ]
+    },
+    "mualani": {
+      "base": {
+        "hp": 1182.1168,
+        "atk": 14.1512,
+        "def": 44.39386
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 1013.5583,
+          "atk": 12.132488,
+          "def": 38.0646,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1733.7181,
+          "atk": 20.75294,
+          "def": 65.1105,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2693.9312,
+          "atk": 32.246876,
+          "def": 101.1717,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 3414.091,
+          "atk": 40.86733,
+          "def": 128.2176,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 4134.251,
+          "atk": 49.48778,
+          "def": 155.2635,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4854.4106,
+          "atk": 58.10823,
+          "def": 182.3094,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "nahida": {
+      "base": {
+        "hp": 806.5087,
+        "atk": 23.275,
+        "def": 49.0606
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 691.5083,
+          "atk": 19.95475,
+          "def": 42.066,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1182.8431,
+          "atk": 34.133125,
+          "def": 71.955,
+          "ascension": 28.8
+        },
+        {
+          "phase": 60,
+          "hp": 1837.9563,
+          "atk": 53.037624,
+          "def": 111.807,
+          "ascension": 57.6
+        },
+        {
+          "phase": 70,
+          "hp": 2329.291,
+          "atk": 67.216,
+          "def": 141.696,
+          "ascension": 57.6
+        },
+        {
+          "phase": 80,
+          "hp": 2820.626,
+          "atk": 81.39438,
+          "def": 171.585,
+          "ascension": 86.4
+        },
+        {
+          "phase": 90,
+          "hp": 3311.961,
+          "atk": 95.57275,
+          "def": 201.474,
+          "ascension": 115.2
+        }
+      ]
+    },
+    "navia": {
+      "base": {
+        "hp": 984.77954,
+        "atk": 27.3714,
+        "def": 61.74456
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 844.35944,
+          "atk": 23.466785,
+          "def": 52.9416,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1444.2991,
+          "atk": 40.140556,
+          "def": 90.558,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2244.2185,
+          "atk": 62.372246,
+          "def": 140.7132,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2844.158,
+          "atk": 79.04601,
+          "def": 178.3296,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3444.0977,
+          "atk": 95.71979,
+          "def": 215.946,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4044.0374,
+          "atk": 112.393555,
+          "def": 253.5624,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "nefer": {
+      "base": {
+        "hp": 988.9742,
+        "atk": 26.8128,
+        "def": 62.2232
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 847.95593,
+          "atk": 22.987871,
+          "def": 53.352,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1450.4509,
+          "atk": 39.32136,
+          "def": 91.26,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2253.7776,
+          "atk": 61.099342,
+          "def": 141.804,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2856.2727,
+          "atk": 77.43283,
+          "def": 179.712,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3458.7676,
+          "atk": 93.76632,
+          "def": 217.62,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4061.2627,
+          "atk": 110.09981,
+          "def": 255.528,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "neuvillette": {
+      "base": {
+        "hp": 1143.984,
+        "atk": 16.21802,
+        "def": 44.8725
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 980.86285,
+          "atk": 13.90447,
+          "def": 38.475,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1677.7917,
+          "atk": 23.783962,
+          "def": 65.8125,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2607.0303,
+          "atk": 36.956615,
+          "def": 102.2625,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 3303.959,
+          "atk": 46.83611,
+          "def": 129.6,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 4000.888,
+          "atk": 56.715603,
+          "def": 156.9375,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4697.817,
+          "atk": 66.59509,
+          "def": 184.275,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "nicole": {
+      "base": {
+        "hp": 810.322,
+        "atk": 26.6266,
+        "def": 43.79556
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 694.77783,
+          "atk": 22.828234,
+          "def": 37.5516,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1188.4358,
+          "atk": 39.048294,
+          "def": 64.233,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 1846.6464,
+          "atk": 60.67504,
+          "def": 99.8082,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 2340.3042,
+          "atk": 76.8951,
+          "def": 126.4896,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 2833.9622,
+          "atk": 93.115166,
+          "def": 153.171,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 3327.62,
+          "atk": 109.33523,
+          "def": 179.8524,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "nilou": {
+      "base": {
+        "hp": 1182.1168,
+        "atk": 17.8752,
+        "def": 56.71884
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 1013.5583,
+          "atk": 15.325248,
+          "def": 48.6324,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1733.7181,
+          "atk": 26.21424,
+          "def": 83.187,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2693.9312,
+          "atk": 40.732895,
+          "def": 129.2598,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 3414.091,
+          "atk": 51.621887,
+          "def": 163.8144,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 4134.251,
+          "atk": 62.51088,
+          "def": 198.369,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 4854.4106,
+          "atk": 73.39987,
+          "def": 232.9236,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "ningguang": {
+      "base": {
+        "hp": 820.6119,
+        "atk": 17.808,
+        "def": 48.069
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "geo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ROCK_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 613.0391,
+          "atk": 13.3038,
+          "def": 35.91,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1048.6195,
+          "atk": 22.7565,
+          "def": 61.425,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1629.3934,
+          "atk": 35.3601,
+          "def": 95.445,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2064.9739,
+          "atk": 44.8128,
+          "def": 120.96,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2500.5542,
+          "atk": 54.2655,
+          "def": 146.475,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2936.1348,
+          "atk": 63.7182,
+          "def": 171.99,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "noelle": {
+      "base": {
+        "hp": 1012.088,
+        "atk": 16.0272,
+        "def": 66.95325
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "def_",
+      "ascension_stat_fightprop": "FIGHT_PROP_DEFENSE_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 756.08154,
+          "atk": 11.97342,
+          "def": 50.0175,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1293.2974,
+          "atk": 20.48085,
+          "def": 85.55625,
+          "ascension": 7.5
+        },
+        {
+          "phase": 60,
+          "hp": 2009.5852,
+          "atk": 31.82409,
+          "def": 132.94125,
+          "ascension": 15.0
+        },
+        {
+          "phase": 70,
+          "hp": 2546.801,
+          "atk": 40.33152,
+          "def": 168.48,
+          "ascension": 15.0
+        },
+        {
+          "phase": 80,
+          "hp": 3084.0168,
+          "atk": 48.83895,
+          "def": 204.01875,
+          "ascension": 22.5
+        },
+        {
+          "phase": 90,
+          "hp": 3621.2327,
+          "atk": 57.34638,
+          "def": 239.5575,
+          "ascension": 30.0
+        }
+      ]
+    },
+    "ororon": {
+      "base": {
+        "hp": 775.02234,
+        "atk": 20.4792,
+        "def": 49.2135
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 578.9814,
+          "atk": 15.29937,
+          "def": 36.765,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 990.36285,
+          "atk": 26.169975,
+          "def": 62.8875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1538.8716,
+          "atk": 40.664116,
+          "def": 97.7175,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 1950.253,
+          "atk": 51.53472,
+          "def": 123.84,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2361.6345,
+          "atk": 62.405327,
+          "def": 149.9625,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2773.016,
+          "atk": 73.27593,
+          "def": 176.085,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "prune": {
+      "base": {
+        "hp": 811.494,
+        "atk": 18.52032,
+        "def": 48.64125
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 606.22754,
+          "atk": 13.835952,
+          "def": 36.3375,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1036.9681,
+          "atk": 23.66676,
+          "def": 62.15625,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1611.2891,
+          "atk": 36.774506,
+          "def": 96.58125,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2042.0297,
+          "atk": 46.605312,
+          "def": 122.4,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2472.7703,
+          "atk": 56.43612,
+          "def": 148.21875,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2903.511,
+          "atk": 66.26693,
+          "def": 174.0375,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "qiqi": {
+      "base": {
+        "hp": 962.8532,
+        "atk": 22.344,
+        "def": 71.796
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "heal_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HEAL_ADD",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 825.5596,
+          "atk": 19.15656,
+          "def": 61.56,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1412.1414,
+          "atk": 32.7678,
+          "def": 105.3,
+          "ascension": 5.54
+        },
+        {
+          "phase": 60,
+          "hp": 2194.2505,
+          "atk": 50.91612,
+          "def": 163.62,
+          "ascension": 11.08
+        },
+        {
+          "phase": 70,
+          "hp": 2780.8323,
+          "atk": 64.52736,
+          "def": 207.36,
+          "ascension": 11.08
+        },
+        {
+          "phase": 80,
+          "hp": 3367.414,
+          "atk": 78.1386,
+          "def": 251.1,
+          "ascension": 16.619999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 3953.9958,
+          "atk": 91.74984,
+          "def": 294.84,
+          "ascension": 22.15
+        }
+      ]
+    },
+    "raidenshogun": {
+      "base": {
+        "hp": 1004.79926,
+        "atk": 26.2542,
+        "def": 61.44541
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "enerRech_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CHARGE_EFFICIENCY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 861.52454,
+          "atk": 22.508959,
+          "def": 52.6851,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1473.6604,
+          "atk": 38.502167,
+          "def": 90.11925,
+          "ascension": 8.0
+        },
+        {
+          "phase": 60,
+          "hp": 2289.8416,
+          "atk": 59.826443,
+          "def": 140.03145,
+          "ascension": 16.0
+        },
+        {
+          "phase": 70,
+          "hp": 2901.9773,
+          "atk": 75.81965,
+          "def": 177.4656,
+          "ascension": 16.0
+        },
+        {
+          "phase": 80,
+          "hp": 3514.1133,
+          "atk": 91.81286,
+          "def": 214.89975,
+          "ascension": 24.0
+        },
+        {
+          "phase": 90,
+          "hp": 4126.249,
+          "atk": 107.80606,
+          "def": 252.3339,
+          "ascension": 32.0
+        }
+      ]
+    },
+    "razor": {
+      "base": {
+        "hp": 1002.9701,
+        "atk": 19.5888,
+        "def": 62.9475
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "physical_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_PHYSICAL_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 749.27,
+          "atk": 14.63418,
+          "def": 47.025,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1281.6461,
+          "atk": 25.03215,
+          "def": 80.4375,
+          "ascension": 7.5
+        },
+        {
+          "phase": 60,
+          "hp": 1991.4808,
+          "atk": 38.89611,
+          "def": 124.9875,
+          "ascension": 15.0
+        },
+        {
+          "phase": 70,
+          "hp": 2523.857,
+          "atk": 49.29408,
+          "def": 158.4,
+          "ascension": 15.0
+        },
+        {
+          "phase": 80,
+          "hp": 3056.233,
+          "atk": 59.69205,
+          "def": 191.8125,
+          "ascension": 22.5
+        },
+        {
+          "phase": 90,
+          "hp": 3588.6091,
+          "atk": 70.09002,
+          "def": 225.225,
+          "ascension": 30.0
+        }
+      ]
+    },
+    "rosaria": {
+      "base": {
+        "hp": 1030.3239,
+        "atk": 20.12304,
+        "def": 59.514
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 769.70465,
+          "atk": 15.033294,
+          "def": 44.46,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1316.6001,
+          "atk": 25.714846,
+          "def": 76.05,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2045.794,
+          "atk": 39.956913,
+          "def": 118.17,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2592.6895,
+          "atk": 50.638466,
+          "def": 149.76,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3139.5847,
+          "atk": 61.320015,
+          "def": 181.35,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3686.4802,
+          "atk": 72.001564,
+          "def": 212.94,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "sangonomiyakokomi": {
+      "base": {
+        "hp": 1048.652,
+        "atk": 18.2476,
+        "def": 51.15465
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "hydro_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_WATER_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 899.12427,
+          "atk": 15.644524,
+          "def": 43.8615,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1537.9757,
+          "atk": 26.76037,
+          "def": 75.02625,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2389.7776,
+          "atk": 41.581497,
+          "def": 116.57925,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 3028.6292,
+          "atk": 52.697346,
+          "def": 147.744,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 3667.4805,
+          "atk": 63.81319,
+          "def": 178.90875,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 4306.332,
+          "atk": 74.92904,
+          "def": 210.0735,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "sayu": {
+      "base": {
+        "hp": 993.8522,
+        "atk": 20.4792,
+        "def": 62.432476
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 742.4585,
+          "atk": 15.29937,
+          "def": 46.64025,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1269.9948,
+          "atk": 26.169975,
+          "def": 79.77937,
+          "ascension": 24.0
+        },
+        {
+          "phase": 60,
+          "hp": 1973.3765,
+          "atk": 40.664116,
+          "def": 123.964874,
+          "ascension": 48.0
+        },
+        {
+          "phase": 70,
+          "hp": 2500.9128,
+          "atk": 51.53472,
+          "def": 157.104,
+          "ascension": 48.0
+        },
+        {
+          "phase": 80,
+          "hp": 3028.449,
+          "atk": 62.405327,
+          "def": 190.24312,
+          "ascension": 72.0
+        },
+        {
+          "phase": 90,
+          "hp": 3555.9854,
+          "atk": 73.27593,
+          "def": 223.38225,
+          "ascension": 96.0
+        }
+      ]
+    },
+    "sethos": {
+      "base": {
+        "hp": 820.6119,
+        "atk": 19.05456,
+        "def": 46.9245
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 613.0391,
+          "atk": 14.235066,
+          "def": 35.055,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1048.6195,
+          "atk": 24.349455,
+          "def": 59.9625,
+          "ascension": 24.0
+        },
+        {
+          "phase": 60,
+          "hp": 1629.3934,
+          "atk": 37.835308,
+          "def": 93.1725,
+          "ascension": 48.0
+        },
+        {
+          "phase": 70,
+          "hp": 2064.9739,
+          "atk": 47.949696,
+          "def": 118.08,
+          "ascension": 48.0
+        },
+        {
+          "phase": 80,
+          "hp": 2500.5542,
+          "atk": 58.064083,
+          "def": 142.9875,
+          "ascension": 72.0
+        },
+        {
+          "phase": 90,
+          "hp": 2936.1348,
+          "atk": 68.178474,
+          "def": 167.895,
+          "ascension": 96.0
+        }
+      ]
+    },
+    "shenhe": {
+      "base": {
+        "hp": 1011.47253,
+        "atk": 23.6474,
+        "def": 64.6164
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 867.2462,
+          "atk": 20.274027,
+          "def": 55.404,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1483.4475,
+          "atk": 34.679256,
+          "def": 94.77,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2305.049,
+          "atk": 53.886227,
+          "def": 147.258,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 2921.2505,
+          "atk": 68.29146,
+          "def": 186.624,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 3537.4517,
+          "atk": 82.696686,
+          "def": 225.99,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 4153.653,
+          "atk": 97.10191,
+          "def": 265.356,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "shikanoinheizou": {
+      "base": {
+        "hp": 893.5552,
+        "atk": 18.87648,
+        "def": 57.33945
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "anemo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_WIND_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 667.5315,
+          "atk": 14.102028,
+          "def": 42.8355,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1141.8302,
+          "atk": 24.12189,
+          "def": 73.27125,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1774.2284,
+          "atk": 37.481705,
+          "def": 113.85225,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2248.527,
+          "atk": 47.501568,
+          "def": 144.288,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2722.8257,
+          "atk": 57.52143,
+          "def": 174.72375,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3197.1245,
+          "atk": 67.54129,
+          "def": 205.1595,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "sigewinne": {
+      "base": {
+        "hp": 1039.1188,
+        "atk": 14.9891,
+        "def": 38.8895
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 890.95044,
+          "atk": 12.850859,
+          "def": 33.345,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1523.9941,
+          "atk": 21.981731,
+          "def": 57.0375,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2368.0525,
+          "atk": 34.15623,
+          "def": 88.6275,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 3001.0962,
+          "atk": 43.287106,
+          "def": 112.32,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 3634.14,
+          "atk": 52.417976,
+          "def": 136.0125,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 4267.1836,
+          "atk": 61.54885,
+          "def": 159.705,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "skirk": {
+      "base": {
+        "hp": 966.6665,
+        "atk": 27.93,
+        "def": 62.76167
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 828.8291,
+          "atk": 23.9457,
+          "def": 53.8137,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1417.734,
+          "atk": 40.95975,
+          "def": 92.04975,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2202.9404,
+          "atk": 63.64515,
+          "def": 143.03114,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2791.8455,
+          "atk": 80.6592,
+          "def": 181.2672,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3380.7502,
+          "atk": 97.67325,
+          "def": 219.50325,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 3969.6553,
+          "atk": 114.6873,
+          "def": 257.7393,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "sucrose": {
+      "base": {
+        "hp": 775.02234,
+        "atk": 14.2464,
+        "def": 58.94175
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "anemo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_WIND_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 578.9814,
+          "atk": 10.64304,
+          "def": 44.0325,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 990.36285,
+          "atk": 18.2052,
+          "def": 75.31875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1538.8716,
+          "atk": 28.28808,
+          "def": 117.03375,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 1950.253,
+          "atk": 35.85024,
+          "def": 148.32,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2361.6345,
+          "atk": 43.4124,
+          "def": 179.60625,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2773.016,
+          "atk": 50.97456,
+          "def": 210.8925,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "tartaglia": {
+      "base": {
+        "hp": 1020.0524,
+        "atk": 23.4612,
+        "def": 63.4198
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "hydro_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_WATER_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 874.6027,
+          "atk": 20.114388,
+          "def": 54.378,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1496.0309,
+          "atk": 34.40619,
+          "def": 93.015,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2324.6018,
+          "atk": 53.461926,
+          "def": 144.531,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 2946.03,
+          "atk": 67.75373,
+          "def": 183.168,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 3567.4585,
+          "atk": 82.04553,
+          "def": 221.805,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 4188.8867,
+          "atk": 96.33733,
+          "def": 260.442,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "thoma": {
+      "base": {
+        "hp": 866.2015,
+        "atk": 16.9176,
+        "def": 62.9475
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 647.0968,
+          "atk": 12.63861,
+          "def": 47.025,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1106.8762,
+          "atk": 21.618675,
+          "def": 80.4375,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1719.9153,
+          "atk": 33.592094,
+          "def": 124.9875,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2179.6946,
+          "atk": 42.57216,
+          "def": 158.4,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2639.4739,
+          "atk": 51.552223,
+          "def": 191.8125,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3099.2532,
+          "atk": 60.53229,
+          "def": 225.225,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "tighnari": {
+      "base": {
+        "hp": 844.64154,
+        "atk": 20.8544,
+        "def": 49.0606
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "dendro_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_GRASS_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 724.20374,
+          "atk": 17.879456,
+          "def": 42.066,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1238.7695,
+          "atk": 30.58328,
+          "def": 71.955,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 1924.8573,
+          "atk": 47.521713,
+          "def": 111.807,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 2439.423,
+          "atk": 60.225536,
+          "def": 141.696,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 2953.989,
+          "atk": 72.92936,
+          "def": 171.585,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 3468.5547,
+          "atk": 85.63319,
+          "def": 201.474,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "varesa": {
+      "base": {
+        "hp": 988.59283,
+        "atk": 27.7438,
+        "def": 60.84711
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 847.62897,
+          "atk": 23.786062,
+          "def": 52.1721,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1449.8916,
+          "atk": 40.686684,
+          "def": 89.24175,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2252.9087,
+          "atk": 63.220848,
+          "def": 138.66795,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2855.1714,
+          "atk": 80.121475,
+          "def": 175.7376,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3457.434,
+          "atk": 97.022095,
+          "def": 212.80725,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4059.6965,
+          "atk": 113.922714,
+          "def": 249.8769,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "varka": {
+      "base": {
+        "hp": 981.9196,
+        "atk": 27.4645,
+        "def": 61.92405
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 841.9073,
+          "atk": 23.546604,
+          "def": 53.0955,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1440.1045,
+          "atk": 40.27709,
+          "def": 90.82125,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2237.701,
+          "atk": 62.584396,
+          "def": 141.12225,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2835.8982,
+          "atk": 79.31488,
+          "def": 178.848,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3434.0955,
+          "atk": 96.045364,
+          "def": 216.57375,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4032.2927,
+          "atk": 112.77585,
+          "def": 254.2995,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "venti": {
+      "base": {
+        "hp": 819.8552,
+        "atk": 20.482,
+        "def": 52.0521
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "enerRech_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CHARGE_EFFICIENCY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 702.9517,
+          "atk": 17.56018,
+          "def": 44.631,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1202.4174,
+          "atk": 30.03715,
+          "def": 76.3425,
+          "ascension": 8.0
+        },
+        {
+          "phase": 60,
+          "hp": 1868.3716,
+          "atk": 46.67311,
+          "def": 118.6245,
+          "ascension": 16.0
+        },
+        {
+          "phase": 70,
+          "hp": 2367.8374,
+          "atk": 59.15008,
+          "def": 150.336,
+          "ascension": 16.0
+        },
+        {
+          "phase": 80,
+          "hp": 2867.303,
+          "atk": 71.62705,
+          "def": 182.0475,
+          "ascension": 24.0
+        },
+        {
+          "phase": 90,
+          "hp": 3366.7688,
+          "atk": 84.10402,
+          "def": 213.759,
+          "ascension": 32.0
+        }
+      ]
+    },
+    "wanderer": {
+      "base": {
+        "hp": 791.2556,
+        "atk": 25.5094,
+        "def": 47.2657
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 678.4301,
+          "atk": 21.870405,
+          "def": 40.527,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1160.4725,
+          "atk": 37.409904,
+          "def": 69.3225,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 1803.1959,
+          "atk": 58.12924,
+          "def": 107.7165,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2285.2383,
+          "atk": 73.66874,
+          "def": 136.512,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 2767.2808,
+          "atk": 89.20824,
+          "def": 165.3075,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 3249.3232,
+          "atk": 104.747734,
+          "def": 194.103,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "wriothesley": {
+      "base": {
+        "hp": 1058.1852,
+        "atk": 24.206,
+        "def": 59.41119
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 907.29816,
+          "atk": 20.75294,
+          "def": 50.9409,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1551.9573,
+          "atk": 35.49845,
+          "def": 87.13575,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2411.503,
+          "atk": 55.15913,
+          "def": 135.39555,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 3056.162,
+          "atk": 69.90464,
+          "def": 171.5904,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3700.8213,
+          "atk": 84.65015,
+          "def": 207.78525,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4345.4805,
+          "atk": 99.39566,
+          "def": 243.9801,
+          "ascension": 38.4
+        }
+      ]
+    },
+    "xiangling": {
+      "base": {
+        "hp": 911.791,
+        "atk": 18.87648,
+        "def": 56.0805
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 681.15454,
+          "atk": 14.102028,
+          "def": 41.895,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1165.1328,
+          "atk": 24.12189,
+          "def": 71.6625,
+          "ascension": 24.0
+        },
+        {
+          "phase": 60,
+          "hp": 1810.4371,
+          "atk": 37.481705,
+          "def": 111.3525,
+          "ascension": 48.0
+        },
+        {
+          "phase": 70,
+          "hp": 2294.4153,
+          "atk": 47.501568,
+          "def": 141.12,
+          "ascension": 48.0
+        },
+        {
+          "phase": 80,
+          "hp": 2778.3936,
+          "atk": 57.52143,
+          "def": 170.8875,
+          "ascension": 72.0
+        },
+        {
+          "phase": 90,
+          "hp": 3262.3718,
+          "atk": 67.54129,
+          "def": 200.655,
+          "ascension": 96.0
+        }
+      ]
+    },
+    "xianyun": {
+      "base": {
+        "hp": 810.322,
+        "atk": 26.068,
+        "def": 44.57335
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 694.77783,
+          "atk": 22.34932,
+          "def": 38.2185,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1188.4358,
+          "atk": 38.2291,
+          "def": 65.37375,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 1846.6464,
+          "atk": 59.40214,
+          "def": 101.58075,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 2340.3042,
+          "atk": 75.28192,
+          "def": 128.736,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 2833.9622,
+          "atk": 91.1617,
+          "def": 155.89125,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 3327.62,
+          "atk": 107.04148,
+          "def": 183.0465,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "xiao": {
+      "base": {
+        "hp": 991.4528,
+        "atk": 27.1852,
+        "def": 62.2232
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 850.0811,
+          "atk": 23.307148,
+          "def": 53.352,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1454.0862,
+          "atk": 39.86749,
+          "def": 91.26,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2259.4263,
+          "atk": 61.947945,
+          "def": 141.804,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2863.4312,
+          "atk": 78.508286,
+          "def": 179.712,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3467.4363,
+          "atk": 95.06863,
+          "def": 217.62,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4071.4412,
+          "atk": 111.628975,
+          "def": 255.528,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "xilonen": {
+      "base": {
+        "hp": 965.71313,
+        "atk": 21.413,
+        "def": 72.3943
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "def_",
+      "ascension_stat_fightprop": "FIGHT_PROP_DEFENSE_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 828.0117,
+          "atk": 18.35837,
+          "def": 62.073,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1416.3358,
+          "atk": 31.402475,
+          "def": 106.1775,
+          "ascension": 9.0
+        },
+        {
+          "phase": 60,
+          "hp": 2200.768,
+          "atk": 48.794617,
+          "def": 164.9835,
+          "ascension": 18.0
+        },
+        {
+          "phase": 70,
+          "hp": 2789.092,
+          "atk": 61.83872,
+          "def": 209.088,
+          "ascension": 18.0
+        },
+        {
+          "phase": 80,
+          "hp": 3377.4163,
+          "atk": 74.88283,
+          "def": 253.1925,
+          "ascension": 27.0
+        },
+        {
+          "phase": 90,
+          "hp": 3965.7402,
+          "atk": 87.92693,
+          "def": 297.297,
+          "ascension": 36.0
+        }
+      ]
+    },
+    "xingqiu": {
+      "base": {
+        "hp": 857.08356,
+        "atk": 16.9176,
+        "def": 63.51975
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 640.2853,
+          "atk": 12.63861,
+          "def": 47.4525,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1095.2249,
+          "atk": 21.618675,
+          "def": 81.16875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1701.8109,
+          "atk": 33.592094,
+          "def": 126.12375,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2156.7505,
+          "atk": 42.57216,
+          "def": 159.84,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2611.69,
+          "atk": 51.552223,
+          "def": 193.55624,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3066.6296,
+          "atk": 60.53229,
+          "def": 227.2725,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "xinyan": {
+      "base": {
+        "hp": 939.1447,
+        "atk": 20.83536,
+        "def": 66.95325
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "atk_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ATTACK_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 701.5892,
+          "atk": 15.565446,
+          "def": 50.0175,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1200.0868,
+          "atk": 26.625105,
+          "def": 85.55625,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1864.7502,
+          "atk": 41.37132,
+          "def": 132.94125,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2363.2478,
+          "atk": 52.430977,
+          "def": 168.48,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2861.7454,
+          "atk": 63.490635,
+          "def": 204.01875,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3360.243,
+          "atk": 74.55029,
+          "def": 239.5575,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "yaemiko": {
+      "base": {
+        "hp": 807.46204,
+        "atk": 26.4404,
+        "def": 44.2742
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 692.3257,
+          "atk": 22.668596,
+          "def": 37.962,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1184.2413,
+          "atk": 38.77523,
+          "def": 64.935,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 1840.1288,
+          "atk": 60.250744,
+          "def": 100.899,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2332.0444,
+          "atk": 76.357376,
+          "def": 127.872,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 2823.96,
+          "atk": 92.46401,
+          "def": 154.845,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 3315.8757,
+          "atk": 108.57064,
+          "def": 181.818,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "yanfei": {
+      "base": {
+        "hp": 784.14026,
+        "atk": 20.12304,
+        "def": 49.2135
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "pyro_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_FIRE_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 585.7929,
+          "atk": 15.033294,
+          "def": 36.765,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1002.0142,
+          "atk": 25.714846,
+          "def": 62.8875,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 1556.976,
+          "atk": 39.956913,
+          "def": 97.7175,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 1973.1973,
+          "atk": 50.638466,
+          "def": 123.84,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 2389.4185,
+          "atk": 61.320015,
+          "def": 149.9625,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 2805.64,
+          "atk": 72.001564,
+          "def": 176.085,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "yaoyao": {
+      "base": {
+        "hp": 1030.3239,
+        "atk": 17.808,
+        "def": 62.9475
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "hp_",
+      "ascension_stat_fightprop": "FIGHT_PROP_HP_PERCENT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 769.70465,
+          "atk": 13.3038,
+          "def": 47.025,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1316.6001,
+          "atk": 22.7565,
+          "def": 80.4375,
+          "ascension": 6.0
+        },
+        {
+          "phase": 60,
+          "hp": 2045.794,
+          "atk": 35.3601,
+          "def": 124.9875,
+          "ascension": 12.0
+        },
+        {
+          "phase": 70,
+          "hp": 2592.6895,
+          "atk": 44.8128,
+          "def": 158.4,
+          "ascension": 12.0
+        },
+        {
+          "phase": 80,
+          "hp": 3139.5847,
+          "atk": 54.2655,
+          "def": 191.8125,
+          "ascension": 18.0
+        },
+        {
+          "phase": 90,
+          "hp": 3686.4802,
+          "atk": 63.7182,
+          "def": 225.225,
+          "ascension": 24.0
+        }
+      ]
+    },
+    "yelan": {
+      "base": {
+        "hp": 1124.9176,
+        "atk": 18.9924,
+        "def": 42.65879
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 964.51514,
+          "atk": 16.283075,
+          "def": 36.5769,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1649.8285,
+          "atk": 27.85263,
+          "def": 62.56575,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 2563.5796,
+          "atk": 43.2787,
+          "def": 97.21755,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 3248.893,
+          "atk": 54.848255,
+          "def": 123.2064,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 3934.2065,
+          "atk": 66.41781,
+          "def": 149.19525,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 4619.52,
+          "atk": 77.987366,
+          "def": 175.1841,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "yoimiya": {
+      "base": {
+        "hp": 791.2556,
+        "atk": 25.137,
+        "def": 47.864
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critRate_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 678.4301,
+          "atk": 21.55113,
+          "def": 41.04,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1160.4725,
+          "atk": 36.863773,
+          "def": 70.2,
+          "ascension": 4.8
+        },
+        {
+          "phase": 60,
+          "hp": 1803.1959,
+          "atk": 57.280636,
+          "def": 109.08,
+          "ascension": 9.6
+        },
+        {
+          "phase": 70,
+          "hp": 2285.2383,
+          "atk": 72.59328,
+          "def": 138.24,
+          "ascension": 9.6
+        },
+        {
+          "phase": 80,
+          "hp": 2767.2808,
+          "atk": 87.90592,
+          "def": 167.4,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 90,
+          "hp": 3249.3232,
+          "atk": 103.21857,
+          "def": 196.56,
+          "ascension": 19.2
+        }
+      ]
+    },
+    "yumemizukimizuki": {
+      "base": {
+        "hp": 991.4528,
+        "atk": 16.758,
+        "def": 58.93255
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "eleMas",
+      "ascension_stat_fightprop": "FIGHT_PROP_ELEMENT_MASTERY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 850.0811,
+          "atk": 14.36742,
+          "def": 50.5305,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1454.0862,
+          "atk": 24.57585,
+          "def": 86.43375,
+          "ascension": 28.8
+        },
+        {
+          "phase": 60,
+          "hp": 2259.4263,
+          "atk": 38.18709,
+          "def": 134.30475,
+          "ascension": 57.6
+        },
+        {
+          "phase": 70,
+          "hp": 2863.4312,
+          "atk": 48.39552,
+          "def": 170.208,
+          "ascension": 57.6
+        },
+        {
+          "phase": 80,
+          "hp": 3467.4363,
+          "atk": 58.60395,
+          "def": 206.11125,
+          "ascension": 86.4
+        },
+        {
+          "phase": 90,
+          "hp": 4071.4412,
+          "atk": 68.81238,
+          "def": 242.0145,
+          "ascension": 115.2
+        }
+      ]
+    },
+    "yunjin": {
+      "base": {
+        "hp": 893.5552,
+        "atk": 16.0272,
+        "def": 61.5741
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S4",
+        "atk": "GROW_CURVE_ATTACK_S4",
+        "def": "GROW_CURVE_HP_S4"
+      },
+      "ascension_stat": "enerRech_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CHARGE_EFFICIENCY",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 667.5315,
+          "atk": 11.97342,
+          "def": 45.999,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1141.8302,
+          "atk": 20.48085,
+          "def": 78.6825,
+          "ascension": 6.67
+        },
+        {
+          "phase": 60,
+          "hp": 1774.2284,
+          "atk": 31.82409,
+          "def": 122.2605,
+          "ascension": 13.33
+        },
+        {
+          "phase": 70,
+          "hp": 2248.527,
+          "atk": 40.33152,
+          "def": 154.944,
+          "ascension": 13.33
+        },
+        {
+          "phase": 80,
+          "hp": 2722.8257,
+          "atk": 48.83895,
+          "def": 187.6275,
+          "ascension": 20.0
+        },
+        {
+          "phase": 90,
+          "hp": 3197.1245,
+          "atk": 57.34638,
+          "def": 220.311,
+          "ascension": 26.669999999999998
+        }
+      ]
+    },
+    "zhongli": {
+      "base": {
+        "hp": 1143.984,
+        "atk": 19.551,
+        "def": 57.4368
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "geo_dmg_",
+      "ascension_stat_fightprop": "FIGHT_PROP_ROCK_ADD_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 980.8628,
+          "atk": 16.762,
+          "def": 49.248,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1677.7917,
+          "atk": 28.6718,
+          "def": 84.24,
+          "ascension": 7.199999999999999
+        },
+        {
+          "phase": 60,
+          "hp": 2607.0303,
+          "atk": 44.5516,
+          "def": 130.896,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 70,
+          "hp": 3303.959,
+          "atk": 56.4614,
+          "def": 165.888,
+          "ascension": 14.399999999999999
+        },
+        {
+          "phase": 80,
+          "hp": 4000.888,
+          "atk": 68.3713,
+          "def": 200.88,
+          "ascension": 21.6
+        },
+        {
+          "phase": 90,
+          "hp": 4697.817,
+          "atk": 80.2811,
+          "def": 235.872,
+          "ascension": 28.799999999999997
+        }
+      ]
+    },
+    "zibai": {
+      "base": {
+        "hp": 1005.7526,
+        "atk": 17.5028,
+        "def": 74.48835
+      },
+      "base_crit_rate_": 5.0,
+      "base_crit_dmg_": 50.0,
+      "curve": {
+        "hp": "GROW_CURVE_HP_S5",
+        "atk": "GROW_CURVE_ATTACK_S5",
+        "def": "GROW_CURVE_HP_S5"
+      },
+      "ascension_stat": "critDMG_",
+      "ascension_stat_fightprop": "FIGHT_PROP_CRITICAL_HURT",
+      "promotion": [
+        {
+          "phase": 20,
+          "hp": 0.0,
+          "atk": 0.0,
+          "def": 0.0,
+          "ascension": 0.0
+        },
+        {
+          "phase": 40,
+          "hp": 862.3419,
+          "atk": 15.006,
+          "def": 63.8685,
+          "ascension": 0.0
+        },
+        {
+          "phase": 50,
+          "hp": 1475.0585,
+          "atk": 25.6681,
+          "def": 109.2488,
+          "ascension": 9.6
+        },
+        {
+          "phase": 60,
+          "hp": 2292.014,
+          "atk": 39.8843,
+          "def": 169.7558,
+          "ascension": 19.2
+        },
+        {
+          "phase": 70,
+          "hp": 2904.7307,
+          "atk": 50.5464,
+          "def": 215.136,
+          "ascension": 19.2
+        },
+        {
+          "phase": 80,
+          "hp": 3517.4473,
+          "atk": 61.2086,
+          "def": 260.5163,
+          "ascension": 28.799999999999997
+        },
+        {
+          "phase": 90,
+          "hp": 4130.164,
+          "atk": 71.8707,
+          "def": 305.8965,
+          "ascension": 38.4
+        }
+      ]
+    }
+  }
+}
