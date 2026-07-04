@@ -33,11 +33,26 @@ def _character_final_stats(params: dict[str, Any]) -> dict[str, Any]:
     return charstats.character_payload(key.strip())
 
 
+def _calculate_rotation(params: dict[str, Any]) -> dict[str, Any]:
+    """Rotation chiffrée (moteur rotation, coefficients+stats réels, jamais de faux DPS)."""
+    from irminsul import rotation  # import paresseux
+
+    team = params.get("team")
+    actions = params.get("actions")
+    enemy = params.get("enemy") or {}
+    if not isinstance(team, list):
+        raise ValueError("paramètre 'team' (liste de personnages) requis")
+    if not isinstance(actions, list):
+        raise ValueError("paramètre 'actions' (liste) requis")
+    return rotation.calculate_rotation(team, actions, enemy)
+
+
 METHODS = {
     "calculate_direct_hit": lambda p: calculate_direct_hit(**p).to_dict(),
     "amplifying_multiplier": lambda p: amplifying_multiplier(**p).to_dict(),
     "transformative_reaction": lambda p: transformative_reaction(**p).to_dict(),
     "character_final_stats": _character_final_stats,
+    "calculate_rotation": _calculate_rotation,
 }
 
 MAX_INPUT = 64 * 1024
