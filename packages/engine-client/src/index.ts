@@ -34,6 +34,13 @@ export {
   type TransformativeKind,
   type TransformativeResult,
 } from "./reactions";
-export { normalizePlayerBuild, parseWeaponRef, type PlayerCharacterBuild } from "./player-build";
+export { normalizePlayerBuild, parseArtifactSets, parseWeaponRef, type PlayerCharacterBuild } from "./player-build";
+export {
+  FINAL_STATS_CONTRACT_VERSION,
+  normalizeFinalStats,
+  type FinalCharacterStats,
+  type FinalStatCell,
+  type FinalStatsResult,
+} from "./final-stats";
 // NOTE : le sidecar (node:child_process) n'est PAS ré-exporté ici — le barrel doit rester
 // importable côté client. Serveur : import depuis "@irminsul/engine-client/sidecar".
