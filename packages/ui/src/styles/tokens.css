@@ -145,6 +145,12 @@
 .irm-badge--gold { color: var(--irm-gold); border-color: color-mix(in oklab, var(--irm-gold) 45%, var(--irm-border-strong)); }
 .irm-badge--warn { color: var(--irm-danger); border-color: color-mix(in oklab, var(--irm-danger) 45%, var(--irm-border-strong)); }
 
+/* Table de stats (breakdown personnage) */
+.irm-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.irm-table tr { border-bottom: 1px solid var(--irm-border); }
+.irm-table tr:last-child { border-bottom: none; }
+.irm-table td { color: var(--irm-text); }
+
 /* Chiffres du résultat */
 .irm-figure { font: 600 22px/1.2 var(--irm-mono); color: var(--irm-text); }
 .irm-figure--hero { font-size: 30px; color: var(--irm-cyan); }

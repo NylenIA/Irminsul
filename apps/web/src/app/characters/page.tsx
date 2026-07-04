@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { loadAccountSummary } from "@/server/account";
 import type { PlayerCharacterBuild } from "@irminsul/engine-client";
 
@@ -55,7 +56,11 @@ export default async function CharactersPage(): Promise<React.ReactElement> {
 
 function CharacterCard({ build }: { build: PlayerCharacterBuild }): React.ReactElement {
   return (
-    <article className="irm-card irm-fade-in">
+    <Link
+      href={`/characters/${encodeURIComponent(build.characterId)}`}
+      className="irm-card irm-fade-in"
+      style={{ textDecoration: "none", color: "inherit", display: "block" }}
+    >
       <h2 className="irm-card__title" style={{ fontSize: 15 }}>{build.characterId}</h2>
       <p style={{ margin: "4px 0 0", color: "var(--irm-text-dim)", fontSize: 13 }}>
         Niv. {build.level ?? "?"}
@@ -80,6 +85,9 @@ function CharacterCard({ build }: { build: PlayerCharacterBuild }): React.ReactE
           ))}
         </p>
       ) : null}
-    </article>
+      <span style={{ display: "block", marginTop: 8, fontSize: 12, color: "var(--irm-cyan)" }}>
+        Voir les stats finales →
+      </span>
+    </Link>
   );
 }
