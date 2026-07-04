@@ -42,5 +42,15 @@ export {
   type FinalStatCell,
   type FinalStatsResult,
 } from "./final-stats";
+export {
+  ROTATION_CONTRACT_VERSION,
+  DAMAGE_KINDS,
+  normalizeRotation,
+  validateRotation,
+  type RotationAction,
+  type RotationActionKind,
+  type RotationActionResult,
+  type RotationResult,
+} from "./rotation";
 // NOTE : le sidecar (node:child_process) n'est PAS ré-exporté ici — le barrel doit rester
 // importable côté client. Serveur : import depuis "@irminsul/engine-client/sidecar".
