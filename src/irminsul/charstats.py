@@ -40,6 +40,16 @@ MAIN_STAT_5STAR_L20: dict[str, float] = {
 }
 
 
+def _level_or(value: Any, default: int = 1) -> int:
+    """Niveau du scan : fallback UNIQUEMENT si None/non-entier. Un 0 falsy réel est conservé
+    (→ rejeté par les gardes de basestats/weaponstats, jamais promu en niveau 1 « plausible »)."""
+    return value if isinstance(value, int) and not isinstance(value, bool) else default
+
+
+def _ascension_or(value: Any, default: int = 0) -> int:
+    return value if isinstance(value, int) and not isinstance(value, bool) else default
+
+
 def artifact_stat_totals(artifacts: list[dict[str, Any]]) -> dict[str, Any]:
     """Somme exacte des stats issues des artéfacts : substats (valeurs réelles du
     GOOD) + stats principales (table 5★ niv.20). Les pièces hors de cette table
@@ -52,22 +62,32 @@ def artifact_stat_totals(artifacts: list[dict[str, Any]]) -> dict[str, Any]:
             key = s.get("key")
             if not key:
                 continue
+            raw_val = s.get("value")
+            # Audit Codex : une value absente/None n'est PAS un 0 silencieux → anomalie explicite.
+            if raw_val is None:
+                anomalies.append({"set": a.get("setKey"), "slot": a.get("slotKey"),
+                                  "key": key, "value": None,
+                                  "reason": "substat sans valeur (ignorée, jamais inventée)"})
+                continue
             try:
-                val = float(s.get("value", 0) or 0)
+                val = float(raw_val)
             except (TypeError, ValueError):
                 # value sérialisée en str → JSON toujours valide (jamais de NaN brut en sortie).
                 anomalies.append({"set": a.get("setKey"), "slot": a.get("slotKey"),
-                                  "key": key, "value": str(s.get("value")),
+                                  "key": key, "value": str(raw_val),
                                   "reason": "substat non numérique (ignorée, jamais inventée)"})
                 continue
             if not math.isfinite(val):
                 anomalies.append({"set": a.get("setKey"), "slot": a.get("slotKey"),
-                                  "key": key, "value": str(s.get("value")),
+                                  "key": key, "value": str(raw_val),
                                   "reason": "substat NaN/infinie (ignorée — donnée corrompue)"})
                 continue
             totals[key] += val
         mk = a.get("mainStatKey")
         if not mk:
+            # Audit Codex : artéfact sans stat principale → anomalie (pas un abandon silencieux).
+            anomalies.append({"set": a.get("setKey"), "slot": a.get("slotKey"),
+                              "reason": "artéfact sans stat principale (ignoré — donnée incomplète)"})
             continue
         if a.get("rarity") == 5 and a.get("level") == 20 and mk in MAIN_STAT_5STAR_L20:
             totals[mk] += MAIN_STAT_5STAR_L20[mk]
@@ -259,12 +279,14 @@ def character_payload(key: str) -> dict[str, Any]:
     art_stats = artifact_stat_totals(equipped)
 
     # Stats de BASE live, versionnées et sourcées (genshin-db) — calculées automatiquement.
+    # Audit Codex : fallback UNIQUEMENT pour None (absent). Un niveau falsy réel (0) est passé
+    # tel quel → rejeté par les gardes de basestats (jamais promu en niveau 1 « plausible »).
     base_stats = basestats.character_base_stats_payload(
-        key, c.get("level") or 1, c.get("ascension") or 0)
+        key, _level_or(c.get("level")), _ascension_or(c.get("ascension")))
     # Stats de BASE d'arme (genshin-db) — calculées automatiquement, sourcées, versionnées.
     if w:
         weapon_bs = weaponstats.weapon_base_stats_payload(
-            w["key"], w.get("level") or 1, w.get("ascension") or 0)
+            w["key"], _level_or(w.get("level")), _ascension_or(w.get("ascension")))
         weapon_bs.setdefault("key", w["key"])
     else:
         weapon_bs = {"supported": False, "reason": "aucune arme équipée", "key": None}

@@ -79,8 +79,9 @@ def _load_cached(path_str: str, mtime: float) -> dict[str, Any]:
 def load_weaponstats() -> dict[str, Any]:
     p = data_path()
     if not p.exists():
+        # Audit Codex : message générique côté API (pas de chemin absolu local vers le caller).
         raise FileNotFoundError(
-            f"Données de stats d'arme absentes : {p}. "
+            "Données de stats d'arme absentes (weapon-basestats.json). "
             "Régénérer via `python tools/extract_weapon_basestats.py`."
         )
     return _load_cached(str(p), p.stat().st_mtime)

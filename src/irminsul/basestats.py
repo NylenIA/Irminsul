@@ -146,8 +146,10 @@ def load_basestats() -> dict[str, Any]:
     """Charge le JSON committé (caché sur (chemin, mtime) → relecture si régénéré)."""
     p = data_path()
     if not p.exists():
+        # Audit Codex : message générique côté API — ne pas divulguer le chemin absolu local
+        # (le détail va dans les logs applicatifs, pas dans la réponse au caller).
         raise FileNotFoundError(
-            f"Données de stats de base absentes : {p}. "
+            "Données de stats de base absentes (character-basestats.json). "
             "Régénérer via `python tools/extract_basestats.py`."
         )
     return _load_cached(str(p), p.stat().st_mtime)
