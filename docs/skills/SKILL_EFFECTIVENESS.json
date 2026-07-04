@@ -1,27 +1,28 @@
 {
-  "$comment": "Registre de confiance des skills. VÉRIDIQUE (preuve disque 2026-06-30). Corrige la table supposée du prompt §12.1 : 15/16 des skills 'senior-*/design/...' sont ABSENTS. Ne jamais cocher sans preuve.",
-  "updatedAt": "2026-06-30",
-  "codexDetectionPossible": false,
-  "codexReason": "Codex CLI absent (non installé). Détection/variante Codex = n/a tant que codex n'est pas installé+authentifié.",
-  "trustStates": ["absent", "untrusted", "candidate", "qualifying", "qualified", "degraded", "blocked"],
-  "skills": [
-    { "skill": "frontend-design", "version": "anthropics (fichier fourni)", "installComplete": true, "detectedClaude": true, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "candidate" },
-    { "skill": "skill-creator", "version": "anthropics/skills", "installComplete": true, "detectedClaude": true, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "candidate" },
-    { "skill": "webapp-testing", "version": "anthropics/skills", "installComplete": true, "detectedClaude": true, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "candidate" },
-    { "skill": "senior-architect", "version": "alirezarezvani (revendiqué @4a3c05b)", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "senior-backend", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "senior-security", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "senior-frontend", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "senior-qa", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "code-reviewer", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "tdd-guide", "version": "alirezarezvani", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "ui-ux-pro-max", "version": "npm ui-ux-pro-max-cli 2.9.0 (CLI présent, skill NON installé)", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "frontend-design-review", "version": "microsoft (revendiqué)", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "design", "version": "npm 2.9.0 (revendiqué)", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "design-system", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "ui-styling", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "brand", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "banner-design", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" },
-    { "skill": "slides", "version": "npm 2.9.0", "installComplete": false, "detectedClaude": false, "detectedCodex": "n/a", "realMissions": 0, "lastMission": "-", "filesInfluenced": [], "tests": 0, "confidence": "absent" }
-  ]
+  "$comment": "Registre d'efficacité réelle des skills. Un skill est 'utilisé' seulement s'il influence un fichier/revue/test/décision. Scripts des skills en quarantaine JAMAIS exécutés. Voir SKILL_AUDIT_MATRIX.json pour l'audit statique.",
+  "updatedAt": "2026-07-04",
+  "states": ["candidate", "qualifying", "qualified", "degraded", "quarantined"],
+  "tracked_allowed": [
+    { "name": "webapp-testing", "mission": "E2E Playwright des parcours (rotations/compare inclus)", "files": ["apps/web/tests/e2e/team-lab.spec.ts"], "state": "qualifying" },
+    { "name": "skill-creator", "mission": "skill interne rotation à formaliser", "files": [], "state": "candidate" },
+    { "name": "genshin-*", "mission": "référentiel mécaniques/vérification", "files": [], "state": "candidate" }
+  ],
+  "quarantined_guidance_applied": [
+    { "name": "senior-architect", "verdict": "verified_read_only", "deliverable": "docs/architecture/ROTATION_ENGINE_ADR.md", "state": "qualifying" },
+    { "name": "senior-backend", "verdict": "verified_claude_only", "deliverable": "src/irminsul/rotation.py (contrats/erreurs/bornes)", "state": "qualifying" },
+    { "name": "senior-security", "verdict": "verified_read_only", "deliverable": "bornes MAX_ACTIONS/MAX_TIME + _validate_enemy + gardes NaN", "state": "qualifying" },
+    { "name": "senior-qa", "verdict": "verified_read_only", "deliverable": "docs/qa/ROTATION_ENGINE_TEST_MATRIX.md", "state": "qualifying" },
+    { "name": "tdd-guide", "verdict": "verified_read_only", "deliverable": "docs/qa/ROTATION_TDD_TRACE.md + tests RED->GREEN", "state": "qualifying" },
+    { "name": "senior-frontend", "verdict": "verified_read_only", "deliverable": "apps/web/src/app/rotations/", "state": "qualifying" },
+    { "name": "design-system", "verdict": "verified_read_only", "deliverable": ".irm-table/badges/halo", "state": "qualifying" },
+    { "name": "ui-styling", "verdict": "verified_read_only", "deliverable": "focus-visible/reduced-motion/densité", "state": "qualifying" },
+    { "name": "ui-ux-pro-max", "verdict": "verified_read_only", "deliverable": "hiérarchie /rotations", "state": "qualifying" },
+    { "name": "frontend-design-review", "verdict": "verified_read_only", "deliverable": "revue états idle/partial/error", "state": "qualifying" },
+    { "name": "design", "verdict": "verified_claude_only", "deliverable": "cohérence couleurs (scripts Gemini NON exécutés)", "state": "qualifying" },
+    { "name": "code-reviewer", "verdict": "verified_claude_only", "deliverable": "revue déléguée à Codex isolé (pas au skill)", "state": "quarantined" },
+    { "name": "brand", "verdict": "verified_read_only", "deliverable": "backlog", "state": "candidate" },
+    { "name": "banner-design", "verdict": "verified_read_only", "deliverable": "backlog", "state": "candidate" },
+    { "name": "slides", "verdict": "verified_read_only", "deliverable": "backlog", "state": "candidate" }
+  ],
+  "honesty_note": "Aucun skill n'est 'qualified' par simple présence disque. Les quarantaine sont au mieux 'qualifying' (guidance appliquée une fois) ; leur code n'a pas tourné, provenance non confirmée. Codex: aucun skill untracked routé (protection worktree)."
 }
