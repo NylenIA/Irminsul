@@ -14,7 +14,20 @@ export default function RootLayout({
 }): React.ReactElement {
   return (
     <html lang="fr">
-      <body className="irm-root">{children}</body>
+      <body className="irm-root">
+        <nav
+          aria-label="Navigation principale"
+          style={{
+            display: "flex", gap: 4, padding: "10px clamp(16px, 4vw, 40px)",
+            borderBottom: "1px solid var(--irm-border)", flexWrap: "wrap",
+          }}
+        >
+          <a href="/" className="irm-btn irm-btn--ghost">Tableau de bord</a>
+          <a href="/characters" className="irm-btn irm-btn--ghost">Personnages</a>
+          <a href="/team-lab" className="irm-btn irm-btn--ghost">Laboratoire d&apos;équipes</a>
+        </nav>
+        {children}
+      </body>
     </html>
   );
 }
