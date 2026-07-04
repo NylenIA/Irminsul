@@ -1,0 +1,43 @@
+{
+  "updatedAt": "2026-07-04",
+  "policy": "Un skill est 'verified_allowed' uniquement s'il est TRACÉ dans le dépôt (committé = revu/versionné). Les skills untracked (source/auteur/licence non prouvés) sont en quarantaine : lisibles par Claude comme référence, JAMAIS auto-chargés dans une mission Codex. Mitigation structurelle : les missions Codex tournent dans un worktree d'intégration neuf qui n'hérite PAS des untracked.",
+  "states": ["verified_allowed", "verified_shadow", "quarantined", "missing", "blocked_source_unresolved"],
+  "verified_allowed": {
+    "criterion": "tracé par git (git ls-files) dans .claude/skills/",
+    "scope": "Claude + Codex",
+    "skills": [
+      "deep-research-genshin", "frontend-design", "project-context", "session-handoff",
+      "skill-creator", "webapp-testing",
+      "genshin-abyss", "genshin-account", "genshin-answer-auditor", "genshin-artifacts",
+      "genshin-audit", "genshin-build", "genshin-character", "genshin-consistency-checker",
+      "genshin-data-diff", "genshin-dps", "genshin-fact-checker", "genshin-farm",
+      "genshin-import-good", "genshin-leak-auditor", "genshin-leaks", "genshin-lore",
+      "genshin-meta", "genshin-optimize", "genshin-pulls", "genshin-regression-tester",
+      "genshin-root-cause-analysis", "genshin-rotation", "genshin-source-verifier",
+      "genshin-team", "genshin-update", "genshin-upgrade", "genshin-verify",
+      "genshin-version-checker", "genshin-weapons"
+    ]
+  },
+  "quarantined": {
+    "criterion": "untracked (git status ??) — source/auteur/licence/hash non prouvés ; plusieurs contiennent des scripts Python exécutables auto-chargés par Codex",
+    "scope": "Claude en LECTURE de référence uniquement ; INTERDIT au routage Codex",
+    "reason_incident": "Le skill code-reviewer untracked (.agents/skills/) a détourné une mission Codex read-only (audit core-v1) en suivant ses propres règles au lieu du prompt.",
+    "skills": [
+      { "name": "code-reviewer", "sha256_skillmd": "5cbee60ac1fb0279", "executable_scripts": 6, "locations": [".claude/skills/", ".agents/skills/"] },
+      { "name": "senior-architect", "sha256_skillmd": "0e4ce0661ccff6b3", "executable_scripts": 6, "locations": [".claude/skills/", ".agents/skills/"] },
+      { "name": "senior-backend", "executable_scripts": 8, "locations": [".claude/skills/", ".agents/skills/"] },
+      { "name": "senior-frontend", "executable_scripts": 8, "locations": [".claude/skills/", ".agents/skills/"] },
+      { "name": "senior-qa", "executable_scripts": 6, "locations": [".claude/skills/", ".agents/skills/"] },
+      { "name": "senior-security", "sha256_skillmd": "8d550378e546ea38", "executable_scripts": 4, "locations": [".claude/skills/", ".agents/skills/"] },
+      { "name": "tdd-guide", "sha256_skillmd": "faa63e59f2c8b139", "executable_scripts": 0, "locations": [".claude/skills/"] },
+      { "name": "design", "executable_scripts": 0, "locations": [".claude/skills/"] },
+      { "name": "design-system", "executable_scripts": 0, "locations": [".claude/skills/"] },
+      { "name": "ui-styling", "executable_scripts": 0, "locations": [".claude/skills/"] },
+      { "name": "ui-ux-pro-max", "executable_scripts": 0, "locations": [".claude/skills/"] },
+      { "name": "frontend-design-review", "executable_scripts": 0, "locations": [".claude/skills/"] },
+      { "name": "brand", "executable_scripts": 0, "locations": [".claude/skills/"] },
+      { "name": "banner-design", "executable_scripts": 0, "locations": [".claude/skills/"] },
+      { "name": "slides", "executable_scripts": 0, "locations": [".claude/skills/"] }
+    ]
+  }
+}
