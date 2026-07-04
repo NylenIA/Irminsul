@@ -92,3 +92,37 @@ test.describe("Laboratoire d'équipes", () => {
     expect(serious, JSON.stringify(serious.map((v) => v.id), null, 2)).toEqual([]);
   });
 });
+
+test.describe("Pages essentielles (dashboard, personnages, navigation)", () => {
+  test("dashboard honnête : comptes réels + contrats moteur + navigation", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { name: "Irminsul — Archive astrale" })).toBeVisible();
+    await expect(page.getByText(/contrat direct-hit\//)).toBeVisible();
+    // Navigation vers Personnages.
+    await page.getByRole("navigation").getByRole("link", { name: "Personnages" }).click();
+    await expect(page.getByRole("heading", { name: "Personnages" })).toBeVisible();
+  });
+
+  test("page personnages : scan réel (provenance) OU état vide honnête", async ({ page }) => {
+    await page.goto("/characters");
+    const provenance = page.getByText(/personnages scannés/);
+    const empty = page.getByText("Aucun scan de compte trouvé");
+    await expect(provenance.or(empty)).toBeVisible();
+    // Si scan présent : provenance complète affichée.
+    if (await provenance.isVisible()) {
+      await expect(page.getByText(/source /)).toBeVisible();
+      await expect(page.getByText(/confiance /)).toBeVisible();
+    }
+  });
+
+  test("accessibilité (axe) des nouvelles pages", async ({ page }) => {
+    for (const path of ["/", "/characters"]) {
+      await page.goto(path);
+      const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+      const serious = results.violations.filter(
+        (v) => v.impact === "critical" || v.impact === "serious",
+      );
+      expect(serious, `${path}: ${JSON.stringify(serious.map((v) => v.id))}`).toEqual([]);
+    }
+  });
+});
