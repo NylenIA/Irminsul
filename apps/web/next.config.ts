@@ -9,6 +9,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   reactStrictMode: true,
   // Packages workspace en TS source -> transpilés par Next.
   transpilePackages: ["@irminsul/ui", "@irminsul/data-access"],
