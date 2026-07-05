@@ -240,3 +240,37 @@ test.describe("Comparateur quantitatif (team-compare/1.0)", () => {
     expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
   });
 });
+
+test.describe("Recommandations transparentes (recommendations/1.0)", () => {
+  test("analyse qualité des données : preuves, confiance, provenance ; jamais d'impact chiffré", async ({ page }) => {
+    await page.goto("/recommendations");
+    await expect(page.getByRole("heading", { name: "Recommandations" })).toBeVisible();
+    await page.getByLabel("Objectif").selectOption("data_quality");
+    await page.getByRole("button", { name: "Analyser" }).click();
+
+    const section = page.getByLabel("Recommandations");
+    await expect(section).toBeVisible({ timeout: 15000 });
+    await expect(section.getByText(/contrat recommendations\//)).toBeVisible();
+    await expect(section.getByText(/confiance /).first()).toBeVisible();
+    // Aucun impact chiffré fabriqué : les impacts sont qualitatifs.
+    await expect(section).not.toContainText("DPS +");
+  });
+
+  test("objectif non modélisé → recommandation qualitative honnête", async ({ page }) => {
+    await page.goto("/recommendations");
+    await page.getByLabel("Objectif").selectOption("survivability");
+    await page.getByRole("button", { name: "Analyser" }).click();
+    const section = page.getByLabel("Recommandations");
+    await expect(section.getByText(/qualitative uniquement/)).toBeVisible({ timeout: 15000 });
+  });
+
+  test("accessibilité (axe) de /recommendations", async ({ page }) => {
+    await page.goto("/recommendations");
+    await expect(page.getByRole("heading", { name: "Recommandations" })).toBeVisible();
+    const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+    const serious = results.violations.filter(
+      (v) => v.impact === "critical" || v.impact === "serious",
+    );
+    expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
+  });
+});

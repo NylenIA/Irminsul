@@ -145,6 +145,11 @@
 .irm-badge--gold { color: var(--irm-gold); border-color: color-mix(in oklab, var(--irm-gold) 45%, var(--irm-border-strong)); }
 .irm-badge--warn { color: var(--irm-danger); border-color: color-mix(in oklab, var(--irm-danger) 45%, var(--irm-border-strong)); }
 
+/* Lien inline discret */
+.irm-link { color: var(--irm-cyan); text-decoration: underline; text-underline-offset: 2px; }
+.irm-link:hover { color: var(--irm-text); }
+.irm-link:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; border-radius: 2px; }
+
 /* Table de stats (breakdown personnage) */
 .irm-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .irm-table tr { border-bottom: 1px solid var(--irm-border); }
