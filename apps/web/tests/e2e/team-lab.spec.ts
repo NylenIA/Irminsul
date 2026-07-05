@@ -274,3 +274,52 @@ test.describe("Recommandations transparentes (recommendations/1.0)", () => {
     expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
   });
 });
+
+test.describe("Import / Export (irminsul-export/1.0)", () => {
+  test("aller-retour : export d'une équipe puis réimport avec aperçu transactionnel", async ({ page }) => {
+    // Crée une équipe à exporter.
+    const teamName = `IO ${Date.now()}`;
+    await page.goto("/team-lab");
+    await page.getByPlaceholder("Ex. Sandrone Lunar-Crystallize").fill(teamName);
+    await page.getByLabel("Personnage, emplacement 1").selectOption("Bennett");
+    await page.getByRole("button", { name: "Sauvegarder l'équipe" }).click();
+    await expect(page.getByRole("heading", { name: teamName })).toBeVisible();
+
+    // Export → capture le téléchargement.
+    await page.goto("/import-export");
+    await expect(page.getByRole("heading", { name: "Import / Export" })).toBeVisible();
+    const downloadPromise = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Exporter mes équipes" }).click();
+    const download = await downloadPromise;
+    const path = await download.path();
+    expect(path).toBeTruthy();
+
+    // Réimport du fichier → aperçu (l'équipe existe déjà → "à remplacer").
+    await page.getByLabel("Fichier d'import").setInputFiles(path!);
+    const preview = page.getByLabel("Aperçu de l'import");
+    await expect(preview).toBeVisible({ timeout: 15000 });
+    await expect(preview.getByText(/à remplacer/)).toBeVisible();
+    // Applique l'import (transactionnel).
+    await page.getByRole("button", { name: "Appliquer l'import" }).click();
+    await expect(page.getByText("Import réussi")).toBeVisible({ timeout: 15000 });
+  });
+
+  test("import d'un JSON invalide → erreur actionnable, aucune écriture", async ({ page }) => {
+    await page.goto("/import-export");
+    // Injecte un fichier invalide via un DataTransfer simulé.
+    await page.getByLabel("Fichier d'import").setInputFiles({
+      name: "bad.json", mimeType: "application/json", buffer: Buffer.from("{ pas du json"),
+    });
+    await expect(page.getByText("Import impossible")).toBeVisible({ timeout: 15000 });
+  });
+
+  test("accessibilité (axe) de /import-export", async ({ page }) => {
+    await page.goto("/import-export");
+    await expect(page.getByRole("heading", { name: "Import / Export" })).toBeVisible();
+    const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+    const serious = results.violations.filter(
+      (v) => v.impact === "critical" || v.impact === "serious",
+    );
+    expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
+  });
+});
