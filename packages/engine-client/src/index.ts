@@ -52,5 +52,13 @@ export {
   type RotationActionResult,
   type RotationResult,
 } from "./rotation";
+export {
+  TEAM_COMPARE_CONTRACT_VERSION,
+  compareTeamPerformance,
+  type EnemyTarget,
+  type TeamComparisonResult,
+  type TeamMetricDifference,
+  type TeamPerformanceSummary,
+} from "./team-compare";
 // NOTE : le sidecar (node:child_process) n'est PAS ré-exporté ici — le barrel doit rester
 // importable côté client. Serveur : import depuis "@irminsul/engine-client/sidecar".
