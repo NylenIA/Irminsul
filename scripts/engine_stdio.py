@@ -22,6 +22,43 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 from irminsul.damage import calculate_direct_hit  # noqa: E402
 from irminsul.reaction import amplifying_multiplier, transformative_reaction  # noqa: E402
 
+# Version du contrat API du sidecar (incrémentée si le protocole change).
+SIDECAR_API_VERSION = "engine-stdio/1.0"
+
+
+def _engine_provenance(_params: dict[str, Any]) -> dict[str, Any]:
+    """Provenance du moteur, lisible par l'app (section diagnostic) — jamais de chemin local.
+
+    Permet à l'UI de vérifier la PARITÉ : quel moteur/contrats répond réellement, plutôt que de
+    supposer qu'un binaire au nom plausible correspond au code testé.
+    """
+    root = pathlib.Path(__file__).resolve().parents[1]
+    git_commit = None
+    try:  # commit source si le .git est présent (dev) — absent en binaire empaqueté, c'est OK.
+        head = (root / ".git" / "HEAD").read_text(encoding="utf-8").strip()
+        if head.startswith("ref:"):
+            ref = head.split(" ", 1)[1].strip()
+            git_commit = (root / ".git" / ref).read_text(encoding="utf-8").strip()[:12]
+        else:
+            git_commit = head[:12]
+    except Exception:  # noqa: BLE001
+        git_commit = None
+    frozen = getattr(sys, "frozen", False)  # True si exécuté depuis un binaire PyInstaller
+    return {
+        "engine": "python-sidecar",
+        "api_version": SIDECAR_API_VERSION,
+        "methods": sorted(METHODS.keys()),
+        "contracts": {
+            "direct_hit": "direct-hit@irminsul-damage",
+            "reactions": "reactions/1.0",
+            "final_stats": "final-stats/1.0",
+            "rotation": "rotation/1.0",
+        },
+        "git_commit": git_commit,
+        "frozen_binary": bool(frozen),
+        "python": sys.version.split()[0],
+    }
+
 
 def _character_final_stats(params: dict[str, Any]) -> dict[str, Any]:
     """Stats finales d'un personnage du scan (moteur charstats, défensif, zéro invention)."""
@@ -53,6 +90,7 @@ METHODS = {
     "transformative_reaction": lambda p: transformative_reaction(**p).to_dict(),
     "character_final_stats": _character_final_stats,
     "calculate_rotation": _calculate_rotation,
+    "engine_provenance": _engine_provenance,
 }
 
 MAX_INPUT = 64 * 1024
