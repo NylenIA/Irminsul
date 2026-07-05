@@ -60,5 +60,15 @@ export {
   type TeamMetricDifference,
   type TeamPerformanceSummary,
 } from "./team-compare";
+export {
+  RECOMMENDATIONS_CONTRACT_VERSION,
+  buildRecommendations,
+  type RecommendationItem,
+  type RecommendationObjective,
+  type RecommendationRequest,
+  type RecommendationResult,
+  type RecommendationType,
+  type TeamForReco,
+} from "./recommendations";
 // NOTE : le sidecar (node:child_process) n'est PAS ré-exporté ici — le barrel doit rester
 // importable côté client. Serveur : import depuis "@irminsul/engine-client/sidecar".
