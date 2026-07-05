@@ -66,6 +66,35 @@ describe("buildRecommendations (recommendations/1.0 — explicable, données ré
     expect(partial.confidence).toBe("medium"); // 1/2 complet
   });
 
+  it("exclusions appliquées à TOUTES les branches (audit Codex Medium #1)", () => {
+    const builds = [build("Keep"), build("Excl")];
+    const teams = [{ id: "t", name: "T", members: ["Keep", "Excl"] }];
+    // highest_complete_dps : le membre exclu ne doit pas compter comme complet.
+    const dps = buildRecommendations(
+      { objective: "highest_complete_dps", availableCharacterIds: ["Keep", "Excl"], constraints: { excludedCharacterIds: ["Excl"] } },
+      builds, teams, PROV,
+    );
+    expect(dps.recommendations[0]!.title).toMatch(/1\/2/); // seul Keep compte
+    // improve_current_team : le membre exclu n'est pas un goulot améliorable, il est signalé.
+    const imp = buildRecommendations(
+      { objective: "improve_current_team", availableCharacterIds: ["Keep", "Excl"], currentTeamId: "t", constraints: { excludedCharacterIds: ["Excl"] } },
+      builds, teams, PROV,
+    );
+    expect(imp.recommendations.some((r) => r.title.includes("Excl"))).toBe(false);
+    expect(imp.missingData.join(" ")).toMatch(/Excl.*exclu ou absent/);
+  });
+
+  it("membre non possédé dans l'équipe → signalé, jamais goulot améliorable", () => {
+    const builds = [build("Owned")];
+    const teams = [{ id: "t", name: "T", members: ["Owned", "NotOwned"] }];
+    const r = buildRecommendations(
+      { objective: "improve_current_team", availableCharacterIds: ["Owned"], currentTeamId: "t" },
+      builds, teams, PROV,
+    );
+    expect(r.recommendations.some((x) => x.title.includes("NotOwned"))).toBe(false);
+    expect(r.missingData.join(" ")).toMatch(/NotOwned/);
+  });
+
   it("objectif non modélisé → recommandation qualitative + missingData (jamais de faux chiffre)", () => {
     const r = buildRecommendations(
       { objective: "survivability", availableCharacterIds: ["A"] },

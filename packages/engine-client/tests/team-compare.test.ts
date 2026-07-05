@@ -38,6 +38,19 @@ describe("compareTeamPerformance (team-compare/1.0 — jamais de verdict sur don
     expect(c.differences.find((d) => d.metric === "DPS moyen")!.computable).toBe(false);
   });
 
+  it("rotation incomplète à valeurs finies → AUCUN winner de métrique (audit Codex Low)", () => {
+    // Une rotation incomplète mais avec des valeurs finies ne doit produire aucun gagnant.
+    const left = rot({ complete: true, averageDamagePerSecond: 12000 });
+    const right = rot({ complete: false, averageDamagePerSecond: 5000, totalDamage: 50000 });
+    const c = compareTeamPerformance("A", left, "B", right, target);
+    expect(c.complete).toBe(false);
+    for (const d of c.differences) {
+      expect(d.computable).toBe(false);
+      expect(d.winner).toBeNull();
+      expect(d.relativePct).toBeNull();
+    }
+  });
+
   it("DPS égal → verdict d'équivalence (pas de faux gagnant)", () => {
     const c = compareTeamPerformance("A", rot(), "B", rot(), target);
     expect(c.verdict).toMatch(/équivalent/);

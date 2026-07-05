@@ -47,16 +47,29 @@ export async function compareTeamsQuantitativeAction(
   right: CompareSideInput,
   target: EnemyTarget,
 ): Promise<QuantitativeCompareResult> {
+  // Audit Codex Medium : valider les entrées AVANT le repository (erreur typée, pas de throw/500).
+  if (!left.teamId?.trim() || !right.teamId?.trim()) {
+    return { ok: false, kind: "validation_error", issues: ["Deux équipes valides sont requises."] };
+  }
   if (left.teamId === right.teamId) {
     return { ok: false, kind: "validation_error", issues: ["Choisis deux équipes différentes."] };
   }
-  // Cible bornée (défense en profondeur — même bornes que le moteur).
+  // Cible bornée (défense en profondeur — même bornes que le moteur). `count` ≥ 1 (mono-cible v1).
   if (!(target.level >= 1 && target.level <= 200) || !(target.resistance >= -1 && target.resistance <= 3)) {
     return { ok: false, kind: "validation_error", issues: ["Cible invalide (niveau 1..200, résistance -1..3)."] };
   }
+  if (!(Number.isFinite(target.count) && target.count >= 1 && target.count <= 20)) {
+    return { ok: false, kind: "validation_error", issues: ["Nombre de cibles invalide (1..20)."] };
+  }
 
   const repo = getTeamRepository();
-  const [tA, tB] = await Promise.all([repo.getById(left.teamId), repo.getById(right.teamId)]);
+  let tA, tB;
+  try {
+    [tA, tB] = await Promise.all([repo.getById(left.teamId), repo.getById(right.teamId)]);
+  } catch {
+    // TeamRepositoryValidationError (id malformé) → erreur typée, jamais un 500 non géré.
+    return { ok: false, kind: "validation_error", issues: ["Identifiant d'équipe invalide."] };
+  }
   if (!tA || !tB) return { ok: false, kind: "engine_error", message: "Équipe introuvable." };
 
   const membersA = tA.members.slice().sort((a, b) => a.slot - b.slot).map((m) => m.character);

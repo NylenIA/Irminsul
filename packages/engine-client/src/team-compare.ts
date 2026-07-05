@@ -97,11 +97,18 @@ export function compareTeamPerformance(
   const r = summary(rightName, right);
 
   const bothComplete = l.complete && r.complete;
-  const differences: TeamMetricDifference[] = [
-    diff("DPS moyen", l.averageDamagePerSecond, r.averageDamagePerSecond),
-    diff("Dégâts totaux", l.totalDamage, r.totalDamage),
-    diff("Durée (s)", l.duration, r.duration, false),
+  // Audit Codex Low : ne JAMAIS produire un gagnant de métrique si une rotation est incomplète,
+  // même si ses valeurs sont finies. Le contrat exporté est ainsi aussi strict que le verdict.
+  const metrics: [string, number | null, number | null, boolean][] = [
+    ["DPS moyen", l.averageDamagePerSecond, r.averageDamagePerSecond, true],
+    ["Dégâts totaux", l.totalDamage, r.totalDamage, true],
+    ["Durée (s)", l.duration, r.duration, false],
   ];
+  const differences: TeamMetricDifference[] = metrics.map(([metric, left, right, higher]) =>
+    bothComplete
+      ? diff(metric, left, right, higher)
+      : { metric, left, right, absolute: null, relativePct: null, computable: false, winner: null },
+  );
 
   let verdict: string;
   let confidence: "high" | "medium" | "low";

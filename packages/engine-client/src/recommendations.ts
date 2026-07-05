@@ -99,6 +99,9 @@ export function buildRecommendations(
 
   // 1) Éliminer l'invalide : ne recommander que des personnages POSSÉDÉS et non exclus.
   const candidates = ownedBuilds.filter((b) => !excluded.has(b.characterId));
+  // Ensemble autorisé, appliqué à TOUTES les branches (audit Codex Medium #1) : un personnage
+  // exclu ou non possédé ne doit JAMAIS ressortir en recommandation ni en goulot d'étranglement.
+  const allowed = new Set(candidates.map((b) => b.characterId));
 
   const recommendations: RecommendationItem[] = [];
   const missingData: string[] = [];
@@ -150,11 +153,16 @@ export function buildRecommendations(
     if (!team) {
       missingData.push("Équipe actuelle introuvable.");
     } else {
-      // Identifier le membre le plus limitant (build le plus incomplet) — goulot d'étranglement.
-      const scored = team.members.map((name) => {
-        const b = owned.get(name);
-        return { name, owned: !!b, gaps: b ? buildGaps(b) : ["personnage non trouvé dans le scan"] };
-      });
+      // Membres non évaluables (exclus ou absents du scan) → signalés, jamais présentés comme
+      // un « goulot améliorable » (on ne peut pas améliorer un perso non possédé/exclu).
+      const notAvailable = team.members.filter((m) => !allowed.has(m));
+      for (const m of notAvailable) {
+        missingData.push(`Membre « ${m} » exclu ou absent du scan — non évaluable pour l'amélioration.`);
+      }
+      // Identifier le membre AUTORISÉ le plus limitant (build le plus incomplet).
+      const scored = team.members
+        .filter((m) => allowed.has(m))
+        .map((name) => ({ name, gaps: buildGaps(owned.get(name)!) }));
       const bottleneck = scored.filter((s) => s.gaps.length > 0).sort((a, b) => b.gaps.length - a.gaps.length)[0];
       if (bottleneck) {
         recommendations.unshift({
@@ -164,10 +172,10 @@ export function buildRecommendations(
           evidence: [`Manque : ${bottleneck.gaps.join(", ")}`],
           tradeoffs: ["Prioriser ce personnage peut retarder d'autres améliorations."],
           expectedImpact: "améliore la fiabilité du calcul",
-          confidence: bottleneck.owned ? "high" : "medium",
+          confidence: "high",
           requiredData: bottleneck.gaps,
         });
-      } else {
+      } else if (scored.length > 0) {
         recommendations.unshift({
           type: "rotation",
           title: `« ${team.name} » : builds complets`,
@@ -186,7 +194,8 @@ export function buildRecommendations(
     // Équipes dont TOUS les membres ont un build complet → candidates à un DPS fiable.
     const ranked = teams
       .map((t) => {
-        const complete = t.members.filter((m) => owned.has(m) && buildGaps(owned.get(m)!).length === 0).length;
+        // Audit Codex Medium #1 : seuls les membres AUTORISÉS (possédés, non exclus) comptent.
+        const complete = t.members.filter((m) => allowed.has(m) && buildGaps(owned.get(m)!).length === 0).length;
         return { t, complete, total: t.members.length };
       })
       .filter((x) => x.total > 0)
