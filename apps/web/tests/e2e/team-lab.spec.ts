@@ -199,10 +199,10 @@ test.describe("Rotations — moteur chiffré (jamais de faux DPS)", () => {
   });
 });
 
-test.describe("Comparateur d'équipes (structurel honnête)", () => {
-  test("compare deux équipes ; dégâts marqués « à venir » (jamais estimés)", async ({ page }) => {
-    // Deux équipes distinctes.
-    for (const [name, char] of [["Compare A", "Bennett"], ["Compare B", "Nahida"]] as const) {
+test.describe("Comparateur quantitatif (team-compare/1.0)", () => {
+  test("compare deux équipes sur deux rotations + cible commune ; verdict sourcé", async ({ page }) => {
+    // Deux équipes distinctes (Mavuika a une ATQ finale complète → rotation complète possible).
+    for (const [name, char] of [["Cmp A", "Mavuika"], ["Cmp B", "Bennett"]] as const) {
       await page.goto("/team-lab");
       await page.getByPlaceholder("Ex. Sandrone Lunar-Crystallize").fill(`${name} ${Date.now()}`);
       await page.getByLabel("Personnage, emplacement 1").selectOption(char);
@@ -213,15 +213,21 @@ test.describe("Comparateur d'équipes (structurel honnête)", () => {
     await page.goto("/team-compare");
     await expect(page.getByRole("heading", { name: "Comparateur d'équipes" })).toBeVisible();
     const empty = page.getByText("Il faut au moins deux équipes");
-    if (await empty.isVisible().catch(() => false)) return; // pas assez d'équipes dans cette db isolée
-    await page.getByRole("button", { name: "Comparer" }).click();
+    if (await empty.isVisible().catch(() => false)) return;
+
+    // Ajoute une action à chaque côté puis compare.
+    const addButtons = page.getByRole("button", { name: "+ Action" });
+    await addButtons.nth(0).click();
+    await addButtons.nth(1).click();
+    await page.getByRole("button", { name: "Comparer quantitativement" }).click();
 
     const result = page.getByLabel("Résultat de la comparaison");
-    await expect(result).toBeVisible({ timeout: 10000 });
+    await expect(result).toBeVisible({ timeout: 15000 });
     await expect(result.getByText(/contrat team-compare\//)).toBeVisible();
-    // La dimension dégâts doit être marquée « à venir », jamais un chiffre.
-    await expect(result.getByText("Dégâts totaux / DPS")).toBeVisible();
-    await expect(result.getByText("à venir", { exact: true }).first()).toBeVisible();
+    // Jamais de NaN/Infinity ; un verdict (complet) ou message d'insuffisance (honnête).
+    await expect(result).not.toContainText("NaN");
+    await expect(result).not.toContainText("Infinity");
+    await expect(result.getByText(/DPS moyen/).first()).toBeVisible();
   });
 
   test("accessibilité (axe) de /team-compare", async ({ page }) => {

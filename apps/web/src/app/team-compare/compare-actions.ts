@@ -1,82 +1,82 @@
 "use server";
 
-import { getTeamRepository } from "@irminsul/data-access";
-import { loadAccountSummary } from "@/server/account";
+import path from "node:path";
 import {
-  TEAM_COMPARE_CONTRACT_VERSION,
-  type CompareResult,
-  type MemberComparison,
-  type TeamComparison,
-  type TeamComparisonSide,
-} from "./compare-types";
+  compareTeamPerformance,
+  normalizeRotation,
+  validateRotation,
+  type EnemyTarget,
+  type RotationAction,
+  type TeamComparisonResult,
+} from "@irminsul/engine-client";
+import { runSidecar, SidecarError } from "@irminsul/engine-client/sidecar";
+import { getTeamRepository } from "@irminsul/data-access";
+
+export interface CompareSideInput {
+  teamId: string;
+  actions: RotationAction[];
+}
+
+export type QuantitativeCompareResult =
+  | { ok: true; comparison: TeamComparisonResult }
+  | { ok: false; kind: "validation_error"; issues: string[] }
+  | { ok: false; kind: "engine_error"; message: string };
+
+const SIDECAR = {
+  pythonPath:
+    process.env["IRMINSUL_PYTHON"] ??
+    path.join(process.cwd(), "..", "..", ".venv", "Scripts", "python.exe"),
+  scriptPath: path.join(process.cwd(), "..", "..", "scripts", "engine_stdio.py"),
+  timeoutMs: 15000,
+};
+
+async function runOneRotation(team: string[], actions: RotationAction[], target: EnemyTarget) {
+  const raw = await runSidecar(SIDECAR, {
+    method: "calculate_rotation",
+    params: { team, actions, enemy: { level: target.level, resistance: target.resistance } },
+  });
+  return normalizeRotation(raw as Parameters<typeof normalizeRotation>[0]);
+}
 
 /**
- * Comparaison d'équipes — squelette HONNÊTE (contrat stable pour les recommandations à venir).
- * Compare uniquement ce qui est calculable SANS simulation : composition, éléments, et complétude
- * des données du compte. La comparaison de dégâts/DPS est explicitement marquée « nécessite une
- * rotation définie » — jamais un chiffre inventé.
+ * Comparaison QUANTITATIVE : deux équipes, deux rotations définies, la MÊME cible.
+ * Verdict de DPS uniquement si les deux rotations sont complètes (géré par compareTeamPerformance).
  */
-export async function compareTeamsAction(teamAId: string, teamBId: string): Promise<CompareResult> {
-  if (!teamAId || !teamBId) return { ok: false, message: "Deux équipes sont requises." };
-  if (teamAId === teamBId) return { ok: false, message: "Choisis deux équipes différentes." };
+export async function compareTeamsQuantitativeAction(
+  left: CompareSideInput,
+  right: CompareSideInput,
+  target: EnemyTarget,
+): Promise<QuantitativeCompareResult> {
+  if (left.teamId === right.teamId) {
+    return { ok: false, kind: "validation_error", issues: ["Choisis deux équipes différentes."] };
+  }
+  // Cible bornée (défense en profondeur — même bornes que le moteur).
+  if (!(target.level >= 1 && target.level <= 200) || !(target.resistance >= -1 && target.resistance <= 3)) {
+    return { ok: false, kind: "validation_error", issues: ["Cible invalide (niveau 1..200, résistance -1..3)."] };
+  }
 
   const repo = getTeamRepository();
-  const [a, b] = await Promise.all([repo.getById(teamAId), repo.getById(teamBId)]);
-  if (!a || !b) return { ok: false, message: "Équipe introuvable." };
+  const [tA, tB] = await Promise.all([repo.getById(left.teamId), repo.getById(right.teamId)]);
+  if (!tA || !tB) return { ok: false, kind: "engine_error", message: "Équipe introuvable." };
 
-  const account = await loadAccountSummary();
-  const scanByName = new Map(
-    (account?.characters ?? []).map((c) => [c.characterId, c] as const),
-  );
+  const membersA = tA.members.slice().sort((a, b) => a.slot - b.slot).map((m) => m.character);
+  const membersB = tB.members.slice().sort((a, b) => a.slot - b.slot).map((m) => m.character);
 
-  const side = (team: NonNullable<typeof a>): TeamComparisonSide => {
-    const members: MemberComparison[] = team.members
-      .slice()
-      .sort((m1, m2) => m1.slot - m2.slot)
-      .map((m) => {
-        const build = scanByName.get(m.character);
-        return {
-          character: m.character,
-          inScan: !!build,
-          level: build?.level,
-          hasWeapon: !!build?.weapon,
-          artifactPieces: build?.artifactSlots?.length ?? 0,
-        };
-      });
-    const inScan = members.filter((m) => m.inScan).length;
-    const completeness: TeamComparisonSide["dataCompleteness"] =
-      inScan === 0 ? "none" : inScan === members.length ? "complete" : "partial";
-    return { id: team.id, name: team.name, members, membersInScan: inScan, dataCompleteness: completeness };
-  };
-
-  const sideA = side(a);
-  const sideB = side(b);
-
-  const dimensions: TeamComparison["dimensions"] = [
-    { label: "Nombre de membres", a: String(sideA.members.length), b: String(sideB.members.length), computable: true },
-    { label: "Membres dans le scan", a: `${sideA.membersInScan}/${sideA.members.length}`, b: `${sideB.membersInScan}/${sideB.members.length}`, computable: true },
-    { label: "Complétude des données", a: sideA.dataCompleteness, b: sideB.dataCompleteness, computable: true },
-    {
-      label: "Dégâts totaux / DPS", a: "—", b: "—", computable: false,
-      note: "Nécessite une rotation définie pour chaque équipe (moteur rotation/1.0). Non calculé — jamais estimé.",
-    },
+  const issues = [
+    ...validateRotation(membersA, left.actions).map((s) => `A: ${s}`),
+    ...validateRotation(membersB, right.actions).map((s) => `B: ${s}`),
   ];
+  if (issues.length > 0) return { ok: false, kind: "validation_error", issues };
 
-  return {
-    ok: true,
-    comparison: {
-      contractVersion: TEAM_COMPARE_CONTRACT_VERSION,
-      a: sideA,
-      b: sideB,
-      dimensions,
-      assumptions: [
-        "Comparaison structurelle uniquement (composition + complétude du compte).",
-        "La comparaison de dégâts exige une rotation par équipe — à venir (contrat rotation/1.0 déjà disponible).",
-      ],
-      warnings: [
-        ...(sideA.dataCompleteness !== "complete" ? [`${sideA.name} : données de compte partielles.`] : []),
-        ...(sideB.dataCompleteness !== "complete" ? [`${sideB.name} : données de compte partielles.`] : []),
-      ],
-    },
-  };
+  try {
+    const [rotA, rotB] = await Promise.all([
+      runOneRotation(membersA, left.actions, target),
+      runOneRotation(membersB, right.actions, target),
+    ]);
+    const comparison = compareTeamPerformance(tA.name, rotA, tB.name, rotB, target);
+    return { ok: true, comparison };
+  } catch (error) {
+    const message = error instanceof SidecarError ? error.message : "Erreur moteur inconnue.";
+    return { ok: false, kind: "engine_error", message };
+  }
 }
