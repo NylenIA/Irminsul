@@ -57,6 +57,60 @@ describe("buildExport / validateImport (irminsul-export/1.0 — aller-retour, in
   });
 });
 
+describe("régression audit io (2 Medium + 1 Low)", () => {
+  it("M1 : JSON trop profond rejeté AVANT parse (pas de stack overflow)", () => {
+    const deep = "[".repeat(60) + "]".repeat(60);
+    expect(validateImport(deep)).toMatchObject({ ok: false, kind: "invalid_schema" });
+  });
+
+  it("M1 : trop d'équipes (> 500) rejeté proprement", () => {
+    const teams = Array.from({ length: 501 }, (_, i) => team(`T${i}`));
+    const file = buildExport(teams.slice(0, 1), "1.0.0");
+    const big = { ...file, data: { teams } };
+    expect(validateImport(JSON.stringify(big))).toMatchObject({ ok: false, kind: "invalid_schema" });
+  });
+
+  it("M1 : champs inconnus purgés + noms trimés (checksum sur copie sanitizée)", () => {
+    const dirty = {
+      formatVersion: EXPORT_FORMAT_VERSION,
+      appVersion: "1.0.0",
+      exportedAt: "2026-07-06T00:00:00Z",
+      data: {
+        teams: [{
+          name: "  Trim  ",
+          members: [{ character: " Bennett ", role: null, slot: 1, extra: { deep: { junk: 1 } } }],
+          unknownField: "x".repeat(100),
+        }],
+      },
+      checksum: checksumOf({ teams: [{ name: "Trim", members: [{ character: "Bennett", role: null, slot: 1 }] }] }),
+    };
+    const res = validateImport(JSON.stringify(dirty));
+    expect(res.ok).toBe(true);
+    if (!res.ok) return;
+    const t = res.file.data.teams[0]!;
+    expect(t.name).toBe("Trim"); // trimé
+    expect(Object.keys(t)).toEqual(["name", "members"]); // clés whitelistées uniquement
+    expect(Object.keys(t.members[0]!)).toEqual(["character", "role", "slot"]);
+  });
+
+  it("M2 : checksum ABSENT → rejeté (requis pour 1.0, plus de contournement par omission)", () => {
+    const file = buildExport([team("X")], "1.0.0");
+    const { checksum: _drop, ...noChecksum } = file;
+    expect(validateImport(JSON.stringify(noChecksum))).toMatchObject({ ok: false, kind: "invalid_schema" });
+    expect(validateImport(JSON.stringify({ ...file, checksum: "zzzz" }))).toMatchObject({ ok: false, kind: "invalid_schema" });
+  });
+
+  it("L3 : doublon interne — la DERNIÈRE occurrence gagne (aligné sur importTeams)", () => {
+    const file = buildExport([team("Dup"), team("Solo")], "1.0.0");
+    file.data.teams.push(team("Dup")); // doublon en fin
+    const plan = planImport(file, []);
+    // La première occurrence est marquée conflit ; la dernière est créée.
+    const dupEntries = plan.entries.filter((e) => e.name === "Dup");
+    expect(dupEntries[0]!.status).toBe("conflict");
+    expect(dupEntries[1]!.status).toBe("created");
+  });
+});
+
 describe("planImport (aperçu déterministe avant écriture)", () => {
   it("classe created / updated / conflict (doublon interne)", () => {
     const file = buildExport([team("New"), team("Existing")], "1.0.0");

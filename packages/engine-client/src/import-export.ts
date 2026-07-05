@@ -6,6 +6,29 @@
 export const EXPORT_FORMAT_VERSION = "irminsul-export/1.0";
 const SUPPORTED_VERSIONS = new Set(["irminsul-export/1.0"]);
 export const MAX_IMPORT_BYTES = 2 * 1024 * 1024; // 2 Mo : borne anti-DoS
+// Bornes STRUCTURELLES (audit Codex M1) : un fichier < 2 Mo mais profond/large ne doit pas
+// saturer CPU/stack. Alignées sur le repository (importTeams ≤ 500, équipe 1..4 membres).
+export const MAX_TEAMS_PER_FILE = 500;
+const MAX_MEMBERS_PER_TEAM = 4;
+const MAX_NAME_LENGTH = 200;
+const MAX_JSON_DEPTH = 30;
+
+/** Scan linéaire de profondeur AVANT JSON.parse (pas de stack overflow sur JSON profond). */
+function jsonDepthExceeds(raw: string, limit: number): boolean {
+  let depth = 0;
+  let inStr = false;
+  let esc = false;
+  for (let i = 0; i < raw.length; i++) {
+    const ch = raw[i];
+    if (esc) { esc = false; continue; }
+    if (ch === "\\") { if (inStr) esc = true; continue; }
+    if (ch === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (ch === "{" || ch === "[") { depth++; if (depth > limit) return true; }
+    else if (ch === "}" || ch === "]") depth--;
+  }
+  return false;
+}
 
 export interface ExportableTeam {
   name: string;
@@ -73,19 +96,43 @@ function isExportableTeam(t: unknown): t is ExportableTeam {
   if (!t || typeof t !== "object") return false;
   const o = t as Record<string, unknown>;
   if (typeof o["name"] !== "string" || !Array.isArray(o["members"])) return false;
+  // Bornes structurelles (audit M1) : nom borné, 1..4 membres.
+  if (o["name"].trim().length === 0 || o["name"].length > MAX_NAME_LENGTH) return false;
+  if (o["members"].length < 1 || o["members"].length > MAX_MEMBERS_PER_TEAM) return false;
   return o["members"].every((m) => {
     if (!m || typeof m !== "object") return false;
     const mm = m as Record<string, unknown>;
     return typeof mm["character"] === "string"
+      && mm["character"].length > 0 && mm["character"].length <= MAX_NAME_LENGTH
       && (mm["role"] === null || typeof mm["role"] === "string")
       && typeof mm["slot"] === "number" && Number.isInteger(mm["slot"]);
   });
 }
 
-/** Valide un texte importé : taille, JSON, schéma, version (migration si possible), checksum. */
+/**
+ * Sanitization stricte (audit M1) : ne conserve QUE les clés whitelistées, noms trimés.
+ * Tout champ inconnu est purgé — le checksum est ensuite vérifié sur la copie sanitizée
+ * (un fichier « enrichi » de champs inconnus ⇒ checksum différent ⇒ rejet).
+ */
+function sanitizeTeams(teams: ExportableTeam[]): ExportableTeam[] {
+  return teams.map((t) => ({
+    name: t.name.trim(),
+    members: t.members.map((m) => ({
+      character: m.character.trim(),
+      role: typeof m.role === "string" ? m.role : null,
+      slot: m.slot,
+    })),
+  }));
+}
+
+/** Valide un texte importé : taille, profondeur, JSON, schéma strict, version, checksum REQUIS. */
 export function validateImport(raw: string): ImportValidation {
   if (raw.length > MAX_IMPORT_BYTES) {
     return { ok: false, kind: "too_large", issues: [`Fichier trop volumineux (> ${MAX_IMPORT_BYTES} octets).`] };
+  }
+  // Audit M1 : profondeur bornée AVANT parse (linéaire, pas de récursion).
+  if (jsonDepthExceeds(raw, MAX_JSON_DEPTH)) {
+    return { ok: false, kind: "invalid_schema", issues: [`Structure trop profonde (> ${MAX_JSON_DEPTH} niveaux).`] };
   }
   let parsed: unknown;
   try {
@@ -119,21 +166,37 @@ export function validateImport(raw: string): ImportValidation {
     return { ok: false, kind: "invalid_schema", issues: ["`data.teams` manquant ou invalide."] };
   }
   const teams = (data as { teams: unknown[] }).teams;
+  if (teams.length > MAX_TEAMS_PER_FILE) {
+    return { ok: false, kind: "invalid_schema", issues: [`Trop d'équipes (> ${MAX_TEAMS_PER_FILE}).`] };
+  }
   if (!teams.every(isExportableTeam)) {
     return { ok: false, kind: "invalid_schema", issues: ["Une ou plusieurs équipes ont un format invalide."] };
+  }
+
+  // Audit M2 : le checksum est REQUIS pour 1.0 (format exact 8 hex) — un fichier sans checksum
+  // est refusé (plus de contournement par omission). NOTE de périmètre : FNV-1a = détection de
+  // corruption, PAS un anti-tamper cryptographique (le fichier est une donnée locale de
+  // l'utilisateur, revalidée structurellement à l'import ; aucun secret, aucune frontière de
+  // confiance traversée). Documenté dans IMPORT_EXPORT contract.
+  const rawChecksum = normalized["checksum"];
+  if (typeof rawChecksum !== "string" || !/^[0-9a-f]{8}$/.test(rawChecksum)) {
+    return { ok: false, kind: "invalid_schema", issues: ["Checksum manquant ou au format invalide (requis pour irminsul-export/1.0)."] };
+  }
+
+  // Audit M1 : sanitization stricte AVANT checksum — le parcours du checksum ne voit que la
+  // structure whitelistée bornée (jamais l'objet brut).
+  const sanitized = { teams: sanitizeTeams(teams as ExportableTeam[]) };
+  if (rawChecksum !== checksumOf(sanitized)) {
+    return { ok: false, kind: "checksum_mismatch", issues: ["Checksum invalide : fichier corrompu ou modifié."] };
   }
 
   const file: ExportFile = {
     formatVersion: EXPORT_FORMAT_VERSION,
     appVersion: typeof normalized["appVersion"] === "string" ? (normalized["appVersion"] as string) : "inconnue",
     exportedAt: typeof normalized["exportedAt"] === "string" ? (normalized["exportedAt"] as string) : new Date(0).toISOString(),
-    data: { teams: teams as ExportableTeam[] },
-    checksum: typeof normalized["checksum"] === "string" ? (normalized["checksum"] as string) : "",
+    data: sanitized,
+    checksum: rawChecksum,
   };
-  // Vérif checksum si présent (fichiers 1.0 en ont un). Un mismatch = corruption → refus.
-  if (file.checksum && file.checksum !== checksumOf(file.data)) {
-    return { ok: false, kind: "checksum_mismatch", issues: ["Checksum invalide : fichier corrompu ou modifié."] };
-  }
   return { ok: true, file, migrated };
 }
 
@@ -158,23 +221,28 @@ export interface ImportPlan {
   total: number;
 }
 
-/** Aperçu déterministe AVANT écriture : que fera l'import face aux équipes existantes ? */
+/**
+ * Aperçu déterministe AVANT écriture — MÊME politique que la persistance (audit L3) :
+ * noms trimés (déjà sanitizés) et en cas de doublon interne, la DERNIÈRE occurrence gagne
+ * (identique au `Map` de `importTeams`). L'aperçu et le résultat écrit coïncident toujours.
+ */
 export function planImport(file: ExportFile, existingTeamNames: string[]): ImportPlan {
-  const existing = new Set(existingTeamNames);
-  const seen = new Set<string>();
+  const existing = new Set(existingTeamNames.map((n) => n.trim()));
+  const teams = file.data.teams;
+  const lastIndexByName = new Map<string, number>();
+  teams.forEach((t, i) => lastIndexByName.set(t.name, i));
   const entries: ImportPlanEntry[] = [];
-  for (const t of file.data.teams) {
-    if (seen.has(t.name)) {
-      entries.push({ name: t.name, status: "conflict", detail: "Doublon dans le fichier d'import (ignoré)." });
-      continue;
+  teams.forEach((t, i) => {
+    if (lastIndexByName.get(t.name) !== i) {
+      entries.push({ name: t.name, status: "conflict", detail: "Doublon dans le fichier — la dernière occurrence sera utilisée (celle-ci est ignorée)." });
+      return;
     }
-    seen.add(t.name);
     if (existing.has(t.name)) {
       entries.push({ name: t.name, status: "updated", detail: "Une équipe du même nom existe — sera remplacée (sauvegarde conservée)." });
     } else {
       entries.push({ name: t.name, status: "created", detail: "Nouvelle équipe." });
     }
-  }
+  });
   return {
     entries,
     created: entries.filter((e) => e.status === "created").length,
