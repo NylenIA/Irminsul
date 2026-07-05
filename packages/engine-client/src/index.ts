@@ -70,5 +70,17 @@ export {
   type RecommendationType,
   type TeamForReco,
 } from "./recommendations";
+export {
+  EXPORT_FORMAT_VERSION,
+  MAX_IMPORT_BYTES,
+  buildExport,
+  checksumOf,
+  planImport,
+  validateImport,
+  type ExportFile,
+  type ExportableTeam,
+  type ImportPlan,
+  type ImportValidation,
+} from "./import-export";
 // NOTE : le sidecar (node:child_process) n'est PAS ré-exporté ici — le barrel doit rester
 // importable côté client. Serveur : import depuis "@irminsul/engine-client/sidecar".

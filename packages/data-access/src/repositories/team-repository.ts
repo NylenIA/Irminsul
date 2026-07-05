@@ -23,6 +23,11 @@ export interface SavedTeamDTO {
   members: { character: string; role: string | null; slot: number }[];
 }
 
+export interface ImportTeamsResult {
+  created: number;
+  updated: number;
+}
+
 export interface TeamRepository {
   save(input: SaveTeamInput): Promise<SavedTeamDTO>;
   list(): Promise<SavedTeamDTO[]>;
@@ -30,6 +35,8 @@ export interface TeamRepository {
   rename(id: string, name: string): Promise<SavedTeamDTO>;
   duplicate(id: string): Promise<SavedTeamDTO>;
   delete(id: string): Promise<void>;
+  /** Import TRANSACTIONNEL : remplace par nom, tout ou rien (rollback si un échec). */
+  importTeams(teams: SaveTeamInput[]): Promise<ImportTeamsResult>;
 }
 
 export class TeamRepositoryValidationError extends Error {
@@ -210,5 +217,48 @@ export class PrismaSqliteTeamRepository implements TeamRepository {
   async delete(id: string): Promise<void> {
     const teamId = validateTeamId(id);
     await this.db.savedTeam.deleteMany({ where: { id: teamId } });
+  }
+
+  async importTeams(teams: SaveTeamInput[]): Promise<ImportTeamsResult> {
+    // 1) Valider TOUT avant d'écrire quoi que ce soit (fail fast, aucune écriture partielle).
+    if (!Array.isArray(teams) || teams.length === 0) {
+      throw new TeamRepositoryValidationError("Aucune équipe à importer.");
+    }
+    if (teams.length > 500) {
+      throw new TeamRepositoryValidationError("Trop d'équipes à importer (> 500).");
+    }
+    const validated = teams.map(validateSaveTeamInput);
+    const names = validated.map((t) => t.name);
+    const existing = await this.db.savedTeam.findMany({
+      where: { name: { in: names } },
+      select: { name: true },
+    });
+    const existingNames = new Set(existing.map((e) => e.name));
+
+    // 2) Transaction : remplace par nom. Tout échoue ensemble (rollback) si une étape échoue.
+    await this.db.$transaction(async (tx) => {
+      // Dédoublonnage interne : la dernière occurrence d'un nom gagne (déterministe).
+      const byName = new Map<string, SaveTeamInput>();
+      for (const t of validated) byName.set(t.name, t);
+      await tx.savedTeam.deleteMany({ where: { name: { in: [...byName.keys()] } } });
+      for (const t of byName.values()) {
+        await tx.savedTeam.create({
+          data: {
+            name: t.name,
+            carry: t.carry,
+            notes: t.notes,
+            members: { create: t.members.map((m) => ({ character: m.character, role: m.role, slot: m.slot })) },
+          },
+        });
+      }
+    });
+
+    let created = 0;
+    let updated = 0;
+    for (const name of new Set(names)) {
+      if (existingNames.has(name)) updated++;
+      else created++;
+    }
+    return { created, updated };
   }
 }
