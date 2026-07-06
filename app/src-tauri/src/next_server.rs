@@ -58,6 +58,7 @@ pub fn spawn_next(
     port: u16,
     database_url: &str,
     log_file: &Path,
+    sidecar_exe: &Path,
 ) -> Result<NextServer, String> {
     if !node.exists() {
         return Err(format!("runtime Node embarqué introuvable : {}", node.display()));
@@ -76,6 +77,8 @@ pub fn spawn_next(
         .env("PORT", port.to_string())
         .env("NODE_ENV", "production")
         .env("DATABASE_URL", database_url)
+        // Desktop : les Server Actions appellent le MOTEUR GELÉ directement (pas de Python/venv).
+        .env("IRMINSUL_SIDECAR_EXE", sidecar_exe)
         .stdin(Stdio::null())
         .stdout(Stdio::from(log))
         .stderr(Stdio::from(log2));
@@ -146,6 +149,7 @@ mod tests {
             1,
             "file:x.db",
             &std::env::temp_dir().join("irm-next-test.log"),
+            Path::new("missing-sidecar.exe"),
         )
         .unwrap_err();
         assert!(e.contains("introuvable"));

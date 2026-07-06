@@ -25,8 +25,18 @@ function finish(code) {
   process.exit(code);
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// LIAISON STRICTE (audit L4) : seuls les node ENFANTS du PID Tauri de CETTE instance comptent.
+const nodePidsOf = (parentPid) => {
+  try {
+    const out = execSync(
+      `powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -like 'node*' -and $_.ParentProcessId -eq ${parentPid} } | Select-Object -ExpandProperty ProcessId"`,
+      { encoding: "utf8" },
+    );
+    return out.split(/\r?\n/).map((l) => l.trim()).filter((l) => /^\d+$/.test(l));
+  } catch { return []; }
+};
+// Node orphelins server.js (peu importe le parent) — pour l'assertion « zéro orphelin ».
 const nodePids = () => {
-  // wmic est absent des Windows 11 récents → CIM via PowerShell.
   try {
     const out = execSync(
       `powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -like 'node*' -and $_.CommandLine -like '*server.js*' } | Select-Object -ExpandProperty ProcessId"`,
@@ -34,6 +44,17 @@ const nodePids = () => {
     );
     return out.split(/\r?\n/).map((l) => l.trim()).filter((l) => /^\d+$/.test(l));
   } catch { return []; }
+};
+// Port loopback en LISTEN appartenant au PID donné (lien strict port↔instance, pas de log).
+const portOf = (pid) => {
+  try {
+    const out = execSync(
+      `powershell -NoProfile -Command "Get-NetTCPConnection -State Listen -OwningProcess ${pid} -ErrorAction SilentlyContinue | Where-Object { $_.LocalAddress -eq '127.0.0.1' } | Select-Object -ExpandProperty LocalPort"`,
+      { encoding: "utf8" },
+    );
+    const m = out.match(/\d+/);
+    return m ? Number(m[0]) : null;
+  } catch { return null; }
 };
 
 if (!existsSync(EXE)) { step("binaire production présent", false, EXE); }
@@ -48,19 +69,22 @@ const app = spawn(EXE, [], { detached: true, stdio: "ignore" });
 proof.tauriPid = app.pid;
 step("lancement (PID)", !!app.pid, `pid=${app.pid}`);
 
-// 2) Readiness : port réel depuis le log Next (borné 60 s).
+// 2) Readiness LIÉE À L'INSTANCE (audit L4) : node enfant du PID Tauri, puis port de CE node
+// via la table TCP (plus aucun parsing de log — un log périmé ne peut plus fausser le test).
+let nodePid = null;
 let port = null;
 for (let i = 0; i < 120 && !port; i++) {
   await sleep(500);
-  if (existsSync(LOG)) {
-    const m = readFileSync(LOG, "utf8").match(/127\.0\.0\.1:(\d+)/);
-    if (m) port = Number(m[1]);
+  if (!nodePid) {
+    const kids = nodePidsOf(app.pid);
+    if (kids.length > 0) nodePid = kids[0];
   }
+  if (nodePid) port = portOf(nodePid);
 }
-step("readiness (port du log Next)", !!port, `port=${port}`);
+step("node ENFANT de cette instance Tauri", !!nodePid, `tauri=${app.pid} node=${nodePid}`);
+step("readiness (port LISTEN de ce node)", !!port, `port=${port}`);
 proof.port = port;
-proof.nodePids = nodePids();
-step("processus Node enfant présent", proof.nodePids.length > 0, `pids=${proof.nodePids}`);
+proof.nodePids = [nodePid];
 
 // 3) Routes critiques : le frontend MODERNE (marqueurs Next + Archive astrale).
 for (const r of ROUTES) {
@@ -88,15 +112,16 @@ await sleep(4000);
 const survivors = nodePids();
 step("aucun processus Node orphelin après fermeture", survivors.length === 0, `survivants=${survivors}`);
 
-// 6) Relance → persistance (la DB existe toujours, le serveur redémarre).
-rmSync(LOG, { force: true });
+// 6) Relance → persistance (liaison stricte identique).
 const app2 = spawn(EXE, [], { detached: true, stdio: "ignore" });
+let nodePid2 = null;
 let port2 = null;
 for (let i = 0; i < 120 && !port2; i++) {
   await sleep(500);
-  if (existsSync(LOG)) { const m = readFileSync(LOG, "utf8").match(/127\.0\.0\.1:(\d+)/); if (m) port2 = Number(m[1]); }
+  if (!nodePid2) { const kids = nodePidsOf(app2.pid); if (kids.length > 0) nodePid2 = kids[0]; }
+  if (nodePid2) port2 = portOf(nodePid2);
 }
-step("relance + readiness", !!port2, `port=${port2}`);
+step("relance + readiness (node lié)", !!port2, `tauri=${app2.pid} node=${nodePid2} port=${port2}`);
 step("persistance DB", existsSync(path.join(APPDATA_DIR, "irminsul.db")), `dbExistaitAvant=${dbExisted}`);
 execSync(`taskkill /PID ${app2.pid}`, { stdio: "ignore" });
 await sleep(4000);

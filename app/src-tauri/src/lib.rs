@@ -185,7 +185,9 @@ fn start_next(app: tauri::AppHandle) {
         let db_url = next_server::ensure_user_db(&app_data, &template)?;
         let port = next_server::alloc_port()?;
         let log = app_data.join("logs").join("next-server.log");
-        let srv = next_server::spawn_next(&node, &server_js, port, &db_url, &log)?;
+        // Le serveur Next appelle le moteur GELÉ (aucun Python requis en desktop).
+        let sidecar = sidecar_path()?;
+        let srv = next_server::spawn_next(&node, &server_js, port, &db_url, &log, &sidecar)?;
         let url = srv.url.clone();
         // Possession AVANT le health check : même en timeout, l'enfant sera tué à l'exit.
         *app.state::<NextState>().0.lock().map_err(|e| e.to_string())? = Some(srv.child);
