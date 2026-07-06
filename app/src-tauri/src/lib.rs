@@ -202,7 +202,17 @@ fn start_next(app: tauri::AppHandle) {
                 let _ = w.eval(&js);
             }
         }
-        Err(e) => fail(&e),
+        Err(e) => {
+            // Audit M2 : sur échec post-spawn (ex. health check expiré), tuer et VIDER l'état —
+            // aucun Node résiduel, et une relance dans la même session redevient possible.
+            if let Ok(mut guard) = app.state::<NextState>().0.lock() {
+                if let Some(mut child) = guard.take() {
+                    let _ = child.kill();
+                    let _ = child.wait();
+                }
+            }
+            fail(&e);
+        }
     }
 }
 

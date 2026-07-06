@@ -111,11 +111,18 @@ def _rotation(p: dict[str, Any]) -> dict[str, Any]:
 # Provenance / capabilities — DÉRIVÉES de la table (jamais une liste à la main).
 # --------------------------------------------------------------------------- #
 def _buildinfo() -> dict[str, Any]:
-    """Infos figées au build (générées par scripts/build_sidecar.py) ; fallback dev = git live."""
-    try:
-        from . import _buildinfo as bi  # type: ignore[attr-defined]
-        return {"git_commit": bi.GIT_COMMIT, "built_at": bi.BUILT_AT, "build_python": bi.PYTHON}
-    except Exception:  # noqa: BLE001 — en dev, pas de module gelé
+    """Infos figées au build (générées par scripts/build_sidecar.py) ; fallback dev = git live.
+
+    Audit L5 : `_buildinfo` n'est consulté QUE gelé — en mode source, un artefact de build
+    résiduel ne peut pas maquiller la provenance (le git live fait foi).
+    """
+    if getattr(sys, "frozen", False):
+        try:
+            from . import _buildinfo as bi  # type: ignore[attr-defined]
+            return {"git_commit": bi.GIT_COMMIT, "built_at": bi.BUILT_AT, "build_python": bi.PYTHON}
+        except Exception:  # noqa: BLE001 — binaire sans buildinfo : dégradé explicite
+            return {"git_commit": None, "built_at": None, "build_python": None}
+    if True:  # mode source : git live uniquement
         try:
             import subprocess
             commit = subprocess.run(

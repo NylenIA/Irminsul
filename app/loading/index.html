@@ -25,15 +25,7 @@
     <div id="err"></div>
     <div class="dim">Serveur local (127.0.0.1 uniquement) — aucune donnée n'est envoyée en ligne.</div>
   </div>
-  <script>
-    // Appelé par Rust en cas d'échec de démarrage : erreur EXPLOITABLE, pas de fenêtre vide.
-    window.__irmFail = function (msg) {
-      document.getElementById("status").textContent = "Le démarrage a échoué.";
-      var e = document.getElementById("err");
-      e.style.display = "block";
-      e.textContent = msg + "\n\nConsulte les logs : %APPDATA%/com.nylenia.irminsul/logs/next-server.log";
-      document.querySelector(".spin").style.display = "none";
-    };
-  </script>
+  <!-- Externe (CSP script-src 'self') : erreur de démarrage EXPLOITABLE, pas de fenêtre vide. -->
+  <script src="boot.js"></script>
 </body>
 </html>
