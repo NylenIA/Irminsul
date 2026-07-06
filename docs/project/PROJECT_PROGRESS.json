@@ -4,25 +4,105 @@
   "scale": "0=absent, 25=squelette/mock/TODO, 50=happy-path peu validé, 75=intégré+testé cas majeurs, 100=prêt à livrer",
   "method": "Score reproductible = somme(poids x score)/100. Deux pondérations: weight (vision complète), mvpWeight (MVP utilisable). Scores assignés par preuve vérifiée, pas à la main dans le rapport.",
   "domains": [
-    { "id": "moteur_donnees_calcul", "label": "Moteur de données et calcul", "weight": 25, "mvpWeight": 30, "score": 82, "confidence": "high",
-      "evidence": "Moteur stats finales INTEGRE (basestats+weaponstats+talentstats+charstats, defensif) ; pytest 192 passed ; goldens vs jeu ; registre mecaniques verified", "blockers": "reactions Lunaires + gcsim nouveaux persos" },
-    { "id": "integration_moteur", "label": "Intégration moteur", "weight": 15, "mvpWeight": 12, "score": 85, "confidence": "high",
-      "evidence": "Stats finales LIVE (sidecar character_final_stats -> charstats, adapter final-stats/1.0, /characters/[id] avec breakdown/provenance/confiance) + apercu + reactions ; parite prouvee ; verrou phase3 leve", "blockers": "additives dans l'UI ; sidecar par defaut" },
-    { "id": "app_web", "label": "Application web", "weight": 15, "mvpWeight": 10, "score": 85, "confidence": "high",
-      "evidence": "Next.js 16.2.9 ; 8 surfaces reelles (+ /import-export versionne, aller-retour transactionnel teste) ; E2E 40/40, axe vert", "blockers": "diagnostics UI ; desktop packaging" },
-    { "id": "app_desktop", "label": "Application desktop", "weight": 10, "mvpWeight": 12, "score": 55, "confidence": "high",
-      "evidence": "ADR runtime decide (Option A) + spike Next standalone PROUVE (server.js loopback HTTP 200) + mecanisme provenance sidecar. Coque Tauri+MSI/NSIS+sidecar existent", "blockers": "P0: coque enveloppe ancien Vite (pas encore le Next standalone) ; P0: binaire sidecar diverge (pas rotation/reactions) -> unifier+rebuild ; smoke packaging non fait" },
-    { "id": "team_builder_sim", "label": "Team builder et simulation", "weight": 15, "mvpWeight": 15, "score": 87, "confidence": "medium",
-      "evidence": "Team Lab CRUD + reactions + rotations chiffrees + COMPARATEUR quantitatif (team-compare/1.0, 2 rotations meme cible, verdict si complet) + RECOMMANDATIONS deterministes (recommendations/1.0, donnees reelles, explicables)", "blockers": "gcsim ; energie/cooldown ; buffs par action" },
-    { "id": "persistance", "label": "Persistance", "weight": 5, "mvpWeight": 8, "score": 82, "confidence": "high",
-      "evidence": "Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL (rollback) ; export/import versionne irminsul-export/1.0 avec checksum", "blockers": "chemins %APPDATA% pour desktop" },
-    { "id": "design_ux", "label": "Design system et UX", "weight": 5, "mvpWeight": 5, "score": 65, "confidence": "medium",
-      "evidence": "tokens OKLCH + primitives + effets astral (halo, energie, skeleton, badges provenance/confiance) reduced-motion safe", "blockers": "Select/Tabs/Toast/CharacterPicker ; brand guide" },
-    { "id": "tests_qualite", "label": "Tests et qualite", "weight": 5, "mvpWeight": 4, "score": 75, "confidence": "high",
-      "evidence": "96 Python ; build ; 4 tests repository Vitest ; E2E Playwright 6 (save/reload/delete) ; axe a11y vert (0 critique/serieux)", "blockers": "couverture composants UI ; lint non cable" },
-    { "id": "packaging", "label": "Packaging et deploiement", "weight": 3, "mvpWeight": 2, "score": 50, "confidence": "medium",
-      "evidence": "desktop MSI/NSIS (Phase 2)", "blockers": "web non deploye" },
-    { "id": "doc_continuite", "label": "Documentation et continuite", "weight": 2, "mvpWeight": 2, "score": 75, "confidence": "high",
-      "evidence": "audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF, hook SessionStart", "blockers": "hook non encore enregistre dans settings" }
+    {
+      "id": "moteur_donnees_calcul",
+      "label": "Moteur de données et calcul",
+      "weight": 25,
+      "mvpWeight": 30,
+      "score": 82,
+      "confidence": "high",
+      "evidence": "Moteur stats finales INTEGRE (basestats+weaponstats+talentstats+charstats, defensif) ; pytest 192 passed ; goldens vs jeu ; registre mecaniques verified",
+      "blockers": "reactions Lunaires + gcsim nouveaux persos"
+    },
+    {
+      "id": "integration_moteur",
+      "label": "Intégration moteur",
+      "weight": 15,
+      "mvpWeight": 12,
+      "score": 85,
+      "confidence": "high",
+      "evidence": "Stats finales LIVE (sidecar character_final_stats -> charstats, adapter final-stats/1.0, /characters/[id] avec breakdown/provenance/confiance) + apercu + reactions ; parite prouvee ; verrou phase3 leve",
+      "blockers": "additives dans l'UI ; sidecar par defaut"
+    },
+    {
+      "id": "app_web",
+      "label": "Application web",
+      "weight": 15,
+      "mvpWeight": 10,
+      "score": 85,
+      "confidence": "high",
+      "evidence": "Next.js 16.2.9 ; 8 surfaces reelles (+ /import-export versionne, aller-retour transactionnel teste) ; E2E 40/40, axe vert",
+      "blockers": "diagnostics UI ; desktop packaging"
+    },
+    {
+      "id": "app_desktop",
+      "label": "Application desktop",
+      "weight": 10,
+      "mvpWeight": 12,
+      "score": 72,
+      "confidence": "high",
+      "evidence": "PROUVE: build Tauri production PASS (exe+MSI+NSIS hashes), smoke binaire production TOUT VERT (6/6 routes 200, Next moderne, provenance sidecar frozen, zero orphelin x2, persistance DB), sidecar canonique rebuilt (parite testee sur .exe), Node embarque, donnees %APPDATA%",
+      "blockers": "installation MSI/NSIS non testee de bout en bout ; signature absente (SmartScreen) ; M3 course port differe"
+    },
+    {
+      "id": "team_builder_sim",
+      "label": "Team builder et simulation",
+      "weight": 15,
+      "mvpWeight": 15,
+      "score": 87,
+      "confidence": "medium",
+      "evidence": "Team Lab CRUD + reactions + rotations chiffrees + COMPARATEUR quantitatif (team-compare/1.0, 2 rotations meme cible, verdict si complet) + RECOMMANDATIONS deterministes (recommendations/1.0, donnees reelles, explicables)",
+      "blockers": "gcsim ; energie/cooldown ; buffs par action"
+    },
+    {
+      "id": "persistance",
+      "label": "Persistance",
+      "weight": 5,
+      "mvpWeight": 8,
+      "score": 82,
+      "confidence": "high",
+      "evidence": "Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL (rollback) ; export/import versionne irminsul-export/1.0 avec checksum",
+      "blockers": "chemins %APPDATA% pour desktop"
+    },
+    {
+      "id": "design_ux",
+      "label": "Design system et UX",
+      "weight": 5,
+      "mvpWeight": 5,
+      "score": 65,
+      "confidence": "medium",
+      "evidence": "tokens OKLCH + primitives + effets astral (halo, energie, skeleton, badges provenance/confiance) reduced-motion safe",
+      "blockers": "Select/Tabs/Toast/CharacterPicker ; brand guide"
+    },
+    {
+      "id": "tests_qualite",
+      "label": "Tests et qualite",
+      "weight": 5,
+      "mvpWeight": 4,
+      "score": 75,
+      "confidence": "high",
+      "evidence": "96 Python ; build ; 4 tests repository Vitest ; E2E Playwright 6 (save/reload/delete) ; axe a11y vert (0 critique/serieux)",
+      "blockers": "couverture composants UI ; lint non cable"
+    },
+    {
+      "id": "packaging",
+      "label": "Packaging et deploiement",
+      "weight": 3,
+      "mvpWeight": 2,
+      "score": 70,
+      "confidence": "medium",
+      "evidence": "MSI 100Mo + NSIS 63Mo produits et hashes (artifacts.txt) ; WiX/NSIS auto-provisionnes",
+      "blockers": "install/desinstall non testees ; non signe"
+    },
+    {
+      "id": "doc_continuite",
+      "label": "Documentation et continuite",
+      "weight": 2,
+      "mvpWeight": 2,
+      "score": 75,
+      "confidence": "high",
+      "evidence": "audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF, hook SessionStart",
+      "blockers": "hook non encore enregistre dans settings"
+    }
   ]
 }
