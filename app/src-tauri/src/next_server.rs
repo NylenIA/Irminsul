@@ -68,7 +68,9 @@ pub fn spawn_next(
     let log = std::fs::File::create(log_file).map_err(|e| format!("log: {e}"))?;
     let log2 = log.try_clone().map_err(|e| e.to_string())?;
     let mut cmd = Command::new(node);
-    cmd.arg(server_js)
+    // Arg RELATIF + cwd : un chemin absolu contenant des espaces (« IA Genshin ») est
+    // tronqué par la résolution du module principal de Node sous Windows.
+    cmd.arg("server.js")
         .current_dir(server_js.parent().unwrap_or(Path::new(".")))
         .env("HOSTNAME", "127.0.0.1") // loopback UNIQUEMENT — jamais exposé au LAN
         .env("PORT", port.to_string())

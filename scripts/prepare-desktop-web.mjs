@@ -35,6 +35,21 @@ cpSync(path.join(WEB, ".next", "static"), path.join(OUT, "apps", "web", ".next",
 if (existsSync(path.join(WEB, "public"))) {
   cpSync(path.join(WEB, "public"), path.join(OUT, "apps", "web", "public"), { recursive: true });
 }
+// Client Prisma GÉNÉRÉ + query engine natif : exclus du tracing Next (serverExternalPackages)
+// → copie explicite, sinon 500 « Cannot find module .prisma/client/default » en production.
+// Le client est généré dans le node_modules du workspace data-access (pas la racine).
+let prismaCopied = false;
+for (const base of [path.join(ROOT, "packages", "data-access", "node_modules"), path.join(ROOT, "node_modules")]) {
+  const src = path.join(base, ".prisma");
+  if (existsSync(src)) {
+    cpSync(src, path.join(OUT, "node_modules", ".prisma"), { recursive: true });
+    const at = path.join(base, "@prisma");
+    if (existsSync(at)) cpSync(at, path.join(OUT, "node_modules", "@prisma"), { recursive: true });
+    prismaCopied = true;
+    break;
+  }
+}
+if (!prismaCopied) { console.error("[prepare] FATAL: client .prisma généré introuvable"); process.exit(1); }
 
 // 3) Runtime Node embarqué (auto-suffisant : pas de Node global requis à l'exécution).
 mkdirSync(path.dirname(NODE_DEST), { recursive: true });

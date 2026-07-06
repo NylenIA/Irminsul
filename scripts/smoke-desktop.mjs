@@ -26,9 +26,13 @@ function finish(code) {
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const nodePids = () => {
+  // wmic est absent des Windows 11 récents → CIM via PowerShell.
   try {
-    const out = execSync(`wmic process where "name='node-x86_64-pc-windows-msvc.exe' or name='node.exe'" get ProcessId,CommandLine /format:csv 2>nul`, { encoding: "utf8" });
-    return out.split("\n").filter((l) => l.includes("server.js")).map((l) => l.trim().split(",").pop()).filter(Boolean);
+    const out = execSync(
+      `powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -like 'node*' -and $_.CommandLine -like '*server.js*' } | Select-Object -ExpandProperty ProcessId"`,
+      { encoding: "utf8" },
+    );
+    return out.split(/\r?\n/).map((l) => l.trim()).filter((l) => /^\d+$/.test(l));
   } catch { return []; }
 };
 
