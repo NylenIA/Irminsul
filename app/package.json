@@ -10,8 +10,8 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "tauri": "tauri",
-    "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "tauri:dev": "set \"PATH=%USERPROFILE%\\.cargo\\bin;%PATH%\" && tauri dev",
+    "tauri:build": "set \"PATH=%USERPROFILE%\\.cargo\\bin;%PATH%\" && tauri build"
   },
   "dependencies": {
     "@tauri-apps/api": "2.1.1",
