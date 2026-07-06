@@ -34,10 +34,15 @@ def _load_module():
 
 
 def test_expected_methods_present() -> None:
+    # La table vit désormais dans le dispatcher CANONIQUE (une seule liste, dérivée) —
+    # on interroge la provenance exposée, pas une table locale.
     mod = _load_module()
-    assert EXPECTED_METHODS.issubset(set(mod.METHODS)), (
-        f"Méthodes manquantes : {EXPECTED_METHODS - set(mod.METHODS)}"
+    methods = set(mod._engine_provenance({})["methods"])
+    assert EXPECTED_METHODS.issubset(methods), (
+        f"Méthodes manquantes : {EXPECTED_METHODS - methods}"
     )
+    # Les méthodes compte du binaire gelé font partie de la MÊME table (divergence éliminée).
+    assert {"profile", "roster", "character-stats", "engine_capabilities"}.issubset(methods)
 
 
 def test_engine_provenance_shape() -> None:

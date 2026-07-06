@@ -17,7 +17,7 @@ import json
 import sys
 from typing import Any
 
-from .account_ipc import dispatch
+from .engine_dispatch import dispatch  # dispatcher CANONIQUE (même table que le pont web)
 
 MAX_INPUT = 2_000_000  # octets : borne la REQUÊTE (le fichier GOOD est lu par chemin)
 PROTOCOL_VERSION = 1

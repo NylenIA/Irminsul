@@ -102,36 +102,11 @@ def import_payload(path: str) -> dict[str, Any]:
     }}
 
 
-# Table de dispatch partagée (CLI + sidecar).
+# Dispatch : DÉLÈGUE au dispatcher canonique (une seule table de méthodes pour
+# CLI + binaire gelé + pont web). Ré-export de compatibilité pour les appels existants.
 def dispatch(method: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
-    params = params or {}
-    if method == "profile":
-        return profile_payload()
-    if method == "overview":
-        return overview_payload()
-    if method == "roster":
-        return roster_payload()
-    if method == "import-good":
-        path = params.get("path")
-        if not path:
-            raise ValueError("paramètre 'path' requis")
-        return import_payload(str(path))
-    if method == "mechanics":
-        from .quickcalc import mechanics_payload
-        return mechanics_payload()
-    if method == "quick-calc":
-        from .quickcalc import quickcalc_payload
-        return quickcalc_payload(params)
-    if method == "characters":
-        from .charstats import characters_payload
-        return characters_payload()
-    if method == "character-stats":
-        from .charstats import character_payload
-        key = params.get("key")
-        if not key:
-            raise ValueError("paramètre 'key' requis")
-        return character_payload(str(key))
-    raise ValueError(f"méthode inconnue: {method}")
+    from .engine_dispatch import dispatch as canonical_dispatch
+    return canonical_dispatch(method, params)
 
 
 def main(argv: list[str]) -> int:
