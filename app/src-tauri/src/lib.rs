@@ -6,6 +6,11 @@ use std::time::Duration;
 use tauri::Manager;
 use wait_timeout::ChildExt;
 
+mod next_server;
+
+/// Possession du serveur Next embarqué (kill garanti à la sortie, un seul lancement).
+struct NextState(std::sync::Mutex<Option<std::process::Child>>);
+
 #[derive(Serialize)]
 struct AppInfo {
     name: &'static str,
@@ -150,10 +155,62 @@ fn mechanics(app: tauri::AppHandle) -> Result<String, String> {
     call_engine(&app, "mechanics", serde_json::json!({})).and_then(to_json_string)
 }
 
+/// Provenance du moteur (section Diagnostic) : interroge RÉELLEMENT le binaire empaqueté.
+#[tauri::command]
+fn engine_provenance(app: tauri::AppHandle) -> Result<String, String> {
+    call_engine(&app, "engine_provenance", serde_json::json!({})).and_then(to_json_string)
+}
+
+/// Démarre le serveur Next embarqué puis navigue la WebView (readiness d'abord, jamais
+/// de délai fixe aveugle). En cas d'échec : erreur EXPLOITABLE dans la page de chargement.
+fn start_next(app: tauri::AppHandle) {
+    let window = app.get_webview_window("main");
+    let fail = |msg: &str| {
+        if let Some(w) = &window {
+            let js = format!(
+                "window.__irmFail && window.__irmFail({})",
+                serde_json::to_string(msg).unwrap_or_else(|_| "\"erreur\"".into())
+            );
+            let _ = w.eval(&js);
+        }
+    };
+    let result = (|| -> Result<String, String> {
+        // Double lancement interdit (relance = re-navigation, pas un second serveur).
+        if app.state::<NextState>().0.lock().map_err(|e| e.to_string())?.is_some() {
+            return Err("serveur déjà démarré".into());
+        }
+        let rd = app.path().resource_dir().map_err(|e| e.to_string())?;
+        let (node, server_js, template) = next_server::resource_paths(&rd);
+        let app_data = data_root(&app)?;
+        let db_url = next_server::ensure_user_db(&app_data, &template)?;
+        let port = next_server::alloc_port()?;
+        let log = app_data.join("logs").join("next-server.log");
+        let srv = next_server::spawn_next(&node, &server_js, port, &db_url, &log)?;
+        let url = srv.url.clone();
+        // Possession AVANT le health check : même en timeout, l'enfant sera tué à l'exit.
+        *app.state::<NextState>().0.lock().map_err(|e| e.to_string())? = Some(srv.child);
+        next_server::wait_ready(port, Duration::from_secs(45))?;
+        Ok(url)
+    })();
+    match result {
+        Ok(url) => {
+            if let Some(w) = &window {
+                let js = format!(
+                    "window.location.replace({})",
+                    serde_json::to_string(&url).unwrap_or_default()
+                );
+                let _ = w.eval(&js);
+            }
+        }
+        Err(e) => fail(&e),
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .manage(NextState(std::sync::Mutex::new(None)))
         .invoke_handler(tauri::generate_handler![
             app_info,
             account_profile,
@@ -161,10 +218,30 @@ pub fn run() {
             account_roster,
             account_import_good,
             quick_calc,
-            mechanics
+            mechanics,
+            engine_provenance
         ])
-        .run(tauri::generate_context!())
-        .expect("erreur au démarrage de l'application Tauri");
+        .setup(|app| {
+            let handle = app.handle().clone();
+            std::thread::spawn(move || start_next(handle));
+            Ok(())
+        })
+        .build(tauri::generate_context!())
+        .expect("erreur au démarrage de l'application Tauri")
+        .run(|app, event| {
+            // Cycle de vie : Tauri POSSÈDE le serveur Next — kill + wait à la sortie
+            // (aucun processus orphelin, y compris fermeture pendant le démarrage).
+            if let tauri::RunEvent::Exit = event {
+                if let Some(state) = app.try_state::<NextState>() {
+                    if let Ok(mut guard) = state.0.lock() {
+                        if let Some(mut child) = guard.take() {
+                            let _ = child.kill();
+                            let _ = child.wait();
+                        }
+                    }
+                }
+            }
+        });
 }
 
 #[cfg(test)]

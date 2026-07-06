@@ -39,3 +39,7 @@ next-env.d.ts
 
 # Duo local runtime (sessions, journaux, checkpoints, rapports temporaires)
 .duo/
+
+# Ressources desktop generees (prepare-desktop-web.mjs)
+app/src-tauri/web/
+app/src-tauri/web-template.db
