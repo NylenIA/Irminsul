@@ -22,8 +22,11 @@ export class SidecarError extends Error {
 }
 
 export interface SidecarOptions {
-  pythonPath: string;
-  scriptPath: string;
+  /** Mode source (dev/web) : Python + pont stdio. */
+  pythonPath?: string;
+  scriptPath?: string;
+  /** Mode desktop : binaire moteur GELÉ (dispatcher canonique) appelé directement. */
+  frozenExePath?: string;
   timeoutMs?: number;
 }
 
@@ -65,8 +68,14 @@ export async function runSidecar(
   request: { method: string; params: Record<string, unknown> },
 ): Promise<Record<string, unknown>> {
   const timeoutMs = options.timeoutMs ?? 10000;
+  const frozen = !!options.frozenExePath;
+  const program = frozen ? options.frozenExePath! : options.pythonPath;
+  const args = frozen ? [] : [options.scriptPath!];
+  if (!program) {
+    throw new SidecarError("configuration sidecar invalide (ni frozenExePath ni pythonPath)");
+  }
   return new Promise((resolve, reject) => {
-    const child = spawn(options.pythonPath, [options.scriptPath], {
+    const child = spawn(program, args, {
       shell: false,
       windowsHide: true,
       stdio: ["pipe", "pipe", "pipe"],
@@ -93,13 +102,20 @@ export async function runSidecar(
         const parsed = JSON.parse(stdout) as {
           ok: boolean;
           result?: unknown;
-          error?: string;
+          error?: string | { type?: string; message?: string };
           engine?: string;
         };
         if (!parsed.ok) {
-          reject(new SidecarError(parsed.error ?? `erreur moteur (exit ${code})`));
-        } else if (parsed.engine !== "python-sidecar" || typeof parsed.result !== "object" || parsed.result === null) {
-          // Audit Codex : ne jamais résoudre un payload qui ne respecte pas le protocole.
+          const msg = typeof parsed.error === "string"
+            ? parsed.error
+            : parsed.error?.message ?? `erreur moteur (exit ${code})`;
+          reject(new SidecarError(msg));
+        } else if (typeof parsed.result !== "object" || parsed.result === null) {
+          reject(new SidecarError("réponse hors protocole (result absent)"));
+        } else if (!frozen && parsed.engine !== "python-sidecar") {
+          // Pont stdio : le champ engine est REQUIS (audit). Le binaire gelé (protocole
+          // sidecar.py {id,ok,result}) n'émet pas ce champ — sa provenance est vérifiée
+          // par engine_provenance (frozen_binary, méthodes, hash).
           reject(new SidecarError(`réponse hors protocole (engine=${parsed.engine ?? "absent"})`));
         } else {
           resolve(parsed.result as Record<string, unknown>);
@@ -108,7 +124,8 @@ export async function runSidecar(
         reject(new SidecarError(`sortie non-JSON (exit ${code}, stderr: ${stderr.slice(0, 300) || "vide"})`));
       }
     });
-    child.stdin.end(JSON.stringify(request));
+    // Le binaire gelé attend {id, method, params} ; le pont stdio ignore id — format unique OK.
+    child.stdin.end(JSON.stringify({ id: request.method, ...request }));
   });
 }
 

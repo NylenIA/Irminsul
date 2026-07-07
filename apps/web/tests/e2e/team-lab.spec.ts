@@ -313,6 +313,29 @@ test.describe("Import / Export (irminsul-export/1.0)", () => {
     await expect(page.getByText("Import impossible")).toBeVisible({ timeout: 15000 });
   });
 
+  test("diagnostic : provenance moteur réelle, rapport sanitizé, mode web indiqué", async ({ page }) => {
+    await page.goto("/diagnostic");
+    await expect(page.getByRole("heading", { name: "Diagnostic" })).toBeVisible();
+    await expect(page.getByText("mode web")).toBeVisible();
+    // Provenance réelle (moteur source en E2E web) OU erreur honnête — jamais une fenêtre vide.
+    const contract = page.getByText("engine-ipc/1.0");
+    const engineError = page.getByText(/Moteur injoignable/);
+    await expect(contract.or(engineError)).toBeVisible({ timeout: 15000 });
+    // Sanitization : le nom du compte utilisateur ne doit pas apparaître dans la page.
+    await expect(page.locator("body")).not.toContainText("akuon");
+    await expect(page.getByRole("button", { name: /Copier le rapport/ })).toBeVisible();
+  });
+
+  test("accessibilité (axe) de /diagnostic", async ({ page }) => {
+    await page.goto("/diagnostic");
+    await expect(page.getByRole("heading", { name: "Diagnostic" })).toBeVisible();
+    const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+    const serious = results.violations.filter(
+      (v) => v.impact === "critical" || v.impact === "serious",
+    );
+    expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
+  });
+
   test("accessibilité (axe) de /import-export", async ({ page }) => {
     await page.goto("/import-export");
     await expect(page.getByRole("heading", { name: "Import / Export" })).toBeVisible();

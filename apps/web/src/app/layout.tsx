@@ -29,6 +29,7 @@ export default function RootLayout({
           <a href="/team-compare" className="irm-btn irm-btn--ghost">Comparateur</a>
           <a href="/recommendations" className="irm-btn irm-btn--ghost">Recommandations</a>
           <a href="/import-export" className="irm-btn irm-btn--ghost">Import/Export</a>
+          <a href="/diagnostic" className="irm-btn irm-btn--ghost">Diagnostic</a>
         </nav>
         {children}
       </body>

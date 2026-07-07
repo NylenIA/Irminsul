@@ -1,6 +1,5 @@
 "use server";
 
-import path from "node:path";
 import {
   compareTeamPerformance,
   normalizeRotation,
@@ -9,8 +8,9 @@ import {
   type RotationAction,
   type TeamComparisonResult,
 } from "@irminsul/engine-client";
-import { runSidecar, SidecarError } from "@irminsul/engine-client/sidecar";
+import { SidecarError } from "@irminsul/engine-client/sidecar";
 import { getTeamRepository } from "@irminsul/data-access";
+import { callEngine } from "@/server/engine";
 
 export interface CompareSideInput {
   teamId: string;
@@ -22,18 +22,9 @@ export type QuantitativeCompareResult =
   | { ok: false; kind: "validation_error"; issues: string[] }
   | { ok: false; kind: "engine_error"; message: string };
 
-const SIDECAR = {
-  pythonPath:
-    process.env["IRMINSUL_PYTHON"] ??
-    path.join(process.cwd(), "..", "..", ".venv", "Scripts", "python.exe"),
-  scriptPath: path.join(process.cwd(), "..", "..", "scripts", "engine_stdio.py"),
-  timeoutMs: 15000,
-};
-
 async function runOneRotation(team: string[], actions: RotationAction[], target: EnemyTarget) {
-  const raw = await runSidecar(SIDECAR, {
-    method: "calculate_rotation",
-    params: { team, actions, enemy: { level: target.level, resistance: target.resistance } },
+  const raw = await callEngine("calculate_rotation", {
+    team, actions, enemy: { level: target.level, resistance: target.resistance },
   });
   return normalizeRotation(raw as Parameters<typeof normalizeRotation>[0]);
 }
