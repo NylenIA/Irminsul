@@ -16,7 +16,7 @@ const ROOT = path.resolve(decodeURIComponent(new URL(".", import.meta.url).pathn
 const EXE = process.argv[2] ?? path.join(ROOT, "app", "src-tauri", "target", "release", "irminsul.exe");
 const APPDATA_DIR = path.join(process.env.APPDATA ?? "", "com.nylenia.irminsul");
 const LOG = path.join(APPDATA_DIR, "logs", "next-server.log");
-const ROUTES = ["/", "/team-lab", "/rotations", "/team-compare", "/recommendations", "/import-export"];
+const ROUTES = ["/", "/team-lab", "/rotations", "/team-compare", "/recommendations", "/import-export", "/diagnostic"];
 const proof = { exe: EXE, startedAt: new Date().toISOString(), steps: [] };
 const step = (name, ok, detail = "") => { proof.steps.push({ name, ok, detail }); console.log(`[smoke] ${ok ? "OK " : "FAIL"} ${name} ${detail}`); if (!ok) finish(1); };
 function finish(code) {
@@ -96,6 +96,21 @@ for (const r of ROUTES) {
 // Ancien Vite absent : le HTML ne référence PAS les assets Vite.
 const home = await (await fetch(`http://127.0.0.1:${port}/`)).text();
 step("frontend = Next moderne (pas Vite)", home.includes("/_next/") && !home.includes("vite"), "");
+
+// 3b) Diagnostic : la page expose la provenance du moteur GELÉ (mode desktop).
+{
+  const diag = await (await fetch(`http://127.0.0.1:${port}/diagnostic`)).text();
+  step("diagnostic = mode desktop + moteur gelé", diag.includes("mode desktop") && diag.includes("engine-ipc/1.0"), "");
+  step("diagnostic sanitizé (pas de nom de compte)", !diag.includes("akuon"), "");
+}
+
+// 3c) Nonce (audit M3) : une MUTATION sans cookie nonce est REFUSÉE ; les GET restent libres.
+{
+  const post = await fetch(`http://127.0.0.1:${port}/`, { method: "POST", body: "x" }).catch(() => null);
+  step("nonce : POST sans cookie → 403", post?.status === 403, `status=${post?.status}`);
+  const boot = await fetch(`http://127.0.0.1:${port}/boot?n=mauvais-nonce`, { redirect: "manual" }).catch(() => null);
+  step("nonce : /boot avec nonce invalide → 403", boot?.status === 403, `status=${boot?.status}`);
+}
 
 // 4) Provenance moteur : le sidecar canonique répond depuis le bundle.
 try {
