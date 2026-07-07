@@ -140,7 +140,10 @@ fn account_roster(app: tauri::AppHandle) -> Result<String, String> {
     call_engine(&app, "roster", serde_json::json!({})).and_then(to_json_string)
 }
 
-#[tauri::command]
+// AUDIT M1 : `account_import_good(path)` N'EST PLUS exposé à la WebView — une page loopback
+// avec IPC pouvait faire importer un chemin arbitraire (bridge path-based hérité de l'UI Vite).
+// L'import GOOD desktop futur passera par un dialogue natif (comme pick_import_file).
+#[allow(dead_code)]
 fn account_import_good(app: tauri::AppHandle, path: String) -> Result<String, String> {
     call_engine(&app, "import-good", serde_json::json!({ "path": path })).and_then(to_json_string)
 }
@@ -295,7 +298,6 @@ pub fn run() {
             account_profile,
             account_overview,
             account_roster,
-            account_import_good,
             quick_calc,
             mechanics,
             engine_provenance,

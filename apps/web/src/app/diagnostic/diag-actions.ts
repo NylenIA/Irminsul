@@ -17,8 +17,11 @@ export interface DiagnosticReport {
 }
 
 function maskPath(p: string): string {
-  // Masquage raisonnable : le profil utilisateur devient ~ (pas de nom de compte exposé).
-  return p.replace(/[A-Za-z]:[\\/](Users|Utilisateurs)[\\/][^\\/]+/i, "~");
+  // Audit L2 : redaction GÉNÉRALISÉE — tout chemin absolu (lecteur ou UNC) est réduit à
+  // ~…/<basename>. Aucun nom de compte ni layout local ne fuit à l'écran ou dans la copie.
+  return p
+    .replace(/(?:[A-Za-z]:|\\\\[^\\/\s"']+)[\\/][^\s"']*[\\/]([^\\/\s"']+)/g, "~…/$1")
+    .replace(/(?:[A-Za-z]:|\\\\[^\\/\s"']+)[\\/][^\s"']+/g, "~…");
 }
 
 export async function getDiagnosticAction(): Promise<DiagnosticReport> {

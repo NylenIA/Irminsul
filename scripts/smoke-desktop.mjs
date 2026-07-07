@@ -101,15 +101,24 @@ step("frontend = Next moderne (pas Vite)", home.includes("/_next/") && !home.inc
 {
   const diag = await (await fetch(`http://127.0.0.1:${port}/diagnostic`)).text();
   step("diagnostic = mode desktop + moteur gelé", diag.includes("mode desktop") && diag.includes("engine-ipc/1.0"), "");
-  step("diagnostic sanitizé (pas de nom de compte)", !diag.includes("akuon"), "");
+  // Audit L3 : username dérivé de l'environnement (pas de valeur en dur).
+  const userName = path.basename(process.env.USERPROFILE ?? "");
+  step("diagnostic sanitizé (pas de nom de compte)", !!userName && !diag.includes(userName), `user=${userName.length} chars`);
 }
 
 // 3c) Nonce (audit M3) : une MUTATION sans cookie nonce est REFUSÉE ; les GET restent libres.
 {
   const post = await fetch(`http://127.0.0.1:${port}/`, { method: "POST", body: "x" }).catch(() => null);
   step("nonce : POST sans cookie → 403", post?.status === 403, `status=${post?.status}`);
+  // Audit L3 : cookie INVALIDE (pas seulement absent) → 403 aussi.
+  const postBad = await fetch(`http://127.0.0.1:${port}/`, {
+    method: "POST", body: "x", headers: { cookie: "irm_nonce=deadbeef".padEnd(75, "0") },
+  }).catch(() => null);
+  step("nonce : POST avec cookie invalide → 403", postBad?.status === 403, `status=${postBad?.status}`);
   const boot = await fetch(`http://127.0.0.1:${port}/boot?n=mauvais-nonce`, { redirect: "manual" }).catch(() => null);
   step("nonce : /boot avec nonce invalide → 403", boot?.status === 403, `status=${boot?.status}`);
+  // NOTE (documentée) : le round-trip /boot VALIDE n'est pas testable de l'extérieur — le nonce
+  // vit uniquement en mémoire (env du serveur + WebView). C'est voulu par le modèle de menace.
 }
 
 // 4) Provenance moteur : le sidecar canonique répond depuis le bundle.
