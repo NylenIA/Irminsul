@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Button, Card, ErrorState } from "@irminsul/ui";
 import type { ImportPlan } from "@irminsul/engine-client";
 import { applyImportAction, exportTeamsAction, previewImportAction } from "./io-actions";
+import { isDesktop, pickImportNative, saveExport } from "@/lib/desktop-io";
 
 const MAX_FILE_BYTES = 2 * 1024 * 1024;
 
@@ -18,21 +19,34 @@ type ImportState =
 export function ImportExportClient(): React.ReactElement {
   const [exportMsg, setExportMsg] = useState<string | null>(null);
   const [imp, setImp] = useState<ImportState>({ kind: "idle" });
+  const [desktop, setDesktop] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const [pending, startTransition] = useTransition();
+  useEffect(() => setDesktop(isDesktop()), []); // détection UNIQUE (adaptateur)
 
   function doExport(): void {
     startTransition(async () => {
       const res = await exportTeamsAction();
-      // Transport navigateur : téléchargement d'un Blob (pas d'accès filesystem arbitraire).
-      const blob = new Blob([res.content], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = res.fileName;
-      a.click();
-      URL.revokeObjectURL(url);
-      setExportMsg(`${res.teamCount} équipe(s) exportée(s) → ${res.fileName}`);
+      // Adaptateur : dialogue NATIF Tauri en desktop, téléchargement Blob en web.
+      try {
+        const outcome = await saveExport(res.fileName, res.content);
+        if (outcome.kind === "cancelled") setExportMsg("Export annulé.");
+        else setExportMsg(`${res.teamCount} équipe(s) exportée(s) (irminsul-export/1.0) → ${outcome.kind === "saved" ? outcome.fileName : res.fileName}`);
+      } catch (e) {
+        setExportMsg(`Échec de l'export : ${String(e)}`);
+      }
+    });
+  }
+
+  function previewRaw(raw: string): void {
+    setImp({ kind: "previewing" });
+    startTransition(async () => {
+      const res = await previewImportAction(raw);
+      if (res.ok) {
+        setImp({ kind: "preview", raw, plan: res.plan, meta: { appVersion: res.appVersion, exportedAt: res.exportedAt, migrated: res.migrated } });
+      } else {
+        setImp({ kind: "error", message: res.message });
+      }
     });
   }
 
@@ -43,16 +57,18 @@ export function ImportExportClient(): React.ReactElement {
       setImp({ kind: "error", message: "Fichier trop volumineux (> 2 Mo)." });
       return;
     }
-    setImp({ kind: "previewing" });
-    file.text().then((raw) => {
-      startTransition(async () => {
-        const res = await previewImportAction(raw);
-        if (res.ok) {
-          setImp({ kind: "preview", raw, plan: res.plan, meta: { appVersion: res.appVersion, exportedAt: res.exportedAt, migrated: res.migrated } });
-        } else {
-          setImp({ kind: "error", message: res.message });
-        }
-      });
+    file.text().then(previewRaw);
+  }
+
+  function onNativeImport(): void {
+    startTransition(async () => {
+      try {
+        const raw = await pickImportNative();
+        if (raw === null) return; // annulation : sans effet
+        previewRaw(raw);
+      } catch (e) {
+        setImp({ kind: "error", message: `Import natif impossible : ${String(e)}` });
+      }
     });
   }
 
@@ -84,6 +100,11 @@ export function ImportExportClient(): React.ReactElement {
         <p style={{ color: "var(--irm-text-dim)", fontSize: 13, margin: "0 0 10px" }}>
           Sélectionne un fichier <code>irminsul-export</code>. Un aperçu s&apos;affiche <strong>avant</strong> toute écriture.
         </p>
+        {desktop ? (
+          <Button variant="primary" onClick={onNativeImport} disabled={pending} style={{ marginRight: 8 }}>
+            Choisir un fichier (natif)…
+          </Button>
+        ) : null}
         <label className="irm-btn" style={{ cursor: "pointer", display: "inline-flex" }}>
           Choisir un fichier…
           <input ref={fileRef} type="file" accept="application/json,.json" onChange={onFile} aria-label="Fichier d'import" style={{ display: "none" }} />

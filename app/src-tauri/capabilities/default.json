@@ -1,7 +1,10 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Permissions minimales : fenêtre principale + ouverture de fichier (import GOOD).",
+  "description": "Permissions minimales : fenêtre principale + dialogues fichier pour les commandes Import/Export restreintes. Le remote loopback est autorisé pour que la WebView (servie par le Next embarqué sur 127.0.0.1) puisse invoquer les commandes métier — aucune commande filesystem générique n'existe.",
   "windows": ["main"],
-  "permissions": ["core:default", "dialog:allow-open"]
+  "remote": {
+    "urls": ["http://127.0.0.1:*"]
+  },
+  "permissions": ["core:default", "dialog:allow-open", "dialog:allow-save"]
 }
