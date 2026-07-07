@@ -316,7 +316,7 @@ test.describe("Import / Export (irminsul-export/1.0)", () => {
   test("diagnostic : provenance moteur réelle, rapport sanitizé, mode web indiqué", async ({ page }) => {
     await page.goto("/diagnostic");
     await expect(page.getByRole("heading", { name: "Diagnostic" })).toBeVisible();
-    await expect(page.getByText("mode web")).toBeVisible();
+    await expect(page.getByText("mode web", { exact: true })).toBeVisible();
     // Provenance réelle (moteur source en E2E web) OU erreur honnête — jamais une fenêtre vide.
     const contract = page.getByText("engine-ipc/1.0");
     const engineError = page.getByText(/Moteur injoignable/);
