@@ -29,9 +29,9 @@
       "label": "Application web",
       "weight": 15,
       "mvpWeight": 10,
-      "score": 85,
+      "score": 87,
       "confidence": "high",
-      "evidence": "Next.js 16.2.9 ; 8 surfaces reelles (+ /import-export versionne, aller-retour transactionnel teste) ; E2E 40/40, axe vert",
+      "evidence": "Next.js 16.2.9 ; 9 surfaces (+ /diagnostic provenance moteur sanitizee) ; E2E 44/44 ; axe 0 critique ; resolution moteur unifiee (gele en desktop)",
       "blockers": "diagnostics UI ; desktop packaging"
     },
     {
@@ -39,10 +39,10 @@
       "label": "Application desktop",
       "weight": 10,
       "mvpWeight": 12,
-      "score": 72,
+      "score": 82,
       "confidence": "high",
-      "evidence": "PROUVE: build Tauri production PASS (exe+MSI+NSIS hashes), smoke binaire production TOUT VERT (6/6 routes 200, Next moderne, provenance sidecar frozen, zero orphelin x2, persistance DB), sidecar canonique rebuilt (parite testee sur .exe), Node embarque, donnees %APPDATA%",
-      "blockers": "installation MSI/NSIS non testee de bout en bout ; signature absente (SmartScreen) ; M3 course port differe"
+      "evidence": "PROUVE bout-en-bout: install NSIS %LOCALAPPDATA%/Irminsul (exit 0, raccourci) + smoke INSTALLE tout vert (7 routes 200 dont /diagnostic, node lie au PID Tauri, port via table TCP, nonce POST/boot->403, zero orphelin x2, persistance) + desinstall (donnees conservees) + reinstall (DB non ecrasee) ; cas d'erreur 4/4 (sidecar/node/standalone absents->app vivante sans enfant ; double lancement) chemin Unicode+espaces. Diagnostic livre, IO natif Tauri, nonce ephemere.",
+      "blockers": "MSI 1603 (per-machine sans elevation) ; non signe (SmartScreen) ; bind-race residuel accepte"
     },
     {
       "id": "team_builder_sim",
@@ -89,10 +89,10 @@
       "label": "Packaging et deploiement",
       "weight": 3,
       "mvpWeight": 2,
-      "score": 70,
+      "score": 74,
       "confidence": "medium",
-      "evidence": "MSI 100Mo + NSIS 63Mo produits et hashes (artifacts.txt) ; WiX/NSIS auto-provisionnes",
-      "blockers": "install/desinstall non testees ; non signe"
+      "evidence": "NSIS installe/desinstalle/reinstalle PROUVE (per-user, sans admin) ; MSI produit mais 1603 sans elevation (preuve msi-install-1603.log)",
+      "blockers": "MSI requiert admin ; non signe"
     },
     {
       "id": "doc_continuite",
