@@ -9,9 +9,9 @@ import { NextResponse, type NextRequest } from "next/server";
  * Les GET (rendu, assets, health check) restent libres : lecture locale non sensible.
  * Limites documentées : un processus du MÊME utilisateur pouvant lire la mémoire/env du
  * process a déjà gagné ; ce nonce bloque l'accès réseau local opportuniste, pas un malware
- * élevé. En mode web (pas d'env), le middleware est inactif.
+ * élevé. En mode web (pas d'env), le proxy est inactif.
  */
-export function middleware(request: NextRequest): NextResponse {
+export function proxy(request: NextRequest): NextResponse {
   const expected = process.env["IRMINSUL_NONCE"];
   if (!expected) return NextResponse.next(); // web/dev : pas de nonce requis
 

@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
  * Si valide → cookie httpOnly SameSite=Strict (inaccessible au JS et aux pages externes)
  * puis redirection vers le dashboard. Le nonce n'est jamais journalisé ni persisté.
  * NB : Next standalone en production ne journalise pas les URLs de requêtes ; la présence
- * du nonce en query est éphémère (mémoire process) — limite documentée dans le middleware.
+ * du nonce en query est éphémère (mémoire process) — limite documentée dans le proxy.
  */
 export function GET(request: NextRequest): NextResponse {
   const expected = process.env["IRMINSUL_NONCE"];
