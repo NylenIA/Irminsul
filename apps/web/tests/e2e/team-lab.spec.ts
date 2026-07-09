@@ -22,6 +22,15 @@ async function confirmDelete(page: Page, name: string): Promise<void> {
   await expect(page.getByRole("heading", { name, exact: true })).toHaveCount(0);
 }
 
+test.describe("Proxy nonce (mode web)", () => {
+  test("POST applicatif non authentifié n'est pas rejeté en 403 sans IRMINSUL_NONCE", async ({ request }) => {
+    // En E2E web, Tauri ne pose pas IRMINSUL_NONCE : le proxy doit rester inactif.
+    // Le refus 403 desktop est couvert uniquement par scripts/smoke-desktop.mjs.
+    const response = await request.post("/", { data: "mutation-probe" });
+    expect(response.status()).not.toBe(403);
+  });
+});
+
 test.describe("Laboratoire d'équipes", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/team-lab");
