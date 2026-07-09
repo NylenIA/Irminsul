@@ -5,11 +5,13 @@
   "description": "Monorepo Irminsul — apps web (Next.js) + desktop (Tauri) + packages partagés. Le moteur Python reste sous services/engine (préservé).",
   "scripts": {
     "typecheck": "npm run typecheck -w @irminsul/web",
+    "lint:py": ".\\.venv\\Scripts\\python.exe -m ruff check src tests",
     "test": "npm run test -w @irminsul/data-access",
+    "test:py": ".\\.venv\\Scripts\\python.exe -m pytest -q",
     "test:e2e": "npm run test:e2e -w @irminsul/web",
     "build": "npm run build -w @irminsul/web",
-    "verify": "npm run typecheck && npm run test && npm run build",
-    "desktop:sidecar": ".venv/Scripts/python.exe scripts/build_sidecar.py",
+    "verify": "npm run typecheck && npm run lint:py && npm run test && npm run test:py && npm run build",
+    "desktop:sidecar": ".\\.venv\\Scripts\\python.exe scripts/build_sidecar.py",
     "desktop:prepare": "node scripts/prepare-desktop-web.mjs",
     "desktop:build": "npm run desktop:prepare && npm --prefix app run tauri:build"
   },

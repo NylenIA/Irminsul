@@ -72,7 +72,8 @@ class TestValidation:
             calculate_rotation(TEAM, acts)
 
     def test_type_inconnu_rejete(self) -> None:
-        bad = _na(); bad["kind"] = "teleport"
+        bad = _na()
+        bad["kind"] = "teleport"
         with pytest.raises(RotationValidationError, match="type inconnu"):
             calculate_rotation(TEAM, [bad])
 
@@ -107,7 +108,8 @@ class TestCalcul:
         assert "incomplète" in r.get("note", "")
 
     def test_coefficient_introuvable_incomplet(self) -> None:
-        bad = _na(); bad["talentLabel"] = "Label Inexistant"
+        bad = _na()
+        bad["talentLabel"] = "Label Inexistant"
         r = calculate_rotation(TEAM, [bad])
         assert r["complete"] is False
         assert r["average_damage_per_second"] is None
