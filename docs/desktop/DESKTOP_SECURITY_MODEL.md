@@ -10,7 +10,7 @@ données de l'utilisateur ; ou détourne le port par une course au bind.
 2. Transmis UNIQUEMENT : env `IRMINSUL_NONCE` du process Next (mémoire) + navigation initiale
    `GET /boot?n=<nonce>` de la WebView.
 3. `/boot` (route handler) compare, pose un cookie **httpOnly SameSite=Strict** puis redirige `/`.
-4. `middleware.ts` : toute requête **POST** (mutations) sans cookie exact → **403**. GET/HEAD
+4. `proxy.ts` : toute requête **POST** (mutations) sans cookie exact → **403**. GET/HEAD
    libres (rendu, assets, health check — lecture locale non sensible).
 5. Rotation : nouveau nonce à chaque lancement ; jamais loggé, jamais persisté, absent de la base.
 
