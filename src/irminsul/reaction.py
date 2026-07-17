@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from collections.abc import Mapping, Sequence
+from dataclasses import asdict, dataclass, field
 
 from .damage import resistance_multiplier
 
@@ -24,6 +25,18 @@ TRANSFORMATIVE_BASE = {
     "burgeon": 3.0,
 }
 
+# --- Réactions lunaires (Luna I / 5.8+) -------------------------------------
+# Multiplicateur de base Lunar-Charged : 1.8 (KQM Lunar Reaction Guide,
+# https://keqingmains.com/misc/lunar-reactions/ ; concordant multi-sources).
+# Les dégâts Lunar-Charged sont de l'Electro (chaînes officielles, genshin-db).
+LUNAR_BASE = {
+    "lunar-charged": 1.8,
+}
+
+# Pondérations d'agrégation multi-participants, classées par dégâts personnels
+# décroissants : 100 % / 50 % / 1/12 / 1/12 (KQM + Icy Veins, concordants).
+LUNAR_CONTRIBUTION_WEIGHTS = (1.0, 0.5, 1.0 / 12.0, 1.0 / 12.0)
+
 # Multiplicateurs de base des réactions amplifiantes.
 AMPLIFYING_BASE = {
     "forward-vaporize": 2.0,
@@ -43,6 +56,18 @@ def amplifying_em_bonus(elemental_mastery: float) -> float:
     """Bonus de Maîtrise pour une réaction amplifiante (formule KQM)."""
     em = max(elemental_mastery, 0.0)
     return 2.78 * em / (em + 1400)
+
+
+def lunar_em_bonus(elemental_mastery: float) -> float:
+    """Bonus de Maîtrise pour une réaction lunaire : 6·EM/(EM+2000).
+
+    Constantes résolues exactement sur les 3 points publiés (Icy Veins,
+    « Lunar-Charged DMG Formula Clarified ») : 500 EM → +120 %,
+    1000 EM → +200 %, 1500 EM → +257,14 % ; structure analogue au
+    16·EM/(EM+2000) des transformatives.
+    """
+    em = max(elemental_mastery, 0.0)
+    return 6 * em / (em + 2000)
 
 
 @dataclass(slots=True)
@@ -106,6 +131,111 @@ def transformative_reaction(
         total_reaction_bonus=round(total_bonus, 4),
         resistance_multiplier=round(res_mult, 4),
         damage=round(damage, 2),
+    )
+
+
+@dataclass(slots=True)
+class LunarChargedResult:
+    reaction: str
+    base_multiplier: float
+    level_multiplier: float
+    resistance_multiplier: float
+    contributors: list[dict[str, float]] = field(default_factory=list)
+    damage: float = 0.0
+
+    def to_dict(self) -> dict[str, object]:
+        return asdict(self)
+
+
+_LUNAR_CONTRIBUTOR_KEYS = frozenset(
+    {"elemental_mastery", "crit_rate", "crit_damage", "base_dmg_bonus", "reaction_bonus"}
+)
+
+
+def lunar_charged_reaction(
+    *,
+    contributors: Sequence[Mapping[str, float]],
+    level_multiplier: float = LEVEL_MULTIPLIER_LV90,
+    enemy_resistance: float = 0.10,
+) -> LunarChargedResult:
+    """Dégâts moyens d'une réaction Lunar-Charged (Electro, ignore la DEF).
+
+    Formule par contributeur (KQM Lunar Reaction Guide) :
+    1.8 × mult_niveau × (1 + base_dmg_bonus) × (1 + reaction_bonus + 6·EM/(EM+2000))
+    × espérance de crit (1 + taux×dégâts crit, stats du contributeur).
+    Agrégation par dégâts personnels décroissants : 100 % / 50 % / 1/12 / 1/12,
+    puis multiplicateur de RES Electro de l'ennemi.
+
+    Chaque contributeur : {elemental_mastery, crit_rate, crit_damage,
+    base_dmg_bonus, reaction_bonus} (tous optionnels, défaut 0).
+
+    Hypothèses/limites (documentées, pas de fausse précision) :
+    - valeur MOYENNE : le jeu détermine le crit affiché via le meilleur
+      contributeur, sans effet sur l'espérance calculée ici ;
+    - l'ICD de déclenchement (~2 s) relève du modèle de rotation, pas d'ici ;
+    - « Elevation » et bonus Moonsign se passent via base_dmg_bonus /
+      reaction_bonus du contributeur concerné.
+    """
+    if not contributors:
+        raise ValueError("contributors ne peut pas être vide (1 à 4 participants)")
+    if len(contributors) > len(LUNAR_CONTRIBUTION_WEIGHTS):
+        raise ValueError(
+            f"Au plus {len(LUNAR_CONTRIBUTION_WEIGHTS)} contributeurs (équipe Genshin) ; "
+            f"reçu {len(contributors)}"
+        )
+    if level_multiplier <= 0:
+        raise ValueError("level_multiplier doit être positif")
+
+    base = LUNAR_BASE["lunar-charged"]
+    computed: list[dict[str, float]] = []
+    for i, raw in enumerate(contributors):
+        unknown = set(raw) - _LUNAR_CONTRIBUTOR_KEYS
+        if unknown:
+            raise ValueError(
+                f"Clés inconnues pour le contributeur {i} : {sorted(unknown)}. "
+                f"Attendues : {sorted(_LUNAR_CONTRIBUTOR_KEYS)}"
+            )
+        em_bonus = lunar_em_bonus(float(raw.get("elemental_mastery", 0.0)))
+        crit_rate = min(max(float(raw.get("crit_rate", 0.0)), 0.0), 1.0)
+        crit_damage = max(float(raw.get("crit_damage", 0.0)), 0.0)
+        expected_crit = 1.0 + crit_rate * crit_damage
+        base_dmg_bonus = max(float(raw.get("base_dmg_bonus", 0.0)), 0.0)
+        reaction_bonus = max(float(raw.get("reaction_bonus", 0.0)), 0.0)
+        personal = (
+            base
+            * level_multiplier
+            * (1.0 + base_dmg_bonus)
+            * (1.0 + reaction_bonus + em_bonus)
+            * expected_crit
+        )
+        computed.append(
+            {
+                "em_bonus": round(em_bonus, 4),
+                "expected_crit_multiplier": round(expected_crit, 4),
+                "base_dmg_bonus": round(base_dmg_bonus, 4),
+                "reaction_bonus": round(reaction_bonus, 4),
+                "personal_damage": personal,
+            }
+        )
+
+    computed.sort(key=lambda c: c["personal_damage"], reverse=True)
+    res_mult = resistance_multiplier(enemy_resistance)
+    total = 0.0
+    for rank, entry in enumerate(computed):
+        weight = LUNAR_CONTRIBUTION_WEIGHTS[rank]
+        weighted = entry["personal_damage"] * weight
+        total += weighted
+        entry["weight"] = round(weight, 6)
+        entry["weighted_damage"] = round(weighted * res_mult, 2)
+        entry["personal_damage"] = round(entry["personal_damage"], 2)
+
+    return LunarChargedResult(
+        reaction="lunar-charged",
+        base_multiplier=base,
+        level_multiplier=level_multiplier,
+        resistance_multiplier=round(res_mult, 4),
+        contributors=computed,
+        damage=round(total * res_mult, 2),
     )
 
 
