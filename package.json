@@ -10,7 +10,8 @@
     "test:py": ".\\.venv\\Scripts\\python.exe -m pytest -q",
     "test:e2e": "npm run test:e2e -w @irminsul/web",
     "build": "npm run build -w @irminsul/web",
-    "verify": "npm run typecheck && npm run lint:py && npm run test && npm run test:py && npm run build",
+    "check:proxy": "node scripts/check-proxy-manifest.mjs",
+    "verify": "npm run typecheck && npm run lint:py && npm run test && npm run test:py && npm run build && npm run check:proxy",
     "desktop:sidecar": ".\\.venv\\Scripts\\python.exe scripts/build_sidecar.py",
     "desktop:prepare": "node scripts/prepare-desktop-web.mjs",
     "desktop:build": "npm run desktop:prepare && npm --prefix app run tauri:build"
