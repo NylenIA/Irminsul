@@ -126,3 +126,13 @@ def test_lunar_charged_validation_errors() -> None:
         lunar_charged_reaction(contributors=[{"em": 100}])  # clé inconnue
     with pytest.raises(ValueError):
         lunar_charged_reaction(contributors=[{}], level_multiplier=0)
+
+
+def test_lunar_charged_via_engine_dispatch() -> None:
+    # Le sidecar expose la méthode : même résultat que l'appel direct.
+    from irminsul.engine_dispatch import CANONICAL_METHODS, dispatch
+
+    assert "lunar_charged_reaction" in CANONICAL_METHODS
+    payload = {"contributors": [{"elemental_mastery": 1000}], "enemy_resistance": 0.0}
+    via_dispatch = dispatch("lunar_charged_reaction", payload)
+    assert math.isclose(via_dispatch["damage"], 1.8 * 1446.85 * 3.0, rel_tol=1e-6)
