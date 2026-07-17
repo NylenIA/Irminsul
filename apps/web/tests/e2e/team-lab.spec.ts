@@ -355,3 +355,11 @@ test.describe("Import / Export (irminsul-export/1.0)", () => {
     expect(serious, JSON.stringify(serious.map((v) => v.id))).toEqual([]);
   });
 });
+
+test.describe("Aperçu de coup — réaction lunaire", () => {
+  test("le sélecteur de réaction propose Électrocution lunaire (lunar-charged)", async ({ page }) => {
+    await page.goto("/team-lab");
+    const select = page.getByLabel("Réaction élémentaire");
+    await expect(select.locator('option[value="lunar-charged"]')).toHaveCount(1);
+  });
+});

@@ -47,6 +47,9 @@ export function isTransformativeKind(key: string): boolean {
 export function isAmplifyingKind(key: string): boolean {
   return key in AMPLIFYING_BASE;
 }
+export function isLunarKind(key: string): boolean {
+  return key === "lunar-charged";
+}
 
 function roundTo(value: number, digits: number): number {
   const factor = 10 ** digits;

@@ -9,10 +9,13 @@ import { LocalEngineClient } from "./direct-hit";
 import {
   amplifyingMultiplier,
   isAmplifyingKind,
+  isLunarKind,
   isTransformativeKind,
+  lunarChargedReaction,
   REACTION_PROVENANCE,
   transformativeReaction,
   type AmplifyingResult,
+  type LunarChargedResult,
   type TransformativeResult,
 } from "./reactions";
 
@@ -36,7 +39,8 @@ export interface DirectHitPreviewRequest {
 
 export type ReactionPreview =
   | { type: "amplifying"; detail: AmplifyingResult; provenance: typeof REACTION_PROVENANCE }
-  | { type: "transformative"; detail: TransformativeResult; provenance: typeof REACTION_PROVENANCE };
+  | { type: "transformative"; detail: TransformativeResult; provenance: typeof REACTION_PROVENANCE }
+  | { type: "lunar"; detail: LunarChargedResult; provenance: typeof REACTION_PROVENANCE };
 
 export interface DirectHitPreview {
   character: string;
@@ -121,7 +125,8 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
   const em = isMissing(request.elementalMastery) ? 0 : request.elementalMastery;
   const isAmplifying = reactionKey !== null && isAmplifyingKind(reactionKey);
   const isTransformative = reactionKey !== null && isTransformativeKind(reactionKey);
-  if (reactionKey !== null && !isAmplifying && !isTransformative) {
+  const isLunar = reactionKey !== null && isLunarKind(reactionKey);
+  if (reactionKey !== null && !isAmplifying && !isTransformative && !isLunar) {
     issues.push(`Réaction inconnue : ${reactionKey}.`);
   }
   if (!finiteIn(em, 0, 4000)) issues.push("elementalMastery doit être entre 0 et 4000.");
@@ -154,6 +159,20 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
         enemyResistance: engineInput.enemyResistance,
       });
       reactionPreview = { type: "transformative", detail, provenance: REACTION_PROVENANCE };
+    } else if (isLunar && reactionKey) {
+      // Aperçu v1 : le personnage prévisualisé est l'UNIQUE contributeur (EM + crit
+      // du formulaire). Les vrais combats agrègent jusqu'à 4 participants (API).
+      const detail = lunarChargedReaction({
+        contributors: [
+          {
+            elementalMastery: em,
+            critRate: engineInput.critRate,
+            critDamage: engineInput.critDamage,
+          },
+        ],
+        enemyResistance: engineInput.enemyResistance,
+      });
+      reactionPreview = { type: "lunar", detail, provenance: REACTION_PROVENANCE };
     }
     const parameters: Record<string, number> = Object.fromEntries(
       Object.entries(engineInput).filter(([, v]) => typeof v === "number"),

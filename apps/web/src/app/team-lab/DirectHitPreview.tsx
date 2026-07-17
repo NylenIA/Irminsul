@@ -49,6 +49,7 @@ const REACTION_LABELS: Record<string, string> = {
   bloom: "Bourgeonnement",
   hyperbloom: "Exubérance",
   burgeon: "Burgeon",
+  "lunar-charged": "Électrocution lunaire (Électro, crit)",
 };
 
 const fmt = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
@@ -186,6 +187,9 @@ export function DirectHitPreview({ roster }: { roster: CharacterSummary[] }): Re
                 <option key={k} value={k}>{REACTION_LABELS[k] ?? k}</option>
               ))}
             </optgroup>
+            <optgroup label="Lunaires (dégâts propres, avec crit)">
+              <option value="lunar-charged">{REACTION_LABELS["lunar-charged"]}</option>
+            </optgroup>
           </select>
         </label>
         {reaction ? (
@@ -318,6 +322,21 @@ function ResultCard({ preview }: { preview: PreviewData }): React.ReactElement {
             <span className="irm-figure">{fmt.format(reaction.detail.damage)}</span>
             <span style={{ color: "var(--irm-text-faint)", fontSize: 12 }}>
               dégâts de réaction (sans crit, niv. 90, EM {reaction.detail.em_bonus > 0 ? "comptée" : "0"})
+            </span>
+          </div>
+        </div>
+      ) : null}
+
+      {reaction?.type === "lunar" ? (
+        <div className="irm-card" style={{ marginTop: 10, padding: 10 }} role="group" aria-label="Réaction lunaire">
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <span className="irm-badge irm-badge--verified">
+              {REACTION_LABELS[reaction.detail.reaction] ?? reaction.detail.reaction}
+            </span>
+            <span className="irm-figure">{fmt.format(reaction.detail.damage)}</span>
+            <span style={{ color: "var(--irm-text-faint)", fontSize: 12 }}>
+              dégâts moyens (crit du perso compté, niv. 90) — aperçu 1 contributeur ;
+              en combat, jusqu&apos;à 4 participants s&apos;agrègent
             </span>
           </div>
         </div>

@@ -101,6 +101,28 @@ describe("buildDirectHitPreview (orchestration pure, sans formule dupliquée)", 
     if (!bad.ok) expect(bad.kind).toBe("validation_error");
   });
 
+  it("réaction lunaire : dégâts moyens avec crit du contributeur, coup direct inchangé", () => {
+    const res = buildDirectHitPreview({
+      ...VALID,
+      reaction: "lunar-charged",
+      elementalMastery: 1000,
+      critRatePct: 50,
+      critDamagePct: 100,
+      enemyResistancePct: 0,
+    });
+    expect(res.ok).toBe(true);
+    if (!res.ok) return;
+    expect(res.preview.reaction?.type).toBe("lunar");
+    expect(res.preview.parameters["amplifyingReactionMultiplier"]).toBeUndefined();
+    if (res.preview.reaction?.type === "lunar") {
+      const detail = res.preview.reaction.detail;
+      // 1 contributeur : 1.8 × 1446.85 × (1+2.0) × (1 + 0.5×1.0) = 11719.485
+      expect(detail.contributors).toHaveLength(1);
+      expect(detail.contributors[0]!.expected_crit_multiplier).toBeCloseTo(1.5, 9);
+      expect(detail.damage).toBeCloseTo(11719.49, 2);
+    }
+  });
+
   it("provenance + hypothèses + confiance présentes (aucun faux DPS)", () => {
     const res = buildDirectHitPreview(VALID);
     expect(res.ok).toBe(true);
