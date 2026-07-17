@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-30",
+  "updatedAt": "2026-07-17",
   "branch": "feat/irminsul-complete-redesign",
   "scale": "0=absent, 25=squelette/mock/TODO, 50=happy-path peu validé, 75=intégré+testé cas majeurs, 100=prêt à livrer",
   "method": "Score reproductible = somme(poids x score)/100. Deux pondérations: weight (vision complète), mvpWeight (MVP utilisable). Scores assignés par preuve vérifiée, pas à la main dans le rapport.",
@@ -9,10 +9,10 @@
       "label": "Moteur de données et calcul",
       "weight": 25,
       "mvpWeight": 30,
-      "score": 82,
+      "score": 85,
       "confidence": "high",
-      "evidence": "Moteur stats finales INTEGRE (basestats+weaponstats+talentstats+charstats, defensif) ; pytest 192 passed ; goldens vs jeu ; registre mecaniques verified",
-      "blockers": "reactions Lunaires + gcsim nouveaux persos"
+      "evidence": "Moteur stats finales INTEGRE (basestats+weaponstats+talentstats+charstats, defensif) ; pytest 231 ; goldens vs jeu ; registre mecaniques verified ; Lunar-Charged LIVRE bout-en-bout (formule KQM sourcee, EM 6x/(x+2000) resolu sur points publies, agregation 1/0.5/1/12/1/12, sidecar+miroir TS goldens croises+UI apercu, E2E 48)",
+      "blockers": "Lunar-Bloom/Crystallize (multiplicateurs non confirmes -> exclus volontairement) ; gcsim nouveaux persos"
     },
     {
       "id": "integration_moteur",
