@@ -14,7 +14,11 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from irminsul.reaction import amplifying_multiplier, transformative_reaction  # noqa: E402
+from irminsul.reaction import (  # noqa: E402
+    amplifying_multiplier,
+    lunar_charged_reaction,
+    transformative_reaction,
+)
 
 OUT = ROOT / "packages" / "engine-client" / "tests" / "reaction.goldens.json"
 
@@ -43,6 +47,30 @@ TRANSFORMATIVE_CASES = [
 ]
 
 
+LUNAR_CASES = [
+    # Baseline : 1 contributeur, point EM publié (1000 -> +200 %), RES 0.
+    dict(contributors=[dict(elemental_mastery=1000)], enemy_resistance=0.0),
+    # Tri : fourni dans le mauvais ordre (faible d'abord), RES 10 % par défaut.
+    dict(contributors=[dict(elemental_mastery=0), dict(elemental_mastery=2000)]),
+    # 4 contributeurs mixtes (crit, bonus base/réaction, clamp crit_rate).
+    dict(
+        contributors=[
+            dict(elemental_mastery=500, crit_rate=0.6, crit_damage=1.2),
+            dict(elemental_mastery=187, reaction_bonus=0.4),
+            dict(elemental_mastery=1500, crit_rate=1.5, crit_damage=0.5, base_dmg_bonus=0.25),
+            dict(),
+        ],
+        enemy_resistance=-0.2,
+    ),
+    # Niveau != 90 + frontière RES élevée.
+    dict(
+        contributors=[dict(elemental_mastery=320, crit_rate=0.31, crit_damage=0.884)],
+        level_multiplier=1077.44,
+        enemy_resistance=0.75,
+    ),
+]
+
+
 def main() -> None:
     goldens = {
         "source": "src/irminsul/reaction.py (formules KQM ; niveau 90 = 1446.85)",
@@ -55,10 +83,17 @@ def main() -> None:
             {"inputs": c, "expected": transformative_reaction(**c).to_dict()}
             for c in TRANSFORMATIVE_CASES
         ],
+        "lunar": [
+            {"inputs": c, "expected": lunar_charged_reaction(**c).to_dict()}
+            for c in LUNAR_CASES
+        ],
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(goldens, indent=2), encoding="utf-8")
-    print(f"{len(AMPLIFYING_CASES)} amplifiantes + {len(TRANSFORMATIVE_CASES)} transformatives -> {OUT.relative_to(ROOT)}")
+    print(
+        f"{len(AMPLIFYING_CASES)} amplifiantes + {len(TRANSFORMATIVE_CASES)} transformatives "
+        f"+ {len(LUNAR_CASES)} lunaires -> {OUT.relative_to(ROOT)}"
+    )
 
 
 if __name__ == "__main__":

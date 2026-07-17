@@ -257,5 +257,173 @@
         "damage": 1953.25
       }
     }
+  ],
+  "lunar": [
+    {
+      "inputs": {
+        "contributors": [
+          {
+            "elemental_mastery": 1000
+          }
+        ],
+        "enemy_resistance": 0.0
+      },
+      "expected": {
+        "reaction": "lunar-charged",
+        "base_multiplier": 1.8,
+        "level_multiplier": 1446.85,
+        "resistance_multiplier": 1.0,
+        "contributors": [
+          {
+            "em_bonus": 2.0,
+            "expected_crit_multiplier": 1.0,
+            "base_dmg_bonus": 0.0,
+            "reaction_bonus": 0.0,
+            "personal_damage": 7812.99,
+            "weight": 1.0,
+            "weighted_damage": 7812.99
+          }
+        ],
+        "damage": 7812.99
+      }
+    },
+    {
+      "inputs": {
+        "contributors": [
+          {
+            "elemental_mastery": 0
+          },
+          {
+            "elemental_mastery": 2000
+          }
+        ]
+      },
+      "expected": {
+        "reaction": "lunar-charged",
+        "base_multiplier": 1.8,
+        "level_multiplier": 1446.85,
+        "resistance_multiplier": 0.9,
+        "contributors": [
+          {
+            "em_bonus": 3.0,
+            "expected_crit_multiplier": 1.0,
+            "base_dmg_bonus": 0.0,
+            "reaction_bonus": 0.0,
+            "personal_damage": 10417.32,
+            "weight": 1.0,
+            "weighted_damage": 9375.59
+          },
+          {
+            "em_bonus": 0.0,
+            "expected_crit_multiplier": 1.0,
+            "base_dmg_bonus": 0.0,
+            "reaction_bonus": 0.0,
+            "personal_damage": 2604.33,
+            "weight": 0.5,
+            "weighted_damage": 1171.95
+          }
+        ],
+        "damage": 10547.54
+      }
+    },
+    {
+      "inputs": {
+        "contributors": [
+          {
+            "elemental_mastery": 500,
+            "crit_rate": 0.6,
+            "crit_damage": 1.2
+          },
+          {
+            "elemental_mastery": 187,
+            "reaction_bonus": 0.4
+          },
+          {
+            "elemental_mastery": 1500,
+            "crit_rate": 1.5,
+            "crit_damage": 0.5,
+            "base_dmg_bonus": 0.25
+          },
+          {}
+        ],
+        "enemy_resistance": -0.2
+      },
+      "expected": {
+        "reaction": "lunar-charged",
+        "base_multiplier": 1.8,
+        "level_multiplier": 1446.85,
+        "resistance_multiplier": 1.1,
+        "contributors": [
+          {
+            "em_bonus": 2.5714,
+            "expected_crit_multiplier": 1.5,
+            "base_dmg_bonus": 0.25,
+            "reaction_bonus": 0.0,
+            "personal_damage": 17439.71,
+            "weight": 1.0,
+            "weighted_damage": 19183.68
+          },
+          {
+            "em_bonus": 1.2,
+            "expected_crit_multiplier": 1.72,
+            "base_dmg_bonus": 0.0,
+            "reaction_bonus": 0.0,
+            "personal_damage": 9854.78,
+            "weight": 0.5,
+            "weighted_damage": 5420.13
+          },
+          {
+            "em_bonus": 0.513,
+            "expected_crit_multiplier": 1.0,
+            "base_dmg_bonus": 0.0,
+            "reaction_bonus": 0.4,
+            "personal_damage": 4982.17,
+            "weight": 0.083333,
+            "weighted_damage": 456.7
+          },
+          {
+            "em_bonus": 0.0,
+            "expected_crit_multiplier": 1.0,
+            "base_dmg_bonus": 0.0,
+            "reaction_bonus": 0.0,
+            "personal_damage": 2604.33,
+            "weight": 0.083333,
+            "weighted_damage": 238.73
+          }
+        ],
+        "damage": 25299.24
+      }
+    },
+    {
+      "inputs": {
+        "contributors": [
+          {
+            "elemental_mastery": 320,
+            "crit_rate": 0.31,
+            "crit_damage": 0.884
+          }
+        ],
+        "level_multiplier": 1077.44,
+        "enemy_resistance": 0.75
+      },
+      "expected": {
+        "reaction": "lunar-charged",
+        "base_multiplier": 1.8,
+        "level_multiplier": 1077.44,
+        "resistance_multiplier": 0.25,
+        "contributors": [
+          {
+            "em_bonus": 0.8276,
+            "expected_crit_multiplier": 1.274,
+            "base_dmg_bonus": 0.0,
+            "reaction_bonus": 0.0,
+            "personal_damage": 4515.72,
+            "weight": 1.0,
+            "weighted_damage": 1128.93
+          }
+        ],
+        "damage": 1128.93
+      }
+    }
   ]
 }
