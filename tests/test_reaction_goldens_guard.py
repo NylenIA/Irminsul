@@ -11,6 +11,7 @@ import pathlib
 import pytest
 
 from irminsul.reaction import (
+    additive_reaction,
     amplifying_multiplier,
     lunar_reaction,
     transformative_reaction,
@@ -34,6 +35,13 @@ def test_reaction_goldens_match_engine() -> None:
                 assert math.isclose(result[key], expected, abs_tol=1e-12), (key, case)
     for case in payload["transformative"]:
         result = transformative_reaction(**case["inputs"]).to_dict()
+        for key, expected in case["expected"].items():
+            if isinstance(expected, str):
+                assert result[key] == expected
+            else:
+                assert math.isclose(result[key], expected, abs_tol=1e-12), (key, case)
+    for case in payload.get("additive", []):
+        result = additive_reaction(**case["inputs"]).to_dict()
         for key, expected in case["expected"].items():
             if isinstance(expected, str):
                 assert result[key] == expected

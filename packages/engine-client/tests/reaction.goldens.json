@@ -258,6 +258,78 @@
       }
     }
   ],
+  "additive": [
+    {
+      "inputs": {
+        "reaction": "aggravate"
+      },
+      "expected": {
+        "reaction": "aggravate",
+        "base_multiplier": 1.15,
+        "level_multiplier": 1446.85,
+        "em_bonus": 0.0,
+        "extra_bonus": 0.0,
+        "base_bonus_damage": 1663.88
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "spread"
+      },
+      "expected": {
+        "reaction": "spread",
+        "base_multiplier": 1.25,
+        "level_multiplier": 1446.85,
+        "em_bonus": 0.0,
+        "extra_bonus": 0.0,
+        "base_bonus_damage": 1808.56
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "aggravate",
+        "elemental_mastery": 300,
+        "reaction_bonus": 0.2
+      },
+      "expected": {
+        "reaction": "aggravate",
+        "base_multiplier": 1.15,
+        "level_multiplier": 1446.85,
+        "em_bonus": 1.0,
+        "extra_bonus": 0.2,
+        "base_bonus_damage": 3660.53
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "spread",
+        "elemental_mastery": 1200
+      },
+      "expected": {
+        "reaction": "spread",
+        "base_multiplier": 1.25,
+        "level_multiplier": 1446.85,
+        "em_bonus": 2.5,
+        "extra_bonus": 0.0,
+        "base_bonus_damage": 6329.97
+      }
+    },
+    {
+      "inputs": {
+        "reaction": "aggravate",
+        "elemental_mastery": 187,
+        "level_multiplier": 1077.44
+      },
+      "expected": {
+        "reaction": "aggravate",
+        "base_multiplier": 1.15,
+        "level_multiplier": 1077.44,
+        "em_bonus": 0.6741,
+        "extra_bonus": 0.0,
+        "base_bonus_damage": 2074.32
+      }
+    }
+  ],
   "lunar": [
     {
       "inputs": {

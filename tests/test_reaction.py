@@ -158,3 +158,50 @@ def test_lunar_crystallize_base_and_generic_api() -> None:
     assert a.to_dict() == b.to_dict()
     with pytest.raises(ValueError):
         lunar_reaction(reaction="lunar-bloom", contributors=[{}])  # exclu v1
+
+
+# --- Réactions additives (Aggravation / Propagation) --------------------------
+
+def test_additive_baselines_and_em_formula() -> None:
+    from irminsul.reaction import additive_em_bonus, additive_reaction
+
+    # Goldens historiques phase3 (d61803b) : EM 0, niveau 90.
+    agg = additive_reaction(reaction="aggravate")
+    spr = additive_reaction(reaction="spread")
+    assert math.isclose(agg.base_bonus_damage, 1663.88, abs_tol=0.01)
+    assert math.isclose(spr.base_bonus_damage, 1808.56, abs_tol=0.01)
+    # Formule EM : 5·EM/(EM+1200) -> 2.5 à 1200 EM.
+    assert math.isclose(additive_em_bonus(1200), 2.5, rel_tol=1e-9)
+    # Monotone en EM.
+    assert additive_em_bonus(400) < additive_em_bonus(800) < additive_em_bonus(1600)
+    with pytest.raises(ValueError):
+        additive_reaction(reaction="quicken")
+
+
+def test_additive_composes_with_direct_hit_flat_base() -> None:
+    from irminsul.damage import calculate_direct_hit
+    from irminsul.reaction import additive_reaction
+
+    detail = additive_reaction(reaction="aggravate", elemental_mastery=300)
+    base = calculate_direct_hit(scaling=2.0, scaling_stat=1500, crit_rate=0, crit_damage=0)
+    boosted = calculate_direct_hit(
+        scaling=2.0,
+        scaling_stat=1500,
+        crit_rate=0,
+        crit_damage=0,
+        flat_base_damage=detail.base_bonus_damage,
+    )
+    # Le bonus additif augmente la BASE (puis modifié par DEF/RES identiques).
+    assert boosted.expected > base.expected
+    # L'écart correspond exactement au bonus × DEF × RES (structure raw_base + flat).
+    assert math.isclose(
+        boosted.raw_base - base.raw_base, detail.base_bonus_damage, abs_tol=1e-9
+    )
+
+
+def test_additive_via_engine_dispatch() -> None:
+    from irminsul.engine_dispatch import CANONICAL_METHODS, dispatch
+
+    assert "additive_reaction" in CANONICAL_METHODS
+    out = dispatch("additive_reaction", {"reaction": "spread", "elemental_mastery": 0})
+    assert math.isclose(out["base_bonus_damage"], 1808.56, abs_tol=0.01)

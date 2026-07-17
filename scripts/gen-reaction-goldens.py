@@ -15,6 +15,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from irminsul.reaction import (  # noqa: E402
+    additive_reaction,
     amplifying_multiplier,
     lunar_reaction,
     transformative_reaction,
@@ -46,6 +47,17 @@ TRANSFORMATIVE_CASES = [
     dict(reaction="shatter", elemental_mastery=0),
 ]
 
+
+ADDITIVE_CASES = [
+    # Baselines historiques phase3 (EM 0, niv. 90) : 1663.88 / 1808.56.
+    dict(reaction="aggravate"),
+    dict(reaction="spread"),
+    # EM réaliste + bonus additif (ex. 4p Thundering Fury-like).
+    dict(reaction="aggravate", elemental_mastery=300, reaction_bonus=0.2),
+    dict(reaction="spread", elemental_mastery=1200),  # point EM : bonus 2.5
+    # Niveau != 90.
+    dict(reaction="aggravate", elemental_mastery=187, level_multiplier=1077.44),
+]
 
 LUNAR_CASES = [
     # Baseline LC : 1 contributeur, point EM publié (1000 -> +200 %), RES 0.
@@ -102,6 +114,10 @@ def main() -> None:
             {"inputs": c, "expected": transformative_reaction(**c).to_dict()}
             for c in TRANSFORMATIVE_CASES
         ],
+        "additive": [
+            {"inputs": c, "expected": additive_reaction(**c).to_dict()}
+            for c in ADDITIVE_CASES
+        ],
         "lunar": [
             {"inputs": c, "expected": lunar_reaction(**c).to_dict()}
             for c in LUNAR_CASES
@@ -111,7 +127,7 @@ def main() -> None:
     OUT.write_text(json.dumps(goldens, indent=2), encoding="utf-8")
     print(
         f"{len(AMPLIFYING_CASES)} amplifiantes + {len(TRANSFORMATIVE_CASES)} transformatives "
-        f"+ {len(LUNAR_CASES)} lunaires -> {OUT.relative_to(ROOT)}"
+        f"+ {len(ADDITIVE_CASES)} additives + {len(LUNAR_CASES)} lunaires -> {OUT.relative_to(ROOT)}"
     )
 
 
