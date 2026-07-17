@@ -3,6 +3,7 @@ import goldens from "./reaction.goldens.json";
 import {
   amplifyingMultiplier,
   lunarChargedReaction,
+  lunarReaction,
   transformativeReaction,
   REACTION_PROVENANCE,
 } from "../src/reactions";
@@ -44,7 +45,8 @@ describe("parité réactions TS ↔ moteur Python (goldens gen-reaction-goldens.
 
   it.each(goldens.lunar.map((c, i) => [i, c] as const))("lunaire golden %d", (_i, c) => {
     const inputs = c.inputs as Record<string, unknown>;
-    const result = lunarChargedReaction({
+    const result = lunarReaction({
+      reaction: inputs["reaction"] as string,
       contributors: (inputs["contributors"] as Record<string, number | undefined>[]).map((raw) => ({
         elementalMastery: raw["elemental_mastery"],
         critRate: raw["crit_rate"],
@@ -71,7 +73,10 @@ describe("parité réactions TS ↔ moteur Python (goldens gen-reaction-goldens.
     }
   });
 
-  it("lunaire : validations (vide, >4 contributeurs, niveau invalide)", () => {
+  it("lunaire : validations (vide, >4 contributeurs, niveau invalide, réaction inconnue)", () => {
+    expect(() => lunarReaction({ reaction: "lunar-bloom", contributors: [{}] })).toThrow(
+      RangeError,
+    );
     expect(() => lunarChargedReaction({ contributors: [] })).toThrow(RangeError);
     expect(() => lunarChargedReaction({ contributors: [{}, {}, {}, {}, {}] })).toThrow(RangeError);
     expect(() => lunarChargedReaction({ contributors: [{}], levelMultiplier: 0 })).toThrow(

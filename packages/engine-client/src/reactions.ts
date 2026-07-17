@@ -48,7 +48,7 @@ export function isAmplifyingKind(key: string): boolean {
   return key in AMPLIFYING_BASE;
 }
 export function isLunarKind(key: string): boolean {
-  return key === "lunar-charged";
+  return key in LUNAR_BASE;
 }
 
 function roundTo(value: number, digits: number): number {
@@ -141,10 +141,17 @@ export function amplifyingMultiplier(input: {
 
 // --- Réactions lunaires (Luna I) — portage fidèle de lunar_charged_reaction ---
 
-/** Multiplicateur de base Lunar-Charged (KQM Lunar Reaction Guide). Dégâts Electro. */
+/**
+ * Multiplicateurs de base lunaires (KQM Lunar Reaction Guide, corroborés) :
+ * Lunar-Charged 1.8 (Electro) · Lunar-Crystallize 1.6 (Géo, sans ICD global).
+ * Lunar-Bloom EXCLU : multiplicateur non confirmé (aucune valeur inventée).
+ */
 export const LUNAR_BASE = Object.freeze({
   "lunar-charged": 1.8,
+  "lunar-crystallize": 1.6,
 } as const);
+
+export type LunarKind = keyof typeof LUNAR_BASE;
 
 /** Pondérations par dégâts personnels décroissants : 100 % / 50 % / 1/12 / 1/12. */
 export const LUNAR_CONTRIBUTION_WEIGHTS = Object.freeze([1.0, 0.5, 1 / 12, 1 / 12] as const);
@@ -183,15 +190,23 @@ export interface LunarChargedResult {
 }
 
 /**
- * Dégâts MOYENS d'une réaction Lunar-Charged (Electro, ignore la DEF) —
- * miroir exact de `lunar_charged_reaction` (Python). Espérance de crit par
+ * Dégâts MOYENS d'une réaction lunaire multi-participants (ignore la DEF) —
+ * miroir exact de `lunar_reaction` (Python). Espérance de crit par
  * contributeur ; agrégation triée par dégâts personnels décroissants.
  */
-export function lunarChargedReaction(input: {
+export function lunarReaction(input: {
+  reaction: string;
   contributors: LunarContributorInput[];
   levelMultiplier?: number;
   enemyResistance?: number;
 }): LunarChargedResult {
+  const key = input.reaction.trim().toLowerCase();
+  const baseFromKey = LUNAR_BASE[key as LunarKind];
+  if (baseFromKey === undefined) {
+    throw new RangeError(
+      `Réaction lunaire inconnue : ${input.reaction}. Options : ${Object.keys(LUNAR_BASE).sort().join(", ")}`,
+    );
+  }
   const { contributors } = input;
   if (!contributors || contributors.length === 0) {
     throw new RangeError("contributors ne peut pas être vide (1 à 4 participants)");
@@ -204,7 +219,7 @@ export function lunarChargedReaction(input: {
   const levelMultiplier = input.levelMultiplier ?? LEVEL_MULTIPLIER_LV90;
   if (levelMultiplier <= 0) throw new RangeError("levelMultiplier doit être positif");
 
-  const base = LUNAR_BASE["lunar-charged"];
+  const base = baseFromKey;
   const computed = contributors.map((raw) => {
     const emBonus = lunarEmBonus(raw.elementalMastery ?? 0);
     const critRate = Math.min(Math.max(raw.critRate ?? 0, 0), 1);
@@ -236,13 +251,22 @@ export function lunarChargedReaction(input: {
   });
 
   return {
-    reaction: "lunar-charged",
+    reaction: key,
     base_multiplier: base,
     level_multiplier: levelMultiplier,
     resistance_multiplier: roundTo(resMult, 4),
     contributors: breakdown,
     damage: roundTo(total * resMult, 2),
   };
+}
+
+/** Compat : Lunar-Charged via `lunarReaction` (appelants existants). */
+export function lunarChargedReaction(input: {
+  contributors: LunarContributorInput[];
+  levelMultiplier?: number;
+  enemyResistance?: number;
+}): LunarChargedResult {
+  return lunarReaction({ reaction: "lunar-charged", ...input });
 }
 
 export const REACTION_PROVENANCE = Object.freeze({
@@ -254,6 +278,6 @@ export const REACTION_PROVENANCE = Object.freeze({
     "Transformatives : pas de critique (comportement de base) ; niveau 90 par défaut (1446.85).",
     "Amplifiantes : multiplicateur à injecter dans un coup direct (direction du déclenchement explicite).",
     "Additives (Aggravation/Propagation) : hors périmètre v1 (moteur phase3 non fusionné).",
-    "Lunar-Charged : valeur MOYENNE multi-contributeurs (espérance de crit par participant) ; ICD ~2 s hors périmètre (rotation) ; Lunar-Bloom/Crystallize hors périmètre v1 (multiplicateurs non confirmés).",
+    "Lunaires (Lunar-Charged 1.8 Électro ; Lunar-Crystallize 1.6 Géo) : valeur MOYENNE multi-contributeurs (espérance de crit par participant) ; ICD hors périmètre (rotation) ; Lunar-Bloom exclu (multiplicateur non confirmé — aucune valeur inventée).",
   ] as const),
 });

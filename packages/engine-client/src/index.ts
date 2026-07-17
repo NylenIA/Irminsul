@@ -33,11 +33,13 @@ export {
   LUNAR_CONTRIBUTION_WEIGHTS,
   lunarChargedReaction,
   lunarEmBonus,
+  lunarReaction,
   type AmplifyingKind,
   type AmplifyingResult,
   type LunarChargedResult,
   type LunarContributorBreakdown,
   type LunarContributorInput,
+  type LunarKind,
   type TransformativeKind,
   type TransformativeResult,
 } from "./reactions";

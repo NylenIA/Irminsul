@@ -94,6 +94,11 @@ def _lunar_charged(p: dict[str, Any]) -> dict[str, Any]:
     return lunar_charged_reaction(**p).to_dict()
 
 
+def _lunar(p: dict[str, Any]) -> dict[str, Any]:
+    from .reaction import lunar_reaction
+    return lunar_reaction(**p).to_dict()
+
+
 def _final_stats(p: dict[str, Any]) -> dict[str, Any]:
     key = p.get("key")
     if not isinstance(key, str) or not key.strip():
@@ -186,6 +191,7 @@ CANONICAL_METHODS: dict[str, Callable[[dict[str, Any]], dict[str, Any]]] = {
     "amplifying_multiplier": _amplifying,
     "transformative_reaction": _transformative,
     "lunar_charged_reaction": _lunar_charged,
+    "lunar_reaction": _lunar,
     "character_final_stats": _final_stats,
     "calculate_rotation": _rotation,
     # Découverte / provenance (dérivées)

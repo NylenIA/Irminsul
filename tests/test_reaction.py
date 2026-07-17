@@ -136,3 +136,25 @@ def test_lunar_charged_via_engine_dispatch() -> None:
     payload = {"contributors": [{"elemental_mastery": 1000}], "enemy_resistance": 0.0}
     via_dispatch = dispatch("lunar_charged_reaction", payload)
     assert math.isclose(via_dispatch["damage"], 1.8 * 1446.85 * 3.0, rel_tol=1e-6)
+
+
+def test_lunar_crystallize_base_and_generic_api() -> None:
+    from irminsul.reaction import lunar_reaction
+
+    # LCrys : base 1.6 (KQM, corroboré), même formule EM, mêmes poids.
+    result = lunar_reaction(
+        reaction="lunar-crystallize",
+        contributors=[{"elemental_mastery": 1000}],
+        enemy_resistance=0.0,
+    )
+    assert result.reaction == "lunar-crystallize"
+    assert result.base_multiplier == 1.6
+    assert math.isclose(result.damage, 1.6 * 1446.85 * 3.0, rel_tol=1e-6)
+    # Wrapper de compat : identique à l'appel générique.
+    from irminsul.reaction import lunar_charged_reaction
+
+    a = lunar_charged_reaction(contributors=[{"elemental_mastery": 500}])
+    b = lunar_reaction(reaction="lunar-charged", contributors=[{"elemental_mastery": 500}])
+    assert a.to_dict() == b.to_dict()
+    with pytest.raises(ValueError):
+        lunar_reaction(reaction="lunar-bloom", contributors=[{}])  # exclu v1

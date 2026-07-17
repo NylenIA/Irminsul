@@ -50,6 +50,7 @@ const REACTION_LABELS: Record<string, string> = {
   hyperbloom: "Exubérance",
   burgeon: "Burgeon",
   "lunar-charged": "Électrocution lunaire (Électro, crit)",
+  "lunar-crystallize": "Cristallisation lunaire (Géo, crit)",
 };
 
 const fmt = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
@@ -189,6 +190,7 @@ export function DirectHitPreview({ roster }: { roster: CharacterSummary[] }): Re
             </optgroup>
             <optgroup label="Lunaires (dégâts propres, avec crit)">
               <option value="lunar-charged">{REACTION_LABELS["lunar-charged"]}</option>
+              <option value="lunar-crystallize">{REACTION_LABELS["lunar-crystallize"]}</option>
             </optgroup>
           </select>
         </label>

@@ -16,7 +16,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from irminsul.reaction import (  # noqa: E402
     amplifying_multiplier,
-    lunar_charged_reaction,
+    lunar_reaction,
     transformative_reaction,
 )
 
@@ -48,12 +48,16 @@ TRANSFORMATIVE_CASES = [
 
 
 LUNAR_CASES = [
-    # Baseline : 1 contributeur, point EM publié (1000 -> +200 %), RES 0.
-    dict(contributors=[dict(elemental_mastery=1000)], enemy_resistance=0.0),
+    # Baseline LC : 1 contributeur, point EM publié (1000 -> +200 %), RES 0.
+    dict(reaction="lunar-charged", contributors=[dict(elemental_mastery=1000)], enemy_resistance=0.0),
     # Tri : fourni dans le mauvais ordre (faible d'abord), RES 10 % par défaut.
-    dict(contributors=[dict(elemental_mastery=0), dict(elemental_mastery=2000)]),
+    dict(
+        reaction="lunar-charged",
+        contributors=[dict(elemental_mastery=0), dict(elemental_mastery=2000)],
+    ),
     # 4 contributeurs mixtes (crit, bonus base/réaction, clamp crit_rate).
     dict(
+        reaction="lunar-charged",
         contributors=[
             dict(elemental_mastery=500, crit_rate=0.6, crit_damage=1.2),
             dict(elemental_mastery=187, reaction_bonus=0.4),
@@ -64,9 +68,24 @@ LUNAR_CASES = [
     ),
     # Niveau != 90 + frontière RES élevée.
     dict(
+        reaction="lunar-charged",
         contributors=[dict(elemental_mastery=320, crit_rate=0.31, crit_damage=0.884)],
         level_multiplier=1077.44,
         enemy_resistance=0.75,
+    ),
+    # LCrys : base 1.6, baseline EM publiée.
+    dict(
+        reaction="lunar-crystallize",
+        contributors=[dict(elemental_mastery=1000)],
+        enemy_resistance=0.0,
+    ),
+    # LCrys : 2 contributeurs avec crit (Hydro applier + Geo trigger).
+    dict(
+        reaction="lunar-crystallize",
+        contributors=[
+            dict(elemental_mastery=800, crit_rate=0.7, crit_damage=1.4),
+            dict(elemental_mastery=120, crit_rate=0.05, crit_damage=0.5),
+        ],
     ),
 ]
 
@@ -84,7 +103,7 @@ def main() -> None:
             for c in TRANSFORMATIVE_CASES
         ],
         "lunar": [
-            {"inputs": c, "expected": lunar_charged_reaction(**c).to_dict()}
+            {"inputs": c, "expected": lunar_reaction(**c).to_dict()}
             for c in LUNAR_CASES
         ],
     }

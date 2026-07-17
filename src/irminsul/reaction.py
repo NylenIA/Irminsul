@@ -26,11 +26,14 @@ TRANSFORMATIVE_BASE = {
 }
 
 # --- Réactions lunaires (Luna I / 5.8+) -------------------------------------
-# Multiplicateur de base Lunar-Charged : 1.8 (KQM Lunar Reaction Guide,
-# https://keqingmains.com/misc/lunar-reactions/ ; concordant multi-sources).
-# Les dégâts Lunar-Charged sont de l'Electro (chaînes officielles, genshin-db).
+# Multiplicateurs de base (KQM Lunar Reaction Guide,
+# https://keqingmains.com/misc/lunar-reactions/ ; corroborés wiki/game8) :
+# Lunar-Charged 1.8 (dégâts Electro) ; Lunar-Crystallize 1.6 (dégâts Géo,
+# pas d'ICD global). Lunar-Bloom EXCLU : multiplicateur non confirmé par KQM
+# (mécanique à cœurs différente) — aucune valeur inventée.
 LUNAR_BASE = {
     "lunar-charged": 1.8,
+    "lunar-crystallize": 1.6,
 }
 
 # Pondérations d'agrégation multi-participants, classées par dégâts personnels
@@ -152,19 +155,22 @@ _LUNAR_CONTRIBUTOR_KEYS = frozenset(
 )
 
 
-def lunar_charged_reaction(
+def lunar_reaction(
     *,
+    reaction: str,
     contributors: Sequence[Mapping[str, float]],
     level_multiplier: float = LEVEL_MULTIPLIER_LV90,
     enemy_resistance: float = 0.10,
 ) -> LunarChargedResult:
-    """Dégâts moyens d'une réaction Lunar-Charged (Electro, ignore la DEF).
+    """Dégâts moyens d'une réaction lunaire multi-participants (ignore la DEF).
 
+    Réactions : lunar-charged (1.8, Electro) · lunar-crystallize (1.6, Géo).
     Formule par contributeur (KQM Lunar Reaction Guide) :
-    1.8 × mult_niveau × (1 + base_dmg_bonus) × (1 + reaction_bonus + 6·EM/(EM+2000))
+    base × mult_niveau × (1 + base_dmg_bonus) × (1 + reaction_bonus + 6·EM/(EM+2000))
     × espérance de crit (1 + taux×dégâts crit, stats du contributeur).
     Agrégation par dégâts personnels décroissants : 100 % / 50 % / 1/12 / 1/12,
-    puis multiplicateur de RES Electro de l'ennemi.
+    puis multiplicateur de RES de l'ennemi (élément de la réaction — au choix
+    de l'appelant via enemy_resistance).
 
     Chaque contributeur : {elemental_mastery, crit_rate, crit_damage,
     base_dmg_bonus, reaction_bonus} (tous optionnels, défaut 0).
@@ -172,10 +178,18 @@ def lunar_charged_reaction(
     Hypothèses/limites (documentées, pas de fausse précision) :
     - valeur MOYENNE : le jeu détermine le crit affiché via le meilleur
       contributeur, sans effet sur l'espérance calculée ici ;
-    - l'ICD de déclenchement (~2 s) relève du modèle de rotation, pas d'ici ;
+    - l'ICD de déclenchement (LC ~2 s ; LCrys sans ICD global) relève du
+      modèle de rotation, pas d'ici ;
     - « Elevation » et bonus Moonsign se passent via base_dmg_bonus /
-      reaction_bonus du contributeur concerné.
+      reaction_bonus du contributeur concerné ;
+    - lunar-bloom ABSENT : multiplicateur non confirmé (pas de valeur inventée).
     """
+    key = reaction.strip().lower()
+    if key not in LUNAR_BASE:
+        raise ValueError(
+            f"Réaction lunaire inconnue : {reaction!r}. "
+            f"Options : {', '.join(sorted(LUNAR_BASE))}"
+        )
     if not contributors:
         raise ValueError("contributors ne peut pas être vide (1 à 4 participants)")
     if len(contributors) > len(LUNAR_CONTRIBUTION_WEIGHTS):
@@ -186,7 +200,7 @@ def lunar_charged_reaction(
     if level_multiplier <= 0:
         raise ValueError("level_multiplier doit être positif")
 
-    base = LUNAR_BASE["lunar-charged"]
+    base = LUNAR_BASE[key]
     computed: list[dict[str, float]] = []
     for i, raw in enumerate(contributors):
         unknown = set(raw) - _LUNAR_CONTRIBUTOR_KEYS
@@ -230,12 +244,27 @@ def lunar_charged_reaction(
         entry["personal_damage"] = round(entry["personal_damage"], 2)
 
     return LunarChargedResult(
-        reaction="lunar-charged",
+        reaction=key,
         base_multiplier=base,
         level_multiplier=level_multiplier,
         resistance_multiplier=round(res_mult, 4),
         contributors=computed,
         damage=round(total * res_mult, 2),
+    )
+
+
+def lunar_charged_reaction(
+    *,
+    contributors: Sequence[Mapping[str, float]],
+    level_multiplier: float = LEVEL_MULTIPLIER_LV90,
+    enemy_resistance: float = 0.10,
+) -> LunarChargedResult:
+    """Compat : Lunar-Charged via `lunar_reaction` (contrat sidecar existant)."""
+    return lunar_reaction(
+        reaction="lunar-charged",
+        contributors=contributors,
+        level_multiplier=level_multiplier,
+        enemy_resistance=enemy_resistance,
     )
 
 

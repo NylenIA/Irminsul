@@ -11,7 +11,7 @@ import {
   isAmplifyingKind,
   isLunarKind,
   isTransformativeKind,
-  lunarChargedReaction,
+  lunarReaction,
   REACTION_PROVENANCE,
   transformativeReaction,
   type AmplifyingResult,
@@ -162,7 +162,8 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
     } else if (isLunar && reactionKey) {
       // Aperçu v1 : le personnage prévisualisé est l'UNIQUE contributeur (EM + crit
       // du formulaire). Les vrais combats agrègent jusqu'à 4 participants (API).
-      const detail = lunarChargedReaction({
+      const detail = lunarReaction({
+        reaction: reactionKey,
         contributors: [
           {
             elementalMastery: em,

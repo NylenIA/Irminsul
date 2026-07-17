@@ -12,7 +12,7 @@ import pytest
 
 from irminsul.reaction import (
     amplifying_multiplier,
-    lunar_charged_reaction,
+    lunar_reaction,
     transformative_reaction,
 )
 
@@ -40,7 +40,7 @@ def test_reaction_goldens_match_engine() -> None:
             else:
                 assert math.isclose(result[key], expected, abs_tol=1e-12), (key, case)
     for case in payload.get("lunar", []):
-        result = lunar_charged_reaction(**case["inputs"]).to_dict()
+        result = lunar_reaction(**case["inputs"]).to_dict()
         for key, expected in case["expected"].items():
             if key == "contributors":
                 got_list = result[key]
