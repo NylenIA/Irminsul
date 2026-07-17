@@ -7,13 +7,16 @@
 import { ENGINE_CONTRACT_VERSION, type DirectHitOutcome } from "./contract";
 import { LocalEngineClient } from "./direct-hit";
 import {
+  additiveReaction,
   amplifyingMultiplier,
+  isAdditiveKind,
   isAmplifyingKind,
   isLunarKind,
   isTransformativeKind,
   lunarReaction,
   REACTION_PROVENANCE,
   transformativeReaction,
+  type AdditiveResult,
   type AmplifyingResult,
   type LunarChargedResult,
   type TransformativeResult,
@@ -40,7 +43,8 @@ export interface DirectHitPreviewRequest {
 export type ReactionPreview =
   | { type: "amplifying"; detail: AmplifyingResult; provenance: typeof REACTION_PROVENANCE }
   | { type: "transformative"; detail: TransformativeResult; provenance: typeof REACTION_PROVENANCE }
-  | { type: "lunar"; detail: LunarChargedResult; provenance: typeof REACTION_PROVENANCE };
+  | { type: "lunar"; detail: LunarChargedResult; provenance: typeof REACTION_PROVENANCE }
+  | { type: "additive"; detail: AdditiveResult; provenance: typeof REACTION_PROVENANCE };
 
 export interface DirectHitPreview {
   character: string;
@@ -126,7 +130,8 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
   const isAmplifying = reactionKey !== null && isAmplifyingKind(reactionKey);
   const isTransformative = reactionKey !== null && isTransformativeKind(reactionKey);
   const isLunar = reactionKey !== null && isLunarKind(reactionKey);
-  if (reactionKey !== null && !isAmplifying && !isTransformative && !isLunar) {
+  const isAdditive = reactionKey !== null && isAdditiveKind(reactionKey);
+  if (reactionKey !== null && !isAmplifying && !isTransformative && !isLunar && !isAdditive) {
     issues.push(`Réaction inconnue : ${reactionKey}.`);
   }
   if (!finiteIn(em, 0, 4000)) issues.push("elementalMastery doit être entre 0 et 4000.");
@@ -145,6 +150,7 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
     enemyResistance: enemyResistancePct / 100,
     attackerLevel,
     amplifyingReactionMultiplier: undefined as number | undefined,
+    flatBaseDamage: undefined as number | undefined,
   };
   try {
     let reactionPreview: ReactionPreview | undefined;
@@ -174,6 +180,11 @@ export function buildDirectHitPreview(request: DirectHitPreviewRequest): DirectH
         enemyResistance: engineInput.enemyResistance,
       });
       reactionPreview = { type: "lunar", detail, provenance: REACTION_PROVENANCE };
+    } else if (isAdditive && reactionKey) {
+      // Additive : le bonus s'AJOUTE à la base du coup, puis DMG%/crit/DEF/RES.
+      const detail = additiveReaction({ reaction: reactionKey, elementalMastery: em });
+      engineInput.flatBaseDamage = detail.base_bonus_damage;
+      reactionPreview = { type: "additive", detail, provenance: REACTION_PROVENANCE };
     }
     const parameters: Record<string, number> = Object.fromEntries(
       Object.entries(engineInput).filter(([, v]) => typeof v === "number"),

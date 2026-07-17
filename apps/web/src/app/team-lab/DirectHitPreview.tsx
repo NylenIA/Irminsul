@@ -51,6 +51,8 @@ const REACTION_LABELS: Record<string, string> = {
   burgeon: "Burgeon",
   "lunar-charged": "Électrocution lunaire (Électro, crit)",
   "lunar-crystallize": "Cristallisation lunaire (Géo, crit)",
+  aggravate: "Aggravation (Électro sur Catalyse, +base ×1.15)",
+  spread: "Propagation (Dendro sur Catalyse, +base ×1.25)",
 };
 
 const fmt = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
@@ -192,6 +194,10 @@ export function DirectHitPreview({ roster }: { roster: CharacterSummary[] }): Re
               <option value="lunar-charged">{REACTION_LABELS["lunar-charged"]}</option>
               <option value="lunar-crystallize">{REACTION_LABELS["lunar-crystallize"]}</option>
             </optgroup>
+            <optgroup label="Additives (s'ajoutent à la base du coup)">
+              <option value="aggravate">{REACTION_LABELS["aggravate"]}</option>
+              <option value="spread">{REACTION_LABELS["spread"]}</option>
+            </optgroup>
           </select>
         </label>
         {reaction ? (
@@ -324,6 +330,21 @@ function ResultCard({ preview }: { preview: PreviewData }): React.ReactElement {
             <span className="irm-figure">{fmt.format(reaction.detail.damage)}</span>
             <span style={{ color: "var(--irm-text-faint)", fontSize: 12 }}>
               dégâts de réaction (sans crit, niv. 90, EM {reaction.detail.em_bonus > 0 ? "comptée" : "0"})
+            </span>
+          </div>
+        </div>
+      ) : null}
+
+      {reaction?.type === "additive" ? (
+        <div className="irm-card" style={{ marginTop: 10, padding: 10 }} role="group" aria-label="Réaction additive">
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <span className="irm-badge irm-badge--verified">
+              {REACTION_LABELS[reaction.detail.reaction] ?? reaction.detail.reaction}
+            </span>
+            <span className="irm-figure">+{fmt.format(reaction.detail.base_bonus_damage)}</span>
+            <span style={{ color: "var(--irm-text-faint)", fontSize: 12 }}>
+              ajouté à la base du coup (déjà compté dans les chiffres ci-dessus,
+              puis DMG%/crit/DEF/RES s&apos;appliquent)
             </span>
           </div>
         </div>

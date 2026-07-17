@@ -31,8 +31,18 @@ export const AMPLIFYING_BASE = Object.freeze({
   "reverse-melt": 1.5,
 } as const);
 
+/**
+ * Coefficients des réactions ADDITIVES (KQM ; porté de phase3 d61803b).
+ * Le bonus s'AJOUTE à la base du coup (flatBaseDamage), puis DMG%/crit/DEF/RES.
+ */
+export const ADDITIVE_BASE = Object.freeze({
+  aggravate: 1.15,
+  spread: 1.25,
+} as const);
+
 export type TransformativeKind = keyof typeof TRANSFORMATIVE_BASE;
 export type AmplifyingKind = keyof typeof AMPLIFYING_BASE;
+export type AdditiveKind = keyof typeof ADDITIVE_BASE;
 
 /** Alias acceptés par le moteur Python (parité : audit Codex B/C). */
 const TRANSFORMATIVE_LOOKUP: Record<string, number> = Object.freeze({
@@ -49,6 +59,9 @@ export function isAmplifyingKind(key: string): boolean {
 }
 export function isLunarKind(key: string): boolean {
   return key in LUNAR_BASE;
+}
+export function isAdditiveKind(key: string): boolean {
+  return key in ADDITIVE_BASE;
 }
 
 function roundTo(value: number, digits: number): number {
@@ -160,6 +173,53 @@ export const LUNAR_CONTRIBUTION_WEIGHTS = Object.freeze([1.0, 0.5, 1 / 12, 1 / 1
 export function lunarEmBonus(elementalMastery: number): number {
   const em = Math.max(elementalMastery, 0);
   return (6 * em) / (em + 2000);
+}
+
+/** Bonus de Maîtrise additif : 5·EM/(EM+1200) (KQM). */
+export function additiveEmBonus(elementalMastery: number): number {
+  const em = Math.max(elementalMastery, 0);
+  return (5 * em) / (em + 1200);
+}
+
+export interface AdditiveResult {
+  reaction: string;
+  base_multiplier: number;
+  level_multiplier: number;
+  em_bonus: number;
+  extra_bonus: number;
+  base_bonus_damage: number;
+}
+
+/**
+ * Bonus de base additif Aggravation/Propagation — miroir exact de
+ * `additive_reaction` (Python). À injecter via `flatBaseDamage` du coup direct.
+ */
+export function additiveReaction(input: {
+  reaction: string;
+  elementalMastery?: number;
+  levelMultiplier?: number;
+  reactionBonus?: number;
+}): AdditiveResult {
+  const key = input.reaction.trim().toLowerCase();
+  const base = ADDITIVE_BASE[key as AdditiveKind];
+  if (base === undefined) {
+    throw new RangeError(
+      `Réaction additive inconnue : ${input.reaction}. Options : ${Object.keys(ADDITIVE_BASE).sort().join(", ")}`,
+    );
+  }
+  const levelMultiplier = input.levelMultiplier ?? LEVEL_MULTIPLIER_LV90;
+  if (levelMultiplier <= 0) throw new RangeError("levelMultiplier doit être positif");
+  const emBonus = additiveEmBonus(input.elementalMastery ?? 0);
+  const extra = Math.max(input.reactionBonus ?? 0, 0);
+  const bonus = base * levelMultiplier * (1 + emBonus + extra);
+  return {
+    reaction: key,
+    base_multiplier: base,
+    level_multiplier: levelMultiplier,
+    em_bonus: roundTo(emBonus, 4),
+    extra_bonus: roundTo(extra, 4),
+    base_bonus_damage: roundTo(bonus, 2),
+  };
 }
 
 export interface LunarContributorInput {
@@ -277,7 +337,7 @@ export const REACTION_PROVENANCE = Object.freeze({
     "Une réaction isolée — pas une rotation ni un uptime d'aura.",
     "Transformatives : pas de critique (comportement de base) ; niveau 90 par défaut (1446.85).",
     "Amplifiantes : multiplicateur à injecter dans un coup direct (direction du déclenchement explicite).",
-    "Additives (Aggravation/Propagation) : hors périmètre v1 (moteur phase3 non fusionné).",
+    "Additives (Aggravation 1.15 / Propagation 1.25) : bonus AJOUTÉ à la base du coup (flatBaseDamage), affecté ensuite par DMG%/crit/DEF/RES ; l'EM ne snapshot pas.",
     "Lunaires (Lunar-Charged 1.8 Électro ; Lunar-Crystallize 1.6 Géo) : valeur MOYENNE multi-contributeurs (espérance de crit par participant) ; ICD hors périmètre (rotation) ; Lunar-Bloom exclu (multiplicateur non confirmé — aucune valeur inventée).",
   ] as const),
 });

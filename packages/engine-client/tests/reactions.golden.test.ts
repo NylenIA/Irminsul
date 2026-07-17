@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import goldens from "./reaction.goldens.json";
 import {
+  additiveReaction,
   amplifyingMultiplier,
   lunarChargedReaction,
   lunarReaction,
@@ -42,6 +43,21 @@ describe("parité réactions TS ↔ moteur Python (goldens gen-reaction-goldens.
       }
     },
   );
+
+  it.each(goldens.additive.map((c, i) => [i, c] as const))("additive golden %d", (_i, c) => {
+    const result = additiveReaction(camelInputs(c.inputs)) as unknown as Num;
+    for (const [key, expected] of Object.entries(c.expected as Num)) {
+      if (typeof expected === "number") expect(result[key]).toBeCloseTo(expected, 9);
+      else expect(result[key]).toBe(expected);
+    }
+  });
+
+  it("additive : réaction inconnue et niveau invalide rejetés", () => {
+    expect(() => additiveReaction({ reaction: "quicken" })).toThrow(RangeError);
+    expect(() => additiveReaction({ reaction: "aggravate", levelMultiplier: 0 })).toThrow(
+      RangeError,
+    );
+  });
 
   it.each(goldens.lunar.map((c, i) => [i, c] as const))("lunaire golden %d", (_i, c) => {
     const inputs = c.inputs as Record<string, unknown>;
@@ -90,8 +106,9 @@ describe("parité réactions TS ↔ moteur Python (goldens gen-reaction-goldens.
     expect(() => amplifyingMultiplier({ reaction: "aggravate" })).toThrow(RangeError);
   });
 
-  it("provenance : source, version, hypothèses (additives explicitement hors périmètre)", () => {
+  it("provenance : source, version, hypothèses (additives à la base ; Lunar-Bloom exclu)", () => {
     expect(REACTION_PROVENANCE.source).toMatch(/reaction\.py/);
-    expect(REACTION_PROVENANCE.assumptions.join(" ")).toMatch(/Additives .* hors périmètre/);
+    expect(REACTION_PROVENANCE.assumptions.join(" ")).toMatch(/Additives .* AJOUTÉ à la base/);
+    expect(REACTION_PROVENANCE.assumptions.join(" ")).toMatch(/Lunar-Bloom exclu/);
   });
 });

@@ -123,6 +123,25 @@ describe("buildDirectHitPreview (orchestration pure, sans formule dupliquée)", 
     }
   });
 
+  it("réaction additive : bonus injecté dans flatBaseDamage, coup direct AUGMENTÉ", () => {
+    const base = buildDirectHitPreview({ ...VALID });
+    const res = buildDirectHitPreview({ ...VALID, reaction: "aggravate", elementalMastery: 300 });
+    expect(base.ok && res.ok).toBe(true);
+    if (!base.ok || !res.ok) return;
+    expect(res.preview.reaction?.type).toBe("additive");
+    // Le bonus est bien passé au moteur et augmente la moyenne du coup.
+    expect(res.preview.parameters["flatBaseDamage"]).toBeGreaterThan(0);
+    expect(res.preview.outcome.result.expected).toBeGreaterThan(
+      base.preview.outcome.result.expected,
+    );
+    if (res.preview.reaction?.type === "additive") {
+      expect(res.preview.parameters["flatBaseDamage"]).toBeCloseTo(
+        res.preview.reaction.detail.base_bonus_damage,
+        9,
+      );
+    }
+  });
+
   it("provenance + hypothèses + confiance présentes (aucun faux DPS)", () => {
     const res = buildDirectHitPreview(VALID);
     expect(res.ok).toBe(true);

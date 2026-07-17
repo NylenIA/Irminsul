@@ -22,6 +22,8 @@ export {
   type ReactionPreview,
 } from "./preview";
 export {
+  ADDITIVE_BASE,
+  additiveReaction,
   AMPLIFYING_BASE,
   amplifyingMultiplier,
   LEVEL_MULTIPLIER_LV90,
@@ -34,6 +36,8 @@ export {
   lunarChargedReaction,
   lunarEmBonus,
   lunarReaction,
+  type AdditiveKind,
+  type AdditiveResult,
   type AmplifyingKind,
   type AmplifyingResult,
   type LunarChargedResult,
