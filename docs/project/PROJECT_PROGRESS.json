@@ -9,9 +9,9 @@
       "label": "Moteur de données et calcul",
       "weight": 25,
       "mvpWeight": 30,
-      "score": 86,
+      "score": 88,
       "confidence": "high",
-      "evidence": "Moteur stats finales INTEGRE (basestats+weaponstats+talentstats+charstats, defensif) ; pytest 232 ; goldens vs jeu ; registre mecaniques verified ; Lunar-Charged (1.8) + Lunar-Crystallize (1.6) LIVRES bout-en-bout via API lunaire generique (formules KQM sourcees, EM 6x/(x+2000), agregation 1/0.5/1/12/1/12, sidecar+miroir TS 6 goldens croises+UI apercu, E2E 48)",
+      "evidence": "Moteur stats finales INTEGRE (basestats+weaponstats+talentstats+charstats, defensif) ; pytest 235 ; goldens vs jeu ; registre mecaniques verified ; lunaires LC (1.8) + LCrys (1.6) LIVRES bout-en-bout (API generique, 6 goldens croises) ; ADDITIVES aggravate/spread portees de phase3 (1.15/1.25, EM 5x/(x+1200), goldens historiques 1663.88/1808.56 verifies, composition flat_base_damage testee structurellement)",
       "blockers": "Lunar-Bloom (multiplicateur non confirme par KQM -> exclu volontairement, ajout trivial des confirmation) ; gcsim nouveaux persos"
     },
     {
@@ -19,10 +19,10 @@
       "label": "Intégration moteur",
       "weight": 15,
       "mvpWeight": 12,
-      "score": 85,
+      "score": 88,
       "confidence": "high",
-      "evidence": "Stats finales LIVE (sidecar character_final_stats -> charstats, adapter final-stats/1.0, /characters/[id] avec breakdown/provenance/confiance) + apercu + reactions ; parite prouvee ; verrou phase3 leve",
-      "blockers": "additives dans l'UI ; sidecar par defaut"
+      "evidence": "Stats finales LIVE (sidecar character_final_stats -> charstats, adapter final-stats/1.0, /characters/[id] avec breakdown/provenance/confiance) + apercu + reactions ; parite prouvee ; verrou phase3 leve ; ADDITIVES dans l'UI (aggravate/spread cables via flatBaseDamage, le coup affiche est l'aggrave reel) + lunaires LC/LCrys selectionnables",
+      "blockers": "sidecar par defaut"
     },
     {
       "id": "app_web",
