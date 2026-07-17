@@ -9,10 +9,10 @@
       "label": "Moteur de données et calcul",
       "weight": 25,
       "mvpWeight": 30,
-      "score": 85,
+      "score": 86,
       "confidence": "high",
-      "evidence": "Moteur stats finales INTEGRE (basestats+weaponstats+talentstats+charstats, defensif) ; pytest 231 ; goldens vs jeu ; registre mecaniques verified ; Lunar-Charged LIVRE bout-en-bout (formule KQM sourcee, EM 6x/(x+2000) resolu sur points publies, agregation 1/0.5/1/12/1/12, sidecar+miroir TS goldens croises+UI apercu, E2E 48)",
-      "blockers": "Lunar-Bloom/Crystallize (multiplicateurs non confirmes -> exclus volontairement) ; gcsim nouveaux persos"
+      "evidence": "Moteur stats finales INTEGRE (basestats+weaponstats+talentstats+charstats, defensif) ; pytest 232 ; goldens vs jeu ; registre mecaniques verified ; Lunar-Charged (1.8) + Lunar-Crystallize (1.6) LIVRES bout-en-bout via API lunaire generique (formules KQM sourcees, EM 6x/(x+2000), agregation 1/0.5/1/12/1/12, sidecar+miroir TS 6 goldens croises+UI apercu, E2E 48)",
+      "blockers": "Lunar-Bloom (multiplicateur non confirme par KQM -> exclu volontairement, ajout trivial des confirmation) ; gcsim nouveaux persos"
     },
     {
       "id": "integration_moteur",
