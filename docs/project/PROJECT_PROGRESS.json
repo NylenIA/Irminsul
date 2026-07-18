@@ -69,10 +69,10 @@
       "label": "Design system et UX",
       "weight": 5,
       "mvpWeight": 5,
-      "score": 74,
+      "score": 76,
       "confidence": "medium",
-      "evidence": "tokens OKLCH + primitives + effets astral reduced-motion safe ; SELECT (chevron tokens, 10 selects bruts migres sur 5 ecrans, axe 0 critique) ; TOAST (aria-live polite, variantes, auto-dismiss, cable app-wide + Team Lab avec preuve E2E)",
-      "blockers": "Tabs/CharacterPicker ; brand guide"
+      "evidence": "tokens OKLCH + primitives + effets astral reduced-motion safe ; SELECT (10 selects migres, axe 0 critique) ; TOAST (aria-live, cable app-wide, preuve E2E) ; CHARACTERPICKER (format Nom·Element unifie, exclusion d'equipe encapsulee, dedup Team Lab + apercu)",
+      "blockers": "Tabs (differe : aucune surface n'en a besoin aujourd'hui, YAGNI) ; brand guide"
     },
     {
       "id": "tests_qualite",
