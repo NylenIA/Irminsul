@@ -19,10 +19,10 @@
       "label": "Intégration moteur",
       "weight": 15,
       "mvpWeight": 12,
-      "score": 88,
+      "score": 91,
       "confidence": "high",
-      "evidence": "Stats finales LIVE (sidecar character_final_stats -> charstats, adapter final-stats/1.0, /characters/[id] avec breakdown/provenance/confiance) + apercu + reactions ; parite prouvee ; verrou phase3 leve ; ADDITIVES dans l'UI (aggravate/spread cables via flatBaseDamage, le coup affiche est l'aggrave reel) + lunaires LC/LCrys selectionnables",
-      "blockers": "sidecar par defaut"
+      "evidence": "Stats finales LIVE + apercu + reactions ; parite prouvee ; ADDITIVES dans l'UI (flatBaseDamage, aussi forwarde au sidecar) + lunaires LC/LCrys ; SIDECAR PYTHON PAR DEFAUT dans l'apercu (opt-out IRMINSUL_ENGINE=local, repli TS documente, provenance honnete, preuve E2E badge moteur python-sidecar obligatoire)",
+      "blockers": "latence spawn-par-appel du sidecar (acceptable apercu, a pooler si generalise)"
     },
     {
       "id": "app_web",
