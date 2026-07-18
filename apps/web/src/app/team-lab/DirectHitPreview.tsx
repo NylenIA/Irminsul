@@ -10,6 +10,7 @@ import {
   type PlayerCharacterBuild,
 } from "@irminsul/engine-client";
 import type { CharacterSummary } from "@/lib/roster";
+import { CharacterPicker } from "@/components/CharacterPicker";
 import { previewDirectHitAction } from "./engine-actions";
 import { loadPlayerBuildAction } from "./build-actions";
 
@@ -134,19 +135,12 @@ export function DirectHitPreview({ roster }: { roster: CharacterSummary[] }): Re
       <div style={grid}>
         <label style={fieldStyle}>
           <span style={labelStyle}>Personnage *</span>
-          <Select
+          <CharacterPicker
+            roster={roster}
             value={character}
-            onChange={(e) => onCharacterChange(e.target.value)}
-           
-            aria-label="Personnage pour l'aperçu"
-          >
-            <option value="">— choisir —</option>
-            {roster.map((c) => (
-              <option key={c.id} value={c.name}>
-                {c.element ? `${c.name} · ${c.element}` : c.name}
-              </option>
-            ))}
-          </Select>
+            onChange={onCharacterChange}
+            ariaLabel="Personnage pour l'aperçu"
+          />
         </label>
         <label style={fieldStyle}>
           <span style={labelStyle}>Multiplicateur de talent (%) *</span>
