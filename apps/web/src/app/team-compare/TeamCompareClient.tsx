@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition, type CSSProperties } from "react";
-import { Button, Card, ErrorState, Input } from "@irminsul/ui";
+import { Button, Card, ErrorState, Input, Select } from "@irminsul/ui";
 import type {
   RotationAction,
   RotationActionKind,
@@ -134,17 +134,17 @@ function SideEditor({
   }
   return (
     <Card title={label}>
-      <select value={teamId} onChange={(e) => { setTeamId(e.target.value); setActions([]); }} className="irm-input" aria-label={`${label} équipe`} style={{ maxWidth: 260 }}>
+      <Select value={teamId} onChange={(e) => { setTeamId(e.target.value); setActions([]); }} aria-label={`${label} équipe`} style={{ maxWidth: 260 }}>
         {teams.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-      </select>
+      </Select>
       <p style={{ color: "var(--irm-text-faint)", fontSize: 12, margin: "6px 0" }}>{members.join(", ") || "—"}</p>
       <div style={{ display: "grid", gap: 6 }}>
         {actions.map((a, i) => (
           <div key={a.id} className="irm-card" style={{ padding: 8, display: "flex", gap: 6, flexWrap: "wrap", alignItems: "end" }}>
             <span style={{ color: "var(--irm-text-faint)", fontSize: 11 }}>{i + 1}</span>
-            <select value={a.actorId} onChange={(e) => setActions(actions.map((x) => x.id === a.id ? { ...x, actorId: e.target.value } : x))} className="irm-input" aria-label={`${label} perso ${i + 1}`}>
+            <Select value={a.actorId} onChange={(e) => setActions(actions.map((x) => x.id === a.id ? { ...x, actorId: e.target.value } : x))} aria-label={`${label} perso ${i + 1}`}>
               {members.map((m) => <option key={m} value={m}>{m}</option>)}
-            </select>
+            </Select>
             <Input style={{ width: 90 }} value={a.talentLabel ?? ""} onChange={(e) => setActions(actions.map((x) => x.id === a.id ? { ...x, talentLabel: e.target.value } : x))} aria-label={`${label} label ${i + 1}`} />
             <Input style={{ width: 46 }} inputMode="numeric" value={String(a.talentLevel ?? "")} onChange={(e) => setActions(actions.map((x) => x.id === a.id ? { ...x, talentLevel: Number(e.target.value) } : x))} aria-label={`${label} niveau ${i + 1}`} />
             <Button variant="ghost" onClick={() => setActions(actions.filter((x) => x.id !== a.id))} aria-label={`${label} supprimer ${i + 1}`}>✕</Button>

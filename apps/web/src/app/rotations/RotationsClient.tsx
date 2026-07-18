@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition, type CSSProperties } from "react";
-import { Button, Card, ErrorState, Input } from "@irminsul/ui";
+import { Button, Card, ErrorState, Input, Select } from "@irminsul/ui";
 import type { RotationAction, RotationActionKind, RotationResult } from "@irminsul/engine-client";
 import { calculateRotationAction } from "./rotation-actions";
 
@@ -87,16 +87,16 @@ export function RotationsClient({ teams }: { teams: TeamOption[] }): React.React
       <Card title="Équipe & actions">
         <label style={{ display: "grid", gap: 4, maxWidth: 320 }}>
           <span style={{ color: "var(--irm-text-dim)", fontSize: 13 }}>Équipe</span>
-          <select
+          <Select
             value={teamId}
             onChange={(e) => { setTeamId(e.target.value); setActions([]); setState({ kind: "idle" }); }}
-            className="irm-input"
+           
             aria-label="Équipe sauvegardée"
           >
             {teams.map((t) => (
               <option key={t.id} value={t.id}>{t.name}</option>
             ))}
-          </select>
+          </Select>
         </label>
         <p style={{ color: "var(--irm-text-faint)", fontSize: 12, margin: "8px 0 0" }}>
           Membres : {members.join(", ") || "—"}
@@ -146,14 +146,14 @@ function ActionRow({
     <div className="irm-card" style={{ padding: 10, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "end" }}>
       <span style={{ color: "var(--irm-text-faint)", fontSize: 12, minWidth: 20 }}>{index + 1}</span>
       <Field label="Perso">
-        <select value={action.actorId} onChange={(e) => onUpdate(action.id, { actorId: e.target.value })} className="irm-input" aria-label={`Personnage action ${index + 1}`}>
+        <Select value={action.actorId} onChange={(e) => onUpdate(action.id, { actorId: e.target.value })} aria-label={`Personnage action ${index + 1}`}>
           {members.map((m) => <option key={m} value={m}>{m}</option>)}
-        </select>
+        </Select>
       </Field>
       <Field label="Type">
-        <select value={action.kind} onChange={(e) => onUpdate(action.id, { kind: e.target.value as RotationActionKind })} className="irm-input" aria-label={`Type action ${index + 1}`}>
+        <Select value={action.kind} onChange={(e) => onUpdate(action.id, { kind: e.target.value as RotationActionKind })} aria-label={`Type action ${index + 1}`}>
           {KINDS.map((k) => <option key={k} value={k}>{KIND_LABELS[k]}</option>)}
-        </select>
+        </Select>
       </Field>
       <Field label="Début (s)"><Input style={{ width: 70 }} inputMode="decimal" value={String(action.startTime)} onChange={(e) => onUpdate(action.id, { startTime: Number(e.target.value) })} aria-label={`Début action ${index + 1}`} /></Field>
       <Field label="Durée (s)"><Input style={{ width: 70 }} inputMode="decimal" value={String(action.duration)} onChange={(e) => onUpdate(action.id, { duration: Number(e.target.value) })} aria-label={`Durée action ${index + 1}`} /></Field>

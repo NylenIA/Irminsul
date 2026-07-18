@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Button, Card } from "@irminsul/ui";
+import { Button, Card, Select } from "@irminsul/ui";
 import type {
   RecommendationItem,
   RecommendationObjective,
@@ -54,16 +54,16 @@ export function RecommendationsClient({ teams }: { teams: RecoTeamOption[] }): R
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "end" }}>
           <label style={{ display: "grid", gap: 4 }}>
             <span style={{ color: "var(--irm-text-dim)", fontSize: 13 }}>Que veux-tu optimiser ?</span>
-            <select value={objective} onChange={(e) => setObjective(e.target.value as RecommendationObjective)} className="irm-input" aria-label="Objectif">
+            <Select value={objective} onChange={(e) => setObjective(e.target.value as RecommendationObjective)} aria-label="Objectif">
               {OBJECTIVES.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
+            </Select>
           </label>
           {objective === "improve_current_team" ? (
             <label style={{ display: "grid", gap: 4 }}>
               <span style={{ color: "var(--irm-text-dim)", fontSize: 13 }}>Équipe</span>
-              <select value={teamId} onChange={(e) => setTeamId(e.target.value)} className="irm-input" aria-label="Équipe à améliorer">
+              <Select value={teamId} onChange={(e) => setTeamId(e.target.value)} aria-label="Équipe à améliorer">
                 {teams.length === 0 ? <option value="">Aucune équipe</option> : teams.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-              </select>
+              </Select>
             </label>
           ) : null}
           <Button variant="primary" onClick={analyze} disabled={pending}>

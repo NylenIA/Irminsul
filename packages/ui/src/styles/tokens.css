@@ -96,6 +96,22 @@
 }
 .irm-input:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; }
 
+/* Select (chevron custom aux tokens, apparence native masquée) */
+.irm-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 30px;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--irm-text-dim) 50%),
+    linear-gradient(135deg, var(--irm-text-dim) 50%, transparent 50%);
+  background-position: calc(100% - 16px) 55%, calc(100% - 11px) 55%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+.irm-select option,
+.irm-select optgroup { background: var(--irm-surface-2); color: var(--irm-text); }
+
 /* Dialog (native) */
 .irm-dialog {
   color: var(--irm-text); background: var(--irm-surface-1);

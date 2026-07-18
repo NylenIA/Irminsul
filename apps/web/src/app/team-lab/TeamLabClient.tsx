@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card, ConfirmDialog, EmptyState, ErrorState, Input } from "@irminsul/ui";
+import { Button, Card, ConfirmDialog, EmptyState, ErrorState, Input, Select } from "@irminsul/ui";
 import type { SavedTeamDTO } from "@irminsul/data-access";
 import { type CharacterSummary, ROSTER_SOURCE_LABEL } from "@/lib/roster";
 import {
@@ -113,12 +113,12 @@ export function TeamLabClient({
               return (
                 <fieldset key={i} style={fieldsetStyle}>
                   <legend style={{ color: "var(--irm-cyan)", fontSize: 12 }}>Emplacement {i + 1}</legend>
-                  <select value={s.character} onChange={(e) => updateSlot(i, { character: e.target.value })} className="irm-input" aria-label={`Personnage, emplacement ${i + 1}`}>
+                  <Select value={s.character} onChange={(e) => updateSlot(i, { character: e.target.value })} aria-label={`Personnage, emplacement ${i + 1}`}>
                     <option value="">— vide —</option>
                     {options.map((c) => (
                       <option key={c.id} value={c.name}>{c.element ? `${c.name} · ${c.element}` : c.name}</option>
                     ))}
-                  </select>
+                  </Select>
                   <Input value={s.role} onChange={(e) => updateSlot(i, { role: e.target.value })} placeholder="Rôle (optionnel)" style={{ marginTop: 6 }} aria-label={`Rôle, emplacement ${i + 1}`} />
                 </fieldset>
               );

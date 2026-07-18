@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition, type CSSProperties } from "react";
-import { Button, Card, ErrorState, Input } from "@irminsul/ui";
+import { Button, Card, ErrorState, Input, Select } from "@irminsul/ui";
 import {
   AMPLIFYING_BASE,
   ENGINE_CONTRACT_VERSION,
@@ -134,10 +134,10 @@ export function DirectHitPreview({ roster }: { roster: CharacterSummary[] }): Re
       <div style={grid}>
         <label style={fieldStyle}>
           <span style={labelStyle}>Personnage *</span>
-          <select
+          <Select
             value={character}
             onChange={(e) => onCharacterChange(e.target.value)}
-            className="irm-input"
+           
             aria-label="Personnage pour l'aperçu"
           >
             <option value="">— choisir —</option>
@@ -146,7 +146,7 @@ export function DirectHitPreview({ roster }: { roster: CharacterSummary[] }): Re
                 {c.element ? `${c.name} · ${c.element}` : c.name}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <label style={fieldStyle}>
           <span style={labelStyle}>Multiplicateur de talent (%) *</span>
@@ -178,7 +178,7 @@ export function DirectHitPreview({ roster }: { roster: CharacterSummary[] }): Re
         </label>
         <label style={fieldStyle}>
           <span style={labelStyle}>Réaction</span>
-          <select value={reaction} onChange={(e) => setReaction(e.target.value)} className="irm-input" aria-label="Réaction élémentaire">
+          <Select value={reaction} onChange={(e) => setReaction(e.target.value)} aria-label="Réaction élémentaire">
             <option value="">— aucune —</option>
             <optgroup label="Amplifiantes (multiplient le coup)">
               {Object.keys(AMPLIFYING_BASE).map((k) => (
@@ -198,7 +198,7 @@ export function DirectHitPreview({ roster }: { roster: CharacterSummary[] }): Re
               <option value="aggravate">{REACTION_LABELS["aggravate"]}</option>
               <option value="spread">{REACTION_LABELS["spread"]}</option>
             </optgroup>
-          </select>
+          </Select>
         </label>
         {reaction ? (
           <label style={fieldStyle}>
