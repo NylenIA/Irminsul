@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "@irminsul/ui";
 import "@irminsul/ui/tokens.css";
 import "./globals.css";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
           <a href="/diagnostic" className="irm-btn irm-btn--ghost">Diagnostic</a>
         </nav>
         {children}
+        <Toaster />
       </body>
     </html>
   );

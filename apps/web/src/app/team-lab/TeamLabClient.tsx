@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card, ConfirmDialog, EmptyState, ErrorState, Input, Select } from "@irminsul/ui";
+import { Button, Card, ConfirmDialog, EmptyState, ErrorState, Input, Select, toast } from "@irminsul/ui";
 import type { SavedTeamDTO } from "@irminsul/data-access";
 import { type CharacterSummary, ROSTER_SOURCE_LABEL } from "@/lib/roster";
 import {
@@ -54,12 +54,17 @@ export function TeamLabClient({
   function takenElsewhere(index: number): Set<string> {
     return new Set(slots.filter((_, i) => i !== index).map((s) => s.character).filter(Boolean));
   }
-  function run(action: () => Promise<{ ok: true } | { ok: false; error: string }>): void {
+  function run(
+    action: () => Promise<{ ok: true } | { ok: false; error: string }>,
+    successMessage?: string,
+  ): void {
     setError(null);
     startTransition(async () => {
       const res = await action();
-      if (res.ok) router.refresh();
-      else setError(res.error);
+      if (res.ok) {
+        if (successMessage) toast(successMessage);
+        router.refresh();
+      } else setError(res.error);
     });
   }
 
@@ -75,14 +80,14 @@ export function TeamLabClient({
         setName("");
       }
       return res;
-    });
+    }, "Équipe sauvegardée");
   }
   function onRenameSubmit(id: string): void {
     run(async () => {
       const res = await renameTeamAction(id, editName);
       if (res.ok) setEditingId(null);
       return res;
-    });
+    }, "Équipe renommée");
   }
 
   return (
@@ -162,7 +167,7 @@ export function TeamLabClient({
                 </span>
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                   <Button variant="ghost" aria-label={`Renommer ${t.name}`} onClick={() => { setEditingId(t.id); setEditName(t.name); }} disabled={pending}>Renommer</Button>
-                  <Button variant="ghost" aria-label={`Dupliquer ${t.name}`} onClick={() => run(() => duplicateTeamAction(t.id))} disabled={pending}>Dupliquer</Button>
+                  <Button variant="ghost" aria-label={`Dupliquer ${t.name}`} onClick={() => run(() => duplicateTeamAction(t.id), "Équipe dupliquée")} disabled={pending}>Dupliquer</Button>
                   <Button variant="danger" aria-label={`Supprimer ${t.name}`} onClick={() => setConfirmId(t.id)} disabled={pending}>Supprimer</Button>
                 </div>
               </div>
@@ -183,7 +188,7 @@ export function TeamLabClient({
         onConfirm={() => {
           const id = confirmId;
           setConfirmId(null);
-          if (id) run(() => deleteTeamAction(id));
+          if (id) run(() => deleteTeamAction(id), "Équipe supprimée");
         }}
       />
     </main>

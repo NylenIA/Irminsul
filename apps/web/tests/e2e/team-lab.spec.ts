@@ -9,6 +9,8 @@ async function composeAndSave(page: Page, teamName: string): Promise<void> {
     await page.getByLabel(`Personnage, emplacement ${i + 1}`).selectOption(SLOT_CHARACTERS[i]!);
   }
   await page.getByRole("button", { name: "Sauvegarder l'équipe" }).click();
+  // Feedback non bloquant (Toaster, aria-live) puis persistance visible.
+  await expect(page.getByText("Équipe sauvegardée")).toBeVisible();
   await expect(page.getByRole("heading", { name: teamName })).toBeVisible();
 }
 
