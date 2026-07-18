@@ -76,7 +76,9 @@ test.describe("Laboratoire d'équipes", () => {
     const result = page.getByLabel("Résultat de l'aperçu pour Bennett");
     await expect(result).toBeVisible();
     await expect(result.getByText("Attendu (moyenne crit.)")).toBeVisible();
-    // Provenance + confiance visibles.
+    // Provenance + confiance visibles. Le moteur PAR DÉFAUT est le sidecar Python
+    // réel (repli TS uniquement si Python indisponible → ce test échouerait, voulu).
+    await expect(result.getByText("moteur python-sidecar")).toBeVisible();
     await expect(result.getByText("formule vérifiée")).toBeVisible();
     await expect(result.getByText(/contrat direct-hit\//)).toBeVisible();
     await expect(result.getByText(/confiance haute/)).toBeVisible();

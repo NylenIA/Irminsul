@@ -10,17 +10,19 @@ import { engineOptions } from "@/server/engine";
 
 /**
  * Aperçu de coup direct — Server Action mince : validation/orchestration dans
- * `@irminsul/engine-client` (pur, testé). Si IRMINSUL_ENGINE=sidecar, le résultat est
- * recalculé par le VRAI moteur Python (engine_stdio.py) ; en cas d'échec, repli silencieux
- * impossible : la provenance (`engine`) reflète toujours le moteur réellement utilisé.
+ * `@irminsul/engine-client` (pur, testé). Par DÉFAUT le résultat est recalculé par le
+ * VRAI moteur Python (engine_stdio.py en dev, binaire gelé en desktop) ; parité TS↔Python
+ * prouvée par goldens. IRMINSUL_ENGINE=local force le port TS (opt-out, ex. environnement
+ * sans Python). En cas d'échec sidecar : repli TS documenté — la provenance (`engine`)
+ * reflète toujours le moteur réellement utilisé (jamais de faux "python-sidecar").
  */
 export async function previewDirectHitAction(
   request: DirectHitPreviewRequest,
 ): Promise<DirectHitPreviewResult> {
   const preview = buildDirectHitPreview(request);
-  if (!preview.ok || process.env["IRMINSUL_ENGINE"] !== "sidecar") return preview;
+  if (!preview.ok || process.env["IRMINSUL_ENGINE"] === "local") return preview;
 
-  // Chemin sidecar : mêmes paramètres (déjà validés/convertis), moteur réel (gelé en desktop).
+  // Chemin sidecar (défaut) : mêmes paramètres (déjà validés/convertis), moteur réel.
   try {
     const sidecar = new SidecarEngineClient(engineOptions());
     const p = preview.preview.parameters;
@@ -34,6 +36,8 @@ export async function previewDirectHitAction(
       enemyResistance: p["enemyResistance"],
       attackerLevel: p["attackerLevel"],
       amplifyingReactionMultiplier: p["amplifyingReactionMultiplier"],
+      // Réactions additives : le bonus fait partie de la BASE du coup (sinon perdu).
+      flatBaseDamage: p["flatBaseDamage"],
     });
     return { ok: true, preview: { ...preview.preview, outcome } };
   } catch {
