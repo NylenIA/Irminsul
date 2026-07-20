@@ -4,7 +4,6 @@ import { useState, useTransition, type CSSProperties } from "react";
 import { Button, Card, ErrorState, Input, Select } from "@irminsul/ui";
 import type {
   RotationAction,
-  RotationActionKind,
   TeamComparisonResult,
   TeamPerformanceSummary,
 } from "@irminsul/engine-client";
@@ -23,11 +22,6 @@ type UiState =
   | { kind: "validation_error"; issues: string[] }
   | { kind: "engine_error"; message: string };
 
-const KIND_LABELS: Record<RotationActionKind, string> = {
-  normal_attack: "Attaque normale", charged_attack: "Attaque chargée",
-  plunging_attack: "Attaque plongeante", skill: "Compétence", burst: "Déchaînement",
-  swap: "Changement", wait: "Attente",
-};
 const fmt = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
 const fmt1 = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 });
 let counter = 0;

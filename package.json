@@ -6,12 +6,13 @@
   "scripts": {
     "typecheck": "npm run typecheck -w @irminsul/web",
     "lint:py": ".\\.venv\\Scripts\\python.exe -m ruff check src tests",
+    "lint:web": "eslint apps/web packages",
     "test": "npm run test -w @irminsul/data-access && npm run test -w @irminsul/engine-client && npm run test -w @irminsul/ui",
     "test:py": ".\\.venv\\Scripts\\python.exe -m pytest -q",
     "test:e2e": "npm run test:e2e -w @irminsul/web",
     "build": "npm run build -w @irminsul/web",
     "check:proxy": "node scripts/check-proxy-manifest.mjs",
-    "verify": "npm run typecheck && npm run lint:py && npm run test && npm run test:py && npm run build && npm run check:proxy",
+    "verify": "npm run typecheck && npm run lint:py && npm run lint:web && npm run test && npm run test:py && npm run build && npm run check:proxy",
     "desktop:sidecar": ".\\.venv\\Scripts\\python.exe scripts/build_sidecar.py",
     "desktop:prepare": "node scripts/prepare-desktop-web.mjs",
     "desktop:build": "npm run desktop:prepare && npm --prefix app run tauri:build"
@@ -22,5 +23,10 @@
   ],
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
+    "typescript-eslint": "^8.64.0"
   }
 }

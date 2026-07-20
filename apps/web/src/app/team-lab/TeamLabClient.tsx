@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card, ConfirmDialog, EmptyState, ErrorState, Input, Select, toast } from "@irminsul/ui";
+import { Button, Card, ConfirmDialog, EmptyState, ErrorState, Input, toast } from "@irminsul/ui";
 import type { SavedTeamDTO } from "@irminsul/data-access";
 import { type CharacterSummary, ROSTER_SOURCE_LABEL } from "@/lib/roster";
 import { CharacterPicker } from "@/components/CharacterPicker";
