@@ -104,6 +104,11 @@ def _additive(p: dict[str, Any]) -> dict[str, Any]:
     return additive_reaction(**p).to_dict()
 
 
+def _run_gcsim(p: dict[str, Any]) -> dict[str, Any]:
+    from .gcsim import run_gcsim_content
+    return run_gcsim_content(str(p.get("config", "")))
+
+
 def _final_stats(p: dict[str, Any]) -> dict[str, Any]:
     key = p.get("key")
     if not isinstance(key, str) or not key.strip():
@@ -198,6 +203,7 @@ CANONICAL_METHODS: dict[str, Callable[[dict[str, Any]], dict[str, Any]]] = {
     "lunar_charged_reaction": _lunar_charged,
     "lunar_reaction": _lunar,
     "additive_reaction": _additive,
+    "run_gcsim": _run_gcsim,
     "character_final_stats": _final_stats,
     "calculate_rotation": _rotation,
     # Découverte / provenance (dérivées)

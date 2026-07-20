@@ -27,6 +27,7 @@ export default function RootLayout({
           <a href="/characters" className="irm-btn irm-btn--ghost">Personnages</a>
           <a href="/team-lab" className="irm-btn irm-btn--ghost">Laboratoire d&apos;équipes</a>
           <a href="/rotations" className="irm-btn irm-btn--ghost">Rotations</a>
+          <a href="/simulation" className="irm-btn irm-btn--ghost">Simulation</a>
           <a href="/team-compare" className="irm-btn irm-btn--ghost">Comparateur</a>
           <a href="/recommendations" className="irm-btn irm-btn--ghost">Recommandations</a>
           <a href="/import-export" className="irm-btn irm-btn--ghost">Import/Export</a>
