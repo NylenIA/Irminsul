@@ -49,10 +49,10 @@
       "label": "Team builder et simulation",
       "weight": 15,
       "mvpWeight": 15,
-      "score": 87,
+      "score": 90,
       "confidence": "medium",
-      "evidence": "Team Lab CRUD + reactions + rotations chiffrees + COMPARATEUR quantitatif (team-compare/1.0, 2 rotations meme cible, verdict si complet) + RECOMMANDATIONS deterministes (recommendations/1.0, donnees reelles, explicables)",
-      "blockers": "gcsim ; energie/cooldown ; buffs par action"
+      "evidence": "Team Lab CRUD + reactions + rotations chiffrees + comparateur quantitatif + recommandations deterministes ; PAGE /simulation : vraies simulations gcsim (binaire local via IPC run_gcsim sanitize, DPS/duree parses, libelle SIMULATION honnete, erreurs typees) prouvee E2E bout-en-bout reelle",
+      "blockers": "generation auto config gcsim depuis une equipe sauvegardee ; energie/cooldown ; buffs par action"
     },
     {
       "id": "persistance",
