@@ -4,7 +4,7 @@
 
 ## Scores
 - **MVP utilisable : 85%**
-- **Vision complète : 85%**
+- **Vision complète : 86%**
 - Confiance globale : moyenne (cœur moteur élevé ; surfaces web/UI récentes).
 - Échelle : 0=absent, 25=squelette/mock/TODO, 50=happy-path peu validé, 75=intégré+testé cas majeurs, 100=prêt à livrer
 
@@ -18,7 +18,7 @@
 | Team builder et simulation | 15 | 15 | 87 | medium | Team Lab CRUD + reactions + rotations chiffrees + COMPARATEUR quantitatif (team-compare/1.0, 2 rotations meme cible, verdict si complet) + RECOMMANDATIONS deterministes (recommendations/1.0, donnees reelles, explicables) | gcsim ; energie/cooldown ; buffs par action |
 | Persistance | 5 | 8 | 82 | high | Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL (rollback) ; export/import versionne irminsul-export/1.0 avec checksum | chemins %APPDATA% pour desktop |
 | Design system et UX | 5 | 5 | 76 | medium | tokens OKLCH + primitives + effets astral reduced-motion safe ; SELECT (10 selects migres, axe 0 critique) ; TOAST (aria-live, cable app-wide, preuve E2E) ; CHARACTERPICKER (format Nom·Element unifie, exclusion d'equipe encapsulee, dedup Team Lab + apercu) | Tabs (differe : aucune surface n'en a besoin aujourd'hui, YAGNI) ; brand guide |
-| Tests et qualite | 5 | 4 | 75 | high | 96 Python ; build ; 4 tests repository Vitest ; E2E Playwright 6 (save/reload/delete) ; axe a11y vert (0 critique/serieux) | couverture composants UI ; lint non cable |
+| Tests et qualite | 5 | 4 | 80 | high | pytest 235 (ruff cable) ; vitest 106 (data-access 5 + engine-client 96 + ui 5, TOUS dans verify — avant seul data-access y etait) ; E2E Playwright 48 (workflows reels + axe 0 critique + preuve moteur sidecar + toast) ; goldens croises TS<->Python (direct-hit + 4 familles de reactions) ; garde manifest proxy | ESLint web absent (cycle dedie : install + config + correction du stock) ; rendu des composants UI non teste unitairement (jsdom — couvert par E2E) |
 | Packaging et deploiement | 3 | 2 | 74 | medium | NSIS installe/desinstalle/reinstalle PROUVE (per-user, sans admin) ; MSI produit mais 1603 sans elevation (preuve msi-install-1603.log) | MSI requiert admin ; non signe |
 | Documentation et continuite | 2 | 2 | 75 | high | audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF, hook SessionStart | hook non encore enregistre dans settings |
 

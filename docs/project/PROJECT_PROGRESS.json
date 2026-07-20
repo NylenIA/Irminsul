@@ -79,10 +79,10 @@
       "label": "Tests et qualite",
       "weight": 5,
       "mvpWeight": 4,
-      "score": 75,
+      "score": 80,
       "confidence": "high",
-      "evidence": "96 Python ; build ; 4 tests repository Vitest ; E2E Playwright 6 (save/reload/delete) ; axe a11y vert (0 critique/serieux)",
-      "blockers": "couverture composants UI ; lint non cable"
+      "evidence": "pytest 235 (ruff cable) ; vitest 106 (data-access 5 + engine-client 96 + ui 5, TOUS dans verify — avant seul data-access y etait) ; E2E Playwright 48 (workflows reels + axe 0 critique + preuve moteur sidecar + toast) ; goldens croises TS<->Python (direct-hit + 4 familles de reactions) ; garde manifest proxy",
+      "blockers": "ESLint web absent (cycle dedie : install + config + correction du stock) ; rendu des composants UI non teste unitairement (jsdom — couvert par E2E)"
     },
     {
       "id": "packaging",
