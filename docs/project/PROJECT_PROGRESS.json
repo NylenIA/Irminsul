@@ -39,9 +39,9 @@
       "label": "Application desktop",
       "weight": 10,
       "mvpWeight": 12,
-      "score": 82,
+      "score": 84,
       "confidence": "high",
-      "evidence": "PROUVE bout-en-bout: install NSIS %LOCALAPPDATA%/Irminsul (exit 0, raccourci) + smoke INSTALLE tout vert (7 routes 200 dont /diagnostic, node lie au PID Tauri, port via table TCP, nonce POST/boot->403, zero orphelin x2, persistance) + desinstall (donnees conservees) + reinstall (DB non ecrasee) ; cas d'erreur 4/4 (sidecar/node/standalone absents->app vivante sans enfant ; double lancement) chemin Unicode+espaces. Diagnostic livre, IO natif Tauri, nonce ephemere.",
+      "evidence": "PROUVE bout-en-bout et REVALIDE (2026-07-20) avec le moteur a jour : rebuild sidecar (provenance commit=48f475a verifiee DANS l'app installee) + desktop:build + reinstall NSIS silencieuse + smoke installe TOUT VERT (7 routes 200, proxy.ts nonce POST/boot->403 x3, node lie au PID Tauri, zero orphelin x2, persistance DB, diagnostic sanitize) + cas d'erreur 4/4 chemin Unicode. L'app installee embarque lunaires+additives+sidecar-par-defaut.",
       "blockers": "MSI 1603 (per-machine sans elevation) ; non signe (SmartScreen) ; bind-race residuel accepte"
     },
     {
