@@ -8,11 +8,15 @@
     ".": "./src/index.ts",
     "./tokens.css": "./src/styles/tokens.css"
   },
+  "scripts": {
+    "test": "vitest run"
+  },
   "peerDependencies": {
     "react": "^19.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.9"
   }
 }

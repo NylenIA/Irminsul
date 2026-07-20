@@ -25,6 +25,15 @@ function emit(): void {
   for (const listener of listeners) listener([...items]);
 }
 
+/** S'abonner au flux de toasts (notifie immédiatement l'état courant). Renvoie l'unsubscribe. */
+export function subscribeToasts(listener: Listener): () => void {
+  listeners.add(listener);
+  listener([...items]);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
 export function dismissToast(id: number): void {
   items = items.filter((item) => item.id !== id);
   emit();
@@ -43,14 +52,7 @@ export function toast(
 
 export function Toaster(): React.ReactElement {
   const [list, setList] = useState<ToastItem[]>([]);
-  useEffect(() => {
-    const listener: Listener = setList;
-    listeners.add(listener);
-    listener([...items]);
-    return () => {
-      listeners.delete(listener);
-    };
-  }, []);
+  useEffect(() => subscribeToasts(setList), []);
   return (
     <div className="irm-toaster" role="status" aria-live="polite">
       {list.map((item) => (
