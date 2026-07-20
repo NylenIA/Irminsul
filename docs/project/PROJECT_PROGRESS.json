@@ -79,10 +79,10 @@
       "label": "Tests et qualite",
       "weight": 5,
       "mvpWeight": 4,
-      "score": 80,
+      "score": 84,
       "confidence": "high",
-      "evidence": "pytest 235 (ruff cable) ; vitest 106 (data-access 5 + engine-client 96 + ui 5, TOUS dans verify — avant seul data-access y etait) ; E2E Playwright 48 (workflows reels + axe 0 critique + preuve moteur sidecar + toast) ; goldens croises TS<->Python (direct-hit + 4 familles de reactions) ; garde manifest proxy",
-      "blockers": "ESLint web absent (cycle dedie : install + config + correction du stock) ; rendu des composants UI non teste unitairement (jsdom — couvert par E2E)"
+      "evidence": "pytest 235 (ruff cable) ; vitest 106 (3 workspaces dans verify) ; E2E 48 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config, stock traite : 3 morts supprimes + convention underscore)",
+      "blockers": "regles Next-specifiques eslint-config-next (extension future) ; rendu composants UI non teste unitairement (jsdom — couvert E2E) ; scripts .mjs hors lint"
     },
     {
       "id": "packaging",
