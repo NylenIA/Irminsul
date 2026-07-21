@@ -32,6 +32,25 @@ test.describe("Simulation gcsim", () => {
     await expect(page.getByText("Durée simulée")).toBeVisible();
   });
 
+  test("squelette gcsim généré depuis une équipe sauvegardée (clés + TODO honnêtes)", async ({
+    page,
+  }) => {
+    // Crée une équipe minimale via Team Lab, puis reviens sur Simulation.
+    await page.goto("/team-lab");
+    const teamName = `SIM ${Date.now()}`;
+    await page.getByPlaceholder("Ex. Sandrone Lunar-Crystallize").fill(teamName);
+    await page.getByLabel("Personnage, emplacement 1").selectOption("Bennett");
+    await page.getByRole("button", { name: "Sauvegarder l'équipe" }).click();
+    await expect(page.getByRole("heading", { name: teamName })).toBeVisible();
+
+    await page.goto("/simulation");
+    await page.getByLabel("Équipe pour le squelette gcsim").selectOption({ label: teamName });
+    const textarea = page.getByLabel("Configuration gcsim");
+    await expect(textarea).toHaveValue(/bennett char lvl=90\/90/);
+    await expect(textarea).toHaveValue(/PAS une simulation/);
+    await expect(textarea).toHaveValue(/weapon="TODO"/);
+  });
+
   test("accessibilité (axe) de /simulation", async ({ page }) => {
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
     const serious = results.violations.filter(

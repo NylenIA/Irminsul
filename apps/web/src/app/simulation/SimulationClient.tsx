@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useTransition, type CSSProperties } from "react";
-import { Button, Card, ErrorState } from "@irminsul/ui";
-import { runGcsimAction, type GcsimRunResult } from "./actions";
+import { useEffect, useState, useTransition, type CSSProperties } from "react";
+import { Button, Card, ErrorState, Select, toast } from "@irminsul/ui";
+import { teamToGcsimSkeleton } from "@irminsul/engine-client";
+import { listTeamsForSimAction, runGcsimAction, type GcsimRunResult, type SimTeamOption } from "./actions";
 
 type UiState =
   | { kind: "idle" }
@@ -27,8 +28,26 @@ bennett skill, attack;`;
 
 export function SimulationClient(): React.ReactElement {
   const [config, setConfig] = useState("");
+  const [teams, setTeams] = useState<SimTeamOption[]>([]);
+  const [teamId, setTeamId] = useState("");
   const [state, setState] = useState<UiState>({ kind: "idle" });
   const [pending, startTransition] = useTransition();
+
+  useEffect(() => {
+    listTeamsForSimAction().then(setTeams).catch(() => setTeams([]));
+  }, []);
+
+  function onGenerateFromTeam(id: string): void {
+    setTeamId(id);
+    const team = teams.find((t) => t.id === id);
+    if (!team) return;
+    try {
+      setConfig(teamToGcsimSkeleton(team.members));
+      toast(`Squelette généré depuis « ${team.name} » — complète les TODO`);
+    } catch (error) {
+      toast(error instanceof Error ? error.message : "Génération impossible", { variant: "error" });
+    }
+  }
 
   function onRun(): void {
     setState({ kind: "running" });
@@ -52,6 +71,23 @@ export function SimulationClient(): React.ReactElement {
 
       <Card title="Configuration gcsim">
         <div style={{ display: "grid", gap: 10 }}>
+          {teams.length > 0 ? (
+            <label style={{ display: "grid", gap: 4 }}>
+              <span style={{ color: "var(--irm-text-dim)", fontSize: 13 }}>
+                Pré-remplir un squelette depuis une équipe sauvegardée
+              </span>
+              <Select
+                value={teamId}
+                onChange={(e) => onGenerateFromTeam(e.target.value)}
+                aria-label="Équipe pour le squelette gcsim"
+              >
+                <option value="">— choisir une équipe —</option>
+                {teams.map((t) => (
+                  <option key={t.id} value={t.id}>{t.name}</option>
+                ))}
+              </Select>
+            </label>
+          ) : null}
           <textarea
             value={config}
             onChange={(e) => setConfig(e.target.value)}

@@ -1,7 +1,31 @@
 "use server";
 
 import { runSidecar } from "@irminsul/engine-client/sidecar";
+import { getTeamRepository } from "@irminsul/data-access";
 import { engineOptions } from "@/server/engine";
+
+export interface SimTeamOption {
+  id: string;
+  name: string;
+  members: { character: string; slot: number }[];
+}
+
+/**
+ * Équipes sauvegardées pour pré-remplir un squelette gcsim. Renvoie une liste
+ * vide (jamais d'erreur bloquante) si la base locale est indisponible.
+ */
+export async function listTeamsForSimAction(): Promise<SimTeamOption[]> {
+  try {
+    const teams = await getTeamRepository().list();
+    return teams.map((t) => ({
+      id: t.id,
+      name: t.name,
+      members: t.members.map((m) => ({ character: m.character, slot: m.slot })),
+    }));
+  } catch {
+    return [];
+  }
+}
 
 export interface GcsimRunResult {
   ok: boolean;
