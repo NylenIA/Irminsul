@@ -49,10 +49,10 @@
       "label": "Team builder et simulation",
       "weight": 15,
       "mvpWeight": 15,
-      "score": 92,
+      "score": 93,
       "confidence": "medium",
-      "evidence": "Team Lab CRUD + reactions + rotations + comparateur + recommandations ; PAGE /simulation : vraies simulations gcsim (IPC run_gcsim sanitize, E2E reelle) + SQUELETTE gcsim genere depuis une equipe sauvegardee (teamToGcsimSkeleton, cles best-effort annotees, TODO honnetes, aucune valeur inventee, E2E)",
-      "blockers": "auto-remplissage armes/stats du squelette depuis un scan GOOD ; energie/cooldown ; buffs par action"
+      "evidence": "Team Lab CRUD + reactions + rotations + comparateur + recommandations ; PAGE /simulation : vraies simulations gcsim (E2E reelle) + SQUELETTE gcsim depuis equipe ENRICHI du scan GOOD reel (perso lvl/cons/talents, arme, sets pre-remplis ; substats+rotation en TODO honnete ; toast N/M builds) ; fonction pure testee (104 vitest)",
+      "blockers": "substats reels dans le squelette (via character_final_stats) ; energie/cooldown ; buffs par action"
     },
     {
       "id": "persistance",
