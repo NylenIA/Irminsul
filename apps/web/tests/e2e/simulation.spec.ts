@@ -46,9 +46,12 @@ test.describe("Simulation gcsim", () => {
     await page.goto("/simulation");
     await page.getByLabel("Équipe pour le squelette gcsim").selectOption({ label: teamName });
     const textarea = page.getByLabel("Configuration gcsim");
-    await expect(textarea).toHaveValue(/bennett char lvl=90\/90/);
+    // Invariants indépendants du scan (le build réel peut enrichir perso/arme/set) :
     await expect(textarea).toHaveValue(/PAS une simulation/);
-    await expect(textarea).toHaveValue(/weapon="TODO"/);
+    await expect(textarea).toHaveValue(/bennett char lvl=\d+\/\d+ cons=\d+/); // clé normalisée + ligne perso
+    await expect(textarea).toHaveValue(/active bennett;/);
+    await expect(textarea).toHaveValue(/TODO stats substats reelles/); // stats toujours TODO (honnête)
+    await expect(textarea).toHaveValue(/TODO rotation/);
   });
 
   test("accessibilité (axe) de /simulation", async ({ page }) => {

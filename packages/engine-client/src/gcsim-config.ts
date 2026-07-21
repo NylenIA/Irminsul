@@ -15,6 +15,23 @@ export interface GcsimSkeletonMember {
   slot: number;
 }
 
+/** Sous-ensemble d'un build réel (scan GOOD) utile à gcsim. Aucune stat substat. */
+export interface GcsimBuildInput {
+  level?: number;
+  ascension?: number;
+  constellation?: number;
+  talents?: { normal?: number; skill?: number; burst?: number };
+  weapon?: { id: string; refinement?: number };
+  artifactSets?: { set: string; count: number }[];
+}
+
+/** Niveau max d'une phase d'ascension (A0..A6). Défaut 90 hors bornes. */
+export function ascensionMaxLevel(ascension: number | undefined): number {
+  const caps = [20, 40, 50, 60, 70, 80, 90];
+  if (ascension === undefined || ascension < 0 || ascension >= caps.length) return 90;
+  return caps[ascension]!;
+}
+
 /**
  * Clé gcsim best-effort : minuscule + alphanumérique uniquement. Correspond à
  * la convention gcsim pour beaucoup de personnages, MAIS pas tous (les noms à
@@ -34,7 +51,10 @@ export function normalizeGcsimKey(name: string): string {
  * blocs personnages), prêt à compléter puis lancer. Ne renvoie JAMAIS de config
  * "prête" : les armes/sets/stats/rotation sont des TODO.
  */
-export function teamToGcsimSkeleton(members: readonly GcsimSkeletonMember[]): string {
+export function teamToGcsimSkeleton(
+  members: readonly GcsimSkeletonMember[],
+  options?: { builds?: Readonly<Record<string, GcsimBuildInput>> },
+): string {
   const named = members
     .filter((m) => m.character && m.character.trim().length > 0)
     .slice()
@@ -47,11 +67,13 @@ export function teamToGcsimSkeleton(members: readonly GcsimSkeletonMember[]): st
     throw new RangeError(`Une équipe Genshin compte au plus 4 personnages ; reçu ${named.length}.`);
   }
 
+  const builds = options?.builds ?? {};
   const keys = named.map((m) => ({ key: normalizeGcsimKey(m.character), name: m.character }));
   const lines: string[] = [
     "// SQUELETTE gcsim genere depuis une equipe Irminsul — PAS une simulation.",
-    "// A completer : cles a verifier (liste gcsim), armes/sets/stats et rotation.",
-    "// Tant que les TODO ne sont pas remplis, le resultat n'a aucune valeur.",
+    "// Perso/arme/set pre-remplis depuis ton scan GOOD quand dispo ; sinon TODO.",
+    "// Les stats (substats) et la rotation restent A COMPLETER : sans elles, le DPS",
+    "// n'est pas representatif. Verifie les cles de personnages (convention gcsim).",
     "",
     "options iteration=1000 duration=90 swap_delay=12;",
     "target lvl=100 resist=0.1 pos=0,0;",
@@ -59,10 +81,39 @@ export function teamToGcsimSkeleton(members: readonly GcsimSkeletonMember[]): st
   ];
 
   for (const { key, name } of keys) {
-    lines.push(`${key} char lvl=90/90 cons=0 talent=9,9,9; // depuis "${name}" — verifier la cle gcsim`);
-    lines.push(`${key} add weapon="TODO" refine=1 lvl=90/90;`);
-    lines.push(`${key} add set="TODO" count=4;`);
-    lines.push(`${key} add stats hp=0 atk=0 em=0; // TODO stats reelles (sinon DPS non representatif)`);
+    const b = builds[name];
+    // Ligne personnage : renseignee depuis le build si dispo, sinon defauts neutres.
+    const lvl = b?.level ?? 90;
+    const maxLvl = ascensionMaxLevel(b?.ascension);
+    const cons = b?.constellation ?? 0;
+    const t = b?.talents;
+    const talent = `${t?.normal ?? 9},${t?.skill ?? 9},${t?.burst ?? 9}`;
+    lines.push(
+      `${key} char lvl=${lvl}/${maxLvl} cons=${cons} talent=${talent}; ` +
+        `// depuis "${name}" — verifier la cle gcsim`,
+    );
+
+    // Arme : cle GOOD->gcsim fiable apres normalisation (ex. NoblesseOblige->noblesseoblige).
+    if (b?.weapon?.id) {
+      lines.push(
+        `${key} add weapon="${normalizeGcsimKey(b.weapon.id)}" refine=${b.weapon.refinement ?? 1} lvl=90/90;`,
+      );
+    } else {
+      lines.push(`${key} add weapon="TODO" refine=1 lvl=90/90;`);
+    }
+
+    // Sets d'artefacts.
+    if (b?.artifactSets && b.artifactSets.length > 0) {
+      for (const s of b.artifactSets) {
+        lines.push(`${key} add set="${normalizeGcsimKey(s.set)}" count=${s.count};`);
+      }
+    } else {
+      lines.push(`${key} add set="TODO" count=4;`);
+    }
+
+    lines.push(
+      `${key} add stats hp=0 atk=0 em=0; // TODO stats substats reelles (non fournies par le scan)`,
+    );
     lines.push("");
   }
 

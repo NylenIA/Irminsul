@@ -1,9 +1,18 @@
 import { describe, expect, it } from "vitest";
 import {
   GCSIM_CONFIG_CONTRACT_VERSION,
+  ascensionMaxLevel,
   normalizeGcsimKey,
   teamToGcsimSkeleton,
 } from "../src/gcsim-config";
+
+describe("ascensionMaxLevel", () => {
+  it("mappe chaque phase A0..A6 sur son cap ; défaut 90 hors bornes", () => {
+    expect([0, 1, 2, 3, 4, 5, 6].map(ascensionMaxLevel)).toEqual([20, 40, 50, 60, 70, 80, 90]);
+    expect(ascensionMaxLevel(undefined)).toBe(90);
+    expect(ascensionMaxLevel(99)).toBe(90);
+  });
+});
 
 describe("normalizeGcsimKey", () => {
   it("minuscule + alphanumérique, diacritiques et espaces retirés", () => {
@@ -48,10 +57,38 @@ describe("teamToGcsimSkeleton", () => {
     expect(out).toMatch(/PAS une simulation/);
     expect(out).toContain('weapon="TODO"');
     expect(out).toContain('set="TODO"');
-    expect(out).toMatch(/TODO stats reelles/);
+    expect(out).toMatch(/TODO stats substats reelles/);
     expect(out).toMatch(/TODO rotation/);
     // Le nom source est annoté pour corriger une cle erronee.
     expect(out).toMatch(/depuis "Bennett" — verifier la cle gcsim/);
+  });
+
+  it("enrichit depuis un build réel (perso/arme/set) ; stats restent TODO", () => {
+    const out = teamToGcsimSkeleton([{ character: "Hu Tao", slot: 0 }], {
+      builds: {
+        "Hu Tao": {
+          level: 80,
+          ascension: 6,
+          constellation: 1,
+          talents: { normal: 10, skill: 8, burst: 9 },
+          weapon: { id: "StaffOfHoma", refinement: 1 },
+          artifactSets: [{ set: "CrimsonWitchOfFlames", count: 4 }],
+        },
+      },
+    });
+    expect(out).toMatch(/hutao char lvl=80\/90 cons=1 talent=10,8,9;/);
+    expect(out).toContain('hutao add weapon="staffofhoma" refine=1 lvl=90/90;');
+    expect(out).toContain('hutao add set="crimsonwitchofflames" count=4;');
+    // Sans stats substat fournies -> TODO honnête, jamais inventé.
+    expect(out).toMatch(/TODO stats substats reelles/);
+    expect(out).not.toContain('weapon="TODO"');
+  });
+
+  it("sans build -> tout en TODO (comportement d'origine préservé)", () => {
+    const out = teamToGcsimSkeleton([{ character: "Bennett", slot: 0 }]);
+    expect(out).toContain('weapon="TODO"');
+    expect(out).toContain('set="TODO"');
+    expect(out).toMatch(/bennett char lvl=90\/90 cons=0 talent=9,9,9;/);
   });
 
   it("expose une version de contrat", () => {

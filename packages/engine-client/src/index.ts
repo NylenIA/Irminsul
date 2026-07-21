@@ -50,8 +50,10 @@ export {
 export { normalizePlayerBuild, parseArtifactSets, parseWeaponRef, type PlayerCharacterBuild } from "./player-build";
 export {
   GCSIM_CONFIG_CONTRACT_VERSION,
+  ascensionMaxLevel,
   normalizeGcsimKey,
   teamToGcsimSkeleton,
+  type GcsimBuildInput,
   type GcsimSkeletonMember,
 } from "./gcsim-config";
 export {

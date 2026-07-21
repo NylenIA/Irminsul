@@ -2,8 +2,13 @@
 
 import { useEffect, useState, useTransition, type CSSProperties } from "react";
 import { Button, Card, ErrorState, Select, toast } from "@irminsul/ui";
-import { teamToGcsimSkeleton } from "@irminsul/engine-client";
-import { listTeamsForSimAction, runGcsimAction, type GcsimRunResult, type SimTeamOption } from "./actions";
+import {
+  buildGcsimSkeletonAction,
+  listTeamsForSimAction,
+  runGcsimAction,
+  type GcsimRunResult,
+  type SimTeamOption,
+} from "./actions";
 
 type UiState =
   | { kind: "idle" }
@@ -39,14 +44,22 @@ export function SimulationClient(): React.ReactElement {
 
   function onGenerateFromTeam(id: string): void {
     setTeamId(id);
+    if (!id) return;
     const team = teams.find((t) => t.id === id);
-    if (!team) return;
-    try {
-      setConfig(teamToGcsimSkeleton(team.members));
-      toast(`Squelette généré depuis « ${team.name} » — complète les TODO`);
-    } catch (error) {
-      toast(error instanceof Error ? error.message : "Génération impossible", { variant: "error" });
-    }
+    startTransition(async () => {
+      const res = await buildGcsimSkeletonAction(id);
+      if (res.ok) {
+        setConfig(res.skeleton);
+        const name = team?.name ?? "équipe";
+        toast(
+          res.enriched > 0
+            ? `Squelette « ${name} » : ${res.enriched}/${res.total} builds pré-remplis depuis ton scan — complète stats & rotation`
+            : `Squelette « ${name} » généré (aucun build scanné) — complète les TODO`,
+        );
+      } else {
+        toast(res.message, { variant: "error" });
+      }
+    });
   }
 
   function onRun(): void {
