@@ -49,10 +49,10 @@
       "label": "Team builder et simulation",
       "weight": 15,
       "mvpWeight": 15,
-      "score": 94,
+      "score": 95,
       "confidence": "medium",
-      "evidence": "Team Lab CRUD + reactions + rotations + comparateur + recommandations ; PAGE /simulation : vraies simulations gcsim (E2E reelle) + SQUELETTE gcsim depuis equipe ENRICHI du scan GOOD : perso/arme/sets + STATS D'ARTEFACTS reelles (sumArtifactStats, main 5*niv20 table exacte + substats, cles/decimales gcsim, contribution artefacts sans double-comptage, gate strict sinon TODO) ; 16 persos du scan declenchent le calcul ; fonction pure testee (108 vitest)",
-      "blockers": "rotation auto (laissee a l'utilisateur par design) ; energie/cooldown ; buffs par action"
+      "evidence": "Team Lab + reactions + rotations + comparateur + recommandations ; /simulation : vraies sims gcsim + squelette depuis equipe enrichi du scan GOOD (perso/arme/sets + stats artefacts reelles sans double-comptage) ; EXPORT rotation Team Lab -> actions gcsim (rotationToGcsimActions, verbes+groupage, ordre seulement honnete). Chaine complete equipe->config gcsim quasi-prete. 113 vitest",
+      "blockers": "energie/cooldown fin ; buffs par action (modele analytique -> gcsim comble le gros du besoin)"
     },
     {
       "id": "persistance",
