@@ -79,10 +79,10 @@
       "label": "Tests et qualite",
       "weight": 5,
       "mvpWeight": 4,
-      "score": 84,
+      "score": 87,
       "confidence": "high",
-      "evidence": "pytest 235 (ruff cable) ; vitest 129 (3 workspaces dans verify : data-access 11 dont rollback transactionnel, engine-client 113, ui 5) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config, stock traite : 3 morts supprimes + convention underscore)",
-      "blockers": "regles Next-specifiques eslint-config-next (extension future) ; rendu composants UI non teste unitairement (jsdom — couvert E2E) ; scripts .mjs hors lint"
+      "evidence": "pytest 235 (ruff cable) ; vitest 145 (3 workspaces dans verify : data-access 11 dont rollback transactionnel, engine-client 113, ui 21) ; RENDU des primitives teste unitairement en jsdom via Testing Library (Button/Input/Select/States/ConfirmDialog : mapping variante->classe, fusion className, passe-plat props natives, roles a11y status/alert/aria-live, cablage onConfirm/onCancel, ouverture modale reelle avec polyfill dialog.showModal/close honnete pour jsdom) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config)",
+      "blockers": "regles Next-specifiques eslint-config-next (extension future) ; surfaces/pages Next non testees unitairement (couvert E2E) ; scripts .mjs hors lint"
     },
     {
       "id": "packaging",

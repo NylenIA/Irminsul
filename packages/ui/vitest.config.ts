@@ -1,10 +1,14 @@
 import { defineConfig } from "vitest/config";
 
-// Tests de la LOGIQUE des primitives (store Toast…) en environnement node —
-// le rendu React est couvert par les E2E Playwright (axe inclus) côté apps/web.
+// Deux familles de tests :
+//  - LOGIQUE des primitives (store Toast…) en environnement node (.test.ts) ;
+//  - RENDU des composants React en jsdom via Testing Library (.test.tsx),
+//    chaque fichier déclarant `// @vitest-environment jsdom` en tête.
+// Les E2E Playwright (axe inclus, apps/web) restent la couverture d'intégration.
 export default defineConfig({
+  esbuild: { jsx: "automatic" },
   test: {
     environment: "node",
-    include: ["tests/**/*.test.ts"],
+    include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
   },
 });
