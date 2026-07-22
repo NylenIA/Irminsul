@@ -3,8 +3,8 @@
 > Généré par `scripts/project_progress.py` depuis `PROJECT_PROGRESS.json` le 2026-07-17. Branche `feat/irminsul-complete-redesign`. Ne pas éditer à la main.
 
 ## Scores
-- **MVP utilisable : 88%**
-- **Vision complète : 88%**
+- **MVP utilisable : 89%**
+- **Vision complète : 89%**
 - Confiance globale : moyenne (cœur moteur élevé ; surfaces web/UI récentes).
 - Échelle : 0=absent, 25=squelette/mock/TODO, 50=happy-path peu validé, 75=intégré+testé cas majeurs, 100=prêt à livrer
 
@@ -17,9 +17,9 @@
 | Application desktop | 10 | 12 | 84 | high | PROUVE bout-en-bout et REVALIDE (2026-07-20) avec le moteur a jour : rebuild sidecar (provenance commit=48f475a verifiee DANS l'app installee) + desktop:build + reinstall NSIS silencieuse + smoke installe TOUT VERT (7 routes 200, proxy.ts nonce POST/boot->403 x3, node lie au PID Tauri, zero orphelin x2, persistance DB, diagnostic sanitize) + cas d'erreur 4/4 chemin Unicode. L'app installee embarque lunaires+additives+sidecar-par-defaut. | MSI 1603 (per-machine sans elevation) ; non signe (SmartScreen) ; bind-race residuel accepte |
 | Team builder et simulation | 15 | 15 | 95 | medium | Team Lab + reactions + rotations + comparateur + recommandations ; /simulation : vraies sims gcsim + squelette depuis equipe enrichi du scan GOOD (perso/arme/sets + stats artefacts reelles sans double-comptage) ; EXPORT rotation Team Lab -> actions gcsim (rotationToGcsimActions, verbes+groupage, ordre seulement honnete). Chaine complete equipe->config gcsim quasi-prete. 113 vitest | energie/cooldown fin ; buffs par action (modele analytique -> gcsim comble le gros du besoin) |
 | Persistance | 5 | 8 | 82 | high | Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL (rollback) ; export/import versionne irminsul-export/1.0 avec checksum | chemins %APPDATA% pour desktop |
-| Design system et UX | 5 | 5 | 86 | medium | tokens OKLCH + primitives (Button/Card/Input/Select/ConfirmDialog/Toast/States/CharacterPicker) axe 0 critique ; BRAND_GUIDE.md ; LOGO Irminsul livre (SVG constellation-arbre degrade tokens, favicon /icon.svg, header logo+wordmark, animation legere reduced-motion safe, E2E) | icone desktop Tauri (PNG/ico a generer) ; Tooltip/Panel ; Tabs differe YAGNI |
+| Design system et UX | 5 | 5 | 86 | medium | tokens OKLCH + primitives (Button/Card/Input/Select/ConfirmDialog/Toast/States/CharacterPicker) axe 0 critique ; BRAND_GUIDE.md ; LOGO Irminsul livre (SVG constellation-arbre degrade tokens, favicon /icon.svg, header logo+wordmark, animation legere reduced-motion safe, E2E) | Tooltip/Panel a la demande ; Tabs differe YAGNI |
 | Tests et qualite | 5 | 4 | 84 | high | pytest 235 (ruff cable) ; vitest 106 (3 workspaces dans verify) ; E2E 48 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config, stock traite : 3 morts supprimes + convention underscore) | regles Next-specifiques eslint-config-next (extension future) ; rendu composants UI non teste unitairement (jsdom — couvert E2E) ; scripts .mjs hors lint |
-| Packaging et deploiement | 3 | 2 | 74 | medium | NSIS installe/desinstalle/reinstalle PROUVE (per-user, sans admin) ; MSI produit mais 1603 sans elevation (preuve msi-install-1603.log) | MSI requiert admin ; non signe |
+| Packaging et deploiement | 3 | 2 | 85 | high | NSIS installe/desinstalle/reinstalle PROUVE (per-user, sans admin) + icone de marque (icon.ico depuis le logo, desktop:build vert) ; signature de code ABANDONNEE par decision (distribution privee entre amis) -> plus un blocage ; chaine desktop complete pour l'usage vise | MSI requiert admin (par conception, non prioritaire) ; pas de signature = SmartScreen sur machines tierces (accepte) |
 | Documentation et continuite | 2 | 2 | 82 | high | audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF ; FORMULA_SOURCES.md (chaque constante sourcee+verifiee) ; PATCH_WATCH.md (process de veille tracable, checklist par patch) ; BRAND_GUIDE.md + DESIGN_SYSTEM.md a jour | hook SessionStart non enregistre ; README racine a rafraichir (surfaces /simulation, reactions recentes) |
 
 _Recalcule : `python scripts/project_progress.py`._
