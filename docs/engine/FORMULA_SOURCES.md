@@ -75,4 +75,4 @@ calcule les sets nous-mêmes (nécessiterait un audit dédié par set + version)
 
 ## À revalider à chaque veille de patch
 Coefficients de réaction (historique 5.2), valeurs de main stat (stables mais à surveiller),
-nouvelles réactions (Lunar-Bloom en attente). Voir le process de veille (à venir).
+nouvelles réactions (Lunar-Bloom en attente). **Process de veille : [PATCH_WATCH.md](PATCH_WATCH.md).**
