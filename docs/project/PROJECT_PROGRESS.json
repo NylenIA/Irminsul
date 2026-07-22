@@ -69,10 +69,10 @@
       "label": "Design system et UX",
       "weight": 5,
       "mvpWeight": 5,
-      "score": 82,
+      "score": 86,
       "confidence": "medium",
-      "evidence": "tokens OKLCH + primitives (Button/Card/Input/Select/ConfirmDialog/Toast/States/CharacterPicker) reduced-motion safe, axe 0 critique ; BRAND_GUIDE.md (nom/voix/couleurs/typo/direction logo/checklist) + DESIGN_SYSTEM.md inventaire a jour",
-      "blockers": "asset logo final (direction documentee, decision Nylen) ; Tooltip/Panel ; Tabs differe YAGNI"
+      "evidence": "tokens OKLCH + primitives (Button/Card/Input/Select/ConfirmDialog/Toast/States/CharacterPicker) axe 0 critique ; BRAND_GUIDE.md ; LOGO Irminsul livre (SVG constellation-arbre degrade tokens, favicon /icon.svg, header logo+wordmark, animation legere reduced-motion safe, E2E)",
+      "blockers": "icone desktop Tauri (PNG/ico a generer) ; Tooltip/Panel ; Tabs differe YAGNI"
     },
     {
       "id": "tests_qualite",
