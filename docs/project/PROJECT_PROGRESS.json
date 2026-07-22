@@ -69,10 +69,10 @@
       "label": "Design system et UX",
       "weight": 5,
       "mvpWeight": 5,
-      "score": 76,
+      "score": 82,
       "confidence": "medium",
-      "evidence": "tokens OKLCH + primitives + effets astral reduced-motion safe ; SELECT (10 selects migres, axe 0 critique) ; TOAST (aria-live, cable app-wide, preuve E2E) ; CHARACTERPICKER (format Nom·Element unifie, exclusion d'equipe encapsulee, dedup Team Lab + apercu)",
-      "blockers": "Tabs (differe : aucune surface n'en a besoin aujourd'hui, YAGNI) ; brand guide"
+      "evidence": "tokens OKLCH + primitives (Button/Card/Input/Select/ConfirmDialog/Toast/States/CharacterPicker) reduced-motion safe, axe 0 critique ; BRAND_GUIDE.md (nom/voix/couleurs/typo/direction logo/checklist) + DESIGN_SYSTEM.md inventaire a jour",
+      "blockers": "asset logo final (direction documentee, decision Nylen) ; Tooltip/Panel ; Tabs differe YAGNI"
     },
     {
       "id": "tests_qualite",
