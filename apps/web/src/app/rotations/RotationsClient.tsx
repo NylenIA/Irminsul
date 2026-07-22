@@ -1,8 +1,13 @@
 "use client";
 
 import { useMemo, useState, useTransition, type CSSProperties } from "react";
-import { Button, Card, ErrorState, Input, Select } from "@irminsul/ui";
-import type { RotationAction, RotationActionKind, RotationResult } from "@irminsul/engine-client";
+import { Button, Card, ErrorState, Input, Select, toast } from "@irminsul/ui";
+import {
+  rotationToGcsimActions,
+  type RotationAction,
+  type RotationActionKind,
+  type RotationResult,
+} from "@irminsul/engine-client";
 import { calculateRotationAction } from "./rotation-actions";
 
 export interface TeamOption {
@@ -44,7 +49,18 @@ export function RotationsClient({ teams }: { teams: TeamOption[] }): React.React
   const team = useMemo(() => teams.find((t) => t.id === teamId), [teams, teamId]);
   const [actions, setActions] = useState<RotationAction[]>([]);
   const [state, setState] = useState<UiState>({ kind: "idle" });
+  const [gcsimActions, setGcsimActions] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+
+  function exportGcsim(): void {
+    try {
+      const out = rotationToGcsimActions(actions);
+      setGcsimActions(out);
+      toast("Actions gcsim générées — ordre seulement, à affiner");
+    } catch (error) {
+      toast(error instanceof Error ? error.message : "Export impossible", { variant: "error" });
+    }
+  }
 
   const members = team?.members ?? [];
 
@@ -113,7 +129,29 @@ export function RotationsClient({ teams }: { teams: TeamOption[] }): React.React
           <Button variant="primary" onClick={calculate} disabled={pending || actions.length === 0}>
             {pending ? "Calcul…" : "Calculer la rotation"}
           </Button>
+          <Button onClick={exportGcsim} disabled={actions.length === 0} aria-label="Exporter en actions gcsim">
+            Actions gcsim
+          </Button>
         </div>
+
+        {gcsimActions ? (
+          <div style={{ marginTop: 12 }} role="group" aria-label="Actions gcsim exportées">
+            <p style={{ color: "var(--irm-text-faint)", fontSize: 12, margin: "0 0 6px" }}>
+              <span className="irm-badge">gcsim</span> Ordre des actions uniquement — colle-le
+              dans la page Simulation sous le bloc personnages, puis affine timing/énergie.
+            </p>
+            <pre
+              aria-label="Séquence d'actions gcsim"
+              style={{
+                whiteSpace: "pre-wrap", fontSize: 12, fontFamily: "ui-monospace, monospace",
+                background: "var(--irm-surface-2)", padding: 10, borderRadius: 8,
+                maxHeight: 220, overflow: "auto",
+              }}
+            >
+              {gcsimActions}
+            </pre>
+          </div>
+        ) : null}
       </Card>
 
       <div style={{ marginTop: 14 }}>

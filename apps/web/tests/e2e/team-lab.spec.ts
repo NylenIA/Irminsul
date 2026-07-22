@@ -201,6 +201,26 @@ test.describe("Rotations — moteur chiffré (jamais de faux DPS)", () => {
     await expect(result.getByText(/coefficient de talent réel/)).toBeVisible();
   });
 
+  test("exporte la rotation en actions gcsim (ordre seulement, honnête)", async ({ page }) => {
+    await page.goto("/team-lab");
+    const teamName = `Gcsim ${Date.now()}`;
+    await page.getByPlaceholder("Ex. Sandrone Lunar-Crystallize").fill(teamName);
+    await page.getByLabel("Personnage, emplacement 1").selectOption("Bennett");
+    await page.getByRole("button", { name: "Sauvegarder l'équipe" }).click();
+    await expect(page.getByRole("heading", { name: teamName })).toBeVisible();
+
+    await page.goto("/rotations");
+    await page.getByLabel("Équipe sauvegardée").selectOption({ label: teamName });
+    await page.getByRole("button", { name: "+ Action" }).click();
+    await page.getByRole("button", { name: "Exporter en actions gcsim" }).click();
+
+    const seq = page.getByLabel("Séquence d'actions gcsim");
+    await expect(seq).toBeVisible();
+    await expect(seq).toContainText("active bennett;");
+    await expect(seq).toContainText("bennett attack;"); // action normale par défaut
+    await expect(seq).toContainText("ORDRE des actions seulement");
+  });
+
   test("accessibilité (axe) de /rotations", async ({ page }) => {
     await page.goto("/rotations");
     await expect(page.getByRole("heading", { name: "Rotations" })).toBeVisible();

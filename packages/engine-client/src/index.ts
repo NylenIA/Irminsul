@@ -57,6 +57,7 @@ export {
   type GcsimSkeletonMember,
 } from "./gcsim-config";
 export { sumArtifactStats, type ArtifactStatSum, type GoodArtifactLike } from "./artifact-stats";
+export { rotationToGcsimActions, type RotationActionLike } from "./gcsim-rotation";
 export {
   FINAL_STATS_CONTRACT_VERSION,
   normalizeFinalStats,
