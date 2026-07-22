@@ -44,6 +44,28 @@ claude
 Claude Code utilisera automatiquement l'agent `irminsul-orchestrator` configuré dans `.claude/settings.json`.
 
 
+### Continuité de session (optionnel)
+
+Un hook `SessionStart` peut réafficher le contexte du dépôt (branche, skills, MCP, état projet) à chaque
+ouverture de session Claude Code. Le script est en **lecture seule** : `.claude/hooks/irminsul-session-start.ps1`.
+Pour l'activer, ajoute ce hook à `.claude/settings.json` :
+
+```json
+"hooks": {
+  "SessionStart": [
+    {
+      "matcher": "startup|resume|clear|compact",
+      "hooks": [
+        { "type": "command",
+          "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/irminsul-session-start.ps1" }
+      ]
+    }
+  ]
+}
+```
+
+> Sur une machine avec PowerShell 7, remplace `powershell` par `pwsh`.
+
 ### Entretien
 
 - `UPDATE_IRMINSUL.bat` force immédiatement la mise à jour des sources et de gcsim.

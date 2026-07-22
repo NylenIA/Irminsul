@@ -51,13 +51,20 @@
 - gcsim `add stats` = contribution ARTEFACTS (pas totaux) sinon double-comptage. Gate strict 5★ niv20 (`artifact-stats.ts`).
 - **local-first** : aucune donnée privée vers le cloud.
 
-## Hook SessionStart (continuité — item ouvert)
-Script `.claude/hooks/irminsul-session-start.ps1` existe (idempotent, lecture seule). À enregistrer dans
-`.claude/settings.json` :
+## Hook SessionStart (continuité — item ouvert, action utilisateur requise)
+Script `.claude/hooks/irminsul-session-start.ps1` existe (idempotent, lecture seule). **Correctif 2026-07-23** :
+la commande proposée d'origine utilisait `pwsh`, **absent de cette machine** (seul `powershell.exe`, Windows
+PowerShell 5.1, est présent) → elle aurait échoué (exit 127) à chaque démarrage. Commande correcte à enregistrer
+dans `.claude/settings.json` :
 ```json
 { "hooks": { "SessionStart": [ { "matcher": "startup|resume|clear|compact",
-  "hooks": [ { "type": "command", "command": "pwsh -NoProfile -File .claude/hooks/irminsul-session-start.ps1" } ] } ] } }
+  "hooks": [ { "type": "command",
+    "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/irminsul-session-start.ps1" } ] } ] } }
 ```
+> Sur une machine avec PowerShell 7 installé, remplacer `powershell` par `pwsh`.
+> **L'édition de `.claude/settings.json` pour ajouter un hook auto-exécuté est bloquée par le classifier
+> en mode auto** (auto-exécution = décision utilisateur) : Nylen doit l'ajouter à la main, ou autoriser
+> l'action. Le script et la commande ci-dessus sont audités et prêts.
 
 ## Scores par domaine (89 % global)
 Team builder 95 · Intégration moteur 91 · Moteur 90 · App web 89 · Design 86 · Packaging 85 ·

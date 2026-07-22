@@ -99,10 +99,10 @@
       "label": "Documentation et continuite",
       "weight": 2,
       "mvpWeight": 2,
-      "score": 82,
+      "score": 84,
       "confidence": "high",
-      "evidence": "audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF ; FORMULA_SOURCES.md (chaque constante sourcee+verifiee) ; PATCH_WATCH.md (process de veille tracable, checklist par patch) ; BRAND_GUIDE.md + DESIGN_SYSTEM.md a jour",
-      "blockers": "hook SessionStart non enregistre ; README racine a rafraichir (surfaces /simulation, reactions recentes)"
+      "evidence": "audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF ; FORMULA_SOURCES.md (chaque constante sourcee+verifiee) ; PATCH_WATCH.md (process de veille tracable, checklist par patch) ; BRAND_GUIDE.md + DESIGN_SYSTEM.md a jour ; README racine VERIFIE a jour (surfaces /simulation, additives, lunaires, sidecar, export gcsim, NSIS) + section 'Continuite de session' documentant le hook avec la commande correcte",
+      "blockers": "hook SessionStart non enregistre : la commande d'origine (pwsh) est INVALIDE ici (pwsh absent -> exit 127), corrigee en 'powershell -NoProfile -ExecutionPolicy Bypass -File ...' et documentee ; l'edition de .claude/settings.json pour un hook auto-execute est bloquee par le classifier en mode auto -> registration = action utilisateur"
     }
   ]
 }
