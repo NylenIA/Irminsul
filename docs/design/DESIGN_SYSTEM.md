@@ -18,7 +18,11 @@
 ## Composants (`packages/ui/src/components`)
 - **Button** : `default | primary | ghost | danger` ; états hover/active/focus-visible/disabled.
 - **Card** : surface 1, titre cyan optionnel.
+- **Input / Select** : surface `.irm-input` commune ; Select masque l'apparence native, chevron aux tokens, `option/optgroup` stylés ; a11y par `aria-label`.
 - **EmptyState / LoadingState / ErrorState** : `role=status|alert`, invite à agir / annonce l'attente / explique l'erreur.
+- **ConfirmDialog** : `<dialog>` natif, backdrop assombri, actions confirmer/annuler.
+- **Toast / Toaster** : feedback non bloquant, `role=status aria-live=polite`, variantes succès/erreur/info, auto-dismiss, reduced-motion safe. Store module-level (`toast()` partout, `<Toaster/>` une fois dans le layout).
+- **CharacterPicker** (app, domaine Genshin) : sélecteur de roster « Nom · Élément », exclusion d'équipe encapsulée.
 
 ## Règles d'usage
 - Importer `@irminsul/ui/tokens.css` une fois (layout) ; appliquer `.irm-root` sur `<body>`.
@@ -27,5 +31,10 @@
 - Accents `violet`/`gold` : usage parcimonieux ; couleurs élémentaires seulement quand la donnée l'exige.
 
 ## À compléter (prochaines primitives)
-Input, Select, Tabs, Dialog, Tooltip, Badge, Panel, CharacterPicker, TeamSlot (cf. mission Q `design-system`).
-La page Team Lab utilise actuellement des contrôles natifs stylés par tokens en attendant ces primitives.
+Tooltip, Panel, TeamSlot. **Tabs différé (YAGNI)** : aucune surface n'en a besoin aujourd'hui ;
+à créer quand un écran le justifie. Badge existe en classe utilitaire (`.irm-badge`) ; le promouvoir
+en composant si l'usage se diversifie.
+
+## Identité de marque
+Voir [BRAND_GUIDE.md](BRAND_GUIDE.md) — nom, voix, logo, psychologie des couleurs, do/don't.
+Le design system (tokens/composants) est l'**implémentation** ; le brand guide en est l'**intention**.
