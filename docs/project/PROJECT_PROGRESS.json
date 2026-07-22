@@ -42,7 +42,7 @@
       "score": 84,
       "confidence": "high",
       "evidence": "PROUVE bout-en-bout et REVALIDE (2026-07-20) avec le moteur a jour : rebuild sidecar (provenance commit=48f475a verifiee DANS l'app installee) + desktop:build + reinstall NSIS silencieuse + smoke installe TOUT VERT (7 routes 200, proxy.ts nonce POST/boot->403 x3, node lie au PID Tauri, zero orphelin x2, persistance DB, diagnostic sanitize) + cas d'erreur 4/4 chemin Unicode. L'app installee embarque lunaires+additives+sidecar-par-defaut.",
-      "blockers": "MSI 1603 (per-machine sans elevation) ; non signe (SmartScreen) ; bind-race residuel accepte"
+      "blockers": "MSI 1603 (per-machine sans elevation) ; non signe (SmartScreen) ; bind-race residuel accepte ; migration-on-update de la base %APPDATA% non geree (voir domaine Persistance) -> decision d'archi requise avant un patch de schema"
     },
     {
       "id": "team_builder_sim",
@@ -61,8 +61,8 @@
       "mvpWeight": 8,
       "score": 86,
       "confidence": "high",
-      "evidence": "Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL ; export/import versionne irminsul-export/1.0 avec checksum ; couverture data-access 11 tests dont PREUVE de rollback par injection de faute (echec avant COMMIT -> delete-par-nom ANNULE, etat d'avant restaure : identite+membres) + fail-fast (membre invalide = AUCUNE ecriture partielle) + remplace-par-nom (compteurs created/updated) + dedoublonnage interne (derniere occurrence gagne) + garde vide/>500",
-      "blockers": "chemins %APPDATA% pour desktop"
+      "evidence": "Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL ; export/import versionne irminsul-export/1.0 avec checksum ; couverture data-access 11 tests dont PREUVE de rollback par injection de faute (echec avant COMMIT -> delete-par-nom ANNULE, etat d'avant restaure : identite+membres) + fail-fast (membre invalide = AUCUNE ecriture partielle) + remplace-par-nom (compteurs created/updated) + dedoublonnage interne (derniere occurrence gagne) + garde vide/>500 ; chemin DB desktop = %APPDATA% CONFIRME (app_data_dir Tauri -> ensure_user_db : dossier+logs crees, template pre-migre copie au 1er lancement, JAMAIS ecrase, teste Rust chemin Unicode+espaces) + expose au Diagnostic",
+      "blockers": "MAJ inter-versions : ensure_user_db ne copie le template que si la base est absente et le CLI Prisma n'est PAS embarque -> une future migration de schema ne serait pas appliquee a une base %APPDATA% existante (gap migration-on-update). Correction = decision d'archi (runner de migration Node au boot, ou rusqlite cote Rust) : a arbitrer avec Nylen, pas un simple bugfix"
     },
     {
       "id": "design_ux",
