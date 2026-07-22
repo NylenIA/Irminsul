@@ -6,7 +6,8 @@ Irminsul AI transforme un projet Claude Code en assistant Genshin spécialisé :
 
 - Un agent principal Claude Code et 7 sous-agents spécialisés.
 - Des skills `/genshin-*` prêts à invoquer.
-- Un serveur MCP local (10 outils) : recherche, calcul de dégâts, calcul de réactions transformatives et amplifiantes, score de fiabilité des leaks, import Enka et exécution gcsim.
+- Un serveur MCP local : recherche, calcul de dégâts, calcul de réactions (amplifiantes, transformatives, **additives**, **lunaires**), score de fiabilité des leaks, import Enka et exécution gcsim.
+- **Une application web + desktop** (Next.js / Tauri) — voir la section dédiée ci-dessous.
 - Une base locale indexée à partir de sources publiques reconnues.
 - Une séparation stricte entre informations officielles, données live, theorycraft, simulations, leaks et spéculations.
 - Une mise à jour quotidienne locale sous Windows après l'installation.
@@ -70,6 +71,33 @@ Claude Code utilisera automatiquement l'agent `irminsul-orchestrator` configuré
 
 Import et exploitation du compte (Inventory Kamera / GOOD) : voir **[docs/ACCOUNT_IMPORT.md](docs/ACCOUNT_IMPORT.md)**.
 Le compte importé (`data/account/`) reste **local** et n'est jamais committé.
+
+## Application web & desktop
+
+En plus de l'agent Claude Code, le projet fournit une **application** (web Next.js + desktop
+Tauri installable, moteur Python embarqué et gelé) :
+
+- **Laboratoire d'équipes** : composition, sauvegarde locale (SQLite), renommage/duplication.
+- **Aperçu de coup** : dégâts d'un coup isolé avec réaction optionnelle — amplifiante,
+  transformative, **additive** (Aggravation/Propagation) ou **lunaire** (Lunar-Charged/Crystallize),
+  hypothèses et provenance affichées, recalculé par le **vrai moteur Python** (sidecar par défaut).
+- **Rotations chiffrées** + **export en actions gcsim** (ordre des actions, à affiner).
+- **Simulation gcsim** : vraies simulations depuis une config, ou **squelette pré-rempli depuis une
+  équipe et ton scan GOOD** (perso, arme, sets, stats d'artéfacts réelles).
+- **Comparateur** quantitatif, **Recommandations** déterministes, **Diagnostic**, **Import/Export** versionné.
+
+Lancer en dev :
+
+```bash
+npm install
+npm run dev -w @irminsul/web          # http://localhost:3000
+npm run verify                         # typecheck + lint + tests (py/ts) + build + gardes
+npm run desktop:build                  # build desktop (exe + installeur NSIS per-user)
+```
+
+Toutes les constantes de calcul sont sourcées et vérifiées dans
+**[docs/engine/FORMULA_SOURCES.md](docs/engine/FORMULA_SOURCES.md)** ; la revalidation à chaque patch
+suit **[docs/engine/PATCH_WATCH.md](docs/engine/PATCH_WATCH.md)**.
 
 ## Philosophie de calcul
 
