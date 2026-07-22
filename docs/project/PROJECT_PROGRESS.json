@@ -99,10 +99,10 @@
       "label": "Documentation et continuite",
       "weight": 2,
       "mvpWeight": 2,
-      "score": 75,
+      "score": 82,
       "confidence": "high",
-      "evidence": "audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF, hook SessionStart",
-      "blockers": "hook non encore enregistre dans settings"
+      "evidence": "audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF ; FORMULA_SOURCES.md (chaque constante sourcee+verifiee) ; PATCH_WATCH.md (process de veille tracable, checklist par patch) ; BRAND_GUIDE.md + DESIGN_SYSTEM.md a jour",
+      "blockers": "hook SessionStart non enregistre ; README racine a rafraichir (surfaces /simulation, reactions recentes)"
     }
   ]
 }
