@@ -56,6 +56,7 @@ export {
   type GcsimBuildInput,
   type GcsimSkeletonMember,
 } from "./gcsim-config";
+export { sumArtifactStats, type ArtifactStatSum, type GoodArtifactLike } from "./artifact-stats";
 export {
   FINAL_STATS_CONTRACT_VERSION,
   normalizeFinalStats,

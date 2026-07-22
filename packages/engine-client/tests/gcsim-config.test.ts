@@ -84,6 +84,21 @@ describe("teamToGcsimSkeleton", () => {
     expect(out).not.toContain('weapon="TODO"');
   });
 
+  it("émet une ligne add stats réelle quand artifactStats fourni (sinon TODO)", () => {
+    const out = teamToGcsimSkeleton([{ character: "Bennett", slot: 0 }], {
+      builds: {
+        Bennett: {
+          weapon: { id: "AquilaFavonia", refinement: 1 },
+          artifactStats: { hp: 4780, atk: 311, "atk%": 0.559, cr: 0.109, cd: 0.7, em: 40 },
+        },
+      },
+    });
+    expect(out).toMatch(/bennett add stats [^;]*atk%=0\.559[^;]*; \/\/ somme artefacts/);
+    expect(out).toContain("hp=4780");
+    expect(out).toContain("cd=0.7");
+    expect(out).not.toMatch(/bennett add stats hp=0 atk=0 em=0/); // pas le TODO
+  });
+
   it("sans build -> tout en TODO (comportement d'origine préservé)", () => {
     const out = teamToGcsimSkeleton([{ character: "Bennett", slot: 0 }]);
     expect(out).toContain('weapon="TODO"');

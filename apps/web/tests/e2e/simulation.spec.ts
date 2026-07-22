@@ -50,7 +50,8 @@ test.describe("Simulation gcsim", () => {
     await expect(textarea).toHaveValue(/PAS une simulation/);
     await expect(textarea).toHaveValue(/bennett char lvl=\d+\/\d+ cons=\d+/); // clé normalisée + ligne perso
     await expect(textarea).toHaveValue(/active bennett;/);
-    await expect(textarea).toHaveValue(/TODO stats substats reelles/); // stats toujours TODO (honnête)
+    // Ligne stats présente : réelle (somme artefacts) si set 5*niv20 scanné, sinon TODO.
+    await expect(textarea).toHaveValue(/bennett add stats /);
     await expect(textarea).toHaveValue(/TODO rotation/);
   });
 

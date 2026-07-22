@@ -23,6 +23,8 @@ export interface GcsimBuildInput {
   talents?: { normal?: number; skill?: number; burst?: number };
   weapon?: { id: string; refinement?: number };
   artifactSets?: { set: string; count: number }[];
+  /** Somme EXACTE des stats d'artéfacts (clés gcsim, % décimal). Voir sumArtifactStats. */
+  artifactStats?: Record<string, number>;
 }
 
 /** Niveau max d'une phase d'ascension (A0..A6). Défaut 90 hors bornes. */
@@ -111,9 +113,19 @@ export function teamToGcsimSkeleton(
       lines.push(`${key} add set="TODO" count=4;`);
     }
 
-    lines.push(
-      `${key} add stats hp=0 atk=0 em=0; // TODO stats substats reelles (non fournies par le scan)`,
-    );
+    // Stats d'artéfacts : émises SEULEMENT si la somme exacte est fournie (tous
+    // artéfacts 5★ niv20). Sinon TODO — jamais de stats approximées.
+    const artStats = b?.artifactStats;
+    if (artStats && Object.keys(artStats).length > 0) {
+      const formatted = Object.entries(artStats)
+        .map(([k, v]) => `${k}=${Number.isInteger(v) ? v : Number(v.toFixed(4))}`)
+        .join(" ");
+      lines.push(`${key} add stats ${formatted}; // somme artefacts (main+substats) depuis ton scan`);
+    } else {
+      lines.push(
+        `${key} add stats hp=0 atk=0 em=0; // TODO stats substats reelles (artefacts non 5*niv20 ou non scanne)`,
+      );
+    }
     lines.push("");
   }
 

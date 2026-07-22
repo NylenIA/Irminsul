@@ -1,10 +1,43 @@
 "use server";
 
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { runSidecar } from "@irminsul/engine-client/sidecar";
 import { getTeamRepository } from "@irminsul/data-access";
-import { teamToGcsimSkeleton, type GcsimBuildInput } from "@irminsul/engine-client";
+import {
+  sumArtifactStats,
+  teamToGcsimSkeleton,
+  type GcsimBuildInput,
+  type GoodArtifactLike,
+} from "@irminsul/engine-client";
 import { engineOptions } from "@/server/engine";
 import { loadPlayerBuildAction } from "@/app/team-lab/build-actions";
+
+const ACCOUNT_DIR = path.join(process.cwd(), "..", "..", "data", "account", "current");
+
+/**
+ * Stats d'artéfacts EXACTES d'un personnage depuis le scan (serveur uniquement).
+ * Filtre les artéfacts par leur `location` (clé GOOD du perso) et somme
+ * main+substats. Renvoie undefined si scan absent ou artéfacts non 5★ niv20.
+ */
+async function artifactStatsFor(goodKey: string): Promise<Record<string, number> | undefined> {
+  try {
+    const raw = await readFile(path.join(ACCOUNT_DIR, "artifacts.json"), "utf8");
+    const parsed = JSON.parse(raw);
+    const collection = parsed?.artifacts ?? parsed;
+    const list: GoodArtifactLike[] = Array.isArray(collection)
+      ? collection
+      : Object.values(collection ?? {});
+    const equipped = list.filter(
+      (a) => (a as unknown as { location?: string }).location === goodKey,
+    );
+    if (equipped.length === 0) return undefined;
+    const { stats, complete } = sumArtifactStats(equipped);
+    return complete && Object.keys(stats).length > 0 ? stats : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export interface SimTeamOption {
   id: string;
@@ -55,6 +88,7 @@ export async function buildGcsimSkeletonAction(teamId: string): Promise<GcsimSke
     const res = await loadPlayerBuildAction(m.character);
     if (res.ok) {
       const b = res.build;
+      const goodKey = m.character.replace(/['’\s-]/g, "");
       builds[m.character] = {
         level: b.level,
         ascension: b.ascension,
@@ -62,6 +96,7 @@ export async function buildGcsimSkeletonAction(teamId: string): Promise<GcsimSke
         talents: b.talents,
         weapon: b.weapon,
         artifactSets: b.artifactSets,
+        artifactStats: await artifactStatsFor(goodKey),
       };
       enriched += 1;
     }
