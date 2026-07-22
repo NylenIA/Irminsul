@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-17",
+  "updatedAt": "2026-07-22",
   "branch": "feat/irminsul-complete-redesign",
   "scale": "0=absent, 25=squelette/mock/TODO, 50=happy-path peu validé, 75=intégré+testé cas majeurs, 100=prêt à livrer",
   "method": "Score reproductible = somme(poids x score)/100. Deux pondérations: weight (vision complète), mvpWeight (MVP utilisable). Scores assignés par preuve vérifiée, pas à la main dans le rapport.",
@@ -59,9 +59,9 @@
       "label": "Persistance",
       "weight": 5,
       "mvpWeight": 8,
-      "score": 82,
+      "score": 86,
       "confidence": "high",
-      "evidence": "Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL (rollback) ; export/import versionne irminsul-export/1.0 avec checksum",
+      "evidence": "Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL ; export/import versionne irminsul-export/1.0 avec checksum ; couverture data-access 11 tests dont PREUVE de rollback par injection de faute (echec avant COMMIT -> delete-par-nom ANNULE, etat d'avant restaure : identite+membres) + fail-fast (membre invalide = AUCUNE ecriture partielle) + remplace-par-nom (compteurs created/updated) + dedoublonnage interne (derniere occurrence gagne) + garde vide/>500",
       "blockers": "chemins %APPDATA% pour desktop"
     },
     {
@@ -81,7 +81,7 @@
       "mvpWeight": 4,
       "score": 84,
       "confidence": "high",
-      "evidence": "pytest 235 (ruff cable) ; vitest 106 (3 workspaces dans verify) ; E2E 48 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config, stock traite : 3 morts supprimes + convention underscore)",
+      "evidence": "pytest 235 (ruff cable) ; vitest 129 (3 workspaces dans verify : data-access 11 dont rollback transactionnel, engine-client 113, ui 5) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config, stock traite : 3 morts supprimes + convention underscore)",
       "blockers": "regles Next-specifiques eslint-config-next (extension future) ; rendu composants UI non teste unitairement (jsdom — couvert E2E) ; scripts .mjs hors lint"
     },
     {
