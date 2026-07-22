@@ -49,10 +49,10 @@
       "label": "Team builder et simulation",
       "weight": 15,
       "mvpWeight": 15,
-      "score": 93,
+      "score": 94,
       "confidence": "medium",
-      "evidence": "Team Lab CRUD + reactions + rotations + comparateur + recommandations ; PAGE /simulation : vraies simulations gcsim (E2E reelle) + SQUELETTE gcsim depuis equipe ENRICHI du scan GOOD reel (perso lvl/cons/talents, arme, sets pre-remplis ; substats+rotation en TODO honnete ; toast N/M builds) ; fonction pure testee (104 vitest)",
-      "blockers": "substats reels dans le squelette (via character_final_stats) ; energie/cooldown ; buffs par action"
+      "evidence": "Team Lab CRUD + reactions + rotations + comparateur + recommandations ; PAGE /simulation : vraies simulations gcsim (E2E reelle) + SQUELETTE gcsim depuis equipe ENRICHI du scan GOOD : perso/arme/sets + STATS D'ARTEFACTS reelles (sumArtifactStats, main 5*niv20 table exacte + substats, cles/decimales gcsim, contribution artefacts sans double-comptage, gate strict sinon TODO) ; 16 persos du scan declenchent le calcul ; fonction pure testee (108 vitest)",
+      "blockers": "rotation auto (laissee a l'utilisateur par design) ; energie/cooldown ; buffs par action"
     },
     {
       "id": "persistance",
