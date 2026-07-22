@@ -29,10 +29,10 @@
       "label": "Application web",
       "weight": 15,
       "mvpWeight": 10,
-      "score": 87,
+      "score": 89,
       "confidence": "high",
-      "evidence": "Next.js 16.2.9 ; 9 surfaces (+ /diagnostic provenance moteur sanitizee) ; E2E 44/44 ; axe 0 critique ; resolution moteur unifiee (gele en desktop)",
-      "blockers": "diagnostics UI ; desktop packaging"
+      "evidence": "Next.js 16.2.9 ; 10 surfaces (+ /simulation gcsim) ; E2E 62/62 (workflows reels team-lab/simulation/rotations/compare/recommandations dont UI conditionnelle improve_current_team, export gcsim, marque) ; axe 0 critique partout ; resolution moteur unifiee (sidecar par defaut)",
+      "blockers": "quelques micro-surfaces sans test unitaire composant (couvert E2E)"
     },
     {
       "id": "app_desktop",
