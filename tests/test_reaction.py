@@ -11,13 +11,29 @@ from irminsul.reaction import (
 
 
 def test_transformative_no_em_baseline() -> None:
-    # Overload niveau 90, 0 EM, RES 0 -> base * level_multiplier
+    # Overload niveau 90, 0 EM, RES 0 -> base * level_multiplier (base 5.2+ = 2.75)
     result = transformative_reaction(
         reaction="overloaded", elemental_mastery=0, enemy_resistance=0.0
     )
-    assert result.base_multiplier == 2.0
+    assert result.base_multiplier == 2.75
     assert result.em_bonus == 0.0
-    assert math.isclose(result.damage, 2.0 * 1446.85, rel_tol=1e-6)
+    assert math.isclose(result.damage, 2.75 * 1446.85, rel_tol=1e-6)
+
+
+def test_transformative_5_2_buffed_bases() -> None:
+    # Garde anti-regression sur les buffs patch 5.2 (source KQM TCL + comparatif 5.2).
+    bases = {
+        r: transformative_reaction(reaction=r, enemy_resistance=0.0).base_multiplier
+        for r in ("superconduct", "electro-charged", "overloaded", "shattered", "swirl", "burning")
+    }
+    assert bases == {
+        "superconduct": 1.5,
+        "electro-charged": 2.0,
+        "overloaded": 2.75,
+        "shattered": 3.0,
+        "swirl": 0.6,  # inchange par 5.2
+        "burning": 0.25,  # inchange
+    }
 
 
 def test_transformative_em_bonus_formula() -> None:

@@ -12,12 +12,13 @@ export const REACTION_CONTRACT_VERSION = "reactions/1.0";
 /** Coefficient de niveau des transformatives — référence KQM, personnage niveau 90. */
 export const LEVEL_MULTIPLIER_LV90 = 1446.85;
 
+// Patch 5.2 : EC/Overload/Superconduct/Shatter buffés (voir docs/engine/FORMULA_SOURCES.md).
 export const TRANSFORMATIVE_BASE = Object.freeze({
   swirl: 0.6,
-  superconduct: 0.5,
-  "electro-charged": 1.2,
-  overloaded: 2.0,
-  shattered: 1.5,
+  superconduct: 1.5,
+  "electro-charged": 2.0,
+  overloaded: 2.75,
+  shattered: 3.0,
   burning: 0.25,
   bloom: 2.0,
   hyperbloom: 3.0,
@@ -47,8 +48,8 @@ export type AdditiveKind = keyof typeof ADDITIVE_BASE;
 /** Alias acceptés par le moteur Python (parité : audit Codex B/C). */
 const TRANSFORMATIVE_LOOKUP: Record<string, number> = Object.freeze({
   ...TRANSFORMATIVE_BASE,
-  overload: 2.0,
-  shatter: 1.5,
+  overload: 2.75,
+  shatter: 3.0,
 });
 
 export function isTransformativeKind(key: string): boolean {

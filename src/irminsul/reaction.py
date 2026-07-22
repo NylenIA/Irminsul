@@ -10,15 +10,18 @@ from .damage import resistance_multiplier
 # Pour un autre niveau, fournir level_multiplier explicitement.
 LEVEL_MULTIPLIER_LV90 = 1446.85
 
-# Multiplicateurs de base des réactions transformatives (source : mécaniques KQM).
+# Multiplicateurs de base des réactions transformatives (source : KQM TCL).
+# ATTENTION patch 5.2 : EC, Overload, Superconduct et Shatter ont été buffés
+# (EC 1.2->2.0, Overload 2.0->2.75, Superconduct 0.5->1.5, Shatter 1.5->3.0).
+# Swirl/Burning/Bloom/Hyperbloom/Burgeon inchangés. Voir docs/engine/FORMULA_SOURCES.md.
 TRANSFORMATIVE_BASE = {
     "swirl": 0.6,
-    "superconduct": 0.5,
-    "electro-charged": 1.2,
-    "overloaded": 2.0,
-    "overload": 2.0,
-    "shattered": 1.5,
-    "shatter": 1.5,
+    "superconduct": 1.5,
+    "electro-charged": 2.0,
+    "overloaded": 2.75,
+    "overload": 2.75,
+    "shattered": 3.0,
+    "shatter": 3.0,
     "burning": 0.25,
     "bloom": 2.0,
     "hyperbloom": 3.0,

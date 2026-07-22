@@ -109,12 +109,12 @@
       },
       "expected": {
         "reaction": "overloaded",
-        "base_multiplier": 2.0,
+        "base_multiplier": 2.75,
         "level_multiplier": 1446.85,
         "em_bonus": 1.3681,
         "total_reaction_bonus": 1.3681,
         "resistance_multiplier": 0.9,
-        "damage": 6167.27
+        "damage": 8480.0
       }
     },
     {
@@ -125,12 +125,12 @@
       },
       "expected": {
         "reaction": "electro-charged",
-        "base_multiplier": 1.2,
+        "base_multiplier": 2.0,
         "level_multiplier": 1446.85,
         "em_bonus": 2.2069,
         "total_reaction_bonus": 2.6069,
         "resistance_multiplier": 0.9,
-        "damage": 5636.13
+        "damage": 9393.55
       }
     },
     {
@@ -141,12 +141,12 @@
       },
       "expected": {
         "reaction": "superconduct",
-        "base_multiplier": 0.5,
+        "base_multiplier": 1.5,
         "level_multiplier": 1446.85,
         "em_bonus": 0.7619,
         "total_reaction_bonus": 0.7619,
         "resistance_multiplier": 0.25,
-        "damage": 318.65
+        "damage": 955.95
       }
     },
     {
@@ -219,12 +219,12 @@
       },
       "expected": {
         "reaction": "shattered",
-        "base_multiplier": 1.5,
+        "base_multiplier": 3.0,
         "level_multiplier": 1446.85,
         "em_bonus": 0.3902,
         "total_reaction_bonus": 0.3902,
         "resistance_multiplier": 0.9,
-        "damage": 2715.49
+        "damage": 5430.98
       }
     },
     {
@@ -234,12 +234,12 @@
       },
       "expected": {
         "reaction": "overload",
-        "base_multiplier": 2.0,
+        "base_multiplier": 2.75,
         "level_multiplier": 1446.85,
         "em_bonus": 0.9057,
         "total_reaction_bonus": 0.9057,
         "resistance_multiplier": 0.9,
-        "damage": 4962.97
+        "damage": 6824.08
       }
     },
     {
@@ -249,12 +249,12 @@
       },
       "expected": {
         "reaction": "shatter",
-        "base_multiplier": 1.5,
+        "base_multiplier": 3.0,
         "level_multiplier": 1446.85,
         "em_bonus": 0.0,
         "total_reaction_bonus": 0.0,
         "resistance_multiplier": 0.9,
-        "damage": 1953.25
+        "damage": 3906.49
       }
     }
   ],
