@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "@irminsul/ui";
+import { IrminsulLogo } from "@/components/IrminsulLogo";
 import "@irminsul/ui/tokens.css";
 import "./globals.css";
 
@@ -23,6 +24,10 @@ export default function RootLayout({
             borderBottom: "1px solid var(--irm-border)", flexWrap: "wrap",
           }}
         >
+          <a href="/" className="irm-brand" aria-label="Irminsul — accueil">
+            <IrminsulLogo size={26} />
+            <span className="irm-brand__name">Irminsul</span>
+          </a>
           <a href="/" className="irm-btn irm-btn--ghost">Tableau de bord</a>
           <a href="/characters" className="irm-btn irm-btn--ghost">Personnages</a>
           <a href="/team-lab" className="irm-btn irm-btn--ghost">Laboratoire d&apos;équipes</a>

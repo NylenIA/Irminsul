@@ -133,6 +133,31 @@
 @keyframes irm-toast-in { from { opacity: 0; transform: translateY(6px); } }
 @media (prefers-reduced-motion: reduce) { .irm-toast { animation: none; } }
 
+/* Marque (logo + wordmark) — entrée douce + scintillement léger de la couronne */
+.irm-brand {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--irm-text); font-weight: 600;
+  padding: 4px 8px; border-radius: var(--irm-r-sm); margin-right: 4px;
+}
+.irm-brand:hover { color: var(--irm-cyan); }
+.irm-brand:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; }
+.irm-brand__name { letter-spacing: 0.02em; }
+.irm-logo { display: block; }
+.irm-logo--animated { animation: irm-logo-in var(--irm-dur-slow) var(--irm-ease); }
+.irm-logo--animated .irm-logo__crown {
+  transform-box: fill-box; transform-origin: center;
+  animation: irm-crown-pulse 3.2s ease-in-out infinite;
+}
+.irm-brand:hover .irm-logo__crown { filter: drop-shadow(0 0 3px var(--irm-cyan)); }
+@keyframes irm-logo-in { from { opacity: 0; transform: translateY(-3px) scale(0.96); } }
+@keyframes irm-crown-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.62; transform: scale(1.14); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .irm-logo--animated, .irm-logo--animated .irm-logo__crown { animation: none; }
+}
+
 /* Dialog (native) */
 .irm-dialog {
   color: var(--irm-text); background: var(--irm-surface-1);

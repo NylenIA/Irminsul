@@ -44,6 +44,12 @@ test.describe("Laboratoire d'équipes", () => {
     await expect(page.getByLabel("Personnage, emplacement 1")).toBeVisible();
   });
 
+  test("marque : logo + wordmark Irminsul dans la navigation (lien accueil)", async ({ page }) => {
+    const brand = page.getByRole("link", { name: "Irminsul — accueil" });
+    await expect(brand).toBeVisible();
+    await expect(brand.getByRole("img", { name: "Irminsul" })).toBeVisible();
+  });
+
   test("workflow complet : save, reload, rename, duplicate, delete confirmé", async ({ page }) => {
     const base = `E2E ${Date.now()}`;
     await composeAndSave(page, base);
