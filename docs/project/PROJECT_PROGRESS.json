@@ -9,10 +9,10 @@
       "label": "Moteur de données et calcul",
       "weight": 25,
       "mvpWeight": 30,
-      "score": 88,
+      "score": 90,
       "confidence": "high",
-      "evidence": "Moteur stats finales INTEGRE (basestats+weaponstats+talentstats+charstats, defensif) ; pytest 235 ; goldens vs jeu ; registre mecaniques verified ; lunaires LC (1.8) + LCrys (1.6) LIVRES bout-en-bout (API generique, 6 goldens croises) ; ADDITIVES aggravate/spread portees de phase3 (1.15/1.25, EM 5x/(x+1200), goldens historiques 1663.88/1808.56 verifies, composition flat_base_damage testee structurellement)",
-      "blockers": "Lunar-Bloom (multiplicateur non confirme par KQM -> exclu volontairement, ajout trivial des confirmation) ; gcsim nouveaux persos"
+      "evidence": "Moteur stats finales INTEGRE ; pytest 238 ; goldens vs jeu ; AUDIT SOURCE des formules (docs/engine/FORMULA_SOURCES.md, chaque constante sourcee KQM+corroboree) qui a corrige un VRAI bug DPS : coefficients transformatifs pre-5.2 -> post-5.2 (EC 2.0/OL 2.75/SC 1.5/Shatter 3.0, 3 sources concordantes, garde anti-regression) ; lunaires LC/LCrys + additives ; parite TS<->Python goldens croises",
+      "blockers": "Lunar-Bloom (non confirme KQM -> exclu) ; veille patch pour revalidation continue des constantes"
     },
     {
       "id": "integration_moteur",
