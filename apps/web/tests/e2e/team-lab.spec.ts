@@ -303,6 +303,33 @@ test.describe("Recommandations transparentes (recommendations/1.0)", () => {
     await expect(section.getByText(/qualitative uniquement/)).toBeVisible({ timeout: 15000 });
   });
 
+  test("objectif 'améliorer une équipe' : sélecteur d'équipe conditionnel + analyse ciblée", async ({
+    page,
+  }) => {
+    // Une équipe à cibler.
+    await page.goto("/team-lab");
+    const teamName = `Reco ${Date.now()}`;
+    await page.getByPlaceholder("Ex. Sandrone Lunar-Crystallize").fill(teamName);
+    await page.getByLabel("Personnage, emplacement 1").selectOption("Bennett");
+    await page.getByRole("button", { name: "Sauvegarder l'équipe" }).click();
+    await expect(page.getByRole("heading", { name: teamName })).toBeVisible();
+
+    await page.goto("/recommendations");
+    // Le sélecteur d'équipe n'existe QUE pour cet objectif (UI conditionnelle).
+    await expect(page.getByLabel("Équipe à améliorer")).toHaveCount(0);
+    await page.getByLabel("Objectif").selectOption("improve_current_team");
+    const teamSelect = page.getByLabel("Équipe à améliorer");
+    await expect(teamSelect).toBeVisible();
+    await teamSelect.selectOption({ label: teamName });
+    await page.getByRole("button", { name: "Analyser" }).click();
+
+    const section = page.getByLabel("Recommandations");
+    await expect(section).toBeVisible({ timeout: 15000 });
+    await expect(section.getByText(/contrat recommendations\//)).toBeVisible();
+    await expect(section.getByText(/confiance /).first()).toBeVisible();
+    await expect(section).not.toContainText("NaN");
+  });
+
   test("accessibilité (axe) de /recommendations", async ({ page }) => {
     await page.goto("/recommendations");
     await expect(page.getByRole("heading", { name: "Recommandations" })).toBeVisible();
