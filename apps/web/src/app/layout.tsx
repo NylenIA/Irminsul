@@ -28,15 +28,20 @@ export default function RootLayout({
             <IrminsulLogo size={26} />
             <span className="irm-brand__name">Irminsul</span>
           </a>
-          <a href="/" className="irm-btn irm-btn--ghost">Tableau de bord</a>
+          {/* Essentiel : le parcours de base d'un joueur. */}
+          <a href="/" className="irm-btn irm-btn--ghost">Accueil</a>
           <a href="/characters" className="irm-btn irm-btn--ghost">Personnages</a>
-          <a href="/team-lab" className="irm-btn irm-btn--ghost">Laboratoire d&apos;équipes</a>
-          <a href="/rotations" className="irm-btn irm-btn--ghost">Rotations</a>
-          <a href="/simulation" className="irm-btn irm-btn--ghost">Simulation</a>
-          <a href="/team-compare" className="irm-btn irm-btn--ghost">Comparateur</a>
-          <a href="/recommendations" className="irm-btn irm-btn--ghost">Recommandations</a>
-          <a href="/import-export" className="irm-btn irm-btn--ghost">Import/Export</a>
-          <a href="/diagnostic" className="irm-btn irm-btn--ghost">Diagnostic</a>
+          <a href="/team-lab" className="irm-btn irm-btn--ghost">Mes équipes</a>
+          <span aria-hidden="true" style={{ alignSelf: "center", color: "var(--irm-border)", padding: "0 2px" }}>·</span>
+          {/* Analyse : pour creuser (résultats toujours expliqués). */}
+          <a href="/rotations" className="irm-btn irm-btn--ghost" title="Chiffrer une suite d'actions avec tes vrais builds">Dégâts d&apos;équipe</a>
+          <a href="/team-compare" className="irm-btn irm-btn--ghost" title="Deux équipes, une cible commune, un verdict sourcé">Comparateur</a>
+          <a href="/recommendations" className="irm-btn irm-btn--ghost" title="Améliorations classées, basées sur tes données">Recommandations</a>
+          <a href="/simulation" className="irm-btn irm-btn--ghost" title="Simulations complètes gcsim (avancé)">Simulation</a>
+          <span aria-hidden="true" style={{ alignSelf: "center", color: "var(--irm-border)", padding: "0 2px" }}>·</span>
+          {/* Système. */}
+          <a href="/import-export" className="irm-btn irm-btn--ghost" title="Sauvegarder / restaurer tes équipes">Import/Export</a>
+          <a href="/diagnostic" className="irm-btn irm-btn--ghost" title="État de l'app, du moteur et de la base">Diagnostic</a>
         </nav>
         {children}
         <Toaster />

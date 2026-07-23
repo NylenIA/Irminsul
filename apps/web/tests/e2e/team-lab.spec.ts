@@ -113,10 +113,15 @@ test.describe("Laboratoire d'équipes", () => {
 });
 
 test.describe("Pages essentielles (dashboard, personnages, navigation)", () => {
-  test("dashboard honnête : comptes réels + contrats moteur + navigation", async ({ page }) => {
+  test("accueil guidé : 3 étapes avec état réel + navigation (zéro jargon moteur)", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: "Irminsul — Archive astrale" })).toBeVisible();
-    await expect(page.getByText(/contrat direct-hit\//)).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Irminsul", exact: true })).toBeVisible();
+    // Le parcours guidé : les 3 étapes sont visibles et actionnables.
+    await expect(page.getByRole("heading", { name: "Importe ton compte" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Regarde tes personnages" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Construis tes équipes" })).toBeVisible();
+    // Le jargon moteur (contrats IPC) n'apparaît PLUS sur l'accueil (il vit au Diagnostic).
+    await expect(page.getByText(/contrat direct-hit\//)).toHaveCount(0);
     // Navigation vers Personnages.
     await page.getByRole("navigation").getByRole("link", { name: "Personnages" }).click();
     await expect(page.getByRole("heading", { name: "Personnages" })).toBeVisible();
