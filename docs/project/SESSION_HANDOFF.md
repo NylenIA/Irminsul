@@ -1,8 +1,15 @@
 # Handoff de session — reprise Irminsul (full auto)
 
 > À lire en premier par une nouvelle session Claude Code. État figé au commit
-> `7031946` (branche `feat/irminsul-complete-redesign`, synchro avec origin, tracked clean).
-> **MVP utilisable : 89 %** (`scripts/project_progress.py`, `docs/project/PROJECT_PROGRESS.md`).
+> `5a7f11c` (branche `feat/irminsul-complete-redesign`, synchro avec origin, tracked clean).
+> **MVP utilisable : 90 %** (`scripts/project_progress.py`, `docs/project/PROJECT_PROGRESS.md`).
+>
+> **Journal 2026-07-23 (session full-auto, 7 commits `ec3aee1`→`5a7f11c`) :** preuve de rollback
+> transactionnel `importTeams` · tests jsdom de TOUTES les primitives UI (ui 5→25) · fix hook
+> `pwsh`→`powershell` (pwsh absent ici) · desktop `%APPDATA%` vérifié fait+testé (cargo lib 11/11) ·
+> **détection de dérive de schéma** (checkSchemaDrift + Diagnostic) · **runner d'auto-migration au boot**
+> (`applyPendingMigrations` + `apps/web/src/instrumentation.ts`, idempotent/transactionnel, no-op
+> aujourd'hui) — ferme le gap migration-on-update desktop. vitest 123→160.
 
 ## Mode de travail (imposé par Nylen)
 - Tu es **lead dev autonome, full auto**. N'utilise plus Duo. Délègue à **Codex seulement si gain réel**
@@ -66,16 +73,20 @@ dans `.claude/settings.json` :
 > en mode auto** (auto-exécution = décision utilisateur) : Nylen doit l'ajouter à la main, ou autoriser
 > l'action. Le script et la commande ci-dessus sont audités et prêts.
 
-## Scores par domaine (89 % global)
-Team builder 95 · Intégration moteur 91 · Moteur 90 · App web 89 · Design 86 · Packaging 85 ·
-App desktop 84 · Tests 84 · Persistance 82 · Documentation 82.
+## Scores par domaine (90 % global)
+Team builder 95 · Persistance 92 · Intégration moteur 91 · Moteur 90 · App web 89 · Tests 88 ·
+Design 86 · App desktop 85 · Packaging 85 · Documentation 84.
 
 ## Backlog priorisé (prochains cycles)
-1. **Persistance 82** — couverture `TeamRepository` (data-access vitest) : import transactionnel avec
-   rollback, ou chemin DB desktop `%APPDATA%`.
-2. **Tests 84** — tests unitaires jsdom des composants UI (aujourd'hui couverts seulement en E2E).
-3. **App desktop 84** — finitions (MSI par conception ; chemins données).
-4. **Documentation 82** — enregistrer le hook SessionStart ci-dessus.
+1. ✅ **Persistance** — fait : rollback transactionnel prouvé · `%APPDATA%` vérifié+testé · détection de
+   dérive de schéma (Diagnostic) · runner d'auto-migration au boot (`instrumentation.ts`).
+2. ✅ **Tests jsdom** — fait : toutes les primitives (`packages/ui`) testées en rendu jsdom (Testing Library).
+3. **Desktop — smoke du runner de migration** : au PROCHAIN patch de schéma, faire `desktop:build` +
+   installer + partir d'une base ancienne et vérifier que la migration s'applique au 1er boot (le chemin
+   de code `register()` est déjà prouvé en dev/E2E). Reste aussi : MSI par conception, non signé.
+4. **Documentation — hook SessionStart** : `pwsh` absent ici → commande corrigée `powershell -NoProfile
+   -ExecutionPolicy Bypass -File …` documentée (README + ci-dessus). L'édition de `.claude/settings.json`
+   (hook auto-exécuté) est **bloquée par le classifier en mode auto** → registration = action Nylen.
 5. Externe : **Lunar-Bloom** dès source KQM ; revalider les constantes à chaque patch (PATCH_WATCH).
 
 ## Où NE PAS retourner
