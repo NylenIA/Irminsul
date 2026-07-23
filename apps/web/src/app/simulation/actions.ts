@@ -11,9 +11,11 @@ import {
   type GoodArtifactLike,
 } from "@irminsul/engine-client";
 import { engineOptions } from "@/server/engine";
+import { accountDir } from "@/server/account";
 import { loadPlayerBuildAction } from "@/app/team-lab/build-actions";
 
-const ACCOUNT_DIR = path.join(process.cwd(), "..", "..", "data", "account", "current");
+// Résolution PARTAGÉE (env desktop IRMINSUL_DATA_DIR sinon repo) — cf. @/server/account.
+const ACCOUNT_DIR = accountDir();
 
 /**
  * Stats d'artéfacts EXACTES d'un personnage depuis le scan (serveur uniquement).

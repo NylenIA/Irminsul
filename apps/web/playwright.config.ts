@@ -7,6 +7,12 @@ const DB_FILE = join(process.cwd(), ".e2e", `test-${Date.now()}.db`);
 const DATABASE_URL = `file:${DB_FILE.replaceAll("\\", "/")}`;
 process.env["DATABASE_URL"] = DATABASE_URL;
 
+// Racine de DONNÉES isolée (compte GOOD…) : reproduit la réalité « utilisateur
+// frais » (aucun scan) et garantit que les E2E ne touchent JAMAIS le compte réel
+// du dépôt (data/account). Le test d'import y écrit sa propre fixture.
+const DATA_DIR = join(process.cwd(), ".e2e", `data-${Date.now()}`);
+process.env["IRMINSUL_DATA_DIR"] = DATA_DIR;
+
 const PORT = 3100;
 
 export default defineConfig({
@@ -28,6 +34,6 @@ export default defineConfig({
     url: `http://localhost:${PORT}/team-lab`,
     reuseExistingServer: false,
     timeout: 180000,
-    env: { DATABASE_URL },
+    env: { DATABASE_URL, IRMINSUL_DATA_DIR: DATA_DIR },
   },
 });

@@ -109,6 +109,30 @@ def test_import_creates_normalized_profile(good_file: Path, account_root: Path) 
     assert profile["counts"]["unresolved_characters"] == 1
 
 
+def test_import_honors_data_dir_env_desktop_scenario(
+    good_file: Path, account_root: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Scénario desktop : IRMINSUL_DATA_DIR (posée par Tauri) PRIME sur le repo.
+
+    Le sidecar gelé tourne hors du dépôt : l'import doit atterrir dans le
+    dossier de données de l'app, pas dans <repo>/data.
+    """
+    app_data = tmp_path / "appdata"
+    monkeypatch.setenv("IRMINSUL_DATA_DIR", str(app_data))
+    try:
+        import_good(good_file, snapshot_date="2026-07-23")
+        current = app_data / "account" / "current"
+        assert (current / "account-profile.json").exists()
+        # Rien n'a été écrit dans le project root simulé.
+        assert not (account_root / "data" / "account" / "current").exists()
+    finally:
+        for p in app_data.rglob("*"):
+            try:
+                os.chmod(p, stat.S_IWRITE | stat.S_IREAD)
+            except OSError:
+                pass
+
+
 def test_import_is_idempotent(good_file: Path, account_root: Path) -> None:
     first = import_good(good_file, snapshot_date="2026-06-26")
     second = import_good(good_file, snapshot_date="2026-06-26")

@@ -16,7 +16,18 @@ def project_root() -> Path:
 
 
 def data_dir() -> Path:
-    path = project_root() / "data"
+    """Racine des données.
+
+    Priorité à `IRMINSUL_DATA_DIR` (posée par l'app desktop : le sidecar gelé
+    tourne hors du dépôt et doit lire/écrire le compte dans le dossier de
+    données utilisateur, p.ex. %APPDATA%/com.nylenia.irminsul). À défaut
+    (dev/CLI), on retombe sur `<repo>/data` comme avant.
+    """
+    configured = os.getenv("IRMINSUL_DATA_DIR")
+    if configured:
+        path = Path(configured).expanduser().resolve()
+    else:
+        path = project_root() / "data"
     path.mkdir(parents=True, exist_ok=True)
     return path
 

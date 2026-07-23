@@ -1,0 +1,34 @@
+{
+  "format": "GOOD",
+  "version": 3,
+  "source": "Inventory_Kamera",
+  "characters": [
+    {
+      "key": "Furina",
+      "level": 90,
+      "constellation": 0,
+      "ascension": 6,
+      "talent": { "auto": 9, "skill": 9, "burst": 10 }
+    },
+    {
+      "key": "Nahida",
+      "level": 80,
+      "constellation": 2,
+      "ascension": 5,
+      "talent": { "auto": 7, "skill": 9, "burst": 9 }
+    }
+  ],
+  "weapons": [
+    {
+      "key": "FavoniusSword",
+      "level": 90,
+      "ascension": 6,
+      "refinement": 1,
+      "location": "Furina",
+      "lock": true,
+      "id": 0
+    }
+  ],
+  "artifacts": [],
+  "materials": { "Mora": 1000 }
+}

@@ -3,12 +3,14 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { normalizePlayerBuild, type PlayerCharacterBuild } from "@irminsul/engine-client";
+import { accountDir } from "@/server/account";
 
 export type PlayerBuildResult =
   | { ok: true; build: PlayerCharacterBuild }
   | { ok: false; reason: "no_scan" | "not_in_scan" };
 
-const ACCOUNT_DIR = path.join(process.cwd(), "..", "..", "data", "account", "current");
+// Résolution PARTAGÉE (env desktop IRMINSUL_DATA_DIR sinon repo) — cf. @/server/account.
+const ACCOUNT_DIR = accountDir();
 
 /**
  * Charge le build RÉEL d'un personnage depuis le scan local (GOOD, gitignoré).

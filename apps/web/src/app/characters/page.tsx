@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { loadAccountSummary } from "@/server/account";
 import type { PlayerCharacterBuild } from "@irminsul/engine-client";
+import { ImportGoodForm } from "./ImportGoodForm";
 
 export const dynamic = "force-dynamic";
 
@@ -17,13 +18,12 @@ export default async function CharactersPage(): Promise<React.ReactElement> {
       </header>
 
       {account === null ? (
-        <div className="irm-state" role="status">
-          <span className="irm-state__title">Aucun scan de compte trouvé</span>
-          <span>
-            Importe un export GOOD (ex. InventoryKamera) dans <code>data/account/current/</code>{" "}
-            via <code>irminsul account import-good &lt;fichier&gt;</code>, puis recharge cette page.
-          </span>
-        </div>
+        <section className="irm-card" aria-label="Importer mon compte" style={{ maxWidth: 640 }}>
+          <h2 className="irm-card__title" style={{ fontSize: 15 }}>
+            Commence ici : importe ton compte
+          </h2>
+          <ImportGoodForm />
+        </section>
       ) : (
         <>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }} aria-label="Provenance du scan">
@@ -44,10 +44,14 @@ export default async function CharactersPage(): Promise<React.ReactElement> {
             ))}
           </section>
 
-          <p style={{ color: "var(--irm-text-faint)", fontSize: 12 }}>
-            Les stats finales (ATQ, crit…) ne sont pas affichées : leur calcul exige le moteur
-            de stats complet (phase 3, non fusionné) — elles ne seront jamais estimées à ta place.
-          </p>
+          <details style={{ fontSize: 13 }}>
+            <summary style={{ cursor: "pointer", color: "var(--irm-text-dim)" }}>
+              Mettre à jour le scan (nouveau fichier GOOD)
+            </summary>
+            <div style={{ marginTop: 8 }}>
+              <ImportGoodForm compact />
+            </div>
+          </details>
         </>
       )}
     </main>

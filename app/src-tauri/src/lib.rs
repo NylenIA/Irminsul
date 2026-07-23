@@ -256,7 +256,9 @@ fn start_next(app: tauri::AppHandle) {
         let mut raw = [0u8; 32];
         getrandom::fill(&mut raw).map_err(|e| format!("générateur aléatoire: {e}"))?;
         let nonce: String = raw.iter().map(|b| format!("{b:02x}")).collect();
-        let srv = next_server::spawn_next(&node, &server_js, port, &db_url, &log, &sidecar, &nonce)?;
+        let srv = next_server::spawn_next(
+            &node, &server_js, port, &db_url, &log, &sidecar, &nonce, &app_data,
+        )?;
         // Amorçage via /boot : pose le cookie httpOnly puis redirige vers le dashboard.
         let url = format!("{}/boot?n={}", srv.url, nonce);
         // Possession AVANT le health check : même en timeout, l'enfant sera tué à l'exit.

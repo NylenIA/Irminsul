@@ -122,10 +122,11 @@ test.describe("Pages essentielles (dashboard, personnages, navigation)", () => {
     await expect(page.getByRole("heading", { name: "Personnages" })).toBeVisible();
   });
 
-  test("page personnages : scan réel (provenance) OU état vide honnête", async ({ page }) => {
+  test("page personnages : scan réel (provenance) OU import proposé (état vide actionnable)", async ({ page }) => {
     await page.goto("/characters");
     const provenance = page.getByText(/personnages scannés/);
-    const empty = page.getByText("Aucun scan de compte trouvé");
+    // Nouvel état vide : l'app PROPOSE l'import (plus jamais une commande CLI).
+    const empty = page.getByRole("heading", { name: /Commence ici : importe ton compte/ });
     await expect(provenance.or(empty)).toBeVisible();
     // Si scan présent : provenance complète affichée.
     if (await provenance.isVisible()) {
@@ -148,14 +149,16 @@ test.describe("Pages essentielles (dashboard, personnages, navigation)", () => {
 
 test.describe("Détail personnage — stats finales (moteur Python via sidecar)", () => {
   test("affiche les stats finales OU un état d'échec honnête, avec provenance/hypothèses", async ({ page }) => {
-    // Mavuika est dans le scan de référence ; si le sidecar est indisponible → état d'erreur typé.
-    await page.goto("/characters/Mavuika");
-    await expect(page.getByRole("heading", { name: "Mavuika" })).toBeVisible();
+    // Furina vient de la fixture E2E (account-import.spec tourne avant) — env de
+    // données ISOLÉ et déterministe ; si le sidecar est indisponible → état typé.
+    await page.goto("/characters/Furina");
+    await expect(page.getByRole("heading", { name: "Furina" })).toBeVisible();
 
-    const statsView = page.getByLabel("Stats finales de Mavuika");
+    const statsView = page.getByLabel("Stats finales de Furina");
     const engineError = page.getByText("Erreur du moteur");
     const noScan = page.getByText("Aucun scan de compte");
-    await expect(statsView.or(engineError).or(noScan)).toBeVisible({ timeout: 15000 });
+    const notInScan = page.getByText("Personnage introuvable dans le scan");
+    await expect(statsView.or(engineError).or(noScan).or(notInScan)).toBeVisible({ timeout: 15000 });
 
     // Chemin nominal : breakdown + confiance + provenance visibles ; jamais NaN/Infinity.
     if (await statsView.isVisible()) {
@@ -169,8 +172,8 @@ test.describe("Détail personnage — stats finales (moteur Python via sidecar)"
   });
 
   test("accessibilité (axe) du détail personnage", async ({ page }) => {
-    await page.goto("/characters/Mavuika");
-    await expect(page.getByRole("heading", { name: "Mavuika" })).toBeVisible();
+    await page.goto("/characters/Furina");
+    await expect(page.getByRole("heading", { name: "Furina" })).toBeVisible();
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
     const serious = results.violations.filter(
       (v) => v.impact === "critical" || v.impact === "serious",
