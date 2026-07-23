@@ -1,7 +1,9 @@
 # Handoff de session — reprise Irminsul (full auto)
 
-> À lire en premier par une nouvelle session Claude Code. État figé au commit
-> `5a7f11c` (branche `feat/irminsul-complete-redesign`, synchro avec origin, tracked clean).
+> À lire en premier par une nouvelle session Claude Code. **Le redesign est FUSIONNÉ dans `main`**
+> (PR [#4](https://github.com/NylenIA/Irminsul/pull/4), merge commit `80d45af`, 2026-07-23) : `main`
+> porte désormais tout le produit (tip fusionné `a880f13`, gates verts). La branche
+> `feat/irminsul-complete-redesign` reste la branche de travail pour les prochains cycles.
 > **MVP utilisable : 90 %** (`scripts/project_progress.py`, `docs/project/PROJECT_PROGRESS.md`).
 >
 > **Journal 2026-07-23 (session full-auto, `ec3aee1`→`0f9f982`) :** preuve de rollback transactionnel
