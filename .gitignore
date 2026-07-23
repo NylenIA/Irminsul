@@ -39,6 +39,15 @@ next-env.d.ts
 
 # Duo local runtime (sessions, journaux, checkpoints, rapports temporaires)
 .duo/
+# Outillage Codex/Duo local (abandonné — voir docs/reviews/CODEX_DUO_ACCESS_REPORT.md) :
+# dossiers générés par les apps, config locale, verrous locaux. Jamais versionnés.
+.agents/
+.codex/
+duo.config.json
+docs/skills/*.local.json
+scripts/*codex-login*
+scripts/repair-resume-duo-script.ps1
+*.backup-*
 
 # Ressources desktop generees (prepare-desktop-web.mjs)
 app/src-tauri/web/
