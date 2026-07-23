@@ -1,0 +1,39 @@
+{
+  "$comment": "Verrou des skills audités. retrievedAt = date d'install/audit. Les skills tournent avec les pleins droits de l'agent : ne pas installer hors de cette liste sans nouvel audit.",
+  "schemaVersion": 1,
+  "updatedAt": "2026-06-30",
+  "installed": [
+    {
+      "name": "frontend-design",
+      "scope": "project",
+      "source": "owner-provided-file",
+      "upstream": "anthropics/skills",
+      "type": "markdown-guidance",
+      "verdict": "APPROVED",
+      "retrievedAt": "2026-06-30"
+    },
+    {
+      "name": "skill-creator",
+      "scope": "project",
+      "source": "github.com/anthropics/skills",
+      "installMethod": "npx skills add --skill skill-creator --copy",
+      "verdict": "APPROVED",
+      "retrievedAt": "2026-06-30"
+    },
+    {
+      "name": "webapp-testing",
+      "scope": "project",
+      "source": "github.com/anthropics/skills",
+      "installMethod": "npx skills add --skill webapp-testing --copy",
+      "verdict": "APPROVED",
+      "retrievedAt": "2026-06-30"
+    }
+  ],
+  "pending": [
+    { "name": "web-design-guidelines", "source": "github.com/vercel-labs/agent-skills", "status": "PENDING_VERIFY_NAME" },
+    { "name": "verification-before-completion", "source": "github.com/obra/superpowers", "status": "PENDING_REVIEW" },
+    { "name": "systematic-debugging", "source": "github.com/obra/superpowers", "status": "PENDING_REVIEW" },
+    { "name": "impeccable", "source": "github.com/pbakaus/impeccable", "status": "PENDING_LOW_UTILITY_NO_PLUGIN" },
+    { "name": "emil-design-eng", "source": "github.com/emilkowalski/skills", "status": "PENDING_REVIEW" }
+  ]
+}

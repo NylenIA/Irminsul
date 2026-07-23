@@ -9,6 +9,10 @@
         "PYTHONIOENCODING": "utf-8"
       },
       "timeout": 600000
+    },
+    "next-devtools": {
+      "command": "npx",
+      "args": ["-y", "next-devtools-mcp@0.4.0"]
     }
   }
 }

@@ -1,0 +1,108 @@
+{
+  "updatedAt": "2026-07-22",
+  "branch": "feat/irminsul-complete-redesign",
+  "scale": "0=absent, 25=squelette/mock/TODO, 50=happy-path peu validé, 75=intégré+testé cas majeurs, 100=prêt à livrer",
+  "method": "Score reproductible = somme(poids x score)/100. Deux pondérations: weight (vision complète), mvpWeight (MVP utilisable). Scores assignés par preuve vérifiée, pas à la main dans le rapport.",
+  "domains": [
+    {
+      "id": "moteur_donnees_calcul",
+      "label": "Moteur de données et calcul",
+      "weight": 25,
+      "mvpWeight": 30,
+      "score": 91,
+      "confidence": "high",
+      "evidence": "Moteur stats finales INTEGRE ; pytest 239 ; goldens vs jeu ; AUDIT SOURCE des formules (docs/engine/FORMULA_SOURCES.md, chaque constante sourcee KQM+corroboree) qui a corrige un VRAI bug DPS : coefficients transformatifs pre-5.2 -> post-5.2 (EC 2.0/OL 2.75/SC 1.5/Shatter 3.0, 3 sources concordantes, garde anti-regression) ; lunaires LC 1.8 / LCrys 1.6 (base LC corroboree Icy Veins) + EM lunaire partage 6EM/(EM+2000) + additives ; parite TS<->Python goldens croises ; Lunar-Bloom TRAITE PAR SOURCAGE (KQM : pas de multiplicateur de reaction propre -> famille 'directe' de capacite) : le moteur renvoie un message SOURCE pointant vers calculate_direct_hit au lieu d'un 'inconnu', parite py+ts testee",
+      "blockers": "Lunar-Bloom RESOLU (sourcage KQM : aucun multiplicateur de reaction par conception ; base 'directe' par capacite a transcrire seulement si on cable un calcul par capacite) ; veille patch pour revalidation continue des constantes"
+    },
+    {
+      "id": "integration_moteur",
+      "label": "Intégration moteur",
+      "weight": 15,
+      "mvpWeight": 12,
+      "score": 91,
+      "confidence": "high",
+      "evidence": "Stats finales LIVE + apercu + reactions ; parite prouvee ; ADDITIVES dans l'UI (flatBaseDamage, aussi forwarde au sidecar) + lunaires LC/LCrys ; SIDECAR PYTHON PAR DEFAUT dans l'apercu (opt-out IRMINSUL_ENGINE=local, repli TS documente, provenance honnete, preuve E2E badge moteur python-sidecar obligatoire)",
+      "blockers": "latence spawn-par-appel du sidecar (acceptable apercu, a pooler si generalise)"
+    },
+    {
+      "id": "app_web",
+      "label": "Application web",
+      "weight": 15,
+      "mvpWeight": 10,
+      "score": 89,
+      "confidence": "high",
+      "evidence": "Next.js 16.2.9 ; 10 surfaces (+ /simulation gcsim) ; E2E 62/62 (workflows reels team-lab/simulation/rotations/compare/recommandations dont UI conditionnelle improve_current_team, export gcsim, marque) ; axe 0 critique partout ; resolution moteur unifiee (sidecar par defaut)",
+      "blockers": "quelques micro-surfaces sans test unitaire composant (couvert E2E)"
+    },
+    {
+      "id": "app_desktop",
+      "label": "Application desktop",
+      "weight": 10,
+      "mvpWeight": 12,
+      "score": 85,
+      "confidence": "high",
+      "evidence": "PROUVE bout-en-bout et REVALIDE (2026-07-20) avec le moteur a jour : rebuild sidecar (provenance commit=48f475a verifiee DANS l'app installee) + desktop:build + reinstall NSIS silencieuse + smoke installe TOUT VERT (7 routes 200, proxy.ts nonce POST/boot->403 x3, node lie au PID Tauri, zero orphelin x2, persistance DB, diagnostic sanitize) + cas d'erreur 4/4 chemin Unicode. L'app installee embarque lunaires+additives+sidecar-par-defaut.",
+      "blockers": "MSI 1603 (per-machine sans elevation) ; non signe (SmartScreen) ; bind-race residuel accepte ; migration-on-update de la base %APPDATA% : desormais DETECTEE (Diagnostic) ET APPLIQUEE au boot (instrumentation.ts, runner idempotent/transactionnel, no-op aujourd'hui) -> reste a revalider par un desktop:build + smoke lors du prochain patch de schema (chemin de code identique a dev/E2E)"
+    },
+    {
+      "id": "team_builder_sim",
+      "label": "Team builder et simulation",
+      "weight": 15,
+      "mvpWeight": 15,
+      "score": 95,
+      "confidence": "medium",
+      "evidence": "Team Lab + reactions + rotations + comparateur + recommandations ; /simulation : vraies sims gcsim + squelette depuis equipe enrichi du scan GOOD (perso/arme/sets + stats artefacts reelles sans double-comptage) ; EXPORT rotation Team Lab -> actions gcsim (rotationToGcsimActions, verbes+groupage, ordre seulement honnete). Chaine complete equipe->config gcsim quasi-prete. 113 vitest",
+      "blockers": "energie/cooldown fin ; buffs par action (modele analytique -> gcsim comble le gros du besoin)"
+    },
+    {
+      "id": "persistance",
+      "label": "Persistance",
+      "weight": 5,
+      "mvpWeight": 8,
+      "score": 92,
+      "confidence": "high",
+      "evidence": "Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL ; export/import versionne irminsul-export/1.0 avec checksum ; couverture data-access 22 tests dont rollback transactionnel + fail-fast + remplace-par-nom + dedoublonnage ; chemin DB desktop = %APPDATA% CONFIRME (app_data_dir Tauri -> ensure_user_db, template pre-migre copie au 1er lancement JAMAIS ecrase, cargo lib 11/11) ; DETECTION de derive : checkSchemaDrift (3 etats, 5 tests) surfacee au Diagnostic (avertissement + re-import, prouve E2E) ; APPLICATION AUTO des migrations en attente : applyPendingMigrations (runner Node IDEMPOTENT + TRANSACTIONNEL tout-ou-rien, ne touche QUE les bases gerees Prisma, 4 tests dont PRESERVATION des donnees existantes + ROLLBACK sur SQL invalide) cable au boot via Next instrumentation.ts (nodejs only, non bloquant) ; SQL embarque via MIGRATIONS_BUNDLE genere de prisma/migrations (garde synchro noms+SQL) -> survit au bundle desktop ; no-op sur base a jour, register() au boot prouve par E2E 62/62",
+      "blockers": "runner d'auto-migration prouve en dev (next dev/E2E via le meme hook register()) + unit (application/no-op/base-non-geree/preservation/rollback) ; un desktop:build + smoke de MAJ (base ancienne -> migration appliquee au 1er boot) reste a executer au prochain build desktop pour revalidation bout-en-bout (chemin de code identique)"
+    },
+    {
+      "id": "design_ux",
+      "label": "Design system et UX",
+      "weight": 5,
+      "mvpWeight": 5,
+      "score": 86,
+      "confidence": "medium",
+      "evidence": "tokens OKLCH + primitives (Button/Card/Input/Select/ConfirmDialog/Toast/States/CharacterPicker) axe 0 critique ; BRAND_GUIDE.md ; LOGO Irminsul livre (SVG constellation-arbre degrade tokens, favicon /icon.svg, header logo+wordmark, animation legere reduced-motion safe, E2E)",
+      "blockers": "Tooltip/Panel a la demande ; Tabs differe YAGNI"
+    },
+    {
+      "id": "tests_qualite",
+      "label": "Tests et qualite",
+      "weight": 5,
+      "mvpWeight": 4,
+      "score": 89,
+      "confidence": "high",
+      "evidence": "pytest 239 (ruff cable) ; vitest 160 (3 workspaces dans verify : data-access 22 dont rollback transactionnel + detection de derive + runner d'auto-migration, engine-client 113, ui 25) ; TOUTES les primitives testees unitairement en jsdom via Testing Library (Button/Input/Select/States/Card/ConfirmDialog + Toaster : mapping variante->classe, fusion className, passe-plat props natives, roles a11y status/alert/aria-live, cablage onConfirm/onCancel, ouverture modale reelle avec polyfill dialog.showModal/close honnete, liaison store<->React du Toaster : emission/pile/fermeture individuelle) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config) ETENDU aux scripts d'outillage scripts/*.mjs + eslint.config.mjs (globals Node explicites sans dependance, 2 imports morts corriges, preuve lint-vs-ignore) + REGLES NEXT (@next/eslint-plugin-next 16.2.9 flat core-web-vitals scope apps/web, preuve d'activation par sonde no-img-element, codebase clean 0 finding)",
+      "blockers": "surfaces/pages Next (app-router) non testees unitairement (couvert E2E)"
+    },
+    {
+      "id": "packaging",
+      "label": "Packaging et deploiement",
+      "weight": 3,
+      "mvpWeight": 2,
+      "score": 85,
+      "confidence": "high",
+      "evidence": "NSIS installe/desinstalle/reinstalle PROUVE (per-user, sans admin) + icone de marque (icon.ico depuis le logo, desktop:build vert) ; signature de code ABANDONNEE par decision (distribution privee entre amis) -> plus un blocage ; chaine desktop complete pour l'usage vise",
+      "blockers": "MSI requiert admin (par conception, non prioritaire) ; pas de signature = SmartScreen sur machines tierces (accepte)"
+    },
+    {
+      "id": "doc_continuite",
+      "label": "Documentation et continuite",
+      "weight": 2,
+      "mvpWeight": 2,
+      "score": 84,
+      "confidence": "high",
+      "evidence": "audit complet, DECISIONS, ARCHITECTURE, SESSION_HANDOFF ; FORMULA_SOURCES.md (chaque constante sourcee+verifiee) ; PATCH_WATCH.md (process de veille tracable, checklist par patch) ; BRAND_GUIDE.md + DESIGN_SYSTEM.md a jour ; README racine VERIFIE a jour (surfaces /simulation, additives, lunaires, sidecar, export gcsim, NSIS) + section 'Continuite de session' documentant le hook avec la commande correcte",
+      "blockers": "hook SessionStart non enregistre : la commande d'origine (pwsh) est INVALIDE ici (pwsh absent -> exit 127), corrigee en 'powershell -NoProfile -ExecutionPolicy Bypass -File ...' et documentee ; l'edition de .claude/settings.json pour un hook auto-execute est bloquee par le classifier en mode auto -> registration = action utilisateur"
+    }
+  ]
+}

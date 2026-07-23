@@ -84,3 +84,28 @@ def run_gcsim(config_path: str | Path, open_viewer: bool = False) -> dict[str, A
         "parsed": parsed,
         "output": output[-12000:],
     }
+
+
+def run_gcsim_content(content: str) -> dict[str, Any]:
+    """Simulation gcsim depuis un CONTENU de config (pas un chemin).
+
+    Écrit un fichier temporaire, exécute le binaire local, renvoie le résultat
+    de `run_gcsim` SANS la clé `command` (pas de chemin machine dans l'IPC).
+    Erreurs explicites : config vide ou binaire absent — jamais de DPS inventé.
+    """
+    import tempfile
+
+    if not content or not content.strip():
+        raise ValueError("Configuration gcsim vide : fournis un script de simulation.")
+    tmp = tempfile.NamedTemporaryFile(
+        "w", suffix=".txt", delete=False, encoding="utf-8", prefix="irminsul-gcsim-"
+    )
+    try:
+        tmp.write(content)
+        tmp.close()
+        result = run_gcsim(tmp.name)
+        result.pop("command", None)
+        return result
+    finally:
+        tmp.close()
+        Path(tmp.name).unlink(missing_ok=True)

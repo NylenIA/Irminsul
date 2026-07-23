@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 
 
@@ -29,6 +29,7 @@ class LeakScore:
     authenticity_note: str
     stability_note: str
     components: dict[str, float]
+    warnings: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, object]:
         return asdict(self)
@@ -48,6 +49,22 @@ def score_leak(
     stage: DevelopmentStage = DevelopmentStage.UNKNOWN,
     conflict_penalty: float = 0.0,
 ) -> LeakScore:
+    raw_axes = {
+        "provenance": provenance,
+        "evidence": evidence,
+        "corroboration": corroboration,
+        "track_record": track_record,
+        "specificity": specificity,
+    }
+    # Garde-fou : chaque axe se note sur 0–5. Une valeur hors échelle (ex. des points
+    # déjà pondérés sur 0–25) est ramenée par _clamp_five, ce qui produisait
+    # silencieusement un score maximal. On rend ce mauvais usage explicite.
+    warnings = [
+        f"{name}={value:g} hors de l'échelle 0–5 (ramené à {_clamp_five(value):g}) : "
+        "score probablement faussé — note chaque axe sur 0–5, pas en points pondérés."
+        for name, value in raw_axes.items()
+        if value < 0 or value > 5
+    ]
     components = {
         "provenance": _clamp_five(provenance) / 5 * 25,
         "evidence": _clamp_five(evidence) / 5 * 25,
@@ -87,4 +104,5 @@ def score_leak(
         authenticity_note=authenticity_note,
         stability_note=stability_note,
         components={key: round(value, 1) for key, value in components.items()},
+        warnings=warnings,
     )

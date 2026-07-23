@@ -39,3 +39,25 @@ def test_run_gcsim_real_smoke() -> None:
     assert result["parsed"] is not None
     assert result["parsed"]["dps"] > 0
     assert result["parsed"]["duration"] == pytest.approx(90.0, abs=1.0)
+
+
+def test_run_gcsim_content_rejects_empty() -> None:
+    from irminsul.gcsim import run_gcsim_content
+
+    with pytest.raises(ValueError, match="vide"):
+        run_gcsim_content("   ")
+
+
+@pytest.mark.integration
+def test_run_gcsim_content_real_and_dispatch() -> None:
+    """Contenu -> simulation réelle ; la méthode IPC renvoie le même résultat sanitizé."""
+    if not gcsim_path().exists():
+        pytest.skip("binaire gcsim non installé")
+    from irminsul.engine_dispatch import CANONICAL_METHODS, dispatch
+
+    content = SMOKE.read_text(encoding="utf-8")
+    result = dispatch("run_gcsim", {"config": content})
+    assert "run_gcsim" in CANONICAL_METHODS
+    assert result["ok"] is True, result["output"][-500:]
+    assert result["parsed"]["dps"] > 0
+    assert "command" not in result  # pas de chemin machine dans l'IPC

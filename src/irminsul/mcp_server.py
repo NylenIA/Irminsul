@@ -130,7 +130,14 @@ def score_leak(
     stage: str = "unknown",
     conflict_penalty: float = 0.0,
 ) -> dict[str, object]:
-    """Score one public, unconfirmed leak. This never converts a leak into official information."""
+    """Score one public, unconfirmed leak. This never converts a leak into official information.
+
+    Note each axis on a 0-5 scale (0 = none, 5 = maximal): provenance, evidence,
+    corroboration, track_record, specificity. Do NOT pass pre-weighted points
+    (e.g. 0-25): any value outside 0-5 is clamped and flagged in `warnings`, which
+    silently inflates the result. The returned `score` is on 0-100.
+    stage in {official-live, late-beta, early-beta, far-roadmap, unknown};
+    conflict_penalty (0-20) is subtracted from the total."""
     try:
         parsed_stage = DevelopmentStage(stage)
     except ValueError:

@@ -4,12 +4,10 @@
   "version": "0.1.0",
   "identifier": "com.nylenia.irminsul",
   "build": {
-    "frontendDist": "../dist",
-    "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build"
+    "frontendDist": "../loading"
   },
   "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
         "label": "main",
@@ -30,6 +28,11 @@
     "active": true,
     "targets": ["msi", "nsis"],
     "externalBin": ["binaries/irminsul-sidecar"],
+    "resources": [
+      "web/standalone/**/*",
+      "binaries/node-x86_64-pc-windows-msvc.exe",
+      "web-template.db"
+    ],
     "icon": ["icons/32x32.png", "icons/128x128.png", "icons/icon.ico", "icons/icon.png"],
     "copyright": "© NylenIA",
     "category": "Utility",

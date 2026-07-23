@@ -6,6 +6,11 @@ use std::time::Duration;
 use tauri::Manager;
 use wait_timeout::ChildExt;
 
+mod next_server;
+
+/// Possession du serveur Next embarqué (kill garanti à la sortie, un seul lancement).
+struct NextState(std::sync::Mutex<Option<std::process::Child>>);
+
 #[derive(Serialize)]
 struct AppInfo {
     name: &'static str,
@@ -135,7 +140,10 @@ fn account_roster(app: tauri::AppHandle) -> Result<String, String> {
     call_engine(&app, "roster", serde_json::json!({})).and_then(to_json_string)
 }
 
-#[tauri::command]
+// AUDIT M1 : `account_import_good(path)` N'EST PLUS exposé à la WebView — une page loopback
+// avec IPC pouvait faire importer un chemin arbitraire (bridge path-based hérité de l'UI Vite).
+// L'import GOOD desktop futur passera par un dialogue natif (comme pick_import_file).
+#[allow(dead_code)]
 fn account_import_good(app: tauri::AppHandle, path: String) -> Result<String, String> {
     call_engine(&app, "import-good", serde_json::json!({ "path": path })).and_then(to_json_string)
 }
@@ -150,26 +158,192 @@ fn mechanics(app: tauri::AppHandle) -> Result<String, String> {
     call_engine(&app, "mechanics", serde_json::json!({})).and_then(to_json_string)
 }
 
+/// Provenance du moteur (section Diagnostic) : interroge RÉELLEMENT le binaire empaqueté.
+#[tauri::command]
+fn engine_provenance(app: tauri::AppHandle) -> Result<String, String> {
+    call_engine(&app, "engine_provenance", serde_json::json!({})).and_then(to_json_string)
+}
+
+// --- Import/Export NATIF : commandes RESTREINTES à l'opération métier. Aucun chemin ---
+// --- arbitraire du frontend ne suffit à lire/écrire (dialogues natifs uniquement).   ---
+
+const MAX_IO_BYTES: usize = 2 * 1024 * 1024; // aligné sur le contrat irminsul-export/1.0
+
+/// Écriture ATOMIQUE : fichier temporaire voisin puis rename (pas d'export corrompu).
+fn write_atomic(dest: &Path, content: &str) -> Result<(), String> {
+    let tmp = dest.with_extension("json.tmp");
+    std::fs::write(&tmp, content).map_err(|e| format!("écriture: {e}"))?;
+    std::fs::rename(&tmp, dest).map_err(|e| {
+        let _ = std::fs::remove_file(&tmp);
+        format!("finalisation: {e}")
+    })
+}
+
+/// Export natif : dialogue de sauvegarde Tauri (confirmation d'écrasement gérée par l'OS),
+/// filtre .json, nom déterministe proposé par l'appelant, écriture atomique.
+#[tauri::command]
+fn save_export_file(app: tauri::AppHandle, default_name: String, content: String) -> Result<String, String> {
+    use tauri_plugin_dialog::DialogExt;
+    if content.len() > MAX_IO_BYTES {
+        return Err("export trop volumineux (> 2 Mo)".into());
+    }
+    let safe_name: String = default_name
+        .chars()
+        .filter(|c| c.is_alphanumeric() || matches!(c, '-' | '_' | '.'))
+        .collect();
+    let picked = app
+        .dialog()
+        .file()
+        .set_file_name(if safe_name.is_empty() { "irminsul-export.json" } else { &safe_name })
+        .add_filter("Export Irminsul", &["json"])
+        .blocking_save_file();
+    match picked {
+        Some(p) => {
+            let path = p.into_path().map_err(|e| e.to_string())?;
+            write_atomic(&path, &content)?;
+            Ok(path.file_name().and_then(|n| n.to_str()).unwrap_or("export.json").to_string())
+        }
+        None => Err("annulé".into()),
+    }
+}
+
+/// Import natif : dialogue d'ouverture Tauri (filtre .json), taille bornée, lecture du SEUL
+/// fichier choisi pendant cette opération. Retourne le contenu (validé ensuite côté métier).
+#[tauri::command]
+fn pick_import_file(app: tauri::AppHandle) -> Result<Option<String>, String> {
+    use tauri_plugin_dialog::DialogExt;
+    let picked = app
+        .dialog()
+        .file()
+        .add_filter("Export Irminsul", &["json"])
+        .blocking_pick_file();
+    let Some(p) = picked else { return Ok(None) }; // annulation = sans effet
+    let path = p.into_path().map_err(|e| e.to_string())?;
+    let meta = std::fs::metadata(&path).map_err(|e| format!("fichier: {e}"))?;
+    if meta.len() as usize > MAX_IO_BYTES {
+        return Err("fichier trop volumineux (> 2 Mo)".into());
+    }
+    std::fs::read_to_string(&path).map(Some).map_err(|e| format!("lecture: {e}"))
+}
+
+/// Démarre le serveur Next embarqué puis navigue la WebView (readiness d'abord, jamais
+/// de délai fixe aveugle). En cas d'échec : erreur EXPLOITABLE dans la page de chargement.
+fn start_next(app: tauri::AppHandle) {
+    let window = app.get_webview_window("main");
+    let fail = |msg: &str| {
+        if let Some(w) = &window {
+            let js = format!(
+                "window.__irmFail && window.__irmFail({})",
+                serde_json::to_string(msg).unwrap_or_else(|_| "\"erreur\"".into())
+            );
+            let _ = w.eval(&js);
+        }
+    };
+    let result = (|| -> Result<String, String> {
+        // Double lancement interdit (relance = re-navigation, pas un second serveur).
+        if app.state::<NextState>().0.lock().map_err(|e| e.to_string())?.is_some() {
+            return Err("serveur déjà démarré".into());
+        }
+        let rd = app.path().resource_dir().map_err(|e| e.to_string())?;
+        let (node, server_js, template) = next_server::resource_paths(&rd);
+        let app_data = data_root(&app)?;
+        let db_url = next_server::ensure_user_db(&app_data, &template)?;
+        let port = next_server::alloc_port()?;
+        let log = app_data.join("logs").join("next-server.log");
+        // Le serveur Next appelle le moteur GELÉ (aucun Python requis en desktop).
+        let sidecar = sidecar_path()?;
+        // Nonce éphémère crypto (audit M3) : 32 octets aléatoires, hex ; mémoire uniquement.
+        let mut raw = [0u8; 32];
+        getrandom::fill(&mut raw).map_err(|e| format!("générateur aléatoire: {e}"))?;
+        let nonce: String = raw.iter().map(|b| format!("{b:02x}")).collect();
+        let srv = next_server::spawn_next(&node, &server_js, port, &db_url, &log, &sidecar, &nonce)?;
+        // Amorçage via /boot : pose le cookie httpOnly puis redirige vers le dashboard.
+        let url = format!("{}/boot?n={}", srv.url, nonce);
+        // Possession AVANT le health check : même en timeout, l'enfant sera tué à l'exit.
+        *app.state::<NextState>().0.lock().map_err(|e| e.to_string())? = Some(srv.child);
+        next_server::wait_ready(port, Duration::from_secs(45))?;
+        Ok(url)
+    })();
+    match result {
+        Ok(url) => {
+            if let Some(w) = &window {
+                let js = format!(
+                    "window.location.replace({})",
+                    serde_json::to_string(&url).unwrap_or_default()
+                );
+                let _ = w.eval(&js);
+            }
+        }
+        Err(e) => {
+            // Audit M2 : sur échec post-spawn (ex. health check expiré), tuer et VIDER l'état —
+            // aucun Node résiduel, et une relance dans la même session redevient possible.
+            if let Ok(mut guard) = app.state::<NextState>().0.lock() {
+                if let Some(mut child) = guard.take() {
+                    let _ = child.kill();
+                    let _ = child.wait();
+                }
+            }
+            fail(&e);
+        }
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .manage(NextState(std::sync::Mutex::new(None)))
         .invoke_handler(tauri::generate_handler![
             app_info,
             account_profile,
             account_overview,
             account_roster,
-            account_import_good,
             quick_calc,
-            mechanics
+            mechanics,
+            engine_provenance,
+            save_export_file,
+            pick_import_file
         ])
-        .run(tauri::generate_context!())
-        .expect("erreur au démarrage de l'application Tauri");
+        .setup(|app| {
+            let handle = app.handle().clone();
+            std::thread::spawn(move || start_next(handle));
+            Ok(())
+        })
+        .build(tauri::generate_context!())
+        .expect("erreur au démarrage de l'application Tauri")
+        .run(|app, event| {
+            // Cycle de vie : Tauri POSSÈDE le serveur Next — kill + wait à la sortie
+            // (aucun processus orphelin, y compris fermeture pendant le démarrage).
+            if let tauri::RunEvent::Exit = event {
+                if let Some(state) = app.try_state::<NextState>() {
+                    if let Ok(mut guard) = state.0.lock() {
+                        if let Some(mut child) = guard.take() {
+                            let _ = child.kill();
+                            let _ = child.wait();
+                        }
+                    }
+                }
+            }
+        });
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn write_atomic_writes_and_replaces() {
+        let dir = std::env::temp_dir().join(format!("irm io étoile-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let dest = dir.join("export espacé.json");
+        write_atomic(&dest, "{\"a\":1}").unwrap();
+        assert_eq!(std::fs::read_to_string(&dest).unwrap(), "{\"a\":1}");
+        // Remplacement atomique (pas de résidu .tmp).
+        write_atomic(&dest, "{\"a\":2}").unwrap();
+        assert_eq!(std::fs::read_to_string(&dest).unwrap(), "{\"a\":2}");
+        assert!(!dir.join("export espacé.json.tmp").exists());
+        let _ = std::fs::remove_dir_all(&dir);
+    }
 
     #[test]
     fn parse_ok_unwraps_result() {

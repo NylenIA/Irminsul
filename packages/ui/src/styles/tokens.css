@@ -1,0 +1,229 @@
+/* Irminsul — Design system « Archive astrale ».
+   Quasi-noir + graphite ; cyan désaturé (turquoise spectral) ; violet lunaire (rare) ;
+   or extrêmement contrôlé ; ivoire froid (jamais blanc pur). Profondeur par la matière,
+   pas par les effets lumineux. OKLCH pour un contraste cohérent. */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces (quasi-noir bleuté → graphite) */
+  --irm-bg: oklch(0.16 0.012 250);
+  --irm-surface-1: oklch(0.21 0.014 250);
+  --irm-surface-2: oklch(0.26 0.016 250);
+  --irm-border: oklch(0.33 0.018 250);
+  --irm-border-strong: oklch(0.42 0.02 250);
+
+  /* Texte (ivoire froid / gris bleuté) */
+  --irm-text: oklch(0.93 0.012 240);
+  --irm-text-dim: oklch(0.72 0.02 245);
+  --irm-text-faint: oklch(0.68 0.02 245); /* >= 4.5:1 sur surfaces (WCAG AA) */
+
+  /* Accents froids irminsul */
+  --irm-cyan: oklch(0.78 0.085 195);
+  --irm-cyan-dim: oklch(0.62 0.06 195);
+  --irm-violet: oklch(0.66 0.12 290); /* lunaire — usage rare */
+  --irm-gold: oklch(0.83 0.085 85);   /* extrêmement contrôlé */
+  --irm-danger: oklch(0.64 0.17 25);  /* tension chaude, rare */
+  --irm-focus: oklch(0.82 0.10 210);
+
+  /* Rayons / espacement / élévation */
+  --irm-r-sm: 6px;
+  --irm-r: 10px;
+  --irm-r-lg: 14px;
+  --irm-space: 8px;
+  --irm-shadow: 0 1px 0 oklch(1 0 0 / 0.03) inset, 0 8px 24px oklch(0 0 0 / 0.35);
+
+  /* Motion */
+  --irm-dur-fast: 120ms;
+  --irm-dur: 200ms;
+  --irm-dur-slow: 360ms;
+  --irm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Typo */
+  --irm-font: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --irm-mono: "Cascadia Code", ui-monospace, "SF Mono", monospace;
+}
+
+@media (prefers-contrast: more) {
+  :root { --irm-text-dim: oklch(0.82 0.02 245); --irm-border: oklch(0.45 0.02 250); }
+}
+
+.irm-root {
+  background:
+    radial-gradient(1100px 520px at 72% -12%, oklch(0.24 0.03 255) 0%, var(--irm-bg) 60%);
+  color: var(--irm-text);
+  font: 15px/1.55 var(--irm-font);
+  min-height: 100vh;
+}
+
+/* Boutons */
+.irm-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 14px; border-radius: var(--irm-r-sm);
+  font: inherit; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--irm-border-strong);
+  background: var(--irm-surface-2); color: var(--irm-text);
+  transition: border-color var(--irm-dur) var(--irm-ease),
+              background var(--irm-dur) var(--irm-ease),
+              transform var(--irm-dur-fast) var(--irm-ease);
+}
+.irm-btn:hover { border-color: var(--irm-cyan-dim); }
+.irm-btn:active { transform: translateY(1px); }
+.irm-btn:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; }
+.irm-btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+.irm-btn--primary { background: color-mix(in oklab, var(--irm-cyan) 18%, var(--irm-surface-2)); border-color: var(--irm-cyan); }
+.irm-btn--ghost { background: transparent; border-color: transparent; color: var(--irm-text-dim); }
+.irm-btn--ghost:hover { color: var(--irm-text); border-color: var(--irm-border); }
+.irm-btn--danger { border-color: var(--irm-danger); color: var(--irm-danger); background: transparent; }
+
+/* Cartes */
+.irm-card {
+  background: var(--irm-surface-1); border: 1px solid var(--irm-border);
+  border-radius: var(--irm-r); padding: 16px; box-shadow: var(--irm-shadow);
+}
+.irm-card__title { margin: 0 0 6px; font-size: 14px; letter-spacing: 0.2px; color: var(--irm-cyan); }
+
+/* États (vide / chargement / erreur) */
+.irm-state { display: grid; gap: 8px; padding: 28px 18px; text-align: center; color: var(--irm-text-dim); border: 1px dashed var(--irm-border); border-radius: var(--irm-r); }
+.irm-state__title { color: var(--irm-text); font-weight: 600; }
+.irm-state--error { border-color: color-mix(in oklab, var(--irm-danger) 50%, var(--irm-border)); color: color-mix(in oklab, var(--irm-danger) 70%, var(--irm-text-dim)); }
+.irm-spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--irm-border-strong); border-top-color: var(--irm-cyan); margin: 0 auto; animation: irm-spin 0.8s linear infinite; }
+
+/* Inputs */
+.irm-input {
+  padding: 8px 10px; border-radius: var(--irm-r-sm);
+  background: var(--irm-surface-2); color: var(--irm-text);
+  border: 1px solid var(--irm-border-strong); font: inherit; width: 100%;
+}
+.irm-input:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; }
+
+/* Select (chevron custom aux tokens, apparence native masquée) */
+.irm-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 30px;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--irm-text-dim) 50%),
+    linear-gradient(135deg, var(--irm-text-dim) 50%, transparent 50%);
+  background-position: calc(100% - 16px) 55%, calc(100% - 11px) 55%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+.irm-select option,
+.irm-select optgroup { background: var(--irm-surface-2); color: var(--irm-text); }
+
+/* Toasts (feedback non bloquant, aria-live) */
+.irm-toaster { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 8px; z-index: 60; }
+.irm-toast {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--irm-surface-1); color: var(--irm-text);
+  border: 1px solid var(--irm-border-strong); border-left-width: 3px;
+  border-radius: var(--irm-r-sm); padding: 10px 12px; max-width: 360px;
+  box-shadow: 0 6px 24px oklch(0 0 0 / 0.35);
+  animation: irm-toast-in 160ms ease-out;
+}
+.irm-toast--success { border-left-color: var(--irm-cyan); }
+.irm-toast--error { border-left-color: var(--irm-danger); }
+.irm-toast--info { border-left-color: var(--irm-border-strong); }
+.irm-toast__close {
+  background: none; border: none; color: var(--irm-text-dim);
+  cursor: pointer; font-size: 16px; line-height: 1; padding: 2px;
+}
+.irm-toast__close:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; }
+@keyframes irm-toast-in { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .irm-toast { animation: none; } }
+
+/* Marque (logo + wordmark) — entrée douce + scintillement léger de la couronne */
+.irm-brand {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--irm-text); font-weight: 600;
+  padding: 4px 8px; border-radius: var(--irm-r-sm); margin-right: 4px;
+}
+.irm-brand:hover { color: var(--irm-cyan); }
+.irm-brand:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; }
+.irm-brand__name { letter-spacing: 0.02em; }
+.irm-logo { display: block; }
+.irm-logo--animated { animation: irm-logo-in var(--irm-dur-slow) var(--irm-ease); }
+.irm-logo--animated .irm-logo__crown {
+  transform-box: fill-box; transform-origin: center;
+  animation: irm-crown-pulse 3.2s ease-in-out infinite;
+}
+.irm-brand:hover .irm-logo__crown { filter: drop-shadow(0 0 3px var(--irm-cyan)); }
+@keyframes irm-logo-in { from { opacity: 0; transform: translateY(-3px) scale(0.96); } }
+@keyframes irm-crown-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.62; transform: scale(1.14); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .irm-logo--animated, .irm-logo--animated .irm-logo__crown { animation: none; }
+}
+
+/* Dialog (native) */
+.irm-dialog {
+  color: var(--irm-text); background: var(--irm-surface-1);
+  border: 1px solid var(--irm-border-strong); border-radius: var(--irm-r);
+  padding: 18px; max-width: 420px;
+}
+.irm-dialog::backdrop { background: oklch(0 0 0 / 0.55); }
+.irm-dialog__title { margin: 0 0 6px; font-size: 16px; }
+.irm-dialog__msg { color: var(--irm-text-dim); margin: 0 0 14px; }
+.irm-dialog__actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ── Aperçu moteur : effets « Archive astrale » (discrets, compositables, reduced-motion safe) ── */
+.irm-halo {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--irm-cyan) 35%, transparent),
+              0 0 24px -6px color-mix(in oklab, var(--irm-cyan) 30%, transparent);
+}
+.irm-fade-in { animation: irm-fade 0.28s var(--irm-ease) both; }
+@keyframes irm-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* Ligne d'énergie : fine bordure animée en tête de carte (aide à repérer le résultat, pas décor permanent) */
+.irm-energy-line { position: relative; overflow: hidden; }
+.irm-energy-line::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--irm-cyan), var(--irm-violet), transparent);
+  background-size: 200% 100%;
+  animation: irm-energy 2.4s linear 2; /* 2 passages puis stop : pas d'animation permanente */
+}
+@keyframes irm-energy { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* Skeleton (chargement) */
+.irm-skeleton {
+  border-radius: var(--irm-r-sm);
+  background: linear-gradient(90deg, var(--irm-surface-2) 25%, var(--irm-border) 50%, var(--irm-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: irm-shimmer 1.1s linear infinite;
+  min-height: 14px;
+}
+@keyframes irm-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* Badges (provenance / confiance / avertissement) */
+.irm-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+  border: 1px solid var(--irm-border-strong); color: var(--irm-text-dim); background: var(--irm-surface-2);
+}
+.irm-badge--verified { color: var(--irm-cyan); border-color: color-mix(in oklab, var(--irm-cyan) 55%, var(--irm-border-strong)); }
+.irm-badge--gold { color: var(--irm-gold); border-color: color-mix(in oklab, var(--irm-gold) 45%, var(--irm-border-strong)); }
+.irm-badge--warn { color: var(--irm-danger); border-color: color-mix(in oklab, var(--irm-danger) 45%, var(--irm-border-strong)); }
+
+/* Lien inline discret */
+.irm-link { color: var(--irm-cyan); text-decoration: underline; text-underline-offset: 2px; }
+.irm-link:hover { color: var(--irm-text); }
+.irm-link:focus-visible { outline: 2px solid var(--irm-focus); outline-offset: 2px; border-radius: 2px; }
+
+/* Table de stats (breakdown personnage) */
+.irm-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.irm-table tr { border-bottom: 1px solid var(--irm-border); }
+.irm-table tr:last-child { border-bottom: none; }
+.irm-table td { color: var(--irm-text); }
+
+/* Chiffres du résultat */
+.irm-figure { font: 600 22px/1.2 var(--irm-mono); color: var(--irm-text); }
+.irm-figure--hero { font-size: 30px; color: var(--irm-cyan); }
+
+@keyframes irm-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .irm-spinner { animation: none; }
+}
