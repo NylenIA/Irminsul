@@ -52,7 +52,11 @@
 4. ✅ Certificat de signature **abandonné** (distribution privée entre amis) → plus un blocage.
 
 ## Décisions verrouillées / gotchas
-- **Lunar-Bloom EXCLU** : multiplicateur non confirmé KQM → rejet explicite. Pipeline prêt (2 constantes + goldens dès source rang A).
+- **Lunar-Bloom RÉSOLU par sourçage (2026-07-23)** : KQM confirme qu'il n'a **aucun multiplicateur de
+  réaction propre** (« does not deal damage on its own » → famille « directe » de capacité uniquement,
+  cœurs=Verdant Dew). Donc **rien à ajouter à `LUNAR_BASE`** — ce n'était pas une valeur « en attente ».
+  Le moteur (py+ts) renvoie désormais un message **sourcé** pointant vers `calculate_direct_hit` + cadre
+  lunaire. Détails : `docs/engine/FORMULA_SOURCES.md` §lunaires. (LC=1.8 confirmé vs le « 3 » = version directe.)
 - **Codex CLI cassé** ici : sandbox `0xC0000142`. Voir `docs/reviews/CODEX_DUO_ACCESS_REPORT.md`. Chemin
   fiable = app Codex desktop (Nylen la lance) OU faire soi-même. Ne pas promettre du Codex CLI autonome.
 - gcsim `add stats` = contribution ARTEFACTS (pas totaux) sinon double-comptage. Gate strict 5★ niv20 (`artifact-stats.ts`).
@@ -74,7 +78,7 @@ dans `.claude/settings.json` :
 > l'action. Le script et la commande ci-dessus sont audités et prêts.
 
 ## Scores par domaine (90 % global)
-Team builder 95 · Persistance 92 · Intégration moteur 91 · Moteur 90 · App web 89 · Tests 88 ·
+Team builder 95 · Persistance 92 · Intégration moteur 91 · Moteur 91 · App web 89 · Tests 88 ·
 Design 86 · App desktop 85 · Packaging 85 · Documentation 84.
 
 ## Backlog priorisé (prochains cycles)
@@ -87,7 +91,9 @@ Design 86 · App desktop 85 · Packaging 85 · Documentation 84.
 4. **Documentation — hook SessionStart** : `pwsh` absent ici → commande corrigée `powershell -NoProfile
    -ExecutionPolicy Bypass -File …` documentée (README + ci-dessus). L'édition de `.claude/settings.json`
    (hook auto-exécuté) est **bloquée par le classifier en mode auto** → registration = action Nylen.
-5. Externe : **Lunar-Bloom** dès source KQM ; revalider les constantes à chaque patch (PATCH_WATCH).
+5. **Lunar-Bloom : résolu** (sourçage KQM — pas de multiplicateur de réaction par conception ; voir
+   Décisions verrouillées). Reste optionnel : câbler un calcul de dégâts lunaires **directs** par capacité
+   (Lauma…) si KQM transcrit les bases. Revalider les constantes à chaque patch (PATCH_WATCH).
 
 ## Où NE PAS retourner
 Mission « desktop V2 » finie ; routeur Duo abandonné. Ne relance pas de gros cycles si les preuves

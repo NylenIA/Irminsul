@@ -29,15 +29,31 @@ TRANSFORMATIVE_BASE = {
 }
 
 # --- Réactions lunaires (Luna I / 5.8+) -------------------------------------
-# Multiplicateurs de base (KQM Lunar Reaction Guide,
-# https://keqingmains.com/misc/lunar-reactions/ ; corroborés wiki/game8) :
-# Lunar-Charged 1.8 (dégâts Electro) ; Lunar-Crystallize 1.6 (dégâts Géo,
-# pas d'ICD global). Lunar-Bloom EXCLU : multiplicateur non confirmé par KQM
-# (mécanique à cœurs différente) — aucune valeur inventée.
+# KQM (https://keqingmains.com/misc/lunar-reactions/) distingue DEUX familles de
+# dégâts lunaires :
+#  (1) Dégâts de RÉACTION lunaire (déclenchés, à l'échelle de l'équipe) :
+#      base × mult_niveau × (1+base_dmg_bonus) × (1+reaction_bonus+EM lunaire)
+#      × crit × RES. Lunar-Charged = 1.8 (Electro) ; Lunar-Crystallize = 1.6
+#      (Géo, sans ICD global). Base LC corroborée Icy Veins (« Lunar-Charged DMG
+#      Formula Clarified ») + wiki/game8. Ce sont les multiplicateurs de LUNAR_BASE.
+#  (2) Dégâts lunaires DIRECTS (capacités de personnage) : base plus élevée,
+#      NE scale PAS avec le niveau, PAS affecté par le DMG% élémentaire/commun
+#      ordinaire, utilise le bonus EM lunaire + « Lunar Reaction Base DMG Bonus »
+#      (Moonsign Benediction). Base propre à chaque capacité (donnée personnage).
+# Lunar-Bloom n'appartient QU'À la famille (2) : KQM confirme que la réaction
+# « does not deal damage on its own » (ses cœurs, type Bloom, accumulent du
+# Verdant Dew consommé par les capacités). Il n'existe donc AUCUN multiplicateur
+# de réaction LB à mettre ici — ce n'est pas une valeur « en attente de KQM »,
+# elle n'existe pas par conception. Les dégâts LB relèvent de calculate_direct_hit
+# (base = scaling de la capacité) + cadre lunaire (voir LUNAR_ABILITY_ONLY).
 LUNAR_BASE = {
     "lunar-charged": 1.8,
     "lunar-crystallize": 1.6,
 }
+
+# Réactions lunaires reconnues mais SANS dégâts de réaction propres (famille
+# « directe » uniquement) : donnent un message sourcé plutôt qu'« inconnu ».
+LUNAR_ABILITY_ONLY = frozenset({"lunar-bloom"})
 
 # Pondérations d'agrégation multi-participants, classées par dégâts personnels
 # décroissants : 100 % / 50 % / 1/12 / 1/12 (KQM + Icy Veins, concordants).
@@ -247,10 +263,23 @@ def lunar_reaction(
       modèle de rotation, pas d'ici ;
     - « Elevation » et bonus Moonsign se passent via base_dmg_bonus /
       reaction_bonus du contributeur concerné ;
-    - lunar-bloom ABSENT : multiplicateur non confirmé (pas de valeur inventée).
+    - lunar-bloom : PAS de dégâts de réaction propres (KQM) → message sourcé
+      pointant vers le chemin capacité (dégâts lunaires directs) ; aucune
+      valeur inventée.
     """
     key = reaction.strip().lower()
     if key not in LUNAR_BASE:
+        if key in LUNAR_ABILITY_ONLY:
+            raise ValueError(
+                "Lunar-Bloom ne produit pas de dégâts de réaction propres "
+                "(KQM : la réaction « does not deal damage on its own » — ses "
+                "cœurs accumulent du Verdant Dew consommé par les capacités). "
+                "Ses dégâts sont des dégâts lunaires DIRECTS de capacité : "
+                "calcule-les via calculate_direct_hit (base = scaling de la "
+                "capacité), avec le bonus EM lunaire (lunar_em_bonus) et le "
+                "Lunar Reaction Base DMG Bonus, SANS multiplicateur de niveau "
+                "ni DMG% élémentaire ordinaire."
+            )
         raise ValueError(
             f"Réaction lunaire inconnue : {reaction!r}. "
             f"Options : {', '.join(sorted(LUNAR_BASE))}"

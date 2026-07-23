@@ -144,6 +144,19 @@ def test_lunar_charged_validation_errors() -> None:
         lunar_charged_reaction(contributors=[{}], level_multiplier=0)
 
 
+def test_lunar_bloom_gives_sourced_message_not_generic_unknown() -> None:
+    # Lunar-Bloom n'a PAS de dégâts de réaction propres (KQM) : le moteur doit
+    # renvoyer un message SOURCÉ pointant vers le chemin capacité, pas un simple
+    # « réaction inconnue » (qui laisserait croire à une faute de frappe).
+    from irminsul.reaction import lunar_reaction
+
+    with pytest.raises(ValueError, match="Verdant Dew"):
+        lunar_reaction(reaction="lunar-bloom", contributors=[{"elemental_mastery": 1000}])
+    # Une vraie faute de frappe garde le message « inconnue ».
+    with pytest.raises(ValueError, match="inconnue"):
+        lunar_reaction(reaction="lunar-typo", contributors=[{"elemental_mastery": 1000}])
+
+
 def test_lunar_charged_via_engine_dispatch() -> None:
     # Le sidecar expose la méthode : même résultat que l'appel direct.
     from irminsul.engine_dispatch import CANONICAL_METHODS, dispatch

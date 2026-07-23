@@ -153,12 +153,17 @@ export function amplifyingMultiplier(input: {
   };
 }
 
-// --- Réactions lunaires (Luna I) — portage fidèle de lunar_charged_reaction ---
+// --- Réactions lunaires (Luna I) — portage fidèle de lunar_reaction (Python) ---
 
 /**
- * Multiplicateurs de base lunaires (KQM Lunar Reaction Guide, corroborés) :
- * Lunar-Charged 1.8 (Electro) · Lunar-Crystallize 1.6 (Géo, sans ICD global).
- * Lunar-Bloom EXCLU : multiplicateur non confirmé (aucune valeur inventée).
+ * KQM distingue DEUX familles de dégâts lunaires (keqingmains.com/misc/lunar-reactions) :
+ *  (1) dégâts de RÉACTION déclenchés : Lunar-Charged 1.8 (Electro) ·
+ *      Lunar-Crystallize 1.6 (Géo, sans ICD global) — les multiplicateurs de LUNAR_BASE ;
+ *  (2) dégâts lunaires DIRECTS de capacité (base plus élevée, pas de scaling niveau,
+ *      pas de DMG% ordinaire, bonus EM lunaire + Lunar Reaction Base DMG Bonus).
+ * Lunar-Bloom n'appartient QU'À (2) : KQM confirme qu'il « ne fait pas de dégâts
+ * par lui-même » (cœurs -> Verdant Dew consommé par les capacités) → AUCUN
+ * multiplicateur de réaction (pas « en attente » : inexistant par conception).
  */
 export const LUNAR_BASE = Object.freeze({
   "lunar-charged": 1.8,
@@ -166,6 +171,9 @@ export const LUNAR_BASE = Object.freeze({
 } as const);
 
 export type LunarKind = keyof typeof LUNAR_BASE;
+
+/** Réactions lunaires reconnues mais sans dégâts de réaction propres (famille directe). */
+export const LUNAR_ABILITY_ONLY: ReadonlySet<string> = new Set(["lunar-bloom"]);
 
 /** Pondérations par dégâts personnels décroissants : 100 % / 50 % / 1/12 / 1/12. */
 export const LUNAR_CONTRIBUTION_WEIGHTS = Object.freeze([1.0, 0.5, 1 / 12, 1 / 12] as const);
@@ -264,6 +272,16 @@ export function lunarReaction(input: {
   const key = input.reaction.trim().toLowerCase();
   const baseFromKey = LUNAR_BASE[key as LunarKind];
   if (baseFromKey === undefined) {
+    if (LUNAR_ABILITY_ONLY.has(key)) {
+      throw new RangeError(
+        "Lunar-Bloom ne produit pas de dégâts de réaction propres (KQM : la réaction " +
+          "« does not deal damage on its own » — ses cœurs accumulent du Verdant Dew " +
+          "consommé par les capacités). Ses dégâts sont des dégâts lunaires DIRECTS de " +
+          "capacité : calcule-les via le coup direct (base = scaling de la capacité), avec " +
+          "le bonus EM lunaire (lunarEmBonus) et le Lunar Reaction Base DMG Bonus, SANS " +
+          "multiplicateur de niveau ni DMG% élémentaire ordinaire.",
+      );
+    }
     throw new RangeError(
       `Réaction lunaire inconnue : ${input.reaction}. Options : ${Object.keys(LUNAR_BASE).sort().join(", ")}`,
     );

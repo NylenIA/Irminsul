@@ -90,8 +90,12 @@ describe("parité réactions TS ↔ moteur Python (goldens gen-reaction-goldens.
   });
 
   it("lunaire : validations (vide, >4 contributeurs, niveau invalide, réaction inconnue)", () => {
+    // Lunar-Bloom : message SOURCÉ (pas de dégâts de réaction propres), pas un simple « inconnu ».
     expect(() => lunarReaction({ reaction: "lunar-bloom", contributors: [{}] })).toThrow(
       RangeError,
+    );
+    expect(() => lunarReaction({ reaction: "lunar-bloom", contributors: [{}] })).toThrow(
+      /Verdant Dew|DIRECTS/,
     );
     expect(() => lunarChargedReaction({ contributors: [] })).toThrow(RangeError);
     expect(() => lunarChargedReaction({ contributors: [{}, {}, {}, {}, {}] })).toThrow(RangeError);

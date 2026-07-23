@@ -9,10 +9,10 @@
       "label": "Moteur de données et calcul",
       "weight": 25,
       "mvpWeight": 30,
-      "score": 90,
+      "score": 91,
       "confidence": "high",
-      "evidence": "Moteur stats finales INTEGRE ; pytest 238 ; goldens vs jeu ; AUDIT SOURCE des formules (docs/engine/FORMULA_SOURCES.md, chaque constante sourcee KQM+corroboree) qui a corrige un VRAI bug DPS : coefficients transformatifs pre-5.2 -> post-5.2 (EC 2.0/OL 2.75/SC 1.5/Shatter 3.0, 3 sources concordantes, garde anti-regression) ; lunaires LC/LCrys + additives ; parite TS<->Python goldens croises",
-      "blockers": "Lunar-Bloom (non confirme KQM -> exclu) ; veille patch pour revalidation continue des constantes"
+      "evidence": "Moteur stats finales INTEGRE ; pytest 239 ; goldens vs jeu ; AUDIT SOURCE des formules (docs/engine/FORMULA_SOURCES.md, chaque constante sourcee KQM+corroboree) qui a corrige un VRAI bug DPS : coefficients transformatifs pre-5.2 -> post-5.2 (EC 2.0/OL 2.75/SC 1.5/Shatter 3.0, 3 sources concordantes, garde anti-regression) ; lunaires LC 1.8 / LCrys 1.6 (base LC corroboree Icy Veins) + EM lunaire partage 6EM/(EM+2000) + additives ; parite TS<->Python goldens croises ; Lunar-Bloom TRAITE PAR SOURCAGE (KQM : pas de multiplicateur de reaction propre -> famille 'directe' de capacite) : le moteur renvoie un message SOURCE pointant vers calculate_direct_hit au lieu d'un 'inconnu', parite py+ts testee",
+      "blockers": "Lunar-Bloom RESOLU (sourcage KQM : aucun multiplicateur de reaction par conception ; base 'directe' par capacite a transcrire seulement si on cable un calcul par capacite) ; veille patch pour revalidation continue des constantes"
     },
     {
       "id": "integration_moteur",

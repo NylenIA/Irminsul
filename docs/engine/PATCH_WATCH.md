@@ -34,7 +34,11 @@ Si l'index a > 24 h ou qu'un patch vient de sortir → `irminsul update` **avant
    - coefficients transformatifs (historique : 5.2) — croiser KQM TCL + gcsim ;
    - formules EM (transfo/ampli/additif/lunaire) ;
    - mains d'artéfacts 5★ niv20 (stables, mais surveiller un rework) ;
-   - **Lunar-Bloom** : dès qu'un multiplicateur KQM fiable existe → l'ajouter (pipeline prêt).
+   - **Lunar-Bloom** : RÉSOLU par sourçage — KQM confirme qu'il n'a **pas** de multiplicateur de
+     réaction propre (la réaction « does not deal damage on its own » ; famille « directe » de capacité
+     uniquement). Ne PAS ajouter de constante à `LUNAR_BASE`. Surveiller seulement : (a) si KQM transcrit
+     la **base directe** par capacité (Lauma…) et qu'on câble un calcul par capacité ; (b) de nouveaux
+     enablers Lunar-Bloom. Voir [FORMULA_SOURCES.md](FORMULA_SOURCES.md) §lunaires.
 4. **Nouveaux contenus** :
    - nouveaux persos/armes/sets → vérifier que `genshin-db` les fournit ; sinon marquer TODO ;
    - nouvelle réaction → l'ajouter **seulement** avec source rang A ; sinon avertissement, pas d'invention.

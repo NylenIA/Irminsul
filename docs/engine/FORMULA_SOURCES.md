@@ -55,11 +55,26 @@ Garde anti-régression : `test_transformative_5_2_buffed_bases`.
 | Spread | 1.25 | KQM TCL — Additive ✅ |
 
 ## Réactions lunaires (Luna I, dégâts propres avec crit)
-| Réaction | Base | Élément | Source |
+
+KQM ([Lunar Reaction Guide](https://keqingmains.com/misc/lunar-reactions/)) distingue **deux familles** :
+- **(1) Dégâts de RÉACTION lunaire** (déclenchés, à l'échelle de l'équipe) : `base × mult_niveau ×
+  (1+base_dmg_bonus) × (1+reaction_bonus + 6·EM/(EM+2000)) × crit × RES`. Ce sont les bases ci-dessous.
+  Formule LC corroborée [Icy Veins « Lunar-Charged DMG Formula Clarified »](https://www.icy-veins.com/genshin-impact/news/genshin-impact-lunar-charged-dmg-formula-clarified/).
+- **(2) Dégâts lunaires DIRECTS** (capacités de personnage) : base **plus élevée**, **ne scale pas avec
+  le niveau**, **pas** affecté par le DMG% élémentaire/commun ordinaire, utilise le bonus EM lunaire +
+  « Lunar Reaction Base DMG Bonus » (Moonsign). Base **propre à chaque capacité** → se calcule via
+  `calculate_direct_hit` (le scaling de la capacité EST la base), pas une constante de réaction.
+
+| Réaction | Base réaction | Élément | Source |
 |---|--:|---|---|
-| Lunar-Charged | 1.8 | Electro | KQM Lunar Reaction Guide ✅ |
+| Lunar-Charged | 1.8 | Electro | KQM Lunar Reaction Guide ✅ (corroboré Icy Veins) |
 | Lunar-Crystallize | 1.6 | Géo | KQM (corroboré wiki/game8) ✅ |
-| Lunar-Bloom | — | Dendro | **EXCLU** : multiplicateur non confirmé par KQM (mécanique à cœurs) → rejet explicite, aucune valeur inventée |
+| Lunar-Bloom | — (famille 2 uniquement) | Dendro | **Pas de multiplicateur de réaction — PAR CONCEPTION** (KQM : la réaction « does not deal damage on its own » ; ses cœurs accumulent du Verdant Dew consommé par les capacités). Dégâts = famille (2), via `calculate_direct_hit`. Ce n'est **pas** une valeur « en attente de KQM ». Le moteur renvoie un message sourcé (voir `LUNAR_ABILITY_ONLY`). |
+
+> Note veille : la **base exacte** des dégâts lunaires directs par capacité (image KQM « Direct-LB », p.ex.
+> Lauma) n'est pas transcrite ici → à renseigner comme donnée personnage le jour où un calcul par capacité
+> est câblé. Le doute « LC = 3 ? » d'un résumé automatique correspond à la **famille (2)** (version directe,
+> base plus élevée), pas à la réaction déclenchée LC = 1.8 : notre constante reste correcte.
 
 ## Stats d'artéfacts (main 5★ niveau 20)
 [`packages/engine-client/src/artifact-stats.ts`](../../packages/engine-client/src/artifact-stats.ts) — table
@@ -75,4 +90,5 @@ calcule les sets nous-mêmes (nécessiterait un audit dédié par set + version)
 
 ## À revalider à chaque veille de patch
 Coefficients de réaction (historique 5.2), valeurs de main stat (stables mais à surveiller),
-nouvelles réactions (Lunar-Bloom en attente). **Process de veille : [PATCH_WATCH.md](PATCH_WATCH.md).**
+dégâts lunaires DIRECTS par capacité (base à transcrire depuis KQM si on câble un calcul par capacité ;
+Lunar-Bloom en fait partie — pas un multiplicateur de réaction). **Process de veille : [PATCH_WATCH.md](PATCH_WATCH.md).**
