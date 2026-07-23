@@ -41,7 +41,7 @@
       "mvpWeight": 12,
       "score": 85,
       "confidence": "high",
-      "evidence": "PROUVE bout-en-bout et REVALIDE (2026-07-20) avec le moteur a jour : rebuild sidecar (provenance commit=48f475a verifiee DANS l'app installee) + desktop:build + reinstall NSIS silencieuse + smoke installe TOUT VERT (7 routes 200, proxy.ts nonce POST/boot->403 x3, node lie au PID Tauri, zero orphelin x2, persistance DB, diagnostic sanitize) + cas d'erreur 4/4 chemin Unicode. L'app installee embarque lunaires+additives+sidecar-par-defaut.",
+      "evidence": "PROUVE bout-en-bout et REVALIDE (2026-07-20) avec le moteur a jour : rebuild sidecar (provenance commit=48f475a verifiee DANS l'app installee) + desktop:build + reinstall NSIS silencieuse + smoke installe TOUT VERT (7 routes 200, proxy.ts nonce POST/boot->403 x3, node lie au PID Tauri, zero orphelin x2, persistance DB, diagnostic sanitize) + cas d'erreur 4/4 chemin Unicode. L'app installee embarque lunaires+additives+sidecar-par-defaut. RE-REVALIDE 2026-07-23 (commit 98fd991, apres fusion PR #4) : desktop:sidecar + desktop:build (exit 0) + reinstall NSIS silencieuse (/S) dans %LOCALAPPDATA%/Irminsul ; sidecar INSTALLE sha256-identique au binaire buildE (42014347...) -> l'app installee embarque desormais le runner d'auto-migration au boot + detection de derive de schema + Lunar-Bloom source.",
       "blockers": "MSI 1603 (per-machine sans elevation) ; non signe (SmartScreen) ; bind-race residuel accepte ; migration-on-update de la base %APPDATA% : desormais DETECTEE (Diagnostic) ET APPLIQUEE au boot (instrumentation.ts, runner idempotent/transactionnel, no-op aujourd'hui) -> reste a revalider par un desktop:build + smoke lors du prochain patch de schema (chemin de code identique a dev/E2E)"
     },
     {
