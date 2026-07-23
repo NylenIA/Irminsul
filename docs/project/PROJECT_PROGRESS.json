@@ -79,10 +79,10 @@
       "label": "Tests et qualite",
       "weight": 5,
       "mvpWeight": 4,
-      "score": 87,
+      "score": 88,
       "confidence": "high",
-      "evidence": "pytest 235 (ruff cable) ; vitest 151 (3 workspaces dans verify : data-access 17 dont rollback transactionnel + detection de derive de schema, engine-client 113, ui 21) ; RENDU des primitives teste unitairement en jsdom via Testing Library (Button/Input/Select/States/ConfirmDialog : mapping variante->classe, fusion className, passe-plat props natives, roles a11y status/alert/aria-live, cablage onConfirm/onCancel, ouverture modale reelle avec polyfill dialog.showModal/close honnete pour jsdom) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config)",
-      "blockers": "regles Next-specifiques eslint-config-next (extension future) ; surfaces/pages Next non testees unitairement (couvert E2E) ; scripts .mjs hors lint"
+      "evidence": "pytest 235 (ruff cable) ; vitest 155 (3 workspaces dans verify : data-access 17 dont rollback transactionnel + detection de derive de schema, engine-client 113, ui 25) ; TOUTES les primitives testees unitairement en jsdom via Testing Library (Button/Input/Select/States/Card/ConfirmDialog + Toaster : mapping variante->classe, fusion className, passe-plat props natives, roles a11y status/alert/aria-live, cablage onConfirm/onCancel, ouverture modale reelle avec polyfill dialog.showModal/close honnete, liaison store<->React du Toaster : emission/pile/fermeture individuelle) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config)",
+      "blockers": "regles Next-specifiques eslint-config-next (extension future) ; surfaces/pages Next (app-router) non testees unitairement (couvert E2E) ; scripts .mjs hors lint"
     },
     {
       "id": "packaging",
