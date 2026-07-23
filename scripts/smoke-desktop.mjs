@@ -8,7 +8,7 @@
  * Usage : node scripts/smoke-desktop.mjs [cheminExeOptionnel]
  */
 import { execSync, spawn } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import { existsSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 

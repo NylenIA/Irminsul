@@ -6,7 +6,7 @@
  * Preuves : .irminsul/proof/smoke-errors.json
  */
 import { execSync, spawn } from "node:child_process";
-import { cpSync, existsSync, renameSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
+import { cpSync, renameSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 

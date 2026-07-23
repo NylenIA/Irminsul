@@ -6,7 +6,7 @@
   "scripts": {
     "typecheck": "npm run typecheck -w @irminsul/web",
     "lint:py": ".\\.venv\\Scripts\\python.exe -m ruff check src tests",
-    "lint:web": "eslint apps/web packages",
+    "lint:web": "eslint apps/web packages scripts eslint.config.mjs",
     "test": "npm run test -w @irminsul/data-access && npm run test -w @irminsul/engine-client && npm run test -w @irminsul/ui",
     "test:py": ".\\.venv\\Scripts\\python.exe -m pytest -q",
     "test:e2e": "npm run test:e2e -w @irminsul/web",
