@@ -11,7 +11,6 @@ use std::time::{Duration, Instant};
 #[derive(Debug)]
 pub struct NextServer {
     pub child: Child,
-    pub port: u16,
     pub url: String,
 }
 
@@ -91,7 +90,7 @@ pub fn spawn_next(
         cmd.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
     }
     let child = cmd.spawn().map_err(|e| format!("démarrage Node: {e}"))?;
-    Ok(NextServer { child, port, url: format!("http://127.0.0.1:{port}") })
+    Ok(NextServer { child, url: format!("http://127.0.0.1:{port}") })
 }
 
 /// Résolution UNIFORME dev/prod via resource_dir (les resources gardent l'arborescence).
