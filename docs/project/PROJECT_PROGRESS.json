@@ -79,10 +79,10 @@
       "label": "Tests et qualite",
       "weight": 5,
       "mvpWeight": 4,
-      "score": 88,
+      "score": 89,
       "confidence": "high",
-      "evidence": "pytest 235 (ruff cable) ; vitest 160 (3 workspaces dans verify : data-access 22 dont rollback transactionnel + detection de derive + runner d'auto-migration, engine-client 113, ui 25) ; TOUTES les primitives testees unitairement en jsdom via Testing Library (Button/Input/Select/States/Card/ConfirmDialog + Toaster : mapping variante->classe, fusion className, passe-plat props natives, roles a11y status/alert/aria-live, cablage onConfirm/onCancel, ouverture modale reelle avec polyfill dialog.showModal/close honnete, liaison store<->React du Toaster : emission/pile/fermeture individuelle) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config) ETENDU aux scripts d'outillage scripts/*.mjs + eslint.config.mjs (globals Node explicites sans dependance, 2 imports morts corriges, preuve lint-vs-ignore)",
-      "blockers": "regles Next-specifiques eslint-config-next (extension future) ; surfaces/pages Next (app-router) non testees unitairement (couvert E2E)"
+      "evidence": "pytest 239 (ruff cable) ; vitest 160 (3 workspaces dans verify : data-access 22 dont rollback transactionnel + detection de derive + runner d'auto-migration, engine-client 113, ui 25) ; TOUTES les primitives testees unitairement en jsdom via Testing Library (Button/Input/Select/States/Card/ConfirmDialog + Toaster : mapping variante->classe, fusion className, passe-plat props natives, roles a11y status/alert/aria-live, cablage onConfirm/onCancel, ouverture modale reelle avec polyfill dialog.showModal/close honnete, liaison store<->React du Toaster : emission/pile/fermeture individuelle) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config) ETENDU aux scripts d'outillage scripts/*.mjs + eslint.config.mjs (globals Node explicites sans dependance, 2 imports morts corriges, preuve lint-vs-ignore) + REGLES NEXT (@next/eslint-plugin-next 16.2.9 flat core-web-vitals scope apps/web, preuve d'activation par sonde no-img-element, codebase clean 0 finding)",
+      "blockers": "surfaces/pages Next (app-router) non testees unitairement (couvert E2E)"
     },
     {
       "id": "packaging",

@@ -1,4 +1,5 @@
 import tseslint from "typescript-eslint";
+import nextPlugin from "@next/eslint-plugin-next";
 
 /**
  * Lint TypeScript + scripts du monorepo (typescript-eslint recommended, flat config).
@@ -27,6 +28,12 @@ export default tseslint.config(
     ],
   },
   ...tseslint.configs.recommended,
+  {
+    // Règles Next-spécifiques (pièges app-router, images, Core Web Vitals),
+    // scopées sur l'app Next uniquement. Preset flat officiel du plugin.
+    ...nextPlugin.configs["core-web-vitals"],
+    files: ["apps/web/**/*.{ts,tsx}"],
+  },
   {
     // Scripts Node (.mjs) : globals du runtime déclarés explicitement (pas de
     // dépendance `globals`) pour que no-undef reste utile sans faux positifs.
