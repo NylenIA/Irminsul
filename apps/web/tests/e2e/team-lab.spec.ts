@@ -389,6 +389,8 @@ test.describe("Import / Export (irminsul-export/1.0)", () => {
     await expect(contract.or(engineError)).toBeVisible({ timeout: 15000 });
     // Sanitization : le nom du compte utilisateur ne doit pas apparaître dans la page.
     await expect(page.locator("body")).not.toContainText("akuon");
+    // Dérive de schéma : base e2e migrée (prisma migrate deploy) -> "à jour", sans alerte.
+    await expect(page.getByRole("row", { name: /Schéma/ })).toContainText("à jour");
     await expect(page.getByRole("button", { name: /Copier le rapport/ })).toBeVisible();
   });
 

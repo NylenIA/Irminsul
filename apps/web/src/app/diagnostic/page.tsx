@@ -7,7 +7,8 @@ const fmt = new Intl.NumberFormat("fr-FR");
 
 export default async function DiagnosticPage(): Promise<React.ReactElement> {
   const d = await getDiagnosticAction();
-  const healthy = d.engine.ok && d.engine.frozen !== undefined;
+  const healthy =
+    d.engine.ok && d.engine.frozen !== undefined && d.database.schema.status !== "drift";
 
   return (
     <main style={{ padding: "clamp(16px, 4vw, 40px)", maxWidth: 860, margin: "0 auto", display: "grid", gap: 14 }}>
@@ -54,8 +55,14 @@ export default async function DiagnosticPage(): Promise<React.ReactElement> {
             <Row k="Emplacement" v={d.database.url} />
             <Row k="Taille" v={d.database.sizeBytes !== null ? `${fmt.format(d.database.sizeBytes)} octets` : "inaccessible"} />
             <Row k="Modifiée le" v={d.database.modifiedAt ?? "—"} />
+            <Row k="Schéma" v={schemaLabel(d.database.schema.status)} />
           </tbody>
         </table>
+        {d.database.schema.status === "drift" ? (
+          <p role="alert" style={{ color: "var(--irm-danger)", fontSize: 13, marginTop: 8 }}>
+            {d.database.schema.detail}
+          </p>
+        ) : null}
       </section>
 
       <section className="irm-card" aria-label="Sécurité et distribution">
@@ -70,6 +77,12 @@ export default async function DiagnosticPage(): Promise<React.ReactElement> {
       <CopyReportButton report={d} />
     </main>
   );
+}
+
+function schemaLabel(status: "ok" | "drift" | "unknown"): string {
+  if (status === "ok") return "à jour";
+  if (status === "drift") return "en retard — ré-importe ton export";
+  return "indéterminé";
 }
 
 function Row({ k, v }: { k: string; v: string }): React.ReactElement {

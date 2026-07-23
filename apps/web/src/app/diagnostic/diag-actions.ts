@@ -2,6 +2,12 @@
 
 import { statSync } from "node:fs";
 import { callEngine } from "@/server/engine";
+import {
+  checkSchemaDrift,
+  prisma,
+  EXPECTED_MIGRATIONS,
+  type SchemaDriftStatus,
+} from "@irminsul/data-access";
 
 /**
  * Diagnostic SANITIZÉ : provenance réelle du moteur (dispatcher canonique) + état app/base.
@@ -12,7 +18,12 @@ export interface DiagnosticReport {
   engine:
     | { ok: true; ipcContract: string; methods: string[]; frozen: boolean; gitCommit: string | null; binarySha256: string | null; python: string }
     | { ok: false; error: string };
-  database: { url: string; sizeBytes: number | null; modifiedAt: string | null };
+  database: {
+    url: string;
+    sizeBytes: number | null;
+    modifiedAt: string | null;
+    schema: { status: SchemaDriftStatus; detail: string };
+  };
   security: { loopbackOnly: true; bundleSigned: false; smartScreenWarning: true };
 }
 
@@ -55,10 +66,21 @@ export async function getDiagnosticAction(): Promise<DiagnosticReport> {
     } catch { /* base absente : affichée telle quelle */ }
   }
 
+  // Dérive de schéma : détecte une base %APPDATA% en retard sur les migrations de
+  // cette version (cas d'une MAJ desktop) pour l'afficher honnêtement plutôt que
+  // de laisser l'app échouer plus loin. Ne modifie/applique RIEN.
+  let schema: { status: SchemaDriftStatus; detail: string };
+  try {
+    const drift = await checkSchemaDrift(prisma, EXPECTED_MIGRATIONS);
+    schema = { status: drift.status, detail: drift.detail };
+  } catch {
+    schema = { status: "unknown", detail: "Vérification du schéma impossible (base injoignable)." };
+  }
+
   return {
     app: { version: "0.1.0", mode: isDesktop ? "desktop" : "web", nodeVersion: process.version },
     engine,
-    database: { url: maskPath(dbUrl), sizeBytes, modifiedAt },
+    database: { url: maskPath(dbUrl), sizeBytes, modifiedAt, schema },
     security: { loopbackOnly: true, bundleSigned: false, smartScreenWarning: true },
   };
 }

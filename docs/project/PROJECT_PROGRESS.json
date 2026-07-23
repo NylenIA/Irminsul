@@ -42,7 +42,7 @@
       "score": 84,
       "confidence": "high",
       "evidence": "PROUVE bout-en-bout et REVALIDE (2026-07-20) avec le moteur a jour : rebuild sidecar (provenance commit=48f475a verifiee DANS l'app installee) + desktop:build + reinstall NSIS silencieuse + smoke installe TOUT VERT (7 routes 200, proxy.ts nonce POST/boot->403 x3, node lie au PID Tauri, zero orphelin x2, persistance DB, diagnostic sanitize) + cas d'erreur 4/4 chemin Unicode. L'app installee embarque lunaires+additives+sidecar-par-defaut.",
-      "blockers": "MSI 1603 (per-machine sans elevation) ; non signe (SmartScreen) ; bind-race residuel accepte ; migration-on-update de la base %APPDATA% non geree (voir domaine Persistance) -> decision d'archi requise avant un patch de schema"
+      "blockers": "MSI 1603 (per-machine sans elevation) ; non signe (SmartScreen) ; bind-race residuel accepte ; migration-on-update de la base %APPDATA% : derive DETECTEE + affichee honnetement au Diagnostic (plus de crash silencieux), mais application auto encore absente -> decision d'archi requise avant un patch de schema (voir Persistance)"
     },
     {
       "id": "team_builder_sim",
@@ -59,10 +59,10 @@
       "label": "Persistance",
       "weight": 5,
       "mvpWeight": 8,
-      "score": 86,
+      "score": 88,
       "confidence": "high",
-      "evidence": "Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL ; export/import versionne irminsul-export/1.0 avec checksum ; couverture data-access 11 tests dont PREUVE de rollback par injection de faute (echec avant COMMIT -> delete-par-nom ANNULE, etat d'avant restaure : identite+membres) + fail-fast (membre invalide = AUCUNE ecriture partielle) + remplace-par-nom (compteurs created/updated) + dedoublonnage interne (derniere occurrence gagne) + garde vide/>500 ; chemin DB desktop = %APPDATA% CONFIRME (app_data_dir Tauri -> ensure_user_db : dossier+logs crees, template pre-migre copie au 1er lancement, JAMAIS ecrase, teste Rust chemin Unicode+espaces) + expose au Diagnostic",
-      "blockers": "MAJ inter-versions : ensure_user_db ne copie le template que si la base est absente et le CLI Prisma n'est PAS embarque -> une future migration de schema ne serait pas appliquee a une base %APPDATA% existante (gap migration-on-update). Correction = decision d'archi (runner de migration Node au boot, ou rusqlite cote Rust) : a arbitrer avec Nylen, pas un simple bugfix"
+      "evidence": "Prisma 6 + SQLite ; TeamRepository CRUD + importTeams TRANSACTIONNEL ; export/import versionne irminsul-export/1.0 avec checksum ; couverture data-access 17 tests dont PREUVE de rollback par injection de faute (echec avant COMMIT -> delete-par-nom ANNULE, etat d'avant restaure) + fail-fast (aucune ecriture partielle) + remplace-par-nom + dedoublonnage interne + garde vide/>500 ; chemin DB desktop = %APPDATA% CONFIRME (app_data_dir Tauri -> ensure_user_db : template pre-migre copie au 1er lancement, JAMAIS ecrase, teste Rust chemin Unicode+espaces, cargo lib 11/11) ; DETECTION de derive de schema : checkSchemaDrift (3 etats ok/drift/unknown, SQL statique, 5 tests) + EXPECTED_MIGRATIONS garde synchro du dossier prisma/migrations par test -> surfacee au Diagnostic (avertissement honnete + re-import, badge, alerte a11y ; prouve E2E 'a jour'), SANS jamais modifier la base",
+      "blockers": "MAJ inter-versions : le risque de CRASH SILENCIEUX est leve (derive detectee et affichee), mais l'APPLICATION automatique des migrations a une base %APPDATA% existante reste absente (CLI Prisma non embarque) -> a implementer AVANT d'expedier une 2e migration ; choix d'archi (runner Node au boot vs rusqlite Rust) a arbitrer avec Nylen"
     },
     {
       "id": "design_ux",
@@ -81,7 +81,7 @@
       "mvpWeight": 4,
       "score": 87,
       "confidence": "high",
-      "evidence": "pytest 235 (ruff cable) ; vitest 145 (3 workspaces dans verify : data-access 11 dont rollback transactionnel, engine-client 113, ui 21) ; RENDU des primitives teste unitairement en jsdom via Testing Library (Button/Input/Select/States/ConfirmDialog : mapping variante->classe, fusion className, passe-plat props natives, roles a11y status/alert/aria-live, cablage onConfirm/onCancel, ouverture modale reelle avec polyfill dialog.showModal/close honnete pour jsdom) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config)",
+      "evidence": "pytest 235 (ruff cable) ; vitest 151 (3 workspaces dans verify : data-access 17 dont rollback transactionnel + detection de derive de schema, engine-client 113, ui 21) ; RENDU des primitives teste unitairement en jsdom via Testing Library (Button/Input/Select/States/ConfirmDialog : mapping variante->classe, fusion className, passe-plat props natives, roles a11y status/alert/aria-live, cablage onConfirm/onCancel, ouverture modale reelle avec polyfill dialog.showModal/close honnete pour jsdom) ; E2E 62 (workflows reels + axe + moteur sidecar + toast) ; goldens croises TS<->Python ; garde manifest proxy ; ESLINT cable dans verify (typescript-eslint recommended, flat config)",
       "blockers": "regles Next-specifiques eslint-config-next (extension future) ; surfaces/pages Next non testees unitairement (couvert E2E) ; scripts .mjs hors lint"
     },
     {
