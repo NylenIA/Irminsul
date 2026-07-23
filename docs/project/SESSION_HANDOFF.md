@@ -4,12 +4,15 @@
 > `5a7f11c` (branche `feat/irminsul-complete-redesign`, synchro avec origin, tracked clean).
 > **MVP utilisable : 90 %** (`scripts/project_progress.py`, `docs/project/PROJECT_PROGRESS.md`).
 >
-> **Journal 2026-07-23 (session full-auto, 7 commits `ec3aee1`→`5a7f11c`) :** preuve de rollback
-> transactionnel `importTeams` · tests jsdom de TOUTES les primitives UI (ui 5→25) · fix hook
-> `pwsh`→`powershell` (pwsh absent ici) · desktop `%APPDATA%` vérifié fait+testé (cargo lib 11/11) ·
-> **détection de dérive de schéma** (checkSchemaDrift + Diagnostic) · **runner d'auto-migration au boot**
+> **Journal 2026-07-23 (session full-auto, `ec3aee1`→`0f9f982`) :** preuve de rollback transactionnel
+> `importTeams` · tests jsdom de TOUTES les primitives UI (ui 5→25) · fix hook `pwsh`→`powershell`
+> (pwsh absent ici) · desktop `%APPDATA%` vérifié fait+testé (cargo lib 11/11) · **détection de dérive
+> de schéma** (checkSchemaDrift + Diagnostic) · **runner d'auto-migration au boot**
 > (`applyPendingMigrations` + `apps/web/src/instrumentation.ts`, idempotent/transactionnel, no-op
-> aujourd'hui) — ferme le gap migration-on-update desktop. vitest 123→160.
+> aujourd'hui) — ferme le gap migration-on-update desktop · **Lunar-Bloom résolu par sourçage** (voir
+> Décisions) · audits Codex/proxy versionnés + résidus Duo gitignorés (tracked ET untracked clean) ·
+> champ mort Rust supprimé (cargo sans warning) · **lint étendu aux scripts .mjs** (blocker levé).
+> vitest 123→160, pytest 239.
 
 ## Mode de travail (imposé par Nylen)
 - Tu es **lead dev autonome, full auto**. N'utilise plus Duo. Délègue à **Codex seulement si gain réel**

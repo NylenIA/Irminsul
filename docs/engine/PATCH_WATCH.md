@@ -56,3 +56,4 @@ Si l'index a > 24 h ou qu'un patch vient de sortir → `irminsul update` **avant
 | Date | Patch | Vérifié | Résultat |
 |---|---|---|---|
 | 2026-07 | ref. post-5.x | coefficients transfo, EM, mains artéfacts, lunaires | fix 5.2 appliqué ; reste conforme KQM |
+| 2026-07-23 | veille courante | `irminsul update` (index 6 411→6 520 docs, 4 sources OK) ; additives (1.15/1.25) reconfirmées sur KQM TCL fraîchement indexé ; lunaires : LC 1.8 reconfirmé (Icy Veins), **Lunar-Bloom résolu par sourçage** (pas de multiplicateur de réaction par conception — cf. FORMULA_SOURCES §lunaires) | constantes conformes, aucun changement requis |
