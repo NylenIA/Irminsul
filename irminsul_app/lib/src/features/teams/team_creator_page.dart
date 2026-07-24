@@ -563,7 +563,8 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
                                 ),
                               ),
                               Tooltip(
-                                message: l.t("creatorActAttack"),
+                                message:
+                                    "$_atkCount ${l.t("creatorActAttackN")}",
                                 child: InkWell(
                                   onTap: () => _addStep("attack"),
                                   child: Padding(

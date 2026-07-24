@@ -231,8 +231,12 @@ class L {
     "creatorActSkill": {"fr": "Compétence (E)", "en": "Skill (E)"},
     "creatorActBurst": {"fr": "Ultime (Q)", "en": "Burst (Q)"},
     "creatorActAttack": {
-      "fr": "2 attaques normales",
-      "en": "2 normal attacks",
+      "fr": "Attaques normales",
+      "en": "Normal attacks",
+    },
+    "creatorActAttackN": {
+      "fr": "attaque(s) normale(s)",
+      "en": "normal attack(s)",
     },
     "creatorActCharge": {"fr": "Attaque chargée", "en": "Charged attack"},
     "creatorTipBurstFirst": {
