@@ -72,10 +72,10 @@ jobs:
           if ($LASTEXITCODE -ne 0) { git merge --abort; Write-Host "varka: merge KO, skip" }
           Pop-Location
           # --- PR Iansan (#2374), adaptée au layout actuel ---
-          gh pr diff 2374 --repo genshinsim/gcsim | Out-File -Encoding utf8 iansan.diff
-          python tool/patch_gcsim_iansan.py gcsim-src iansan.diff
+          gh pr diff 2374 --repo genshinsim/gcsim 2>&1 | Out-File -Encoding utf8 iansan.diff
+          python tool/patch_gcsim_iansan.py gcsim-src iansan.diff 2>&1
           $iansanOk = $LASTEXITCODE -eq 0
-          if ($iansanOk) { python tool/check_keys_alignment.py gcsim-src; $iansanOk = $LASTEXITCODE -eq 0 }
+          if ($iansanOk) { python tool/check_keys_alignment.py gcsim-src 2>&1; $iansanOk = $LASTEXITCODE -eq 0 }
           if (-not $iansanOk) {
             Write-Host "iansan: patch/alignement KO, retrait"
             Push-Location gcsim-src; git checkout -- .; git clean -fd internal/characters/iansan; Pop-Location

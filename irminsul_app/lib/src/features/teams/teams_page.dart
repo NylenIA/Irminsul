@@ -84,6 +84,7 @@ class TeamsPage extends ConsumerWidget {
                       const Center(child: CircularProgressIndicator()),
                   error: (e, _) => GlassCard(child: Text("Erreur : $e")),
                   data: (list) {
+                    final byId = {for (final c in list) c.id: c};
                     final all = matchTeams(
                         meta: db, box: playerBox, characters: list);
                     final shown = mode == null
@@ -135,7 +136,8 @@ class TeamsPage extends ConsumerWidget {
                         for (var i = 0; i < shown.length; i++) ...[
                           Reveal(
                             delayMs: 60 + (i.clamp(0, 8)) * 70,
-                            child: _TeamMatchCard(match: shown[i], l: l),
+                            child: _TeamMatchCard(
+                                match: shown[i], l: l, byId: byId),
                           ),
                           const SizedBox(height: 16),
                         ],
@@ -319,7 +321,34 @@ class _ModeFilter extends ConsumerWidget {
 class _TeamMatchCard extends StatelessWidget {
   final TeamMatch match;
   final L l;
-  const _TeamMatchCard({required this.match, required this.l});
+  final Map<String, CharacterFull> byId;
+  const _TeamMatchCard(
+      {required this.match, required this.l, required this.byId});
+
+  /// Adapte le template gcsim à la BOX : si un slot est pourvu par une
+  /// ALTERNATIVE, on substitue le perso dans la liste ET dans la rotation.
+  /// Sans ça, la sim échouerait « personnage absent » sur une équipe
+  /// affichée COMPLÈTE.
+  (GcsimTemplateData, String?) _effectiveTemplate(GcsimTemplateData tpl) {
+    var rotation = tpl.rotation;
+    final chars = List<String>.from(tpl.chars);
+    final notes = <String>[];
+    for (final s in match.slots) {
+      final titular = byId[s.slot.id];
+      if (titular == null || s.character.id == s.slot.id) continue;
+      final oldName = GcsimService.gcsimName(titular.good);
+      final newName = GcsimService.gcsimName(s.character.good);
+      rotation =
+          rotation.replaceAll(RegExp("\\b$oldName\\b"), newName);
+      final idx = chars.indexOf(titular.good);
+      if (idx >= 0) chars[idx] = s.character.good;
+      notes.add("${titular.name} → ${s.character.name}");
+    }
+    return (
+      GcsimTemplateData(chars, rotation),
+      notes.isEmpty ? null : notes.join(" · "),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -413,7 +442,11 @@ class _TeamMatchCard extends StatelessWidget {
             // ---- simulation gcsim (vrai DPS sur les builds du joueur) ----
             if (t.gcsim != null && match.complete) ...[
               const SizedBox(height: 12),
-              _SimSection(template: t.gcsim!, l: l),
+              Builder(builder: (context) {
+                final (tpl, adaptNote) = _effectiveTemplate(t.gcsim!);
+                return _SimSection(
+                    template: tpl, l: l, adaptNote: adaptNote);
+              }),
             ],
 
             // ---- rotation + combos ----
@@ -580,7 +613,9 @@ class _InfoBlock extends StatelessWidget {
 class _SimSection extends StatefulWidget {
   final GcsimTemplateData template;
   final L l;
-  const _SimSection({required this.template, required this.l});
+  final String? adaptNote; // substitutions box (ex. « Xingqiu → Yelan »)
+  const _SimSection(
+      {required this.template, required this.l, this.adaptNote});
 
   @override
   State<_SimSection> createState() => _SimSectionState();
@@ -696,6 +731,16 @@ class _SimSectionState extends State<_SimSection> {
                 ),
               ],
             ),
+            if (widget.adaptNote != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                "${l.t("simAdapted")} ${widget.adaptNote}",
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.white.withValues(alpha: 0.5),
+                ),
+              ),
+            ],
             const SizedBox(height: 10),
             SimBreakdown(result: r),
           ],

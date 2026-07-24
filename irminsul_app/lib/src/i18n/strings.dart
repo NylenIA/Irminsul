@@ -245,6 +245,10 @@ class L {
       "en":
           "Tip: bursts start at 0 energy. Open your rotation with skills (E) to charge up, otherwise the simulation stalls waiting.",
     },
+    "simAdapted": {
+      "fr": "Rotation adaptée à ta box :",
+      "en": "Rotation adapted to your box:",
+    },
     "simEngineVersion": {"fr": "Moteur embarqué", "en": "Bundled engine"},
     "simEngineBuiltFromSource": {
       "fr": "compilé depuis la dernière source à chaque build",

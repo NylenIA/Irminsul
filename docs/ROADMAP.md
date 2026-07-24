@@ -81,9 +81,19 @@
   « ulti en début de rotation = 0 énergie ».
   Constat vérifié : Zibai/Sandrone/Iansan/Varka/Nefer **pas implémentés** dans
   gcsim même à HEAD (pas une question de version — travail de l'équipe gcsim).
-- **4.3.2 — Templates partout + dashboard réel** ⏳ (attend validation) :
-  rotations gcsim validées pour les 15 équipes ; DPS de démo du dashboard
-  remplacés par les résultats simulés réels du joueur (avec cache).
+- **4.3.2 — Templates partout + dashboard réel + contenus actuels** ⏳
+  (attend validation) — périmètre étendu le 2026-07-25 sur demande :
+  * rotations gcsim validées pour les 15 équipes — **optimales mais jouables
+    à la main** ;
+  * DPS de démo du dashboard remplacés par les résultats simulés réels (cache) ;
+  * **équipes créées sauvegardables dans « Équipes »** avec un mode
+    (Abîme / Théâtre / Carnage) ;
+  * **contenus ACTUELS du patch** affichés et maintenus : boss/bénédiction de
+    l'Abîme, éléments du Théâtre, boss du Carnage — avec la **stratégie
+    adéquate** indiquée dans l'app ;
+  * meilleure team par contenu, et si persos manquants → **version adaptée à
+    la box** (le moteur de substitution existe déjà : slots alts/pool +
+    rotations auto-adaptées).
 - **4.3.3 — Persos absents & leaks** ⏳ (attend validation) : calcul théorique
   étiqueté SPÉCULATION pour les kits leakés documentés (Odette V3) via nos
   propres formules ; suivi auto des nouveaux persos ajoutés à gcsim.
