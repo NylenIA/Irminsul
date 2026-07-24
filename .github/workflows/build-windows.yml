@@ -8,6 +8,9 @@ on:
       - ".github/workflows/build-windows.yml"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-windows:
     runs-on: windows-latest
@@ -51,9 +54,24 @@ jobs:
       - name: Package (zip)
         run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath Irminsul-windows.zip -Force
 
-      - name: Upload artifact
+      # Livraison principale : GitHub Release « dev-latest » (pas de quota,
+      # lien stable). L'artifact reste en secours avec rétention courte.
+      - name: Publish dev release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view dev-latest --repo $env:GITHUB_REPOSITORY 2>$null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create dev-latest --repo $env:GITHUB_REPOSITORY --prerelease --title "Irminsul (build de dev)" --notes "Dernier build de la branche flutter-app. Telecharge Irminsul-windows.zip, dezippe, lance irminsul.exe."
+          }
+          gh release upload dev-latest irminsul_app/Irminsul-windows.zip --repo $env:GITHUB_REPOSITORY --clobber
+
+      - name: Upload artifact (secours)
         uses: actions/upload-artifact@v4
+        continue-on-error: true
         with:
           name: Irminsul-windows
           path: irminsul_app/Irminsul-windows.zip
+          retention-days: 3
           if-no-files-found: error
