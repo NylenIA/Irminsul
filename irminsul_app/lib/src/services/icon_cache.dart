@@ -23,6 +23,7 @@ class IconCache {
 
       for (final url in [
         "https://enka.network/ui/$filename.png",
+        "https://gi.yatta.moe/assets/UI/$filename.png",
         "https://api.ambr.top/assets/UI/$filename.png",
       ]) {
         try {

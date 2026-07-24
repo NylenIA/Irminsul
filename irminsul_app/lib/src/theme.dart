@@ -26,21 +26,26 @@ class AccentPalette {
   );
 }
 
+/// Thèmes par NATION (DA moodboards) + identité Irminsul.
 const accentPalettes = <String, AccentPalette>{
   "irminsul": AccentPalette("irminsul", "Irminsul",
       Color(0xFFA78BFA), Color(0xFFEC4899), Color(0xFF22D3EE)),
-  "sumeru": AccentPalette("sumeru", "Sumeru",
+  "mondstadt": AccentPalette("mondstadt", "Mondstadt · Liberté",
+      Color(0xFF57C7B8), Color(0xFF9BE8D2), Color(0xFF3FB6FF)),
+  "liyue": AccentPalette("liyue", "Liyue · Contrat",
+      Color(0xFFF2A93B), Color(0xFFE8833A), Color(0xFFFFD9A0)),
+  "inazuma": AccentPalette("inazuma", "Inazuma · Éternité",
+      Color(0xFF9C7BFF), Color(0xFFF4A7C8), Color(0xFFC4B5FD)),
+  "sumeru": AccentPalette("sumeru", "Sumeru · Sagesse",
       Color(0xFF5DBB63), Color(0xFFB5E48C), Color(0xFF2DD4BF)),
-  "hydro": AccentPalette("hydro", "Hydro",
-      Color(0xFF3FB6FF), Color(0xFF22D3EE), Color(0xFF6366F1)),
-  "pyro": AccentPalette("pyro", "Pyro",
-      Color(0xFFFF6A4D), Color(0xFFF59E0B), Color(0xFFEC4899)),
-  "geo": AccentPalette("geo", "Geo",
-      Color(0xFFF2C14E), Color(0xFFFBBF24), Color(0xFFFDE68A)),
-  "electro": AccentPalette("electro", "Electro",
-      Color(0xFFB98BFF), Color(0xFF8B5CF6), Color(0xFFE879F9)),
-  "sakura": AccentPalette("sakura", "Sakura",
-      Color(0xFFF472B6), Color(0xFFEC4899), Color(0xFFC084FC)),
+  "fontaine": AccentPalette("fontaine", "Fontaine · Justice",
+      Color(0xFF3FA9F5), Color(0xFF22D3EE), Color(0xFFF2C14E)),
+  "natlan": AccentPalette("natlan", "Natlan · Guerre",
+      Color(0xFFFF6A3D), Color(0xFFFFB13D), Color(0xFFEC4899)),
+  "nodkrai": AccentPalette("nodkrai", "Nod-Krai · Lune",
+      Color(0xFF5C6BC0), Color(0xFFB8C4F0), Color(0xFF8FD8EA)),
+  "snezhnaya": AccentPalette("snezhnaya", "Snezhnaya · Amour",
+      Color(0xFF8FD8EA), Color(0xFFF6D27A), Color(0xFFDDF7FA)),
 };
 
 AccentPalette paletteOf(String id) =>

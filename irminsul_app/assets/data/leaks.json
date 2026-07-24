@@ -33,6 +33,50 @@
         {"n": "ThePhraseMaker — analyse kit V3", "d": "14 juillet 2026"},
         {"n": "EnjoyGM — récap leaks 7.0", "d": "juillet 2026"}
       ]
+    },
+    {
+      "id": "tsaritsa",
+      "name": "La Tsaritsa (Anastasya)",
+      "element": "cryo",
+      "rarity": 5,
+      "weaponType": "Non confirmé",
+      "expected": "v7.0 (estimée ~12 août 2026, selon leaks)",
+      "kitVersion": "Pré-bêta (très incertain)",
+      "score": 55,
+      "grade": "C · plausible, confirmation insuffisante",
+      "summary": "L'Archonne Cryo en personne — Anastasya Feodorovna, souveraine de Snezhnaya. Les leaks la donnent jouable dès la 7.0 avec l'ouverture officielle de Snezhnaya. Aucun kit fiable n'a fuité à ce jour.",
+      "kit": [
+        {
+          "t": "Kit (aucune fuite fiable)",
+          "d": "Rien de solide n'a filtré sur ses mécaniques. Toute vidéo ou liste de talents circulant actuellement doit être considérée comme fabriquée."
+        }
+      ],
+      "sources": [
+        {"n": "GamsGo / Icy Veins — roadmaps bannières", "d": "juillet 2026"},
+        {"n": "Recoupements multiples leaks 7.0", "d": "juillet 2026"}
+      ]
+    },
+    {
+      "id": "alyosha",
+      "name": "Alyosha",
+      "element": "none",
+      "rarity": 5,
+      "weaponType": "Non confirmé",
+      "expected": "v7.0 (estimée ~12 août 2026, selon leaks)",
+      "kitVersion": "Pré-bêta (très incertain)",
+      "score": 55,
+      "grade": "C · plausible, confirmation insuffisante",
+      "summary": "Nouveau personnage de Snezhnaya annoncé par les leaks pour la 7.0 aux côtés d'Odette. Élément, arme et kit non confirmés.",
+      "kit": [
+        {
+          "t": "Kit (aucune fuite fiable)",
+          "d": "Pas de détails crédibles sur ses mécaniques à ce jour."
+        }
+      ],
+      "sources": [
+        {"n": "Icy Veins — bannières 6.7 & 7.0", "d": "juillet 2026"},
+        {"n": "Recoupements multiples leaks 7.0", "d": "juillet 2026"}
+      ]
     }
   ]
 }

@@ -5,6 +5,7 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 
 import "../../data/characters_repository.dart";
+import "../../data/nations.dart";
 import "../../i18n/strings.dart";
 import "../../services/icon_cache.dart";
 import "../../state/providers.dart";
@@ -56,10 +57,13 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
           l.t("tabMats"),
         ];
 
+        final nation = nationOf(c.region);
         return ElementBackdrop(
           element: c.element,
           intensity: c.rarity == 5 ? 38 : 24,
           golden: c.isArchon,
+          glowA: nation.a,
+          glowB: nation.b,
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(30),
             child: Column(
@@ -275,17 +279,49 @@ class _HeroHeader extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 5),
-                      Text(
-                        [
-                          if (c.title.isNotEmpty) c.title,
-                          c.weaponType,
-                          if (c.region.isNotEmpty) c.region,
-                        ].join(" · "),
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: color,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              [
+                                if (c.title.isNotEmpty) c.title,
+                                c.weaponType,
+                              ].join(" · "),
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: color,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (c.region.isNotEmpty) ...[
+                            const SizedBox(width: 10),
+                            Builder(builder: (context) {
+                              final n = nationOf(c.region);
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [
+                                    n.a.withValues(alpha: 0.30),
+                                    n.b.withValues(alpha: 0.22),
+                                  ]),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                      color: n.a.withValues(alpha: 0.5)),
+                                ),
+                                child: Text(
+                                  "${n.name} · ${n.principle}",
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                        ],
                       ),
                       if (curated != null) ...[
                         const SizedBox(height: 6),

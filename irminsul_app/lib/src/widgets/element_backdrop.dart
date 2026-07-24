@@ -48,12 +48,16 @@ class ElementBackdrop extends StatefulWidget {
   final Widget child;
   final int intensity; // nombre de particules
   final bool golden; // éclats dorés (Archons)
+  final Color? glowA; // teinte d'ambiance (nation) — sinon élément
+  final Color? glowB;
   const ElementBackdrop({
     super.key,
     required this.element,
     required this.child,
     this.intensity = 30,
     this.golden = false,
+    this.glowA,
+    this.glowB,
   });
 
   @override
@@ -102,11 +106,13 @@ class _ElementBackdropState extends State<ElementBackdrop>
       );
     }
     final glow = elementColor(widget.element);
+    final ambA = widget.glowA ?? glow;
+    final ambB = widget.glowB ?? glow;
     final hasSymbol = widget.element != "none";
 
     return Stack(
       children: [
-        // lueur d'ambiance de l'élément (haut de page)
+        // lueur d'ambiance (nation ou élément) — haut de page
         Positioned(
           top: -140,
           left: 60,
@@ -117,8 +123,25 @@ class _ElementBackdropState extends State<ElementBackdrop>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(colors: [
-                  glow.withValues(alpha: 0.13),
-                  glow.withValues(alpha: 0),
+                  ambA.withValues(alpha: 0.14),
+                  ambA.withValues(alpha: 0),
+                ]),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: -160,
+          left: -120,
+          child: IgnorePointer(
+            child: Container(
+              width: 420,
+              height: 420,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(colors: [
+                  ambB.withValues(alpha: 0.10),
+                  ambB.withValues(alpha: 0),
                 ]),
               ),
             ),
