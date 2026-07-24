@@ -6,24 +6,31 @@ import "features/onboarding/onboarding_page.dart";
 import "features/placeholder/placeholder_page.dart";
 import "features/settings/settings_page.dart";
 import "shell/app_shell.dart";
+import "widgets/data_sweep.dart";
 
-/// Transition douce (fondu + léger glissement) — fluidité demandée.
+/// Transition « Irminsul » : fondu + léger glissement, traversés par un
+/// balayage de données (bande d'énergie + nœuds lumineux, couleurs du thème).
 CustomTransitionPage<void> _fade(Widget child) => CustomTransitionPage<void>(
       child: child,
-      transitionDuration: const Duration(milliseconds: 380),
+      transitionDuration: const Duration(milliseconds: 400),
       reverseTransitionDuration: const Duration(milliseconds: 260),
       transitionsBuilder: (context, animation, secondary, child) {
         final curved =
             CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
-        return FadeTransition(
-          opacity: curved,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 0.03),
-              end: Offset.zero,
-            ).animate(curved),
-            child: child,
-          ),
+        return Stack(
+          children: [
+            FadeTransition(
+              opacity: curved,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 0.03),
+                  end: Offset.zero,
+                ).animate(curved),
+                child: child,
+              ),
+            ),
+            Positioned.fill(child: DataSweep(animation: animation)),
+          ],
         );
       },
     );
