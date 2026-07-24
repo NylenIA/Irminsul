@@ -4,7 +4,6 @@ import "package:go_router/go_router.dart";
 
 import "../../i18n/strings.dart";
 import "../../state/providers.dart";
-import "../../theme.dart";
 import "../../widgets/glass_card.dart";
 
 /// Contenu du tableau de bord (la coquille fournit la barre latérale + le fond).
@@ -15,6 +14,7 @@ class DashboardPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L(ref.watch(localeProvider));
     final account = ref.watch(accountProvider);
+    final cs = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.all(30),
@@ -38,10 +38,10 @@ class DashboardPage extends ConsumerWidget {
                   width: 46,
                   height: 46,
                   decoration: BoxDecoration(
-                    color: kPurple.withValues(alpha: 0.18),
+                    color: cs.primary.withValues(alpha: 0.18),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.check_circle, color: kPurple),
+                  child: Icon(Icons.check_circle, color: cs.primary),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -75,7 +75,7 @@ class DashboardPage extends ConsumerWidget {
           GlassCard(
             child: Row(
               children: [
-                const Icon(Icons.auto_awesome, color: kPink),
+                Icon(Icons.auto_awesome, color: cs.secondary),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Text(

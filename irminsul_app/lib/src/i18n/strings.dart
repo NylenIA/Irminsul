@@ -72,5 +72,13 @@ class L {
     "navSettings": {"fr": "Réglages", "en": "Settings"},
     "sectionMain": {"fr": "Principal", "en": "Main"},
     "sectionResources": {"fr": "Ressources", "en": "Resources"},
+    "settingsTheme": {"fr": "Couleur du thème", "en": "Theme color"},
+    "settingsThemeDesc": {
+      "fr":
+          "Choisis l'ambiance de l'app — Sumeru pour la verdure de Nahida, ou une autre région. Le logo Irminsul garde ses couleurs.",
+      "en":
+          "Pick the app's mood — Sumeru for Nahida's greenery, or another region. The Irminsul logo keeps its colors.",
+    },
+    "settingsLanguage": {"fr": "Langue", "en": "Language"},
   };
 }

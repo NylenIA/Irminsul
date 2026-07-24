@@ -14,10 +14,11 @@ class IrminsulApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
+    final palette = paletteOf(ref.watch(accentProvider));
     return MaterialApp.router(
       title: "Irminsul",
       debugShowCheckedModeBanner: false,
-      theme: buildTheme(),
+      theme: buildTheme(palette),
       locale: locale,
       supportedLocales: L.supported,
       localizationsDelegates: const [

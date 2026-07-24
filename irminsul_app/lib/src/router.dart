@@ -4,6 +4,7 @@ import "package:go_router/go_router.dart";
 import "features/dashboard/dashboard_page.dart";
 import "features/onboarding/onboarding_page.dart";
 import "features/placeholder/placeholder_page.dart";
+import "features/settings/settings_page.dart";
 import "shell/app_shell.dart";
 
 /// Transition douce (fondu + léger glissement) — fluidité demandée.
@@ -69,8 +70,7 @@ final appRouter = GoRouter(
         ),
         GoRoute(
           path: "/settings",
-          pageBuilder: (context, state) =>
-              _fade(const PlaceholderPage(tab: "settings")),
+          pageBuilder: (context, state) => _fade(const SettingsPage()),
         ),
       ],
     ),

@@ -8,7 +8,6 @@ import "package:go_router/go_router.dart";
 
 import "../../i18n/strings.dart";
 import "../../state/providers.dart";
-import "../../theme.dart";
 import "../../widgets/aurora_background.dart";
 import "../../widgets/glass_card.dart";
 import "../../widgets/irminsul_logo.dart";
@@ -85,8 +84,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const IrminsulLogo(size: 118),
-                        const SizedBox(height: 20),
+                        const IrminsulLogo(size: 120),
+                        const SizedBox(height: 18),
                         Text(
                           l.t("welcomeTitle"),
                           style: const TextStyle(
@@ -143,12 +142,13 @@ class _ImportGoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return GlassCard(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.upload_file, color: kPurple, size: 28),
+          Icon(Icons.upload_file, color: cs.primary, size: 28),
           const SizedBox(height: 14),
           Text(
             l.t("importGoodTitle"),
@@ -181,12 +181,13 @@ class _ImportEnkaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return GlassCard(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.badge_outlined, color: kPink, size: 28),
+          Icon(Icons.badge_outlined, color: cs.secondary, size: 28),
           const SizedBox(height: 14),
           Text(
             l.t("importEnkaTitle"),
@@ -245,16 +246,20 @@ class _LangToggle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final cs = Theme.of(context).colorScheme;
     Widget chip(String code) {
       final active = current == code;
       return GestureDetector(
-        onTap: () => ref.read(localeProvider.notifier).state = Locale(code),
+        onTap: () {
+          ref.read(localeProvider.notifier).state = Locale(code);
+          persistSetting("lang", code);
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
           margin: const EdgeInsets.only(left: 6),
           decoration: BoxDecoration(
             gradient: active
-                ? const LinearGradient(colors: [kPurple, kPink])
+                ? LinearGradient(colors: [cs.primary, cs.secondary])
                 : null,
             color: active ? null : Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(10),

@@ -3,7 +3,6 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "../../i18n/strings.dart";
 import "../../state/providers.dart";
-import "../../theme.dart";
 
 /// Page « en construction » stylée pour les onglets à venir.
 class PlaceholderPage extends ConsumerWidget {
@@ -16,12 +15,12 @@ class PlaceholderPage extends ConsumerWidget {
     "compare": (Icons.compare_arrows, "navCompare"),
     "guides": (Icons.menu_book, "navGuides"),
     "farm": (Icons.track_changes, "navFarm"),
-    "settings": (Icons.settings, "navSettings"),
   };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L(ref.watch(localeProvider));
+    final cs = Theme.of(context).colorScheme;
     final entry = _meta[tab] ?? (Icons.auto_awesome, "navDashboard");
 
     return Center(
@@ -35,8 +34,8 @@ class PlaceholderPage extends ConsumerWidget {
               shape: BoxShape.circle,
               gradient: LinearGradient(
                 colors: [
-                  kPurple.withValues(alpha: 0.25),
-                  kCyan.withValues(alpha: 0.18),
+                  cs.primary.withValues(alpha: 0.25),
+                  cs.tertiary.withValues(alpha: 0.18),
                 ],
               ),
             ),

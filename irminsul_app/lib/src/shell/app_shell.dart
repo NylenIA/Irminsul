@@ -4,7 +4,6 @@ import "package:go_router/go_router.dart";
 
 import "../i18n/strings.dart";
 import "../state/providers.dart";
-import "../theme.dart";
 import "../widgets/aurora_background.dart";
 import "../widgets/irminsul_logo.dart";
 
@@ -68,6 +67,7 @@ class _Sidebar extends StatelessWidget {
 
   Widget _item(BuildContext context, _NavItem item) {
     final active = location == item.path;
+    final accent = Theme.of(context).colorScheme.primary;
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () => context.go(item.path),
@@ -87,7 +87,7 @@ class _Sidebar extends StatelessWidget {
             Icon(
               item.icon,
               size: 20,
-              color: active ? kPurple : Colors.white.withValues(alpha: 0.7),
+              color: active ? accent : Colors.white.withValues(alpha: 0.7),
             ),
             const SizedBox(width: 12),
             Text(
