@@ -16,16 +16,28 @@
       "summary": "5★ Cryo de Snezhnaya (rapporté). Danseuse qui invoque son double « Solo Reflection » : il alterne des pas de danse (Feather Step / Wing Step) infligeant des DGT Cryo autour de lui.",
       "kit": [
         {
-          "t": "Compétence (rapportée)",
-          "d": "Danse gracieuse : DGT Cryo de zone + invocation du Solo Reflection, qui attaque en alternant Feather Step et Wing Step."
+          "t": "Mécanique signature (rapportée)",
+          "d": "Convertit Cryo + Électro en « Stellar Conduct » et Cryo + Anémo en « Stellar Swirl » (réactions étoilées améliorées), activant des états de Radiance. Son rôle : support off-field qui transforme les réactions de toute l'équipe."
         },
         {
-          "t": "Ultime (rapporté)",
-          "d": "Danse rapide multi-coups, réinvoque le Solo Reflection et accorde le buff « Dream of the Snow Swan » (augmente les dégâts de réaction)."
+          "t": "Compétence — E (rapportée, V3)",
+          "d": "Coup initial : DGT Cryo de zone ~194,5 % ATK, puis invoque son Double de danse qui alterne deux postures — Plume (~77,5 %) et Aile (~92,6 %) en Cryo de zone. Version renforcée (fenêtre de 6 s) : dégâts périodiques ~172,5 % + finisher étoilé (~366 % en Conduct, ~549 % en Swirl). Durée 20 s / recharge 15 s → uptime 100 %."
         },
         {
-          "t": "Mécanique d'équipe (rapportée)",
-          "d": "Convertit pour toute l'équipe Supraconducteur → « Stellar-Conduct » et Tourbillon Cryo → « Stellar-Swirl » (réactions améliorées)."
+          "t": "Ultime — Q (rapporté, V3)",
+          "d": "Trois frappes Cryo de zone (~198,3 % chacune) + coup final ~306,5 % ATK. Accorde +50 % de dégâts de réaction étoilée pendant 20 s et réinvoque le Double. Coût 60 / recharge 15 s."
+        },
+        {
+          "t": "Passifs d'élévation (rapportés)",
+          "d": "1) Stacks « Marvelous Splendor » : +15 % de dégâts étoilés par stack, transférés aux alliés quand elle est off-field. 2) Chaque tranche de 100 ATK au-dessus de 1000 donne +1,5 % de dégâts étoilés (max +30 % à 3000 ATK)."
+        },
+        {
+          "t": "Constellations clés (rapportées, V3)",
+          "d": "C1 : coup étoilé supplémentaire sur l'E renforcé (~300 %/450 %). C2 : +7 % ATK par stack + réduction de RÉS par le Double. C4 : +25 % dégâts étoilés aux alliés + attaques conjointes toutes les 3,5 s. C6 : plus de perte de stacks, +25 % dégâts étoilés alliés / +20 % pour elle."
+        },
+        {
+          "t": "Première lecture TC (rapportée)",
+          "d": "Verdict des analystes sur la V3 : « son C0 est inchangé — toujours aussi fort » ; les ajustements V3 ont surtout renforcé les constellations."
         }
       ],
       "sources": [

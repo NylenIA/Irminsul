@@ -104,7 +104,7 @@ final metaDbProvider = FutureProvider<MetaDb>((ref) async {
               ))
           .toList(),
       rotationSteps:
-          (m["rotation"] as List? ?? const []).cast<String>(),
+          (m["rotationSteps"] as List? ?? const []).cast<String>(),
       combos: m["combos"] as String? ?? "",
     );
   }).toList();
