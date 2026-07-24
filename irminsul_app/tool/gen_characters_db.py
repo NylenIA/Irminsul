@@ -72,6 +72,7 @@ def main() -> None:
     chars_dir = SRC / "French" / "characters"
     talents_dir = SRC / "French" / "talents"
     cons_dir = SRC / "French" / "constellations"
+    en_chars_dir = SRC / "English" / "characters"
 
     out: list[dict] = []
     skipped: list[str] = []
@@ -176,8 +177,17 @@ def main() -> None:
                 if vtal:  # ignore les variantes vides (non sorties)
                     variants.append({"el": el, "talents": vtal, "cons": vcons})
 
+        # ---- clé GOOD (format des scanners : nom EN sans espaces) ----
+        if cid in ("aether", "lumine"):
+            good_key = "Traveler"
+        else:
+            en_file = en_chars_dir / f"{cid}.json"
+            en_name = load(en_file).get("name", "") if en_file.exists() else ""
+            good_key = "".join(ch for ch in en_name if ch.isalnum())
+
         out.append({
             "id": cid,
+            "good": good_key,
             "name": clean(c.get("name")),
             "title": clean(c.get("title")),
             "element": element,

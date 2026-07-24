@@ -165,6 +165,41 @@ class L {
       "fr": "Meilleur build selon la méta actuelle",
       "en": "Best build in the current meta",
     },
+    "teamsSubtitle": {
+      "fr":
+          "Les équipes méta croisées avec TA box — jamais de bricolage : un slot manquant est dit manquant.",
+      "en":
+          "Meta teams crossed with YOUR box — never botched: a missing slot is called missing.",
+    },
+    "teamsNoBox": {
+      "fr": "Importe ta box pour commencer",
+      "en": "Import your box to get started",
+    },
+    "teamsNoBoxDesc": {
+      "fr":
+          "Le Team Builder a besoin de ton fichier GOOD (Inventory Kamera / Genshin Optimizer) : persos, constellations, niveaux et artefacts. L'import Enka (vitrine) ne suffit pas pour le croisement complet.",
+      "en":
+          "The Team Builder needs your GOOD file (Inventory Kamera / Genshin Optimizer): characters, constellations, levels and artifacts. Enka (showcase) is not enough for full matching.",
+    },
+    "teamsNoBoxCta": {"fr": "Importer mon fichier", "en": "Import my file"},
+    "teamsCrossedWith": {"fr": "Croisé avec", "en": "Crossed with"},
+    "teamsComplete": {"fr": "COMPLÈTE", "en": "COMPLETE"},
+    "teamsMissingPrefix": {"fr": "IL TE MANQUE", "en": "MISSING"},
+    "teamsMissingChar": {"fr": "manquant", "en": "missing"},
+    "teamsAlt": {"fr": "ALT", "en": "ALT"},
+    "teamsRotation": {"fr": "Rotation & combos", "en": "Rotation & combos"},
+    "teamsErEst": {"fr": "recharge estimée", "en": "estimated ER"},
+    "teamsErAdvised": {"fr": "· conseillé", "en": "· advised"},
+    "teamsErNote": {
+      "fr": "(estimation artefacts, hors arme)",
+      "en": "(artifacts estimate, weapon excluded)",
+    },
+    "teamsDemoNote": {
+      "fr":
+          "BDD méta de démonstration (5 équipes curées) — elle s'étoffera via la synchro. Le croisement avec ta box, lui, est réel.",
+      "en":
+          "Demo meta DB (5 curated teams) — it will grow via sync. The matching with your box is real.",
+    },
     "leaksSection": {
       "fr": "Leaks · non confirmés",
       "en": "Leaks · unconfirmed",

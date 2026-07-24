@@ -18,6 +18,15 @@ class MissingInfo {
   const MissingInfo(this.character, this.gain);
 }
 
+/// Un slot d'équipe : titulaire + alternatives acceptées + exigence d'ER.
+class TeamSlot {
+  final String id; // id de perso (characters_full)
+  final List<String> alts;
+  final int? er; // % de recharge conseillé (null/0 = pas d'exigence)
+  final String role;
+  const TeamSlot(this.id, this.alts, this.er, this.role);
+}
+
 /// Une équipe méta (démo pour l'instant — BDD curée + gcsim ensuite).
 class MetaTeam {
   final String id;
@@ -30,6 +39,9 @@ class MetaTeam {
   final String note;
   final List<TeamChar> chars;
   final MissingInfo? missing;
+  final List<TeamSlot> slots;
+  final List<String> rotationSteps;
+  final String combos;
 
   const MetaTeam({
     required this.id,
@@ -42,6 +54,9 @@ class MetaTeam {
     required this.note,
     required this.chars,
     required this.missing,
+    required this.slots,
+    required this.rotationSteps,
+    required this.combos,
   });
 }
 
@@ -80,6 +95,17 @@ final metaDbProvider = FutureProvider<MetaDb>((ref) async {
               (m["missing"] as Map)["char"] as String,
               (m["missing"] as Map)["gain"] as String,
             ),
+      slots: (m["slots"] as List? ?? const [])
+          .map((s) => TeamSlot(
+                s["id"] as String,
+                (s["alts"] as List? ?? const []).cast<String>(),
+                (s["er"] as num?)?.toInt(),
+                s["role"] as String? ?? "",
+              ))
+          .toList(),
+      rotationSteps:
+          (m["rotation"] as List? ?? const []).cast<String>(),
+      combos: m["combos"] as String? ?? "",
     );
   }).toList();
   return MetaDb(

@@ -10,7 +10,6 @@
       "half": "1ʳᵉ moitié",
       "badge": "meta",
       "dps": 214800,
-      "rotation": "~20 s",
       "note": "uptime 100 %",
       "chars": [
         {
@@ -34,7 +33,43 @@
           "i": "Xilonen"
         }
       ],
-      "missing": null
+      "missing": null,
+      "slots": [
+        {
+          "id": "mavuika",
+          "alts": [],
+          "er": null,
+          "role": "DPS principal"
+        },
+        {
+          "id": "citlali",
+          "alts": [],
+          "er": 150,
+          "role": "Buff Cryo + bouclier"
+        },
+        {
+          "id": "bennett",
+          "alts": [],
+          "er": 190,
+          "role": "Soin + buff ATK"
+        },
+        {
+          "id": "xilonen",
+          "alts": [
+            "zhongli"
+          ],
+          "er": null,
+          "role": "Shred + confort"
+        }
+      ],
+      "combos": "Reste dans le cercle de Bennett. Repose Xilonen E et Bennett Q à chaque rotation ; Mavuika n'a pas besoin de recharge (Ferveur guerrière).",
+      "rotationSteps": [
+        "Citlali E (application Cryo + bouclier)",
+        "Bennett Q (buff ATK)",
+        "Xilonen E (shred résistances)",
+        "Mavuika E maintenu → Q, puis enchaîne en Flamestrider"
+      ],
+      "rotation": "~20 s"
     },
     {
       "id": "nahida-hb",
@@ -43,7 +78,6 @@
       "half": "2ᵉ moitié",
       "badge": "viable",
       "dps": 168400,
-      "rotation": "~21 s",
       "note": "clear estimé 8★",
       "chars": [
         {
@@ -67,7 +101,43 @@
           "i": "Xingqiu"
         }
       ],
-      "missing": null
+      "missing": null,
+      "slots": [
+        {
+          "id": "nahida",
+          "alts": [],
+          "er": null,
+          "role": "Application Dendro"
+        },
+        {
+          "id": "furina",
+          "alts": [],
+          "er": 180,
+          "role": "Buff + Hydro off-field"
+        },
+        {
+          "id": "raidenshogun",
+          "alts": [],
+          "er": 0,
+          "role": "Déclencheur Hyperbloom (EM)"
+        },
+        {
+          "id": "xingqiu",
+          "alts": [
+            "yelan"
+          ],
+          "er": 200,
+          "role": "Hydro off-field"
+        }
+      ],
+      "combos": "Raiden se joue full Maîtrise élémentaire ici (pas de crit) : ses graines Hyperbloom ignorent le crit. Garde Nahida Q et Furina E actifs en permanence.",
+      "rotationSteps": [
+        "Nahida E (tap) + Q",
+        "Furina E",
+        "Xingqiu E → Q",
+        "Raiden E, puis conduis la rotation (les graines éclosent sur son Electro)"
+      ],
+      "rotation": "~21 s"
     },
     {
       "id": "mavuika-bis",
@@ -76,7 +146,6 @@
       "half": "Ta meilleure version possible",
       "badge": "locked",
       "dps": 240500,
-      "rotation": "~20 s",
       "note": "≈ +12 % vs ta version actuelle",
       "chars": [
         {
@@ -103,7 +172,41 @@
       "missing": {
         "char": "Iansan",
         "gain": "+12 %"
-      }
+      },
+      "slots": [
+        {
+          "id": "mavuika",
+          "alts": [],
+          "er": null,
+          "role": "DPS principal"
+        },
+        {
+          "id": "citlali",
+          "alts": [],
+          "er": 150,
+          "role": "Buff Cryo + bouclier"
+        },
+        {
+          "id": "iansan",
+          "alts": [],
+          "er": null,
+          "role": "Buff ATK Nightsoul"
+        },
+        {
+          "id": "bennett",
+          "alts": [],
+          "er": 190,
+          "role": "Soin + buff ATK"
+        }
+      ],
+      "combos": "Iansan convertit les mouvements Nightsoul de Mavuika en buff d'ATK massif — la version la plus forte du noyau Natlan.",
+      "rotationSteps": [
+        "Citlali E",
+        "Iansan E",
+        "Bennett Q",
+        "Mavuika E → Q, enchaîne en Flamestrider"
+      ],
+      "rotation": "~20 s"
     },
     {
       "id": "furina-mono",
@@ -112,7 +215,6 @@
       "half": "Acte flexible",
       "badge": "viable",
       "dps": 152300,
-      "rotation": "~18 s",
       "note": "valorise la largeur de roster",
       "chars": [
         {
@@ -136,7 +238,43 @@
           "i": "Beidou"
         }
       ],
-      "missing": null
+      "missing": null,
+      "slots": [
+        {
+          "id": "furina",
+          "alts": [],
+          "er": 180,
+          "role": "Moteur Hydro + buff"
+        },
+        {
+          "id": "barbara",
+          "alts": [
+            "kokomi"
+          ],
+          "er": null,
+          "role": "Soin (contre le drain de Furina)"
+        },
+        {
+          "id": "fischl",
+          "alts": [],
+          "er": null,
+          "role": "Sub-DPS Electro"
+        },
+        {
+          "id": "beidou",
+          "alts": [],
+          "er": 200,
+          "role": "Sub-DPS Electro (parade)"
+        }
+      ],
+      "combos": "Team flexible pour le Théâtre : les slots Electro acceptent presque tous tes persos Electro montés.",
+      "rotationSteps": [
+        "Furina E",
+        "Fischl E (Oz)",
+        "Beidou E (parade) → Q",
+        "Barbara E, puis pilote avec le perso de ton choix"
+      ],
+      "rotation": "~18 s"
     },
     {
       "id": "mavuika-onslaught",
@@ -145,7 +283,6 @@
       "half": "Tenue + burst",
       "badge": "meta",
       "dps": 198700,
-      "rotation": "~22 s",
       "note": "survie assurée (Bennett)",
       "chars": [
         {
@@ -169,7 +306,43 @@
           "i": "Zhongli"
         }
       ],
-      "missing": null
+      "missing": null,
+      "slots": [
+        {
+          "id": "mavuika",
+          "alts": [],
+          "er": null,
+          "role": "DPS principal"
+        },
+        {
+          "id": "citlali",
+          "alts": [],
+          "er": 150,
+          "role": "Buff + bouclier"
+        },
+        {
+          "id": "bennett",
+          "alts": [],
+          "er": 190,
+          "role": "Soin + buff"
+        },
+        {
+          "id": "zhongli",
+          "alts": [
+            "xilonen"
+          ],
+          "er": null,
+          "role": "Bouclier + shred"
+        }
+      ],
+      "combos": "Double protection (Zhongli + Citlali) : idéal boss unique — zéro interruption, uptime maximal.",
+      "rotationSteps": [
+        "Zhongli E (bouclier)",
+        "Citlali E",
+        "Bennett Q",
+        "Mavuika E → Q, burst prolongé sur le boss"
+      ],
+      "rotation": "~22 s"
     }
   ]
 }

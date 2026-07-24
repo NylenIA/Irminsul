@@ -1,4 +1,3 @@
-import "dart:convert";
 import "dart:io";
 
 import "package:file_picker/file_picker.dart";
@@ -7,6 +6,7 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 
 import "../../i18n/strings.dart";
+import "../../services/box_service.dart";
 import "../../services/enka_service.dart";
 import "../../state/providers.dart";
 import "../../widgets/aurora_background.dart";
@@ -62,16 +62,17 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       if (path == null) return;
 
       final content = await File(path).readAsString();
-      final dynamic data = jsonDecode(content);
-      var count = 0;
-      if (data is Map && data["characters"] is List) {
-        count = (data["characters"] as List).length;
-      }
+      final name = res!.files.single.name;
+      // parse complet (persos, constellations, niveaux, ER artefacts)…
+      final box = BoxService.parse(content, label: name);
+      // …et persistance locale : la box survit au redémarrage.
+      await BoxService.save(content, name);
+      ref.invalidate(boxProvider);
 
       ref.read(accountProvider.notifier).state = AccountSummary(
         source: "GOOD",
-        label: res!.files.single.name,
-        characterCount: count,
+        label: name,
+        characterCount: box.count,
       );
       if (mounted) context.go("/dashboard");
     } catch (e) {

@@ -2,6 +2,8 @@ import "package:flutter/widgets.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
+import "../services/box_service.dart";
+
 /// Langue courante (FR par défaut ; surchargée au démarrage si sauvegardée).
 final localeProvider = StateProvider<Locale>((ref) => const Locale("fr"));
 
@@ -34,3 +36,8 @@ class AccountSummary {
 
 /// null = aucun compte importé.
 final accountProvider = StateProvider<AccountSummary?>((ref) => null);
+
+/// La box complète du joueur (GOOD sauvegardé sur disque, rechargé au
+/// démarrage). null = pas encore importée. Invalider après un import.
+final boxProvider =
+    FutureProvider<PlayerBox?>((ref) => BoxService.loadSaved());
