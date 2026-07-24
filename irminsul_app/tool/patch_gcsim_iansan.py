@@ -41,6 +41,42 @@ def extract_new_files(patch_text: str, prefix: str) -> dict[str, str]:
     return out
 
 
+def modernize(content: str) -> str:
+    """Adapte le code d'il y a un an aux API actuelles de gcsim.
+
+    Constaté en CI : seuls deux packages ont été SUPPRIMÉS depuis la PR —
+    `pkg/core/geometry` et `pkg/core/targets`, fusionnés dans `pkg/core/info`
+    (geometry.Point -> info.Point, targets.TargettableEnemy ->
+    info.TargettableEnemy). Réécriture + dédoublonnage d'imports.
+    """
+    content = content.replace(
+        '"github.com/genshinsim/gcsim/pkg/core/geometry"',
+        '"github.com/genshinsim/gcsim/pkg/core/info"',
+    ).replace(
+        '"github.com/genshinsim/gcsim/pkg/core/targets"',
+        '"github.com/genshinsim/gcsim/pkg/core/info"',
+    )
+    content = re.sub(r"\bgeometry\.", "info.", content)
+    content = re.sub(r"\btargets\.", "info.", content)
+    # dédoublonne les lignes d'import identiques (bloc import multi-lignes)
+    lines = content.split("\n")
+    seen_imports: set[str] = set()
+    out_lines: list[str] = []
+    in_block = False
+    for line in lines:
+        if line.startswith("import ("):
+            in_block = True
+            seen_imports.clear()
+        elif in_block and line.startswith(")"):
+            in_block = False
+        if in_block and line.strip().startswith('"') and line.strip() in seen_imports:
+            continue
+        if in_block and line.strip().startswith('"'):
+            seen_imports.add(line.strip())
+        out_lines.append(line)
+    return "\n".join(out_lines)
+
+
 def insert_sorted_triple(keys_file: Path) -> None:
     """Insere Iansan dans les 3 listes ALIGNEES de character.dm.go.
 
@@ -105,8 +141,10 @@ def main() -> None:
     for rel, content in files.items():
         dest = gcsim / rel
         dest.parent.mkdir(parents=True, exist_ok=True)
+        if rel.endswith(".go"):
+            content = modernize(content)
         dest.write_text(content, encoding="utf-8")
-    print(f"{len(files)} fichiers du perso ecrits")
+    print(f"{len(files)} fichiers du perso ecrits (API modernisees)")
 
     # 2) enregistrements (format actuel *.dm.go)
     insert_sorted_triple(gcsim / "pkg/core/keys/character.dm.go")
