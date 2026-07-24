@@ -52,21 +52,53 @@ jobs:
           go-version: stable
           cache: false
 
-      # Compilé depuis la DERNIÈRE source (persos plus récents que la release
-      # officielle, ex. Columbina). Repli : release officielle si le build casse.
-      - name: Build gcsim engine from latest source
+      # Compilé depuis la DERNIÈRE source + PRs communautaires en attente :
+      #   #2668 Varka (mainteneur core, merge propre)
+      #   #2374 Iansan (adaptée via tool/patch_gcsim_iansan.py — fichiers déplacés)
+      # Replis en cascade : sans Iansan -> main pur -> release officielle.
+      - name: Build gcsim engine (latest source + community PRs)
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git clone --depth 1 https://github.com/genshinsim/gcsim gcsim-src
+          $out = "build/windows/x64/runner/Release/gcsim.exe"
+          git clone --depth 50 https://github.com/genshinsim/gcsim gcsim-src
           Push-Location gcsim-src
-          go build -o ../build/windows/x64/runner/Release/gcsim.exe ./cmd/gcsim
-          $ok = $LASTEXITCODE -eq 0
+          git config user.email "ci@irminsul.local"
+          git config user.name "irminsul-ci"
+          # --- PR Varka (#2668) ---
+          git fetch --depth 50 origin pull/2668/head:pr-varka
+          git merge pr-varka --no-edit
+          if ($LASTEXITCODE -ne 0) { git merge --abort; Write-Host "varka: merge KO, skip" }
           Pop-Location
-          if (-not $ok -or -not (Test-Path "build/windows/x64/runner/Release/gcsim.exe")) {
-            Write-Host "Build source KO -> repli sur la release officielle"
-            Invoke-WebRequest -Uri "https://github.com/genshinsim/gcsim/releases/latest/download/gcsim_windows_amd64.exe" -OutFile "build/windows/x64/runner/Release/gcsim.exe"
+          # --- PR Iansan (#2374), adaptée au layout actuel ---
+          gh pr diff 2374 --repo genshinsim/gcsim | Out-File -Encoding utf8 iansan.diff
+          python tool/patch_gcsim_iansan.py gcsim-src iansan.diff
+          $iansanOk = $LASTEXITCODE -eq 0
+          if ($iansanOk) { python tool/check_keys_alignment.py gcsim-src; $iansanOk = $LASTEXITCODE -eq 0 }
+          if (-not $iansanOk) {
+            Write-Host "iansan: patch/alignement KO, retrait"
+            Push-Location gcsim-src; git checkout -- .; git clean -fd internal/characters/iansan; Pop-Location
           }
-          if ((Get-Item "build/windows/x64/runner/Release/gcsim.exe").Length -lt 1000000) { throw "gcsim.exe missing" }
+          # --- build, avec replis ---
+          Push-Location gcsim-src
+          go build -o ../$out ./cmd/gcsim
+          if ($LASTEXITCODE -ne 0 -and $iansanOk) {
+            Write-Host "build KO avec iansan -> retrait et retry"
+            git checkout -- .; git clean -fd internal/characters/iansan
+            go build -o ../$out ./cmd/gcsim
+          }
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "build KO avec PRs -> main pur"
+            git reset --hard origin/main; git clean -fd
+            go build -o ../$out ./cmd/gcsim
+          }
+          Pop-Location
+          if (-not (Test-Path $out)) {
+            Write-Host "build source KO -> release officielle"
+            Invoke-WebRequest -Uri "https://github.com/genshinsim/gcsim/releases/latest/download/gcsim_windows_amd64.exe" -OutFile $out
+          }
+          if ((Get-Item $out).Length -lt 1000000) { throw "gcsim.exe missing" }
 
       - name: Package (zip)
         run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath Irminsul-windows.zip -Force
