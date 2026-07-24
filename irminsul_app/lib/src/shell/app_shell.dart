@@ -2,10 +2,29 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 
+// (couleurs de teinte par onglet définies dans _tintFor)
+
 import "../i18n/strings.dart";
 import "../state/providers.dart";
 import "../widgets/aurora_background.dart";
 import "../widgets/irminsul_logo.dart";
+
+/// Teintes d'ambiance par onglet (cohérence de section).
+(Color?, Color?) _tintFor(String location) {
+  if (location.startsWith("/guides")) {
+    return (const Color(0xFF5DBB63), const Color(0xFF2DD4BF)); // Gazette : verdure
+  }
+  if (location.startsWith("/teams")) {
+    return (const Color(0xFFEC4899), const Color(0xFFA78BFA));
+  }
+  if (location.startsWith("/compare")) {
+    return (const Color(0xFF22D3EE), const Color(0xFF3FB6FF));
+  }
+  if (location.startsWith("/farm")) {
+    return (const Color(0xFFF2C14E), const Color(0xFFF59E0B));
+  }
+  return (null, null); // thème de l'utilisateur
+}
 
 /// Coquille persistante : barre latérale + contenu de l'onglet actif.
 class AppShell extends ConsumerWidget {
@@ -16,8 +35,11 @@ class AppShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L(ref.watch(localeProvider));
+    final (tintA, tintB) = _tintFor(location);
     return Scaffold(
       body: AuroraBackground(
+        tintA: tintA,
+        tintB: tintB,
         child: Row(
           children: [
             _Sidebar(l: l, location: location),

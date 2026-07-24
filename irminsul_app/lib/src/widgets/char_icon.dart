@@ -49,7 +49,8 @@ class CharIcon extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: FutureBuilder<File?>(
-        future: IconCache.get(icon),
+        future: IconCache.get(
+            icon.startsWith("UI_") ? icon : "UI_AvatarIcon_$icon"),
         builder: (context, snap) {
           final file = snap.data;
           if (file == null) {

@@ -140,5 +140,24 @@ class L {
     "syncUpToDate": {"fr": "Données à jour", "en": "Data up to date"},
     "syncUpdate": {"fr": "Màj méta dispo :", "en": "Meta update available:"},
     "syncOffline": {"fr": "Hors-ligne", "en": "Offline"},
+    "searchHint": {"fr": "Rechercher un personnage…", "en": "Search a character…"},
+    "tabBuild": {"fr": "Build", "en": "Build"},
+    "tabTalents": {"fr": "Aptitudes", "en": "Talents"},
+    "tabCons": {"fr": "Constellations", "en": "Constellations"},
+    "tabMats": {"fr": "Matériaux", "en": "Materials"},
+    "buildSoon": {
+      "fr":
+          "Build curé à venir via la synchro méta. Les données du jeu (aptitudes, constellations, matériaux) sont déjà complètes ci-contre.",
+      "en":
+          "Curated build coming via meta sync. Game data (talents, constellations, materials) is already complete here.",
+    },
+    "matAsc": {"fr": "Élévation du personnage", "en": "Character ascension"},
+    "matTal": {"fr": "Amélioration des aptitudes", "en": "Talent upgrades"},
+    "gameDataNote": {
+      "fr":
+          "Données du jeu (genshin-db, FR officiel) — noms et descriptions exacts, 120 personnages.",
+      "en":
+          "Game data (genshin-db, official FR) — exact names and descriptions, 120 characters.",
+    },
   };
 }

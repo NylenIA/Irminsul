@@ -25,10 +25,14 @@ CustomTransitionPage<void> _fade(Widget child) => CustomTransitionPage<void>(
               opacity: curved,
               child: SlideTransition(
                 position: Tween<Offset>(
-                  begin: const Offset(0, 0.03),
+                  begin: const Offset(0.035, 0.02),
                   end: Offset.zero,
                 ).animate(curved),
-                child: child,
+                child: ScaleTransition(
+                  scale: Tween<double>(begin: 0.985, end: 1).animate(curved),
+                  alignment: Alignment.center,
+                  child: child,
+                ),
               ),
             ),
             Positioned.fill(child: DataSweep(animation: animation)),
