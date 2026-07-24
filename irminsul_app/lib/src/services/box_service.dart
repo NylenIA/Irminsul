@@ -178,6 +178,17 @@ class BoxService {
     await m.writeAsString(jsonEncode({"label": label}));
   }
 
+  /// Contenu GOOD brut sauvegardé (pour la génération de configs gcsim).
+  static Future<String?> readSavedRaw() async {
+    try {
+      final f = await _file(_fileName);
+      if (!await f.exists()) return null;
+      return await f.readAsString();
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// Recharge la box sauvegardée (null si aucune).
   static Future<PlayerBox?> loadSaved(
       {Map<String, List<double>> erWeapons = const {}}) async {

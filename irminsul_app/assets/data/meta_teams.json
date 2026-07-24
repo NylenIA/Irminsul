@@ -154,7 +154,16 @@
         "Xingqiu E → Q",
         "Raiden E, puis conduis la rotation (les graines éclosent sur son Electro)"
       ],
-      "rotation": "~21 s"
+      "rotation": "~21 s",
+      "gcsim": {
+        "chars": [
+          "Nahida",
+          "Furina",
+          "Xingqiu",
+          "RaidenShogun"
+        ],
+        "rotation": "while 1 {\n    nahida skill, burst;\n    furina skill;\n    xingqiu skill, burst;\n    raiden skill;\n    raiden attack:10;\n    nahida skill;\n    furina attack:2;\n    xingqiu attack:2;\n    raiden attack:8;\n}"
+      }
     },
     {
       "id": "mavuika-bis",
@@ -545,7 +554,16 @@
           "e": "pyro",
           "i": "Bennett"
         }
-      ]
+      ],
+      "gcsim": {
+        "chars": [
+          "Bennett",
+          "Xiangling",
+          "Xingqiu",
+          "RaidenShogun"
+        ],
+        "rotation": "while 1 {\n    bennett skill, burst;\n    xiangling burst, skill;\n    xingqiu skill, burst;\n    raiden skill;\n    raiden burst;\n    raiden attack:8;\n    raiden skill;\n    bennett attack, skill;\n    xiangling attack, skill;\n    xingqiu attack:2;\n}"
+      }
     },
     {
       "id": "hutao-double-hydro",

@@ -43,6 +43,11 @@ jobs:
       - name: Build Windows (release)
         run: flutter build windows --release
 
+      - name: Bundle gcsim engine
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/genshinsim/gcsim/releases/latest/download/gcsim_windows_amd64.exe" -OutFile "build/windows/x64/runner/Release/gcsim.exe"
+          if ((Get-Item "build/windows/x64/runner/Release/gcsim.exe").Length -lt 1000000) { throw "gcsim.exe download failed" }
+
       - name: Package (zip)
         run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath Irminsul-windows.zip -Force
 

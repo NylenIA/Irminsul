@@ -45,6 +45,9 @@ class MetaTeam {
   final List<String> rotationSteps;
   final String combos;
 
+  /// Template gcsim validé (null = pas encore de simulation pour cette équipe).
+  final GcsimTemplateData? gcsim;
+
   const MetaTeam({
     required this.id,
     required this.mode,
@@ -59,7 +62,15 @@ class MetaTeam {
     required this.slots,
     required this.rotationSteps,
     required this.combos,
+    required this.gcsim,
   });
+}
+
+/// Données brutes du template gcsim (clés GOOD + script de rotation).
+class GcsimTemplateData {
+  final List<String> chars;
+  final String rotation;
+  const GcsimTemplateData(this.chars, this.rotation);
 }
 
 class MetaDb {
@@ -109,6 +120,12 @@ final metaDbProvider = FutureProvider<MetaDb>((ref) async {
       rotationSteps:
           (m["rotationSteps"] as List? ?? const []).cast<String>(),
       combos: m["combos"] as String? ?? "",
+      gcsim: m["gcsim"] == null
+          ? null
+          : GcsimTemplateData(
+              ((m["gcsim"] as Map)["chars"] as List).cast<String>(),
+              (m["gcsim"] as Map)["rotation"] as String,
+            ),
     );
   }).toList();
   return MetaDb(

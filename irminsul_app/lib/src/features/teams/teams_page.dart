@@ -6,6 +6,7 @@ import "../../data/characters_repository.dart";
 import "../../data/meta_repository.dart";
 import "../../data/team_matcher.dart";
 import "../../i18n/strings.dart";
+import "../../services/gcsim_service.dart";
 import "../../state/providers.dart";
 import "../../widgets/char_icon.dart";
 import "../../widgets/glass_card.dart";
@@ -395,6 +396,12 @@ class _TeamMatchCard extends StatelessWidget {
               ),
             ],
 
+            // ---- simulation gcsim (vrai DPS sur les builds du joueur) ----
+            if (t.gcsim != null && match.complete) ...[
+              const SizedBox(height: 12),
+              _SimSection(template: t.gcsim!, l: l),
+            ],
+
             // ---- rotation + combos ----
             if (t.rotationSteps.isNotEmpty) ...[
               const SizedBox(height: 6),
@@ -551,6 +558,148 @@ class _InfoBlock extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Bouton + résultat de la simulation gcsim sur les builds réels du joueur.
+class _SimSection extends StatefulWidget {
+  final GcsimTemplateData template;
+  final L l;
+  const _SimSection({required this.template, required this.l});
+
+  @override
+  State<_SimSection> createState() => _SimSectionState();
+}
+
+class _SimSectionState extends State<_SimSection> {
+  bool _running = false;
+  SimResult? _result;
+  String? _error;
+
+  Future<void> _run() async {
+    setState(() {
+      _running = true;
+      _error = null;
+    });
+    try {
+      final r = await GcsimService.run(
+        GcsimTemplate(widget.template.chars, widget.template.rotation),
+      );
+      if (mounted) setState(() => _result = r);
+    } catch (e) {
+      if (mounted) setState(() => _error = e.toString());
+    } finally {
+      if (mounted) setState(() => _running = false);
+    }
+  }
+
+  static String _fmt(num v) {
+    final s = v.round().toString();
+    final b = StringBuffer();
+    for (var i = 0; i < s.length; i++) {
+      if (i > 0 && (s.length - i) % 3 == 0) b.write(" ");
+      b.write(s[i]);
+    }
+    return b.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final l = widget.l;
+
+    if (_result != null) {
+      final r = _result!;
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [
+            cs.primary.withValues(alpha: 0.14),
+            cs.tertiary.withValues(alpha: 0.08),
+          ]),
+          borderRadius: BorderRadius.circular(13),
+          border: Border.all(color: cs.primary.withValues(alpha: 0.4)),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.bolt, color: cs.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        _fmt(r.dps),
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: cs.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 3),
+                        child: Text(
+                          "${l.t("simDpsLabel")} · "
+                          "min ${_fmt(r.dpsMin)} / max ${_fmt(r.dpsMax)}",
+                          style: TextStyle(
+                            fontSize: 11.5,
+                            color: Colors.white.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    "${r.iterations} ${l.t("simNote")}",
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.white.withValues(alpha: 0.45),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: _running ? null : _run,
+              child: Text(l.t("simAgain")),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        FilledButton.icon(
+          onPressed: _running ? null : _run,
+          icon: _running
+              ? const SizedBox(
+                  width: 15,
+                  height: 15,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.speed, size: 18),
+          label: Text(_running ? l.t("simRunning") : l.t("simButton")),
+        ),
+        if (_error != null) ...[
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              _error!,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 11.5, color: _amber),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

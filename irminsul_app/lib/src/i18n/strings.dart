@@ -194,6 +194,25 @@ class L {
       "fr": "(artefacts + arme, depuis ton GOOD)",
       "en": "(artifacts + weapon, from your GOOD)",
     },
+    "simButton": {
+      "fr": "Simuler mon vrai DPS (gcsim)",
+      "en": "Simulate my real DPS (gcsim)",
+    },
+    "simRunning": {
+      "fr": "Simulation en cours… (~10-30 s)",
+      "en": "Simulating… (~10-30 s)",
+    },
+    "simAgain": {"fr": "Relancer", "en": "Run again"},
+    "simDpsLabel": {
+      "fr": "DPS simulé sur TES builds",
+      "en": "DPS simulated on YOUR builds",
+    },
+    "simNote": {
+      "fr":
+          "itérations · rotation standard simplifiée · moteur gcsim · à affiner via la synchro",
+      "en":
+          "iterations · simplified standard rotation · gcsim engine · refined via sync",
+    },
     "teamsReady": {"fr": "PRÊTE", "en": "READY"},
     "teamsReadyOf": {"fr": "sur", "en": "of"},
     "teamsPlayableNow": {
