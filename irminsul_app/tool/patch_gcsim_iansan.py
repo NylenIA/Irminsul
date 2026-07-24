@@ -185,8 +185,29 @@ def main() -> None:
         dest.parent.mkdir(parents=True, exist_ok=True)
         if rel.endswith(".go"):
             content = modernize(content)
+        if rel.endswith("iansan_gen.go"):
+            # Le gcsim actuel lit tout (élément, stats de base, courbes, coût
+            # d'ulti) dans catalog.CharacterMap — le package parse déjà le
+            # même proto : on enregistre l'objet tel quel (pattern identique à
+            # pkg/testhelper). Sans ça : nil pointer dans parser.newChar.
+            content = content.replace(
+                "import (",
+                'import (\n'
+                '\t"github.com/genshinsim/gcsim/pkg/catalog"\n'
+                '\t"github.com/genshinsim/gcsim/pkg/core/keys"\n',
+                1,
+            )
+            content = content.replace(
+                "\t\tpanic(err)\n\t}\n}",
+                "\t\tpanic(err)\n\t}\n"
+                "\tcatalog.CharacterMap[keys.Iansan] = base\n}",
+                1,
+            )
+            if "catalog.CharacterMap[keys.Iansan]" not in content:
+                raise SystemExit(
+                    "iansan_gen.go : injection catalog manquée (structure ?)")
         dest.write_text(content, encoding="utf-8")
-    print(f"{len(files)} fichiers du perso ecrits (API modernisees)")
+    print(f"{len(files)} fichiers du perso ecrits (API modernisees + catalog)")
 
     # 2) enregistrements (format actuel *.dm.go)
     insert_sorted_triple(gcsim / "pkg/core/keys/character.dm.go")
