@@ -1,0 +1,92 @@
+{
+  "metaVersion": "6.2",
+  "dataKind": "DEMO",
+  "comment": "Données de DÉMONSTRATION (theorycraft indicatif) — remplacées par la BDD méta curée + moteur gcsim (Étape 3/4).",
+  "teams": [
+    {
+      "id": "mavuika-hc",
+      "mode": "abyss",
+      "name": "Mavuika Hypercarry",
+      "half": "1ʳᵉ moitié",
+      "badge": "meta",
+      "dps": 214800,
+      "rotation": "~20 s",
+      "note": "uptime 100 %",
+      "chars": [
+        {"n": "Mavuika", "e": "pyro"},
+        {"n": "Citlali", "e": "cryo"},
+        {"n": "Bennett", "e": "pyro"},
+        {"n": "Xilonen", "e": "geo"}
+      ],
+      "missing": null
+    },
+    {
+      "id": "nahida-hb",
+      "mode": "abyss",
+      "name": "Nahida Hyperbloom",
+      "half": "2ᵉ moitié",
+      "badge": "viable",
+      "dps": 168400,
+      "rotation": "~21 s",
+      "note": "clear estimé 8★",
+      "chars": [
+        {"n": "Nahida", "e": "dendro"},
+        {"n": "Furina", "e": "hydro"},
+        {"n": "Raiden", "e": "electro"},
+        {"n": "Xingqiu", "e": "hydro"}
+      ],
+      "missing": null
+    },
+    {
+      "id": "mavuika-bis",
+      "mode": "abyss",
+      "name": "Mavuika BiS — Citlali · Iansan · Bennett",
+      "half": "Ta meilleure version possible",
+      "badge": "locked",
+      "dps": 240500,
+      "rotation": "~20 s",
+      "note": "≈ +12 % vs ta version actuelle",
+      "chars": [
+        {"n": "Mavuika", "e": "pyro"},
+        {"n": "Citlali", "e": "cryo"},
+        {"n": "Iansan", "e": "electro"},
+        {"n": "Bennett", "e": "pyro"}
+      ],
+      "missing": {"char": "Iansan", "gain": "+12 %"}
+    },
+    {
+      "id": "furina-mono",
+      "mode": "theater",
+      "name": "Furina Flex Hydro",
+      "half": "Acte flexible",
+      "badge": "viable",
+      "dps": 152300,
+      "rotation": "~18 s",
+      "note": "valorise la largeur de roster",
+      "chars": [
+        {"n": "Furina", "e": "hydro"},
+        {"n": "Barbara", "e": "hydro"},
+        {"n": "Fischl", "e": "electro"},
+        {"n": "Beidou", "e": "electro"}
+      ],
+      "missing": null
+    },
+    {
+      "id": "mavuika-onslaught",
+      "mode": "onslaught",
+      "name": "Mavuika Burst — boss unique",
+      "half": "Tenue + burst",
+      "badge": "meta",
+      "dps": 198700,
+      "rotation": "~22 s",
+      "note": "survie assurée (Bennett)",
+      "chars": [
+        {"n": "Mavuika", "e": "pyro"},
+        {"n": "Citlali", "e": "cryo"},
+        {"n": "Bennett", "e": "pyro"},
+        {"n": "Zhongli", "e": "geo"}
+      ],
+      "missing": null
+    }
+  ]
+}

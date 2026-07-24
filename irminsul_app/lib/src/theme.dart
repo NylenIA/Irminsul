@@ -46,6 +46,19 @@ const accentPalettes = <String, AccentPalette>{
 AccentPalette paletteOf(String id) =>
     accentPalettes[id] ?? accentPalettes["irminsul"]!;
 
+/// Couleurs des éléments Genshin (anneaux des portraits, accents des teams).
+const elementColors = <String, Color>{
+  "pyro": Color(0xFFFF6A4D),
+  "hydro": Color(0xFF3FB6FF),
+  "electro": Color(0xFFB98BFF),
+  "cryo": Color(0xFF8FE3EA),
+  "anemo": Color(0xFF6FD6B6),
+  "geo": Color(0xFFF2C14E),
+  "dendro": Color(0xFF9AD24F),
+};
+
+Color elementColor(String e) => elementColors[e] ?? kPurple;
+
 ThemeData buildTheme(AccentPalette p) {
   final scheme = ColorScheme.fromSeed(
     seedColor: p.primary,

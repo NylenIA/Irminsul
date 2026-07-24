@@ -7,6 +7,7 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 
 import "../../i18n/strings.dart";
+import "../../services/enka_service.dart";
 import "../../state/providers.dart";
 import "../../widgets/aurora_background.dart";
 import "../../widgets/glass_card.dart";
@@ -21,11 +22,34 @@ class OnboardingPage extends ConsumerStatefulWidget {
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   final _uid = TextEditingController();
+  bool _enkaLoading = false;
 
   @override
   void dispose() {
     _uid.dispose();
     super.dispose();
+  }
+
+  Future<void> _importEnka(L l) async {
+    if (_enkaLoading) return;
+    setState(() => _enkaLoading = true);
+    try {
+      final r = await EnkaService().fetch(_uid.text);
+      ref.read(accountProvider.notifier).state = AccountSummary(
+        source: "Enka",
+        label: "UID ${_uid.text.trim()}",
+        characterCount: r.characterCount,
+        playerName: r.nickname,
+      );
+      if (mounted) context.go("/dashboard");
+    } on EnkaException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message)));
+      }
+    } finally {
+      if (mounted) setState(() => _enkaLoading = false);
+    }
   }
 
   Future<void> _importGood(L l) async {
@@ -118,7 +142,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                             ),
                             SizedBox(
                               width: 400,
-                              child: _ImportEnkaCard(l: l, controller: _uid),
+                              child: _ImportEnkaCard(
+                                l: l,
+                                controller: _uid,
+                                loading: _enkaLoading,
+                                onSubmit: () => _importEnka(l),
+                              ),
                             ),
                           ],
                         ),
@@ -177,7 +206,14 @@ class _ImportGoodCard extends StatelessWidget {
 class _ImportEnkaCard extends StatelessWidget {
   final L l;
   final TextEditingController controller;
-  const _ImportEnkaCard({required this.l, required this.controller});
+  final bool loading;
+  final VoidCallback onSubmit;
+  const _ImportEnkaCard({
+    required this.l,
+    required this.controller,
+    required this.loading,
+    required this.onSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -201,6 +237,7 @@ class _ImportEnkaCard extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.6),
             ),
           ),
+          const SizedBox(height: 4),
           const SizedBox(height: 18),
           Row(
             children: [
@@ -225,12 +262,14 @@ class _ImportEnkaCard extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               FilledButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l.t("enkaComingSoon"))),
-                  );
-                },
-                child: Text(l.t("importEnkaButton")),
+                onPressed: loading ? null : onSubmit,
+                child: loading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(l.t("importEnkaButton")),
               ),
             ],
           ),

@@ -1,0 +1,88 @@
+import "dart:convert";
+
+import "package:flutter/services.dart" show rootBundle;
+import "package:flutter_riverpod/flutter_riverpod.dart";
+
+/// Un personnage d'une équipe méta.
+class TeamChar {
+  final String name;
+  final String element;
+  const TeamChar(this.name, this.element);
+}
+
+/// Ce qui manque au joueur pour débloquer la team.
+class MissingInfo {
+  final String character;
+  final String gain;
+  const MissingInfo(this.character, this.gain);
+}
+
+/// Une équipe méta (démo pour l'instant — BDD curée + gcsim ensuite).
+class MetaTeam {
+  final String id;
+  final String mode; // abyss | theater | onslaught
+  final String name;
+  final String half;
+  final String badge; // meta | viable | locked
+  final int dps;
+  final String rotation;
+  final String note;
+  final List<TeamChar> chars;
+  final MissingInfo? missing;
+
+  const MetaTeam({
+    required this.id,
+    required this.mode,
+    required this.name,
+    required this.half,
+    required this.badge,
+    required this.dps,
+    required this.rotation,
+    required this.note,
+    required this.chars,
+    required this.missing,
+  });
+}
+
+class MetaDb {
+  final String metaVersion;
+  final String dataKind;
+  final List<MetaTeam> teams;
+  const MetaDb(this.metaVersion, this.dataKind, this.teams);
+
+  List<MetaTeam> byMode(String mode) =>
+      teams.where((t) => t.mode == mode).toList();
+}
+
+/// Charge la BDD méta embarquée (assets/data/meta_teams.json).
+final metaDbProvider = FutureProvider<MetaDb>((ref) async {
+  final raw = await rootBundle.loadString("assets/data/meta_teams.json");
+  final json = jsonDecode(raw) as Map<String, dynamic>;
+  final teams = (json["teams"] as List).map((t) {
+    final m = t as Map<String, dynamic>;
+    return MetaTeam(
+      id: m["id"] as String,
+      mode: m["mode"] as String,
+      name: m["name"] as String,
+      half: m["half"] as String? ?? "",
+      badge: m["badge"] as String,
+      dps: m["dps"] as int,
+      rotation: m["rotation"] as String? ?? "",
+      note: m["note"] as String? ?? "",
+      chars: (m["chars"] as List)
+          .map((c) => TeamChar(c["n"] as String, c["e"] as String))
+          .toList(),
+      missing: m["missing"] == null
+          ? null
+          : MissingInfo(
+              (m["missing"] as Map)["char"] as String,
+              (m["missing"] as Map)["gain"] as String,
+            ),
+    );
+  }).toList();
+  return MetaDb(
+    json["metaVersion"] as String,
+    json["dataKind"] as String? ?? "DEMO",
+    teams,
+  );
+});

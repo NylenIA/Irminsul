@@ -35,8 +35,10 @@ class L {
     "importGoodButton": {"fr": "Choisir un fichier", "en": "Choose a file"},
     "importEnkaTitle": {"fr": "Ou utilise ton UID", "en": "Or use your UID"},
     "importEnkaDesc": {
-      "fr": "Récupère ta vitrine via Enka.network (bientôt).",
-      "en": "Fetch your showcase via Enka.network (coming soon).",
+      "fr":
+          "Récupère ta vitrine via Enka.network (les persos affichés dans ta vitrine en jeu).",
+      "en":
+          "Fetch your showcase via Enka.network (the characters shown in your in-game showcase).",
     },
     "importEnkaHint": {"fr": "ex. 700000001", "en": "e.g. 700000001"},
     "importEnkaButton": {"fr": "Récupérer", "en": "Fetch"},
@@ -80,5 +82,30 @@ class L {
           "Pick the app's mood — Sumeru for Nahida's greenery, or another region. The Irminsul logo keeps its colors.",
     },
     "settingsLanguage": {"fr": "Langue", "en": "Language"},
+    "greetingName": {"fr": "Bonjour,", "en": "Hello,"},
+    "bestTeamsFor": {
+      "fr": "Tes meilleures équipes",
+      "en": "Your best teams",
+    },
+    "modeAbyss": {"fr": "Abîme", "en": "Abyss"},
+    "modeTheater": {"fr": "Théâtre", "en": "Theater"},
+    "modeOnslaught": {"fr": "Carnage", "en": "Onslaught"},
+    "dpsPerRotation": {"fr": "DPS / rotation", "en": "DPS / rotation"},
+    "rotationLabel": {"fr": "Rotation", "en": "Rotation"},
+    "badgeMeta": {"fr": "MÉTA", "en": "META"},
+    "badgeViable": {"fr": "VIABLE", "en": "VIABLE"},
+    "badgeLocked": {"fr": "IL TE MANQUE", "en": "MISSING"},
+    "missingPrefix": {"fr": "Il te manque", "en": "You're missing"},
+    "missingSuffix": {
+      "fr": "de DPS en plus. On ne bricole pas de team à tout prix.",
+      "en": "more DPS. We never botch a team just to fill slots.",
+    },
+    "demoDataNote": {
+      "fr":
+          "Données de démonstration (theorycraft indicatif) — moteur gcsim et BDD méta curée à venir.",
+      "en":
+          "Demo data (indicative theorycraft) — gcsim engine and curated meta DB coming.",
+    },
+    "enkaLoading": {"fr": "Récupération…", "en": "Fetching…"},
   };
 }

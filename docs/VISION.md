@@ -95,6 +95,11 @@ navigation, graphes épurés et animés) — **version Genshin**. *(réfs Pinter
 - **Densité** : riche mais **respirant** (cartes séparées, pas de mur d'infos). 🟡
 - **Icônes / illus** : officielles Genshin (persos/éléments/armes). 🟡 *(licence à vérifier pour distribution publique)*
 - **Détails “fini”** : transitions douces, feedback au clic, graphes animés. 🟡
+- **Charte animation (actée 2026-07-24)** : des micro-animations « waouh » partout
+  mais **cohérentes et sobres** — jamais too much. Vocabulaire commun : apparition
+  en cascade (fade + léger slide), compteurs qui montent, hover subtil (léger
+  zoom/lueur), particules réservées au logo/moments forts. Durées 200-400 ms,
+  courbes douces (easeOutCubic). ✅
 - **Première maquette** : `docs/mockups/theorycrafter-dashboard.html` (2026-07-24). 🟡
 
 ## 7. Ordre de construction (proposition 🟡)

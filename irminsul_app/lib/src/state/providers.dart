@@ -19,11 +19,13 @@ class AccountSummary {
   final String source; // "GOOD" ou "Enka"
   final String label;
   final int characterCount;
+  final String? playerName;
 
   const AccountSummary({
     required this.source,
     required this.label,
     required this.characterCount,
+    this.playerName,
   });
 }
 
