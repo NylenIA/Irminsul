@@ -16,6 +16,22 @@ const nextConfig: NextConfig = {
   // pour tracer les dépendances hoistées -> l'étape « Finalizing page optimization »
   // devient pathologiquement lente (voire bloquée) sous Windows/Defender.
   outputFileTracingRoot: path.join(process.cwd(), "..", ".."),
+  // NE JAMAIS tracer/embarquer `data/` dans le bundle standalone : il contient
+  // le COMPTE RÉEL du joueur (data/account, privé), la base, et data/sources
+  // (genshin-db, chemins > MAX_PATH). Le tracing l'incluait -> (1) FUITE de
+  // données privées dans l'installeur, (2) fichiers read-only/longs qui font
+  // échouer le build Tauri (« Accès refusé »). Le moteur lit ces données au
+  // runtime via le sidecar, pas via le bundle Next.
+  outputFileTracingExcludes: {
+    "**/*": [
+      "data/**",
+      "../../data/**",
+      "**/data/account/**",
+      "**/data/sources/**",
+      "**/data/mechanics/**",
+      "**/data/*.db",
+    ],
+  },
   // Packages workspace en TS source -> transpilés par Next.
   transpilePackages: ["@irminsul/ui", "@irminsul/data-access"],
   // Prisma reste externe au bundle serveur (moteur natif, jamais côté client).

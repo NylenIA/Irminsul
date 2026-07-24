@@ -49,10 +49,23 @@ def db_path() -> Path:
 
 
 def account_dir() -> Path:
-    """Racine des données de compte du joueur (jamais committée, cf. .gitignore)."""
-    path = data_dir() / "account"
-    path.mkdir(parents=True, exist_ok=True)
-    return path
+    """Racine des données de compte du joueur (jamais committée, cf. .gitignore).
+
+    Emplacement CANONIQUE : `<data_dir>/account`.
+
+    Repli HISTORIQUE : d'anciennes versions desktop écrivaient sous
+    `<data_dir>/data/account` (un niveau `data/` en trop). Un compte importé
+    avec ces versions devenait INVISIBLE après mise à jour. On lit l'ancien
+    emplacement s'il est le seul à exister, plutôt que de perdre le compte.
+    Miroir exact de `accountDir()` dans `apps/web/src/server/account.ts`.
+    """
+    canonical = data_dir() / "account"
+    if not canonical.exists():
+        legacy = data_dir() / "data" / "account"
+        if legacy.exists():
+            return legacy
+    canonical.mkdir(parents=True, exist_ok=True)
+    return canonical
 
 
 def account_subdir(name: str) -> Path:

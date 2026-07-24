@@ -2,6 +2,7 @@
  * Lecture SERVEUR du scan de compte local (GOOD, gitignoré — données personnelles).
  * Jamais importé côté client : seules les données normalisées partent au rendu.
  */
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { normalizePlayerBuild, type PlayerCharacterBuild } from "@irminsul/engine-client";
@@ -15,8 +16,23 @@ export function dataRoot(): string {
   return process.env["IRMINSUL_DATA_DIR"] ?? path.join(process.cwd(), "..", "..", "data");
 }
 
+/**
+ * Dossier du compte courant.
+ *
+ * Emplacement CANONIQUE : `<dataRoot>/account/current`.
+ *
+ * Repli HISTORIQUE : d'anciennes versions desktop écrivaient sous
+ * `<dataRoot>/data/account/current` (un niveau `data/` en trop). Un compte
+ * importé avec ces versions devenait INVISIBLE après mise à jour — l'app
+ * affichait « aucun scan » alors que les données existaient. On lit donc
+ * l'ancien emplacement s'il est le seul present, au lieu de perdre le compte.
+ */
 export function accountDir(): string {
-  return path.join(dataRoot(), "account", "current");
+  const canonical = path.join(dataRoot(), "account", "current");
+  if (existsSync(canonical)) return canonical;
+  const legacy = path.join(dataRoot(), "data", "account", "current");
+  if (existsSync(legacy)) return legacy;
+  return canonical;
 }
 
 export interface AccountSummary {
