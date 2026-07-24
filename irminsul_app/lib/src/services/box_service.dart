@@ -47,7 +47,12 @@ class BoxService {
   static const _metaName = "account.meta.json";
 
   /// Parse un JSON GOOD. Lève [FormatException] si invalide.
-  static PlayerBox parse(String jsonStr, {String label = ""}) {
+  /// [erWeapons] : table ER% exacte par arme et par niveau (weapons_er.json).
+  static PlayerBox parse(
+    String jsonStr, {
+    String label = "",
+    Map<String, List<double>> erWeapons = const {},
+  }) {
     final dynamic data = jsonDecode(jsonStr);
     if (data is! Map || data["characters"] is! List) {
       throw const FormatException(
@@ -72,10 +77,21 @@ class BoxService {
       );
     }
 
-    // ---- estimation ER par perso (artefacts équipés) ----
+    // ---- ER par perso : base 100 + artefacts équipés + ARME équipée ----
     final er = <String, double>{};
     for (final k in chars.keys) {
       er[k] = 100.0;
+    }
+    if (data["weapons"] is List) {
+      for (final w in data["weapons"] as List) {
+        if (w is! Map) continue;
+        final loc = w["location"] as String? ?? "";
+        if (loc.isEmpty || !er.containsKey(loc)) continue;
+        final table = erWeapons[w["key"]];
+        if (table == null || table.isEmpty) continue;
+        final lvl = ((w["level"] as num?)?.toInt() ?? 1).clamp(1, table.length);
+        er[loc] = er[loc]! + table[lvl - 1];
+      }
     }
     if (data["artifacts"] is List) {
       for (final a in data["artifacts"] as List) {
@@ -116,7 +132,8 @@ class BoxService {
   }
 
   /// Recharge la box sauvegardée (null si aucune).
-  static Future<PlayerBox?> loadSaved() async {
+  static Future<PlayerBox?> loadSaved(
+      {Map<String, List<double>> erWeapons = const {}}) async {
     try {
       final f = await _file(_fileName);
       if (!await f.exists()) return null;
@@ -126,7 +143,8 @@ class BoxService {
         final meta = jsonDecode(await m.readAsString());
         if (meta is Map) label = meta["label"] as String? ?? "";
       }
-      return parse(await f.readAsString(), label: label);
+      return parse(await f.readAsString(),
+          label: label, erWeapons: erWeapons);
     } catch (_) {
       return null;
     }

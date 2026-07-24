@@ -1,3 +1,6 @@
+import "dart:convert";
+
+import "package:flutter/services.dart" show rootBundle;
 import "package:flutter/widgets.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -37,7 +40,18 @@ class AccountSummary {
 /// null = aucun compte importé.
 final accountProvider = StateProvider<AccountSummary?>((ref) => null);
 
+/// Table ER% exacte par arme et par niveau (générée depuis les données du jeu).
+final erWeaponsProvider =
+    FutureProvider<Map<String, List<double>>>((ref) async {
+  final raw = await rootBundle.loadString("assets/data/weapons_er.json");
+  final json = jsonDecode(raw) as Map<String, dynamic>;
+  return json.map((k, v) =>
+      MapEntry(k, (v as List).map((x) => (x as num).toDouble()).toList()));
+});
+
 /// La box complète du joueur (GOOD sauvegardé sur disque, rechargé au
 /// démarrage). null = pas encore importée. Invalider après un import.
-final boxProvider =
-    FutureProvider<PlayerBox?>((ref) => BoxService.loadSaved());
+final boxProvider = FutureProvider<PlayerBox?>((ref) async {
+  final erWeapons = await ref.watch(erWeaponsProvider.future);
+  return BoxService.loadSaved(erWeapons: erWeapons);
+});

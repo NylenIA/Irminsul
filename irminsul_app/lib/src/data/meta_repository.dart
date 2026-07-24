@@ -18,13 +18,15 @@ class MissingInfo {
   const MissingInfo(this.character, this.gain);
 }
 
-/// Un slot d'équipe : titulaire + alternatives acceptées + exigence d'ER.
+/// Un slot d'équipe : titulaire + alternatives acceptées + exigence d'ER
+/// + pool de remplaçants « en attendant » (classés du meilleur au moins bon).
 class TeamSlot {
   final String id; // id de perso (characters_full)
   final List<String> alts;
   final int? er; // % de recharge conseillé (null/0 = pas d'exigence)
   final String role;
-  const TeamSlot(this.id, this.alts, this.er, this.role);
+  final List<String> pool;
+  const TeamSlot(this.id, this.alts, this.er, this.role, this.pool);
 }
 
 /// Une équipe méta (démo pour l'instant — BDD curée + gcsim ensuite).
@@ -101,6 +103,7 @@ final metaDbProvider = FutureProvider<MetaDb>((ref) async {
                 (s["alts"] as List? ?? const []).cast<String>(),
                 (s["er"] as num?)?.toInt(),
                 s["role"] as String? ?? "",
+                (s["pool"] as List? ?? const []).cast<String>(),
               ))
           .toList(),
       rotationSteps:

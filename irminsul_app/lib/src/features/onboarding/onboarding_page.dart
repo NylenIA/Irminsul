@@ -63,8 +63,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
       final content = await File(path).readAsString();
       final name = res!.files.single.name;
-      // parse complet (persos, constellations, niveaux, ER artefacts)…
-      final box = BoxService.parse(content, label: name);
+      // parse complet (persos, constellations, niveaux, ER artefacts+arme)…
+      final erWeapons = await ref.read(erWeaponsProvider.future);
+      final box = BoxService.parse(content, label: name, erWeapons: erWeapons);
       // …et persistance locale : la box survit au redémarrage.
       await BoxService.save(content, name);
       ref.invalidate(boxProvider);

@@ -188,12 +188,18 @@ class L {
     "teamsMissingChar": {"fr": "manquant", "en": "missing"},
     "teamsAlt": {"fr": "ALT", "en": "ALT"},
     "teamsRotation": {"fr": "Rotation & combos", "en": "Rotation & combos"},
-    "teamsErEst": {"fr": "recharge estimée", "en": "estimated ER"},
+    "teamsErEst": {"fr": "recharge calculée", "en": "computed ER"},
     "teamsErAdvised": {"fr": "· conseillé", "en": "· advised"},
     "teamsErNote": {
-      "fr": "(estimation artefacts, hors arme)",
-      "en": "(artifacts estimate, weapon excluded)",
+      "fr": "(artefacts + arme, depuis ton GOOD)",
+      "en": "(artifacts + weapon, from your GOOD)",
     },
+    "teamsSuggestFor": {"fr": "en attendant :", "en": "meanwhile:"},
+    "teamsNoSuggest": {
+      "fr": "aucun remplaçant valable dans ta box",
+      "en": "no valid replacement in your box",
+    },
+    "teamsToBuild": {"fr": "à monter", "en": "needs building"},
     "teamsDemoNote": {
       "fr":
           "BDD méta de démonstration (5 équipes curées) — elle s'étoffera via la synchro. Le croisement avec ta box, lui, est réel.",

@@ -39,19 +39,26 @@
           "id": "mavuika",
           "alts": [],
           "er": null,
-          "role": "DPS principal"
+          "role": "DPS principal",
+          "pool": []
         },
         {
           "id": "citlali",
           "alts": [],
           "er": 150,
-          "role": "Buff Cryo + bouclier"
+          "role": "Buff Cryo + bouclier",
+          "pool": [
+            "layla",
+            "diona",
+            "kirara"
+          ]
         },
         {
           "id": "bennett",
           "alts": [],
           "er": 190,
-          "role": "Soin + buff ATK"
+          "role": "Soin + buff ATK",
+          "pool": []
         },
         {
           "id": "xilonen",
@@ -59,7 +66,11 @@
             "zhongli"
           ],
           "er": null,
-          "role": "Shred + confort"
+          "role": "Shred + confort",
+          "pool": [
+            "kachina",
+            "iansan"
+          ]
         }
       ],
       "combos": "Reste dans le cercle de Bennett. Repose Xilonen E et Bennett Q à chaque rotation ; Mavuika n'a pas besoin de recharge (Ferveur guerrière).",
@@ -107,19 +118,24 @@
           "id": "nahida",
           "alts": [],
           "er": null,
-          "role": "Application Dendro"
+          "role": "Application Dendro",
+          "pool": []
         },
         {
           "id": "furina",
           "alts": [],
           "er": 180,
-          "role": "Buff + Hydro off-field"
+          "role": "Buff + Hydro off-field",
+          "pool": []
         },
         {
           "id": "raidenshogun",
           "alts": [],
           "er": 0,
-          "role": "Déclencheur Hyperbloom (EM)"
+          "role": "Déclencheur Hyperbloom (EM)",
+          "pool": [
+            "kukishinobu"
+          ]
         },
         {
           "id": "xingqiu",
@@ -127,7 +143,8 @@
             "yelan"
           ],
           "er": 200,
-          "role": "Hydro off-field"
+          "role": "Hydro off-field",
+          "pool": []
         }
       ],
       "combos": "Raiden se joue full Maîtrise élémentaire ici (pas de crit) : ses graines Hyperbloom ignorent le crit. Garde Nahida Q et Furina E actifs en permanence.",
@@ -178,25 +195,36 @@
           "id": "mavuika",
           "alts": [],
           "er": null,
-          "role": "DPS principal"
+          "role": "DPS principal",
+          "pool": []
         },
         {
           "id": "citlali",
           "alts": [],
           "er": 150,
-          "role": "Buff Cryo + bouclier"
+          "role": "Buff Cryo + bouclier",
+          "pool": [
+            "layla",
+            "diona",
+            "kirara"
+          ]
         },
         {
           "id": "iansan",
           "alts": [],
           "er": null,
-          "role": "Buff ATK Nightsoul"
+          "role": "Buff ATK Nightsoul",
+          "pool": [
+            "xilonen",
+            "kachina"
+          ]
         },
         {
           "id": "bennett",
           "alts": [],
           "er": 190,
-          "role": "Soin + buff ATK"
+          "role": "Soin + buff ATK",
+          "pool": []
         }
       ],
       "combos": "Iansan convertit les mouvements Nightsoul de Mavuika en buff d'ATK massif — la version la plus forte du noyau Natlan.",
@@ -244,27 +272,41 @@
           "id": "furina",
           "alts": [],
           "er": 180,
-          "role": "Moteur Hydro + buff"
+          "role": "Moteur Hydro + buff",
+          "pool": []
         },
         {
           "id": "barbara",
           "alts": [
-            "kokomi"
+            "sangonomiyakokomi"
           ],
           "er": null,
-          "role": "Soin (contre le drain de Furina)"
+          "role": "Soin (contre le drain de Furina)",
+          "pool": [
+            "charlotte",
+            "sigewinne",
+            "jean"
+          ]
         },
         {
           "id": "fischl",
           "alts": [],
           "er": null,
-          "role": "Sub-DPS Electro"
+          "role": "Sub-DPS Electro",
+          "pool": [
+            "yaemiko",
+            "kujousara"
+          ]
         },
         {
           "id": "beidou",
           "alts": [],
           "er": 200,
-          "role": "Sub-DPS Electro (parade)"
+          "role": "Sub-DPS Electro (parade)",
+          "pool": [
+            "yaemiko",
+            "lisa"
+          ]
         }
       ],
       "combos": "Team flexible pour le Théâtre : les slots Electro acceptent presque tous tes persos Electro montés.",
@@ -312,19 +354,26 @@
           "id": "mavuika",
           "alts": [],
           "er": null,
-          "role": "DPS principal"
+          "role": "DPS principal",
+          "pool": []
         },
         {
           "id": "citlali",
           "alts": [],
           "er": 150,
-          "role": "Buff + bouclier"
+          "role": "Buff + bouclier",
+          "pool": [
+            "layla",
+            "diona",
+            "kirara"
+          ]
         },
         {
           "id": "bennett",
           "alts": [],
           "er": 190,
-          "role": "Soin + buff"
+          "role": "Soin + buff",
+          "pool": []
         },
         {
           "id": "zhongli",
@@ -332,7 +381,12 @@
             "xilonen"
           ],
           "er": null,
-          "role": "Bouclier + shred"
+          "role": "Bouclier + shred",
+          "pool": [
+            "layla",
+            "diona",
+            "thoma"
+          ]
         }
       ],
       "combos": "Double protection (Zhongli + Citlali) : idéal boss unique — zéro interruption, uptime maximal.",

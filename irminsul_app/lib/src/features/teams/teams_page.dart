@@ -269,7 +269,39 @@ class _TeamMatchCard extends StatelessWidget {
               ],
             ),
 
-            // ---- alertes ER ----
+            // ---- suggestions pour les slots manquants ----
+            if (match.missing.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(11),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.04),
+                  borderRadius: BorderRadius.circular(12),
+                  border:
+                      Border.all(color: Colors.white.withValues(alpha: 0.10)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final s in match.missing)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Text(
+                          s.suggestion != null
+                              ? "🔒 ${s.character.name} — ${l.t("teamsSuggestFor")} ${s.suggestion!.name} "
+                                  "(C${s.suggestionData!.constellation} · Nv ${s.suggestionData!.level}"
+                                  "${s.suggestionData!.level < 70 ? " · ${l.t("teamsToBuild")}" : ""})"
+                              : "🔒 ${s.character.name} — ${l.t("teamsNoSuggest")}",
+                          style: const TextStyle(fontSize: 12, height: 1.5),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+
+            // ---- alertes ER (calculées depuis le GOOD) ----
             if (match.slots.any((s) => s.erWarning)) ...[
               const SizedBox(height: 12),
               Container(
@@ -285,7 +317,7 @@ class _TeamMatchCard extends StatelessWidget {
                   children: [
                     for (final s in match.slots.where((x) => x.erWarning))
                       Text(
-                        "⚡ ${s.character.name} — ${l.t("teamsErEst")} ~${s.erEstimate!.round()} % ${l.t("teamsErAdvised")} ${s.slot.er} %. ${l.t("teamsErNote")}",
+                        "⚡ ${s.character.name} — ${l.t("teamsErEst")} ~${s.erValue!.round()} % ${l.t("teamsErAdvised")} ${s.slot.er} % ${l.t("teamsErNote")}",
                         style: const TextStyle(fontSize: 12, height: 1.5),
                       ),
                   ],
@@ -461,14 +493,17 @@ class _SlotView extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             owned
-                ? "C${od!.constellation} · Nv ${od.level}"
+                ? "C${od!.constellation} · Nv ${od.level}${s.lowLevel ? " ⚠" : ""}"
                 : l.t("teamsMissingChar"),
             style: TextStyle(
               fontSize: 10,
-              color: owned
-                  ? Colors.white.withValues(alpha: 0.5)
-                  : const Color(0xFFF2C14E).withValues(alpha: 0.9),
-              fontWeight: owned ? FontWeight.normal : FontWeight.w700,
+              color: !owned
+                  ? const Color(0xFFF2C14E).withValues(alpha: 0.9)
+                  : s.lowLevel
+                      ? const Color(0xFFF2C14E).withValues(alpha: 0.85)
+                      : Colors.white.withValues(alpha: 0.5),
+              fontWeight:
+                  owned && !s.lowLevel ? FontWeight.normal : FontWeight.w700,
             ),
           ),
           Text(

@@ -9,8 +9,10 @@ class SlotMatch {
   final bool owned;
   final bool viaAlt;
   final OwnedChar? ownedData;
-  final double? erEstimate; // % (artefacts seulement)
+  final double? erValue; // % ER calculée (artefacts + arme, depuis le GOOD)
   final bool erWarning;
+  final CharacterFull? suggestion; // remplaçant possédé « en attendant »
+  final OwnedChar? suggestionData;
 
   const SlotMatch({
     required this.slot,
@@ -18,9 +20,14 @@ class SlotMatch {
     required this.owned,
     required this.viaAlt,
     required this.ownedData,
-    required this.erEstimate,
+    required this.erValue,
     required this.erWarning,
+    required this.suggestion,
+    required this.suggestionData,
   });
+
+  /// Perso possédé mais clairement pas monté (à builder avant de compter dessus).
+  bool get lowLevel => owned && (ownedData?.level ?? 90) < 70;
 }
 
 /// Une équipe méta croisée avec la box du joueur.
@@ -72,13 +79,28 @@ List<TeamMatch> matchTeams({
       if (chosen == null) continue; // id inconnu dans la BDD : ignore
 
       final owned = ownedData != null;
-      double? erEst;
+      double? erVal;
       var erWarn = false;
       final req = slot.er;
       if (owned && req != null && req > 0) {
-        erEst = box.erByChar[chosen.good];
-        // marge de 20 pts : l'estimation ignore l'arme.
-        erWarn = erEst != null && erEst + 20 < req;
+        erVal = box.erByChar[chosen.good];
+        // ER réelle (artefacts + arme) : petite tolérance d'arrondi.
+        erWarn = erVal != null && erVal + 3 < req;
+      }
+
+      // slot manquant → meilleur remplaçant POSSÉDÉ du pool (« en attendant »)
+      CharacterFull? suggestion;
+      OwnedChar? suggestionData;
+      if (!owned) {
+        for (final pid in slot.pool) {
+          final cand = byId[pid];
+          final candOwned = cand == null ? null : box.chars[cand.good];
+          if (candOwned != null) {
+            suggestion = cand;
+            suggestionData = candOwned;
+            break;
+          }
+        }
       }
 
       slots.add(SlotMatch(
@@ -87,8 +109,10 @@ List<TeamMatch> matchTeams({
         owned: owned,
         viaAlt: viaAlt,
         ownedData: ownedData,
-        erEstimate: erEst,
+        erValue: erVal,
         erWarning: erWarn,
+        suggestion: suggestion,
+        suggestionData: suggestionData,
       ));
     }
     return TeamMatch(team: team, slots: slots);
