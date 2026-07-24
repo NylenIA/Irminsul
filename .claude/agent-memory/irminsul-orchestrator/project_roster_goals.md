@@ -12,6 +12,17 @@ Objectifs déclarés :
 - Prévoit de pull **Sandrone** (5★ Cryo/claymore, sortie 6.7 le **2026-07-01**) → team de planification (LEAK, score E).
 - A précisé : **a Furina, pas d'Escoffier** ; BiS Mavuika selon lui = Mavuika/Citlali/Iansan/Bennett.
 
+**BOX COMPLÈTE vérifiée via GOOD réel** (`genshinData_GOOD_2026_07_24_16_44.json`,
+Inventory Kamera v3, importé dans l'app Flutter le 2026-07-24) : **85 persos,
+292 armes, 578 artefacts**. Faits saillants :
+- Mavuika C0 Nv90 · Raiden C0 Nv90 · Yelan C0 Nv90 · Bennett **C6** Nv80 ·
+  Xingqiu **C6** Nv80 · Furina C0 Nv80 · Nahida C0 Nv80 · Xilonen C0 Nv80 ·
+  **Iansan C0 Nv40 (à monter)**.
+- **N'a PAS : Citlali, Zhongli** (les suggestions « en attendant » de l'app
+  s'appuient dessus).
+- ER réelles calculées : Bennett ~158 % (117,5 artefacts + Skyward Blade Nv60),
+  Xingqiu ~184 % (133,6 + Sacrificial Sword Nv70).
+
 Builds réels notables (vitrine, 2026-06-26) :
 - **Xilonen** ⭐ excellente : Peak Patrol Song, 4p Scroll Cinder City, DEF 3517, ER 145 %.
 - **Furina** : 4p Golden Troupe, HP 31k, ER 184 %, mais **arme au niveau 1** (gros manque à gagner).
