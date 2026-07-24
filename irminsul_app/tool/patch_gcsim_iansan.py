@@ -58,6 +58,34 @@ def modernize(content: str) -> str:
     )
     content = re.sub(r"\bgeometry\.", "info.", content)
     content = re.sub(r"\btargets\.", "info.", content)
+
+    # event.Hook : func(args ...interface{}) bool -> func(args ...any)
+    # (les `return true/false` NUS n'existent que dans ces hooks — vérifié
+    # occurrence par occurrence sur les fichiers de la PR)
+    content = content.replace(
+        "(args ...interface{}) bool {", "(args ...any) {")
+    content = re.sub(r"^(\s*)return (?:true|false)$", r"\1return",
+                     content, flags=re.M)
+
+    # Amount : ([]float64, bool) -> []float64 ; retours à deux valeurs aplatis
+    content = content.replace("([]float64, bool)", "[]float64")
+    content = re.sub(r"^(\s*return .+?), (?:true|false)$", r"\1",
+                     content, flags=re.M)
+
+    # types déplacés combat -> info (constaté à la compilation)
+    for old, new in [("combat.AttackCB", "info.AttackCB"),
+                     ("*combat.AttackEvent", "*info.AttackEvent"),
+                     ("combat.Target)", "info.Target)")]:
+        content = content.replace(old, new)
+
+    # garantit l'import de pkg/core/info si `info.` est utilisé
+    if re.search(r"\binfo\.", content) and \
+            '"github.com/genshinsim/gcsim/pkg/core/info"' not in content:
+        content = content.replace(
+            "import (",
+            'import (\n\t"github.com/genshinsim/gcsim/pkg/core/info"',
+            1,
+        )
     # dédoublonne les lignes d'import identiques (bloc import multi-lignes)
     lines = content.split("\n")
     seen_imports: set[str] = set()
