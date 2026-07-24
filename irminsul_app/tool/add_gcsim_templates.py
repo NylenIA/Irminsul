@@ -7,6 +7,37 @@ p = HERE / "assets/data/meta_teams.json"
 d = json.loads(p.read_text(encoding="utf-8"))
 
 TEMPLATES = {
+    "fischl-taser": {
+        "chars": ["Fischl", "Beidou", "Xingqiu", "Sucrose"],
+        "rotation": (
+            "while 1 {\n"
+            "    fischl skill;\n"
+            "    beidou skill, burst;\n"
+            "    xingqiu skill, burst;\n"
+            "    sucrose skill;\n"
+            "    sucrose attack:6;\n"
+            "    fischl burst;\n"
+            "    sucrose attack:6;\n"
+            "    sucrose skill;\n"
+            "    sucrose attack:4;\n"
+            "}"
+        ),
+    },
+    "furina-mono": {
+        "chars": ["Furina", "Barbara", "Fischl", "Beidou"],
+        "rotation": (
+            "while 1 {\n"
+            "    furina skill;\n"
+            "    fischl skill;\n"
+            "    beidou skill, burst;\n"
+            "    barbara skill;\n"
+            "    furina burst;\n"
+            "    furina attack:6;\n"
+            "    fischl burst;\n"
+            "    furina attack:8;\n"
+            "}"
+        ),
+    },
     "raiden-national": {
         "chars": ["Bennett", "Xiangling", "Xingqiu", "RaidenShogun"],
         "rotation": (

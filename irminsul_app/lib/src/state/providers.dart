@@ -49,6 +49,14 @@ final erWeaponsProvider =
       MapEntry(k, (v as List).map((x) => (x as num).toDouble()).toList()));
 });
 
+/// Personnages implémentés dans le moteur gcsim (noms gcsim), extraits de la
+/// source officielle. Sert à marquer les persos « pas encore simulables ».
+final gcsimSupportedProvider = FutureProvider<Set<String>>((ref) async {
+  final raw = await rootBundle.loadString("assets/data/gcsim_chars.json");
+  final json = jsonDecode(raw) as Map<String, dynamic>;
+  return (json["chars"] as List).cast<String>().toSet();
+});
+
 /// La box complète du joueur (GOOD sauvegardé sur disque, rechargé au
 /// démarrage). null = pas encore importée. Invalider après un import.
 final boxProvider = FutureProvider<PlayerBox?>((ref) async {

@@ -3,17 +3,31 @@ import "dart:io";
 
 import "box_service.dart";
 
+/// Contribution d'un personnage au résultat (pour comprendre la méta).
+class CharContribution {
+  final String gcsimName;
+  final double dps;
+  final double fieldSeconds; // temps de terrain moyen
+  const CharContribution({
+    required this.gcsimName,
+    required this.dps,
+    required this.fieldSeconds,
+  });
+}
+
 /// Résultat d'une simulation gcsim.
 class SimResult {
   final int dps;
   final double dpsMin;
   final double dpsMax;
   final int iterations;
+  final List<CharContribution> perChar;
   const SimResult({
     required this.dps,
     required this.dpsMin,
     required this.dpsMax,
     required this.iterations,
+    this.perChar = const [],
   });
 }
 
@@ -49,6 +63,7 @@ class GcsimService {
     "KujouSara": "sara",
     "ShikanoinHeizou": "heizou",
     "HuTao": "hutao",
+    "YumemizukiMizuki": "mizuki",
   };
 
   static const _ascMax = [20, 40, 50, 60, 70, 80, 90];
@@ -214,11 +229,13 @@ class GcsimService {
 
     final tmp = await Directory.systemTemp.createTemp("irminsul_gcsim");
     try {
-      final cfg = File("${tmp.path}${Platform.pathSeparator}config.txt");
+      final sep = Platform.pathSeparator;
+      final cfg = File("${tmp.path}${sep}config.txt");
+      final outJson = "${tmp.path}${sep}result.json";
       await cfg.writeAsString(config);
       final proc = await Process.run(
         bin.path,
-        ["-c", cfg.path],
+        ["-c", cfg.path, "-out", outJson, "-nb"],
         stdoutEncoding: utf8,
         stderrEncoding: utf8,
       ).timeout(const Duration(minutes: 3));
@@ -231,11 +248,38 @@ class GcsimService {
         throw GcsimException(
             "Simulation échouée : ${err.isEmpty ? "sortie vide" : err.substring(0, err.length.clamp(0, 220))}");
       }
+
+      // Détail par perso (comprendre QUI fait les dégâts et le temps de terrain).
+      var perChar = <CharContribution>[];
+      try {
+        final j = jsonDecode(await File(outJson).readAsString())
+            as Map<String, dynamic>;
+        final details = j["character_details"] as List? ?? const [];
+        final st = j["statistics"] as Map<String, dynamic>? ?? const {};
+        final dpsList = st["character_dps"] as List? ?? const [];
+        final fieldList = st["field_time"] as List? ?? const [];
+        double meanOf(dynamic x) =>
+            x is Map ? ((x["mean"] as num?)?.toDouble() ?? 0) : 0;
+        perChar = [
+          for (var i = 0; i < details.length; i++)
+            CharContribution(
+              gcsimName:
+                  (details[i] as Map)["name"] as String? ?? "?",
+              dps: i < dpsList.length ? meanOf(dpsList[i]) : 0,
+              fieldSeconds:
+                  i < fieldList.length ? meanOf(fieldList[i]) / 60 : 0,
+            ),
+        ];
+      } catch (_) {
+        // le détail est un bonus — le DPS global reste valable sans lui
+      }
+
       return SimResult(
         dps: int.parse(m.group(1)!),
         dpsMin: double.parse(m.group(2)!),
         dpsMax: double.parse(m.group(3)!),
         iterations: _iterations,
+        perChar: perChar,
       );
     } finally {
       await tmp.delete(recursive: true);

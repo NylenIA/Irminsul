@@ -235,6 +235,23 @@ class L {
       "en": "2 normal attacks",
     },
     "creatorActCharge": {"fr": "Attaque chargée", "en": "Charged attack"},
+    "creatorActDash": {
+      "fr": "Dash (annulation d'animation)",
+      "en": "Dash (animation cancel)",
+    },
+    "creatorActJump": {
+      "fr": "Saut (annulation d'animation)",
+      "en": "Jump (animation cancel)",
+    },
+    "simBreakdown": {
+      "fr": "Détail par personnage",
+      "en": "Per-character breakdown",
+    },
+    "simFieldTime": {"fr": "de terrain", "en": "on field"},
+    "simUnsupported": {
+      "fr": "Pas encore simulable — le moteur gcsim n'implémente pas ce personnage (trop récent).",
+      "en": "Not simulatable yet — the gcsim engine does not implement this character (too recent).",
+    },
     "simHowTitle": {
       "fr": "Comment ce DPS est-il calculé ?",
       "en": "How is this DPS computed?",

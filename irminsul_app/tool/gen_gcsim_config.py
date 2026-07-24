@@ -20,6 +20,7 @@ CHAR_MAP = {
     "ShikanoinHeizou": "heizou",
     "Tartaglia": "tartaglia",
     "HuTao": "hutao",
+    "YumemizukiMizuki": "mizuki",
 }
 
 # maxLvl par palier d'ascension (persos ET armes)
@@ -169,6 +170,38 @@ while 1 {
 }
 """,
     },
+}
+
+TEAMS["fischl-taser"] = {
+    "chars": ["Fischl", "Beidou", "Xingqiu", "Sucrose"],
+    "rotation": """
+while 1 {
+    fischl skill;
+    beidou skill, burst;
+    xingqiu skill, burst;
+    sucrose skill;
+    sucrose attack:6;
+    fischl burst;
+    sucrose attack:6;
+    sucrose skill;
+    sucrose attack:4;
+}
+""",
+}
+TEAMS["furina-mono"] = {
+    "chars": ["Furina", "Barbara", "Fischl", "Beidou"],
+    "rotation": """
+while 1 {
+    furina skill;
+    fischl skill;
+    beidou skill, burst;
+    barbara skill;
+    furina burst;
+    furina attack:6;
+    fischl burst;
+    furina attack:8;
+}
+""",
 }
 
 OPTIONS = """

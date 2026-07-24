@@ -13,6 +13,7 @@ import "../../widgets/char_icon.dart";
 import "../../widgets/glass_card.dart";
 import "../../widgets/hover_card.dart";
 import "../../widgets/reveal.dart";
+import "../../widgets/sim_breakdown.dart";
 
 const _green = Color(0xFF8BE28B);
 const _amber = Color(0xFFF2C14E);
@@ -635,60 +636,68 @@ class _SimSectionState extends State<_SimSection> {
           borderRadius: BorderRadius.circular(13),
           border: Border.all(color: cs.primary.withValues(alpha: 0.4)),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.bolt, color: cs.primary),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+            Row(
+              children: [
+                Icon(Icons.bolt, color: cs.primary),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        _fmt(r.dps),
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w800,
-                          color: cs.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 3),
-                        child: Text(
-                          "${l.t("simDpsLabel")} · "
-                          "min ${_fmt(r.dpsMin)} / max ${_fmt(r.dpsMax)}",
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            color: Colors.white.withValues(alpha: 0.6),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            _fmt(r.dps),
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                              color: cs.primary,
+                            ),
                           ),
+                          const SizedBox(width: 8),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 3),
+                            child: Text(
+                              "${l.t("simDpsLabel")} · "
+                              "min ${_fmt(r.dpsMin)} / max ${_fmt(r.dpsMax)}",
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                color: Colors.white.withValues(alpha: 0.6),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        "${r.iterations} ${l.t("simNote")}",
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.white.withValues(alpha: 0.45),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 3),
-                  Text(
-                    "${r.iterations} ${l.t("simNote")}",
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.white.withValues(alpha: 0.45),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                IconButton(
+                  tooltip: l.t("simHowTitle"),
+                  icon: Icon(Icons.info_outline,
+                      size: 18,
+                      color: Colors.white.withValues(alpha: 0.55)),
+                  onPressed: () => showSimInfoDialog(context, l),
+                ),
+                TextButton(
+                  onPressed: _running ? null : _run,
+                  child: Text(l.t("simAgain")),
+                ),
+              ],
             ),
-            IconButton(
-              tooltip: l.t("simHowTitle"),
-              icon: Icon(Icons.info_outline,
-                  size: 18, color: Colors.white.withValues(alpha: 0.55)),
-              onPressed: () => showSimInfoDialog(context, l),
-            ),
-            TextButton(
-              onPressed: _running ? null : _run,
-              child: Text(l.t("simAgain")),
-            ),
+            const SizedBox(height: 10),
+            SimBreakdown(result: r),
           ],
         ),
       );

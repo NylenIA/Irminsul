@@ -14,6 +14,7 @@ import "../../theme.dart";
 import "../../widgets/char_icon.dart";
 import "../../widgets/glass_card.dart";
 import "../../widgets/reveal.dart";
+import "../../widgets/sim_breakdown.dart";
 
 const _amber = Color(0xFFF2C14E);
 
@@ -225,12 +226,16 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
               if (playerBox == null) {
                 return GlassCard(child: Text(l.t("teamsNoBox")));
               }
+              final supported = ref.watch(gcsimSupportedProvider).maybeWhen(
+                    data: (s) => s,
+                    orElse: () => null,
+                  );
               return chars.when(
                 loading: () =>
                     const Center(child: CircularProgressIndicator()),
                 error: (e, _) => GlassCard(child: Text("Erreur : $e")),
                 data: (list) =>
-                    _content(l, cs, playerBox, list),
+                    _content(l, cs, playerBox, list, supported),
               );
             },
           ),
@@ -240,7 +245,10 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
   }
 
   Widget _content(L l, ColorScheme cs, PlayerBox playerBox,
-      List<CharacterFull> list) {
+      List<CharacterFull> list, Set<String>? supported) {
+    bool isSupported(String goodKey) =>
+        supported == null ||
+        supported.contains(GcsimService.gcsimName(goodKey));
     final byGood = {for (final c in list) c.good: c};
     // roster possédé, montés d'abord
     final roster = playerBox.chars.values
@@ -417,39 +425,50 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
                                 .contains(_search.toLowerCase()))
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
-                            child: InkWell(
-                              onTap: _picked.contains(o.key)
-                                  ? null
-                                  : () => setState(() {
-                                        if (_picked.length < 4) {
-                                          _picked.add(o.key);
-                                          _activeChar ??= o.key;
-                                        }
-                                      }),
-                              child: Opacity(
-                                opacity:
-                                    _picked.contains(o.key) ? 0.35 : 1,
-                                child: Column(
-                                  children: [
-                                    CharIcon(
-                                      name: byGood[o.key]!.name,
-                                      icon: byGood[o.key]!.icon,
-                                      element: byGood[o.key]!.element,
-                                      size: 50,
-                                      showName: true,
-                                    ),
-                                    Text(
-                                      "Nv ${o.level}",
-                                      style: TextStyle(
-                                        fontSize: 9.5,
-                                        color: o.level >= 70
-                                            ? Colors.white
-                                                .withValues(alpha: 0.45)
-                                            : _amber
-                                                .withValues(alpha: 0.8),
+                            child: Tooltip(
+                              message: isSupported(o.key)
+                                  ? byGood[o.key]!.name
+                                  : l.t("simUnsupported"),
+                              child: InkWell(
+                                onTap: _picked.contains(o.key) ||
+                                        !isSupported(o.key)
+                                    ? null
+                                    : () => setState(() {
+                                          if (_picked.length < 4) {
+                                            _picked.add(o.key);
+                                            _activeChar ??= o.key;
+                                          }
+                                        }),
+                                child: Opacity(
+                                  opacity: !isSupported(o.key)
+                                      ? 0.22
+                                      : _picked.contains(o.key)
+                                          ? 0.35
+                                          : 1,
+                                  child: Column(
+                                    children: [
+                                      CharIcon(
+                                        name: byGood[o.key]!.name,
+                                        icon: byGood[o.key]!.icon,
+                                        element: byGood[o.key]!.element,
+                                        size: 50,
+                                        showName: true,
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        isSupported(o.key)
+                                            ? "Nv ${o.level}"
+                                            : "⛔",
+                                        style: TextStyle(
+                                          fontSize: 9.5,
+                                          color: o.level >= 70
+                                              ? Colors.white
+                                                  .withValues(alpha: 0.45)
+                                              : _amber
+                                                  .withValues(alpha: 0.8),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -523,6 +542,14 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
                             label: "CHARGÉE",
                             tip: l.t("creatorActCharge"),
                             onTap: () => _addStep("charge")),
+                        _ActionBtn(
+                            label: "DASH",
+                            tip: l.t("creatorActDash"),
+                            onTap: () => _addStep("dash")),
+                        _ActionBtn(
+                            label: "SAUT",
+                            tip: l.t("creatorActJump"),
+                            onTap: () => _addStep("jump")),
                       ],
                     ],
                   ),
@@ -689,6 +716,9 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
                       ],
                     ),
                     const SizedBox(height: 10),
+                    const SizedBox(height: 10),
+                    SimBreakdown(result: _result!),
+                    const SizedBox(height: 10),
                     OutlinedButton.icon(
                       onPressed: () => _save(l),
                       icon: const Icon(Icons.bookmark_add, size: 17),
@@ -715,6 +745,8 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
         "skill" => "E",
         "burst" => "Q",
         "charge" => "CHARGÉE",
+        "dash" => "DASH",
+        "jump" => "SAUT",
         _ => "ATQ ×${s.count}",
       };
 }
