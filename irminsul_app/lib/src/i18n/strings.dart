@@ -194,6 +194,39 @@ class L {
       "fr": "(artefacts + arme, depuis ton GOOD)",
       "en": "(artifacts + weapon, from your GOOD)",
     },
+    "teamsReady": {"fr": "PRÊTE", "en": "READY"},
+    "teamsReadyOf": {"fr": "sur", "en": "of"},
+    "teamsPlayableNow": {
+      "fr": "jouables tout de suite",
+      "en": "playable right now",
+    },
+    "teamsAllModes": {"fr": "Tous les modes", "en": "All modes"},
+    "teamsNoArtifacts": {
+      "fr": "aucun artefact équipé",
+      "en": "no artifacts equipped",
+    },
+    "teamsWeakWeapon": {
+      "fr": "arme non montée",
+      "en": "weapon not leveled",
+    },
+    "dashSeeAll": {"fr": "Voir toutes les équipes", "en": "See all teams"},
+    "dashNoTeamForMode": {
+      "fr": "Aucune équipe curée pour ce mode pour l'instant — la BDD s'étoffe via la synchro.",
+      "en": "No curated team for this mode yet — the DB grows via sync.",
+    },
+    "dashDpsIfComplete": {
+      "fr": "DPS si complète",
+      "en": "DPS if complete",
+    },
+    "dashReadyClean": {
+      "fr": "Jouable tout de suite, rien à corriger",
+      "en": "Playable right now, nothing to fix",
+    },
+    "dashIssues": {"fr": "point(s) à corriger", "en": "thing(s) to fix"},
+    "dashCompleteToBuild": {
+      "fr": "Complète, mais un perso est à monter",
+      "en": "Complete, but a character needs building",
+    },
     "teamsSuggestFor": {"fr": "en attendant :", "en": "meanwhile:"},
     "teamsNoSuggest": {
       "fr": "aucun remplaçant valable dans ta box",

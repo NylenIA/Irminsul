@@ -397,6 +397,745 @@
         "Mavuika E → Q, burst prolongé sur le boss"
       ],
       "rotation": "~22 s"
+    },
+    {
+      "id": "neuvillette-hyper",
+      "mode": "abyss",
+      "name": "Neuvillette Hypercarry",
+      "half": "1ʳᵉ moitié",
+      "badge": "meta",
+      "dps": 205000,
+      "rotation": "~18 s",
+      "note": "mono-cible & AoE",
+      "missing": null,
+      "slots": [
+        {
+          "id": "neuvillette",
+          "alts": [],
+          "er": null,
+          "role": "DPS principal (attaque chargée)",
+          "pool": []
+        },
+        {
+          "id": "furina",
+          "alts": [],
+          "er": 180,
+          "role": "Buff + Hydro off-field",
+          "pool": []
+        },
+        {
+          "id": "kaedeharakazuha",
+          "alts": [],
+          "er": null,
+          "role": "Swirl + buff Hydro",
+          "pool": [
+            "sucrose"
+          ]
+        },
+        {
+          "id": "baizhu",
+          "alts": [
+            "zhongli"
+          ],
+          "er": null,
+          "role": "Bouclier + soin",
+          "pool": [
+            "layla",
+            "thoma"
+          ]
+        }
+      ],
+      "rotationSteps": [
+        "Furina E",
+        "Kazuha E → Q (absorbe Hydro)",
+        "Baizhu E → Q",
+        "Neuvillette attaque chargée (draine les gouttes)"
+      ],
+      "combos": "Neuvillette se soigne via ses gouttes : ne l'interromps pas pendant la charge. Kazuha doit absorber Hydro (tourbillonne après le E de Furina).",
+      "chars": [
+        {
+          "n": "Neuvillette",
+          "e": "hydro",
+          "i": "Neuvillette"
+        },
+        {
+          "n": "Furina",
+          "e": "hydro",
+          "i": "Furina"
+        },
+        {
+          "n": "Kazuha",
+          "e": "anemo",
+          "i": "Kazuha"
+        },
+        {
+          "n": "Baizhu",
+          "e": "dendro",
+          "i": "Baizhuer"
+        }
+      ]
+    },
+    {
+      "id": "raiden-national",
+      "mode": "abyss",
+      "name": "Raiden National",
+      "half": "2ᵉ moitié",
+      "badge": "meta",
+      "dps": 190000,
+      "rotation": "~24 s",
+      "note": "la valeur sûre depuis des années",
+      "missing": null,
+      "slots": [
+        {
+          "id": "raidenshogun",
+          "alts": [],
+          "er": 200,
+          "role": "DPS burst + batterie",
+          "pool": []
+        },
+        {
+          "id": "xiangling",
+          "alts": [],
+          "er": 230,
+          "role": "Pyro off-field (Pyronado)",
+          "pool": []
+        },
+        {
+          "id": "xingqiu",
+          "alts": [
+            "yelan"
+          ],
+          "er": 200,
+          "role": "Hydro off-field",
+          "pool": []
+        },
+        {
+          "id": "bennett",
+          "alts": [],
+          "er": 190,
+          "role": "Soin + buff ATK",
+          "pool": []
+        }
+      ],
+      "rotationSteps": [
+        "Bennett E → Q",
+        "Xiangling Guoba → Q",
+        "Xingqiu E → Q",
+        "Raiden E → Q, enchaîne pendant son ultime"
+      ],
+      "combos": "Fais tourner l'énergie : les E de Bennett/Raiden rechargent Xiangling. Le Q de Raiden rembourse toute l'équipe.",
+      "chars": [
+        {
+          "n": "Raiden",
+          "e": "electro",
+          "i": "Shougun"
+        },
+        {
+          "n": "Xiangling",
+          "e": "pyro",
+          "i": "Xiangling"
+        },
+        {
+          "n": "Xingqiu",
+          "e": "hydro",
+          "i": "Xingqiu"
+        },
+        {
+          "n": "Bennett",
+          "e": "pyro",
+          "i": "Bennett"
+        }
+      ]
+    },
+    {
+      "id": "hutao-double-hydro",
+      "mode": "abyss",
+      "name": "Hu Tao Double Hydro",
+      "half": "1ʳᵉ moitié",
+      "badge": "meta",
+      "dps": 195000,
+      "rotation": "~20 s",
+      "note": "vaporisation en continu",
+      "missing": null,
+      "slots": [
+        {
+          "id": "hutao",
+          "alts": [],
+          "er": null,
+          "role": "DPS principal (vapo)",
+          "pool": []
+        },
+        {
+          "id": "xingqiu",
+          "alts": [],
+          "er": 200,
+          "role": "Hydro off-field",
+          "pool": []
+        },
+        {
+          "id": "yelan",
+          "alts": [],
+          "er": 170,
+          "role": "Hydro off-field + buff",
+          "pool": []
+        },
+        {
+          "id": "zhongli",
+          "alts": [
+            "citlali"
+          ],
+          "er": null,
+          "role": "Bouclier (confort N2C)",
+          "pool": [
+            "layla",
+            "thoma"
+          ]
+        }
+      ],
+      "rotationSteps": [
+        "Yelan E → Q",
+        "Xingqiu E → Q",
+        "Zhongli E (bouclier)",
+        "Hu Tao E puis N2C ×8-9, Q en fin de fenêtre"
+      ],
+      "combos": "Le combo : 2 attaques normales → attaque chargée → annule la reculade (N2C jump/dash cancel). Sous 50 % PV pour son passif si tu maîtrises.",
+      "chars": [
+        {
+          "n": "Hu Tao",
+          "e": "pyro",
+          "i": "Hutao"
+        },
+        {
+          "n": "Xingqiu",
+          "e": "hydro",
+          "i": "Xingqiu"
+        },
+        {
+          "n": "Yelan",
+          "e": "hydro",
+          "i": "Yelan"
+        },
+        {
+          "n": "Zhongli",
+          "e": "geo",
+          "i": "Zhongli"
+        }
+      ]
+    },
+    {
+      "id": "ayaka-freeze",
+      "mode": "abyss",
+      "name": "Ayaka Freeze",
+      "half": "2ᵉ moitié",
+      "badge": "viable",
+      "dps": 175000,
+      "rotation": "~21 s",
+      "note": "contrôle total par le gel",
+      "missing": null,
+      "slots": [
+        {
+          "id": "kamisatoayaka",
+          "alts": [],
+          "er": null,
+          "role": "DPS principal",
+          "pool": []
+        },
+        {
+          "id": "shenhe",
+          "alts": [],
+          "er": 160,
+          "role": "Buff Cryo (Plumes)",
+          "pool": []
+        },
+        {
+          "id": "sangonomiyakokomi",
+          "alts": [
+            "barbara"
+          ],
+          "er": null,
+          "role": "Hydro + soin (gel)",
+          "pool": []
+        },
+        {
+          "id": "kaedeharakazuha",
+          "alts": [],
+          "er": null,
+          "role": "Swirl + regroupement",
+          "pool": [
+            "sucrose"
+          ]
+        }
+      ],
+      "rotationSteps": [
+        "Kokomi E",
+        "Kazuha E → Q (absorbe Cryo)",
+        "Shenhe E → Q",
+        "Ayaka sprint (infusion) → attaques → Q sur les ennemis gelés"
+      ],
+      "combos": "Alterne Hydro/Cryo pour un gel permanent. L'ultime d'Ayaka doit partir sur des ennemis gelés et regroupés par Kazuha.",
+      "chars": [
+        {
+          "n": "Ayaka",
+          "e": "cryo",
+          "i": "Ayaka"
+        },
+        {
+          "n": "Shenhe",
+          "e": "cryo",
+          "i": "Shenhe"
+        },
+        {
+          "n": "Kokomi",
+          "e": "hydro",
+          "i": "Kokomi"
+        },
+        {
+          "n": "Kazuha",
+          "e": "anemo",
+          "i": "Kazuha"
+        }
+      ]
+    },
+    {
+      "id": "xiao-premium",
+      "mode": "abyss",
+      "name": "Xiao Hyper (Xianyun)",
+      "half": "1ʳᵉ moitié",
+      "badge": "meta",
+      "dps": 185000,
+      "rotation": "~22 s",
+      "note": "pluie de piqués",
+      "missing": null,
+      "slots": [
+        {
+          "id": "xiao",
+          "alts": [],
+          "er": null,
+          "role": "DPS principal (piqués)",
+          "pool": []
+        },
+        {
+          "id": "faruzan",
+          "alts": [],
+          "er": 200,
+          "role": "Buff Anémo + shred",
+          "pool": []
+        },
+        {
+          "id": "furina",
+          "alts": [],
+          "er": 180,
+          "role": "Buff universel",
+          "pool": []
+        },
+        {
+          "id": "xianyun",
+          "alts": [],
+          "er": 155,
+          "role": "Boost de piqués + soin",
+          "pool": []
+        }
+      ],
+      "rotationSteps": [
+        "Furina E",
+        "Faruzan E → Q",
+        "Xianyun E → Q",
+        "Xiao Q, enchaîne les attaques plongeantes"
+      ],
+      "combos": "Plonge DANS le vortex de Faruzan. Xianyun augmente la hauteur des piqués et soigne — aucun temps mort.",
+      "chars": [
+        {
+          "n": "Xiao",
+          "e": "anemo",
+          "i": "Xiao"
+        },
+        {
+          "n": "Faruzan",
+          "e": "anemo",
+          "i": "Faruzan"
+        },
+        {
+          "n": "Furina",
+          "e": "hydro",
+          "i": "Furina"
+        },
+        {
+          "n": "Xianyun",
+          "e": "anemo",
+          "i": "Liuyun"
+        }
+      ]
+    },
+    {
+      "id": "arlecchino-vape",
+      "mode": "onslaught",
+      "name": "Arlecchino Vaporisation",
+      "half": "Boss unique",
+      "badge": "meta",
+      "dps": 200000,
+      "rotation": "~25 s",
+      "note": "burst massif sur boss",
+      "missing": null,
+      "slots": [
+        {
+          "id": "arlecchino",
+          "alts": [],
+          "er": null,
+          "role": "DPS principal (Directives)",
+          "pool": []
+        },
+        {
+          "id": "yelan",
+          "alts": [
+            "xingqiu"
+          ],
+          "er": 170,
+          "role": "Hydro off-field",
+          "pool": []
+        },
+        {
+          "id": "zhongli",
+          "alts": [
+            "citlali"
+          ],
+          "er": null,
+          "role": "Bouclier",
+          "pool": [
+            "layla",
+            "thoma"
+          ]
+        },
+        {
+          "id": "bennett",
+          "alts": [],
+          "er": 190,
+          "role": "Soin + buff (elle ne se soigne pas seule)",
+          "pool": []
+        }
+      ],
+      "rotationSteps": [
+        "Bennett E → Q",
+        "Yelan E → Q",
+        "Zhongli E",
+        "Arlecchino E (marque) → attaques chargées → récolte les Directives"
+      ],
+      "combos": "Arlecchino ne peut pas être soignée par les autres (sauf son Q) : le buff de Bennett compte, pas son soin. Marque TOUS les ennemis avant de frapper.",
+      "chars": [
+        {
+          "n": "Arlecchino",
+          "e": "pyro",
+          "i": "Arlecchino"
+        },
+        {
+          "n": "Yelan",
+          "e": "hydro",
+          "i": "Yelan"
+        },
+        {
+          "n": "Zhongli",
+          "e": "geo",
+          "i": "Zhongli"
+        },
+        {
+          "n": "Bennett",
+          "e": "pyro",
+          "i": "Bennett"
+        }
+      ]
+    },
+    {
+      "id": "nilou-bloom",
+      "mode": "theater",
+      "name": "Nilou Bloom",
+      "half": "Acte Dendro/Hydro",
+      "badge": "viable",
+      "dps": 160000,
+      "rotation": "~19 s",
+      "note": "explosions de Cœurs de rosée",
+      "missing": null,
+      "slots": [
+        {
+          "id": "nilou",
+          "alts": [],
+          "er": null,
+          "role": "Moteur de Cœurs de rosée",
+          "pool": []
+        },
+        {
+          "id": "nahida",
+          "alts": [],
+          "er": null,
+          "role": "Application Dendro",
+          "pool": []
+        },
+        {
+          "id": "sangonomiyakokomi",
+          "alts": [
+            "barbara"
+          ],
+          "er": null,
+          "role": "Hydro + soin (dégâts Bloom subis)",
+          "pool": []
+        },
+        {
+          "id": "collei",
+          "alts": [],
+          "er": null,
+          "role": "2ᵉ Dendro",
+          "pool": [
+            "emilie"
+          ]
+        }
+      ],
+      "rotationSteps": [
+        "Nahida E → Q",
+        "Nilou E (danse) → 3 coups",
+        "Kokomi E",
+        "Collei E, entretiens les réactions"
+      ],
+      "combos": "⚠ Uniquement des persos Dendro et Hydro, sinon Nilou perd son passif. Les Cœurs blessent aussi ton équipe : garde Kokomi active.",
+      "chars": [
+        {
+          "n": "Nilou",
+          "e": "hydro",
+          "i": "Nilou"
+        },
+        {
+          "n": "Nahida",
+          "e": "dendro",
+          "i": "Nahida"
+        },
+        {
+          "n": "Kokomi",
+          "e": "hydro",
+          "i": "Kokomi"
+        },
+        {
+          "n": "Collei",
+          "e": "dendro",
+          "i": "Collei"
+        }
+      ]
+    },
+    {
+      "id": "skirk-premium",
+      "mode": "abyss",
+      "name": "Skirk Premium",
+      "half": "1ʳᵉ moitié",
+      "badge": "meta",
+      "dps": 230000,
+      "rotation": "~20 s",
+      "note": "le plafond Cryo actuel",
+      "missing": null,
+      "slots": [
+        {
+          "id": "skirk",
+          "alts": [],
+          "er": null,
+          "role": "DPS principal (Sept-Phases)",
+          "pool": []
+        },
+        {
+          "id": "escoffier",
+          "alts": [],
+          "er": null,
+          "role": "Shred Cryo/Hydro + soin",
+          "pool": []
+        },
+        {
+          "id": "citlali",
+          "alts": [],
+          "er": 150,
+          "role": "Buff + bouclier",
+          "pool": [
+            "layla",
+            "diona"
+          ]
+        },
+        {
+          "id": "furina",
+          "alts": [],
+          "er": 180,
+          "role": "Buff universel",
+          "pool": []
+        }
+      ],
+      "rotationSteps": [
+        "Citlali E",
+        "Escoffier E → Q",
+        "Furina E",
+        "Skirk E, enchaîne et ramasse les fissures du Néant"
+      ],
+      "combos": "Skirk n'utilise pas d'énergie : maximise sa fenêtre de terrain. Ramasse les fissures générées par tes Cryo/Hydro pour renforcer son ultime.",
+      "chars": [
+        {
+          "n": "Skirk",
+          "e": "cryo",
+          "i": "SkirkNew"
+        },
+        {
+          "n": "Escoffier",
+          "e": "cryo",
+          "i": "Escoffier"
+        },
+        {
+          "n": "Citlali",
+          "e": "cryo",
+          "i": "Citlali"
+        },
+        {
+          "n": "Furina",
+          "e": "hydro",
+          "i": "Furina"
+        }
+      ]
+    },
+    {
+      "id": "mualani-vape",
+      "mode": "onslaught",
+      "name": "Mualani Vaporisation",
+      "half": "Boss unique",
+      "badge": "viable",
+      "dps": 175000,
+      "rotation": "~18 s",
+      "note": "morsures requin mono-cible",
+      "missing": null,
+      "slots": [
+        {
+          "id": "mualani",
+          "alts": [],
+          "er": null,
+          "role": "DPS Nightsoul (morsures)",
+          "pool": []
+        },
+        {
+          "id": "xilonen",
+          "alts": [],
+          "er": null,
+          "role": "Shred + buff",
+          "pool": []
+        },
+        {
+          "id": "citlali",
+          "alts": [],
+          "er": 150,
+          "role": "Buff Cryo + bouclier",
+          "pool": [
+            "layla",
+            "diona"
+          ]
+        },
+        {
+          "id": "furina",
+          "alts": [],
+          "er": 180,
+          "role": "Buff universel",
+          "pool": []
+        }
+      ],
+      "rotationSteps": [
+        "Citlali E",
+        "Xilonen E",
+        "Furina E",
+        "Mualani E (surf) → morsure chargée ×3"
+      ],
+      "combos": "Chaque 3ᵉ morsure est énorme. Surfe entre les phases pour recharger les points Nightsoul ; surtout du mono-cible.",
+      "chars": [
+        {
+          "n": "Mualani",
+          "e": "hydro",
+          "i": "Mualani"
+        },
+        {
+          "n": "Xilonen",
+          "e": "geo",
+          "i": "Xilonen"
+        },
+        {
+          "n": "Citlali",
+          "e": "cryo",
+          "i": "Citlali"
+        },
+        {
+          "n": "Furina",
+          "e": "hydro",
+          "i": "Furina"
+        }
+      ]
+    },
+    {
+      "id": "fischl-taser",
+      "mode": "theater",
+      "name": "Taser Électro-charge",
+      "half": "Acte flexible",
+      "badge": "viable",
+      "dps": 150000,
+      "rotation": "~18 s",
+      "note": "très flexible, zéro 5★ requis",
+      "missing": null,
+      "slots": [
+        {
+          "id": "fischl",
+          "alts": [],
+          "er": null,
+          "role": "Électro off-field (Oz)",
+          "pool": []
+        },
+        {
+          "id": "beidou",
+          "alts": [],
+          "er": 200,
+          "role": "Électro off-field (parade)",
+          "pool": []
+        },
+        {
+          "id": "xingqiu",
+          "alts": [
+            "yelan"
+          ],
+          "er": 200,
+          "role": "Hydro off-field",
+          "pool": []
+        },
+        {
+          "id": "sucrose",
+          "alts": [
+            "kaedeharakazuha"
+          ],
+          "er": null,
+          "role": "Swirl + regroupement + EM",
+          "pool": []
+        }
+      ],
+      "rotationSteps": [
+        "Fischl E (Oz)",
+        "Beidou E (parade) → Q",
+        "Xingqiu E → Q",
+        "Sucrose E et attaques, pilote et tourbillonne"
+      ],
+      "combos": "Tout tourne tout seul : garde Oz et les éclairs de Beidou actifs. Sucrose partage sa Maîtrise via son passif.",
+      "chars": [
+        {
+          "n": "Fischl",
+          "e": "electro",
+          "i": "Fischl"
+        },
+        {
+          "n": "Beidou",
+          "e": "electro",
+          "i": "Beidou"
+        },
+        {
+          "n": "Xingqiu",
+          "e": "hydro",
+          "i": "Xingqiu"
+        },
+        {
+          "n": "Sucrose",
+          "e": "anemo",
+          "i": "Sucrose"
+        }
+      ]
     }
   ]
 }

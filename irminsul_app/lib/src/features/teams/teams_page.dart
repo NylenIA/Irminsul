@@ -7,11 +7,17 @@ import "../../data/meta_repository.dart";
 import "../../data/team_matcher.dart";
 import "../../i18n/strings.dart";
 import "../../state/providers.dart";
-import "../../theme.dart";
 import "../../widgets/char_icon.dart";
 import "../../widgets/glass_card.dart";
 import "../../widgets/hover_card.dart";
 import "../../widgets/reveal.dart";
+
+const _green = Color(0xFF8BE28B);
+const _amber = Color(0xFFF2C14E);
+const _cyan = Color(0xFF22D3EE);
+
+/// Filtre de mode de la page Équipes (null = tous).
+final _teamsModeProvider = StateProvider<String?>((ref) => null);
 
 /// Team Builder : la BDD méta croisée avec TA box (fichier GOOD importé).
 /// Règle produit : jamais de bricolage — un slot manquant est dit manquant.
@@ -24,6 +30,7 @@ class TeamsPage extends ConsumerWidget {
     final box = ref.watch(boxProvider);
     final meta = ref.watch(metaDbProvider);
     final chars = ref.watch(charactersFullProvider);
+    final mode = ref.watch(_teamsModeProvider);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(30),
@@ -45,7 +52,7 @@ class TeamsPage extends ConsumerWidget {
               style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 22),
           box.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => GlassCard(child: Text("Erreur box : $e")),
@@ -62,28 +69,62 @@ class TeamsPage extends ConsumerWidget {
                       const Center(child: CircularProgressIndicator()),
                   error: (e, _) => GlassCard(child: Text("Erreur : $e")),
                   data: (list) {
-                    final matches = matchTeams(
+                    final all = matchTeams(
                         meta: db, box: playerBox, characters: list);
+                    final shown = mode == null
+                        ? all
+                        : all.where((m) => m.team.mode == mode).toList();
+                    final ready = all.where((m) => m.ready).length;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Reveal(
-                          child: _BoxChip(
-                              count: playerBox.count,
-                              label: playerBox.label,
-                              l: l),
+                          child: Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              _BoxChip(
+                                  count: playerBox.count,
+                                  label: playerBox.label,
+                                  l: l),
+                              _ReadyChip(ready: ready, total: all.length, l: l),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        Reveal(
+                          delayMs: 40,
+                          child: Row(
+                            children: [
+                              _ModeFilter(
+                                  label: l.t("teamsAllModes"),
+                                  value: null,
+                                  current: mode),
+                              _ModeFilter(
+                                  label: l.t("modeAbyss"),
+                                  value: "abyss",
+                                  current: mode),
+                              _ModeFilter(
+                                  label: l.t("modeTheater"),
+                                  value: "theater",
+                                  current: mode),
+                              _ModeFilter(
+                                  label: l.t("modeOnslaught"),
+                                  value: "onslaught",
+                                  current: mode),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 18),
-                        for (var i = 0; i < matches.length; i++) ...[
+                        for (var i = 0; i < shown.length; i++) ...[
                           Reveal(
-                            delayMs: 80 + i * 80,
-                            child: _TeamMatchCard(
-                                match: matches[i], l: l),
+                            delayMs: 60 + (i.clamp(0, 8)) * 70,
+                            child: _TeamMatchCard(match: shown[i], l: l),
                           ),
                           const SizedBox(height: 16),
                         ],
                         Reveal(
-                          delayMs: 100 + matches.length * 80,
                           child: Row(
                             children: [
                               Icon(Icons.science_outlined,
@@ -117,7 +158,7 @@ class TeamsPage extends ConsumerWidget {
   }
 }
 
-// ------------------------------------------------------------------ cards --
+// ------------------------------------------------------------------ chips --
 
 class _NoBoxCard extends StatelessWidget {
   final L l;
@@ -189,6 +230,77 @@ class _BoxChip extends StatelessWidget {
   }
 }
 
+class _ReadyChip extends StatelessWidget {
+  final int ready;
+  final int total;
+  final L l;
+  const _ReadyChip(
+      {required this.ready, required this.total, required this.l});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: _green.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _green.withValues(alpha: 0.35)),
+      ),
+      child: Text(
+        "✓ $ready ${l.t("teamsReadyOf")} $total ${l.t("teamsPlayableNow")}",
+        style: const TextStyle(
+            fontSize: 12.5, fontWeight: FontWeight.w700, color: _green),
+      ),
+    );
+  }
+}
+
+class _ModeFilter extends ConsumerWidget {
+  final String label;
+  final String? value;
+  final String? current;
+  const _ModeFilter(
+      {required this.label, required this.value, required this.current});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cs = Theme.of(context).colorScheme;
+    final active = value == current;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(11),
+        onTap: () => ref.read(_teamsModeProvider.notifier).state = value,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            gradient: active
+                ? LinearGradient(colors: [cs.primary, cs.secondary])
+                : null,
+            color: active ? null : Colors.white.withValues(alpha: 0.045),
+            borderRadius: BorderRadius.circular(11),
+            border: active
+                ? null
+                : Border.all(color: Colors.white.withValues(alpha: 0.09)),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: active ? FontWeight.w700 : FontWeight.normal,
+              color: active ? Colors.white : Colors.white70,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ------------------------------------------------------------------- card --
+
 class _TeamMatchCard extends StatelessWidget {
   final TeamMatch match;
   final L l;
@@ -198,17 +310,13 @@ class _TeamMatchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final t = match.team;
-    final complete = match.complete;
-    const green = Color(0xFF8BE28B);
-    const amber = Color(0xFFF2C14E);
 
     return HoverCard(
-      glow: complete ? cs.primary : Colors.white24,
+      glow: match.ready ? _green : (match.complete ? cs.primary : Colors.white24),
       child: GlassCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ---- entête ----
             Row(
               children: [
                 Expanded(
@@ -232,35 +340,10 @@ class _TeamMatchCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: complete
-                        ? green.withValues(alpha: 0.15)
-                        : amber.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: (complete ? green : amber)
-                          .withValues(alpha: 0.45),
-                    ),
-                  ),
-                  child: Text(
-                    complete
-                        ? "✓ ${l.t("teamsComplete")}"
-                        : "${l.t("teamsMissingPrefix")} ${match.missing.length}",
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: complete ? green : amber,
-                    ),
-                  ),
-                ),
+                _StatusBadge(match: match, l: l),
               ],
             ),
             const SizedBox(height: 16),
-
-            // ---- slots ----
             Wrap(
               spacing: 16,
               runSpacing: 12,
@@ -269,65 +352,52 @@ class _TeamMatchCard extends StatelessWidget {
               ],
             ),
 
-            // ---- suggestions pour les slots manquants ----
+            // ---- slots manquants + remplaçant possédé ----
             if (match.missing.isNotEmpty) ...[
               const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(11),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.04),
-                  borderRadius: BorderRadius.circular(12),
-                  border:
-                      Border.all(color: Colors.white.withValues(alpha: 0.10)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final s in match.missing)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Text(
-                          s.suggestion != null
-                              ? "🔒 ${s.character.name} — ${l.t("teamsSuggestFor")} ${s.suggestion!.name} "
-                                  "(C${s.suggestionData!.constellation} · Nv ${s.suggestionData!.level}"
-                                  "${s.suggestionData!.level < 70 ? " · ${l.t("teamsToBuild")}" : ""})"
-                              : "🔒 ${s.character.name} — ${l.t("teamsNoSuggest")}",
-                          style: const TextStyle(fontSize: 12, height: 1.5),
-                        ),
-                      ),
-                  ],
-                ),
+              _InfoBlock(
+                color: Colors.white24,
+                lines: [
+                  for (final s in match.missing)
+                    s.suggestion != null
+                        ? "🔒 ${s.character.name} — ${l.t("teamsSuggestFor")} "
+                            "${s.suggestion!.name} (C${s.suggestionData!.constellation} · Nv ${s.suggestionData!.level}"
+                            "${s.suggestionNeedsBuild ? " · ${l.t("teamsToBuild")}" : ""})"
+                        : "🔒 ${s.character.name} — ${l.t("teamsNoSuggest")}",
+                ],
               ),
             ],
 
-            // ---- alertes ER (calculées depuis le GOOD) ----
-            if (match.slots.any((s) => s.erWarning)) ...[
-              const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(11),
-                decoration: BoxDecoration(
-                  color: amber.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: amber.withValues(alpha: 0.35)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final s in match.slots.where((x) => x.erWarning))
-                      Text(
-                        "⚡ ${s.character.name} — ${l.t("teamsErEst")} ~${s.erValue!.round()} % ${l.t("teamsErAdvised")} ${s.slot.er} % ${l.t("teamsErNote")}",
-                        style: const TextStyle(fontSize: 12, height: 1.5),
-                      ),
-                  ],
-                ),
+            // ---- équipement (plus juste qu'une alerte ER) ----
+            if (match.equipmentWarnings.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              _InfoBlock(
+                color: _cyan,
+                lines: [
+                  for (final s in match.equipmentWarnings)
+                    s.noArtifacts
+                        ? "🎒 ${s.character.name} — ${l.t("teamsNoArtifacts")}"
+                        : "🗡 ${s.character.name} — ${l.t("teamsWeakWeapon")} (Nv ${s.buildInfo!.weaponLevel})",
+                ],
+              ),
+            ],
+
+            // ---- alertes de recharge ----
+            if (match.erWarnings.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              _InfoBlock(
+                color: _amber,
+                lines: [
+                  for (final s in match.erWarnings)
+                    "⚡ ${s.character.name} — ${l.t("teamsErEst")} ~${s.erValue!.round()} % "
+                        "${l.t("teamsErAdvised")} ${s.slot.er} % ${l.t("teamsErNote")}",
+                ],
               ),
             ],
 
             // ---- rotation + combos ----
             if (t.rotationSteps.isNotEmpty) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Theme(
                 data: Theme.of(context)
                     .copyWith(dividerColor: Colors.transparent),
@@ -426,6 +496,65 @@ class _TeamMatchCard extends StatelessWidget {
       };
 }
 
+class _StatusBadge extends StatelessWidget {
+  final TeamMatch match;
+  final L l;
+  const _StatusBadge({required this.match, required this.l});
+
+  @override
+  Widget build(BuildContext context) {
+    final (color, text) = match.ready
+        ? (_green, "✓ ${l.t("teamsReady")}")
+        : match.complete
+            ? (_cyan, "${l.t("teamsComplete")} · ${l.t("teamsToBuild")}")
+            : (_amber,
+                "${l.t("teamsMissingPrefix")} ${match.missing.length}");
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.45)),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+            fontSize: 11, fontWeight: FontWeight.w800, color: color),
+      ),
+    );
+  }
+}
+
+class _InfoBlock extends StatelessWidget {
+  final Color color;
+  final List<String> lines;
+  const _InfoBlock({required this.color, required this.lines});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(11),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.09),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.32)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final t in lines)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Text(t,
+                  style: const TextStyle(fontSize: 12, height: 1.45)),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _SlotView extends StatelessWidget {
   final SlotMatch s;
   final L l;
@@ -435,6 +564,7 @@ class _SlotView extends StatelessWidget {
   Widget build(BuildContext context) {
     final owned = s.owned;
     final od = s.ownedData;
+    final flagged = s.lowLevel || s.noArtifacts || s.weakWeapon;
     return SizedBox(
       width: 96,
       child: Column(
@@ -458,7 +588,7 @@ class _SlotView extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 5, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF22D3EE),
+                      color: _cyan,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -477,6 +607,18 @@ class _SlotView extends StatelessWidget {
                   right: -2,
                   child: Text("🔒", style: TextStyle(fontSize: 13)),
                 ),
+              if (owned && s.noArtifacts)
+                const Positioned(
+                  bottom: -2,
+                  right: -2,
+                  child: Text("🎒", style: TextStyle(fontSize: 12)),
+                ),
+              if (owned && !s.noArtifacts && s.weakWeapon)
+                const Positioned(
+                  bottom: -2,
+                  right: -2,
+                  child: Text("🗡", style: TextStyle(fontSize: 12)),
+                ),
             ],
           ),
           const SizedBox(height: 6),
@@ -493,17 +635,15 @@ class _SlotView extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             owned
-                ? "C${od!.constellation} · Nv ${od.level}${s.lowLevel ? " ⚠" : ""}"
+                ? "C${od!.constellation} · Nv ${od.level}"
                 : l.t("teamsMissingChar"),
             style: TextStyle(
               fontSize: 10,
-              color: !owned
-                  ? const Color(0xFFF2C14E).withValues(alpha: 0.9)
-                  : s.lowLevel
-                      ? const Color(0xFFF2C14E).withValues(alpha: 0.85)
-                      : Colors.white.withValues(alpha: 0.5),
+              color: !owned || flagged
+                  ? _amber.withValues(alpha: 0.9)
+                  : Colors.white.withValues(alpha: 0.5),
               fontWeight:
-                  owned && !s.lowLevel ? FontWeight.normal : FontWeight.w700,
+                  !owned || flagged ? FontWeight.w700 : FontWeight.normal,
             ),
           ),
           Text(

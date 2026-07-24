@@ -22,20 +22,44 @@ class OwnedChar {
   });
 }
 
+/// État d'équipement réel d'un perso (pour distinguer « mal réglé » de
+/// « pas équipé du tout » : une alerte ER sur un perso sans artefacts est
+/// trompeuse, le vrai problème est ailleurs).
+class BuildInfo {
+  final int artifactCount;
+  final String weaponKey;
+  final int weaponLevel;
+
+  const BuildInfo({
+    required this.artifactCount,
+    required this.weaponKey,
+    required this.weaponLevel,
+  });
+
+  bool get noArtifacts => artifactCount == 0;
+  bool get partialArtifacts => artifactCount > 0 && artifactCount < 5;
+
+  /// Arme visiblement pas montée (arme de départ ou jamais améliorée).
+  bool get weakWeapon => weaponKey.isEmpty || weaponLevel <= 20;
+}
+
 /// La box du joueur, parsée depuis un fichier GOOD.
 class PlayerBox {
   final Map<String, OwnedChar> chars; // par clé GOOD
 
-  /// Estimation de recharge d'énergie PAR PERSO, %, artefacts uniquement
-  /// (base 100 + main stat sablier ER + toutes les sous-stats ER équipées).
-  /// L'arme n'est pas comptée — l'étiquette UI le précise.
+  /// Recharge d'énergie PAR PERSO, % : base 100 + artefacts équipés
+  /// (main stat sablier + sous-stats) + ARME équipée au niveau exact.
   final Map<String, double> erByChar;
+
+  /// Équipement réel par perso (artefacts posés, arme et son niveau).
+  final Map<String, BuildInfo> buildByChar;
 
   final String label;
 
   const PlayerBox({
     required this.chars,
     required this.erByChar,
+    required this.buildByChar,
     required this.label,
   });
 
@@ -79,17 +103,25 @@ class BoxService {
 
     // ---- ER par perso : base 100 + artefacts équipés + ARME équipée ----
     final er = <String, double>{};
+    final artCount = <String, int>{};
+    final wKey = <String, String>{};
+    final wLevel = <String, int>{};
     for (final k in chars.keys) {
       er[k] = 100.0;
+      artCount[k] = 0;
     }
     if (data["weapons"] is List) {
       for (final w in data["weapons"] as List) {
         if (w is! Map) continue;
         final loc = w["location"] as String? ?? "";
         if (loc.isEmpty || !er.containsKey(loc)) continue;
-        final table = erWeapons[w["key"]];
+        final key = w["key"] as String? ?? "";
+        final lvlRaw = (w["level"] as num?)?.toInt() ?? 1;
+        wKey[loc] = key;
+        wLevel[loc] = lvlRaw;
+        final table = erWeapons[key];
         if (table == null || table.isEmpty) continue;
-        final lvl = ((w["level"] as num?)?.toInt() ?? 1).clamp(1, table.length);
+        final lvl = lvlRaw.clamp(1, table.length);
         er[loc] = er[loc]! + table[lvl - 1];
       }
     }
@@ -98,6 +130,7 @@ class BoxService {
         if (a is! Map) continue;
         final loc = a["location"] as String? ?? "";
         if (loc.isEmpty || !er.containsKey(loc)) continue;
+        artCount[loc] = (artCount[loc] ?? 0) + 1;
         // main stat sablier ER (valeur approx. selon rareté/niveau)
         if (a["mainStatKey"] == "enerRech_") {
           final rarity = (a["rarity"] as num?)?.toInt() ?? 5;
@@ -114,7 +147,21 @@ class BoxService {
       }
     }
 
-    return PlayerBox(chars: chars, erByChar: er, label: label);
+    final builds = <String, BuildInfo>{
+      for (final k in chars.keys)
+        k: BuildInfo(
+          artifactCount: artCount[k] ?? 0,
+          weaponKey: wKey[k] ?? "",
+          weaponLevel: wLevel[k] ?? 0,
+        ),
+    };
+
+    return PlayerBox(
+      chars: chars,
+      erByChar: er,
+      buildByChar: builds,
+      label: label,
+    );
   }
 
   static Future<File> _file(String name) async {
