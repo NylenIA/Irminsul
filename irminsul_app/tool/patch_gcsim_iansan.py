@@ -72,11 +72,24 @@ def modernize(content: str) -> str:
     content = re.sub(r"^(\s*return .+?), (?:true|false)$", r"\1",
                      content, flags=re.M)
 
-    # types déplacés combat -> info (constaté à la compilation)
+    # types déplacés combat -> info (mapping vérifié symbole par symbole :
+    # AttackInfo/AttackCB/AttackEvent/Target -> info ; les constructeurs de
+    # hitbox NewCircleHit/NewBoxHitOnTarget/... restent dans combat)
     for old, new in [("combat.AttackCB", "info.AttackCB"),
                      ("*combat.AttackEvent", "*info.AttackEvent"),
-                     ("combat.Target)", "info.Target)")]:
+                     ("combat.Target)", "info.Target)"),
+                     ("combat.AttackInfo", "info.AttackInfo")]:
         content = content.replace(old, new)
+
+    # c.Index est devenu une méthode (champ -> func() int)
+    content = re.sub(r"\bc\.Index\b(?!\()", "c.Index()", content)
+
+    # retire l'import combat s'il n'est plus utilisé après réécriture
+    if '"github.com/genshinsim/gcsim/pkg/core/combat"' in content and \
+            not re.search(r"\bcombat\.", content):
+        content = re.sub(
+            r'^\t"github\.com/genshinsim/gcsim/pkg/core/combat"\n',
+            "", content, flags=re.M)
 
     # garantit l'import de pkg/core/info si `info.` est utilisé
     if re.search(r"\binfo\.", content) and \
