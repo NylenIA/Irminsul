@@ -1,6 +1,7 @@
 name: quality
 on:
   push:
+    branches-ignore: [flutter-app]
   pull_request:
 jobs:
   test:
