@@ -65,7 +65,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) {
             gh release create dev-latest --repo $env:GITHUB_REPOSITORY --prerelease --title "Irminsul (build de dev)" --notes "Dernier build de la branche flutter-app. Telecharge Irminsul-windows.zip, dezippe, lance irminsul.exe."
           }
-          gh release upload dev-latest irminsul_app/Irminsul-windows.zip --repo $env:GITHUB_REPOSITORY --clobber
+          gh release upload dev-latest Irminsul-windows.zip --repo $env:GITHUB_REPOSITORY --clobber
 
       - name: Upload artifact (secours)
         uses: actions/upload-artifact@v4
