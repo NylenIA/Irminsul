@@ -81,8 +81,9 @@ def modernize(content: str) -> str:
                      ("combat.AttackInfo", "info.AttackInfo")]:
         content = content.replace(old, new)
 
-    # c.Index est devenu une méthode (champ -> func() int)
-    content = re.sub(r"\bc\.Index\b(?!\()", "c.Index()", content)
+    # .Index est devenu une méthode (champ -> func() int) — toutes les
+    # occurrences dans ces fichiers sont des refs de personnage (vérifié).
+    content = re.sub(r"\b(\w+)\.Index\b(?!\()", r"\1.Index()", content)
 
     # retire l'import combat s'il n'est plus utilisé après réécriture
     if '"github.com/genshinsim/gcsim/pkg/core/combat"' in content and \
