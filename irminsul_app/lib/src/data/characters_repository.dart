@@ -46,6 +46,7 @@ const archonIds = {
 
 class CharacterFull {
   final String id;
+  final String good; // clé GOOD (scanners) — ex. RaidenShogun, Traveler
   final String name;
   final String title;
   final String element;
@@ -66,6 +67,7 @@ class CharacterFull {
 
   const CharacterFull({
     required this.id,
+    required this.good,
     required this.name,
     required this.title,
     required this.element,
@@ -110,6 +112,7 @@ final charactersFullProvider =
     final m = c as Map<String, dynamic>;
     return CharacterFull(
       id: m["id"] as String,
+      good: m["good"] as String? ?? "",
       name: m["name"] as String,
       title: m["title"] as String? ?? "",
       element: m["element"] as String,
