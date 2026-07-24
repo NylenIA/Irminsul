@@ -1,16 +1,18 @@
 import "package:flutter/material.dart";
 
-/// Palette « Helios + Genshin » : sombre profond, accents violet/rose.
+/// Palette « Irminsul » : sombre profond, arbre-monde de données.
+/// Violet/rose (accent) + cyan (le « côté informatique » / data-tree).
 const kBg = Color(0xFF07070C);
 const kPurple = Color(0xFFA78BFA);
 const kPink = Color(0xFFEC4899);
+const kCyan = Color(0xFF22D3EE);
 const kSurface = Color(0xFF0E0E16);
 
 ThemeData buildTheme() {
   final scheme = ColorScheme.fromSeed(
     seedColor: kPurple,
     brightness: Brightness.dark,
-  ).copyWith(secondary: kPink, surface: kSurface);
+  ).copyWith(secondary: kPink, tertiary: kCyan, surface: kSurface);
 
   return ThemeData(
     useMaterial3: true,
@@ -28,13 +30,3 @@ ThemeData buildTheme() {
     ),
   );
 }
-
-/// Fond dégradé partagé (lueur violette en haut à gauche).
-BoxDecoration appBackground() => const BoxDecoration(
-      gradient: RadialGradient(
-        center: Alignment(-0.9, -1.0),
-        radius: 1.5,
-        colors: [Color(0x33A78BFA), kBg],
-        stops: [0.0, 0.65],
-      ),
-    );

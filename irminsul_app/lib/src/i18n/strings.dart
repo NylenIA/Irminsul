@@ -1,7 +1,6 @@
 import "package:flutter/widgets.dart";
 
 /// i18n minimaliste et robuste (FR/EN) — architecture prête à s'étendre.
-/// Pas de génération de code : un simple dictionnaire, sélectionné par la locale.
 class L {
   final Locale locale;
   const L(this.locale);
@@ -10,8 +9,7 @@ class L {
 
   String get code => locale.languageCode;
 
-  String t(String key) =>
-      _data[key]?[code] ?? _data[key]?["en"] ?? key;
+  String t(String key) => _data[key]?[code] ?? _data[key]?["en"] ?? key;
 
   static const Map<String, Map<String, String>> _data = {
     "welcomeTitle": {
@@ -31,7 +29,8 @@ class L {
     "importGoodDesc": {
       "fr":
           "Choisis ton .json au format GOOD (Inventory Kamera / Genshin Optimizer).",
-      "en": "Choose your .json in GOOD format (Inventory Kamera / Genshin Optimizer).",
+      "en":
+          "Choose your .json in GOOD format (Inventory Kamera / Genshin Optimizer).",
     },
     "importGoodButton": {"fr": "Choisir un fichier", "en": "Choose a file"},
     "importEnkaTitle": {"fr": "Ou utilise ton UID", "en": "Or use your UID"},
@@ -60,6 +59,10 @@ class L {
           "Coming soon: your best teams, ranked by mode, with DPS and what you're missing.",
     },
     "changeAccount": {"fr": "Changer de compte", "en": "Change account"},
+    "underConstruction": {
+      "fr": "En construction — bientôt disponible",
+      "en": "Under construction — coming soon",
+    },
     "navDashboard": {"fr": "Tableau de bord", "en": "Dashboard"},
     "navCharacters": {"fr": "Mes personnages", "en": "My characters"},
     "navTeams": {"fr": "Équipes", "en": "Teams"},
@@ -67,5 +70,7 @@ class L {
     "navGuides": {"fr": "Guides persos", "en": "Character guides"},
     "navFarm": {"fr": "Que farmer", "en": "What to farm"},
     "navSettings": {"fr": "Réglages", "en": "Settings"},
+    "sectionMain": {"fr": "Principal", "en": "Main"},
+    "sectionResources": {"fr": "Ressources", "en": "Resources"},
   };
 }

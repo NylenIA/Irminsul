@@ -9,7 +9,9 @@ import "package:go_router/go_router.dart";
 import "../../i18n/strings.dart";
 import "../../state/providers.dart";
 import "../../theme.dart";
+import "../../widgets/aurora_background.dart";
 import "../../widgets/glass_card.dart";
+import "../../widgets/irminsul_logo.dart";
 
 class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({super.key});
@@ -64,8 +66,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     final l = L(locale);
 
     return Scaffold(
-      body: Container(
-        decoration: appBackground(),
+      body: AuroraBackground(
         child: SafeArea(
           child: Stack(
             children: [
@@ -84,8 +85,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const _Logo(),
-                        const SizedBox(height: 22),
+                        const IrminsulLogo(size: 118),
+                        const SizedBox(height: 20),
                         Text(
                           l.t("welcomeTitle"),
                           style: const TextStyle(
@@ -130,32 +131,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _Logo extends StatelessWidget {
-  const _Logo();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 62,
-      height: 62,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [kPurple, kPink]),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: kPink.withValues(alpha: 0.35),
-            blurRadius: 22,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: const Center(
-        child: Text("🌳", style: TextStyle(fontSize: 30)),
       ),
     );
   }
@@ -240,8 +215,10 @@ class _ImportEnkaCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 14,
+                    ),
                   ),
                 ),
               ),
@@ -271,8 +248,7 @@ class _LangToggle extends ConsumerWidget {
     Widget chip(String code) {
       final active = current == code;
       return GestureDetector(
-        onTap: () =>
-            ref.read(localeProvider.notifier).state = Locale(code),
+        onTap: () => ref.read(localeProvider.notifier).state = Locale(code),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
           margin: const EdgeInsets.only(left: 6),
