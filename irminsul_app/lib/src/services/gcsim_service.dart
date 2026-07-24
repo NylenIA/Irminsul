@@ -105,6 +105,23 @@ class GcsimService {
 
   static Future<bool> available() => binary().exists();
 
+  static String? _versionCache;
+
+  /// Version du moteur embarqué (hash de commit gcsim), pour transparence.
+  static Future<String> version() async {
+    if (_versionCache != null) return _versionCache!;
+    try {
+      final proc = await Process.run(binary().path, ["-version"],
+              stdoutEncoding: utf8, stderrEncoding: utf8)
+          .timeout(const Duration(seconds: 10));
+      final line = "${proc.stdout}".trim().split("\n").first.trim();
+      _versionCache = line.length > 12 ? line.substring(0, 12) : line;
+    } catch (_) {
+      _versionCache = "?";
+    }
+    return _versionCache!;
+  }
+
   static double? _mainValue(String key, int rarity, int level) {
     final table = rarity >= 5 ? _mainMax5 : _mainMax4;
     final mx = table[key];
@@ -266,8 +283,10 @@ class GcsimService {
               gcsimName:
                   (details[i] as Map)["name"] as String? ?? "?",
               dps: i < dpsList.length ? meanOf(dpsList[i]) : 0,
+              // field_time est déjà en secondes (vérifié empiriquement :
+              // la somme des 4 persos ≈ 90 s de combat).
               fieldSeconds:
-                  i < fieldList.length ? meanOf(fieldList[i]) / 60 : 0,
+                  i < fieldList.length ? meanOf(fieldList[i]) : 0,
             ),
         ];
       } catch (_) {

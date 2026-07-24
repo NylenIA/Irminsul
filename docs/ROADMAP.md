@@ -72,6 +72,22 @@
 
 ---
 
+## Étape 4.3 — sous-étapes (validées une par une par l'utilisateur, 2026-07-25)
+
+- **4.3.1 — Moteur & liberté** ✅ : gcsim compilé depuis la DERNIÈRE source à
+  chaque build CI (persos plus récents que la release, ex. Columbina) + version
+  du moteur affichée dans l'app · fix « 0 s de terrain » (field_time déjà en
+  secondes) · créateur : **ATQ ×1 à ×8** au choix (- / +) · astuce anti-piège
+  « ulti en début de rotation = 0 énergie ».
+  Constat vérifié : Zibai/Sandrone/Iansan/Varka/Nefer **pas implémentés** dans
+  gcsim même à HEAD (pas une question de version — travail de l'équipe gcsim).
+- **4.3.2 — Templates partout + dashboard réel** ⏳ (attend validation) :
+  rotations gcsim validées pour les 15 équipes ; DPS de démo du dashboard
+  remplacés par les résultats simulés réels du joueur (avec cache).
+- **4.3.3 — Persos absents & leaks** ⏳ (attend validation) : calcul théorique
+  étiqueté SPÉCULATION pour les kits leakés documentés (Odette V3) via nos
+  propres formules ; suivi auto des nouveaux persos ajoutés à gcsim.
+
 ## Annexe A — Ajustements du Tech Lead (réalité de terrain)
 
 > Je garde **tout** le cahier des charges. Ces points sont des **franchises** pour

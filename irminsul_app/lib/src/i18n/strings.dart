@@ -235,6 +235,17 @@ class L {
       "en": "2 normal attacks",
     },
     "creatorActCharge": {"fr": "Attaque chargée", "en": "Charged attack"},
+    "creatorTipBurstFirst": {
+      "fr":
+          "Astuce : les ultis démarrent à 0 énergie. Commence ta rotation par des compétences (E) pour charger, sinon la simulation attend dans le vide.",
+      "en":
+          "Tip: bursts start at 0 energy. Open your rotation with skills (E) to charge up, otherwise the simulation stalls waiting.",
+    },
+    "simEngineVersion": {"fr": "Moteur embarqué", "en": "Bundled engine"},
+    "simEngineBuiltFromSource": {
+      "fr": "compilé depuis la dernière source à chaque build",
+      "en": "built from latest source on every build",
+    },
     "creatorActDash": {
       "fr": "Dash (annulation d'animation)",
       "en": "Dash (animation cancel)",

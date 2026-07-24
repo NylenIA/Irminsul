@@ -110,6 +110,7 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
   final List<RotationStep> _steps = [];
   String _search = "";
   String? _activeChar; // perso sélectionné pour ajouter des étapes
+  int _atkCount = 2; // nombre d'attaques normales par étape (1..8)
   final _nameCtrl = TextEditingController();
 
   bool _running = false;
@@ -534,10 +535,61 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
                             label: "Q",
                             tip: l.t("creatorActBurst"),
                             onTap: () => _addStep("burst")),
-                        _ActionBtn(
-                            label: "ATQ ×2",
-                            tip: l.t("creatorActAttack"),
-                            onTap: () => _addStep("attack")),
+                        // ATQ ×n : nombre libre (1..8) via - / +
+                        Container(
+                          margin: const EdgeInsets.only(right: 6),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.14),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withValues(alpha: 0.4)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              InkWell(
+                                onTap: () => setState(() => _atkCount =
+                                    (_atkCount - 1).clamp(1, 8)),
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 7, vertical: 8),
+                                  child: Icon(Icons.remove, size: 14),
+                                ),
+                              ),
+                              Tooltip(
+                                message: l.t("creatorActAttack"),
+                                child: InkWell(
+                                  onTap: () => _addStep("attack"),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 9),
+                                    child: Text(
+                                      "ATQ ×$_atkCount",
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () => setState(() => _atkCount =
+                                    (_atkCount + 1).clamp(1, 8)),
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 7, vertical: 8),
+                                  child: Icon(Icons.add, size: 14),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         _ActionBtn(
                             label: "CHARGÉE",
                             tip: l.t("creatorActCharge"),
@@ -553,6 +605,24 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
                       ],
                     ],
                   ),
+                  // Astuce anti-piège : un ulti en tout début de rotation
+                  // démarre à 0 énergie -> la simulation attend dans le vide.
+                  if (_steps.isNotEmpty && _steps.first.action == "burst") ...[
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Text("💡", style: TextStyle(fontSize: 13)),
+                        const SizedBox(width: 7),
+                        Expanded(
+                          child: Text(
+                            l.t("creatorTipBurstFirst"),
+                            style: const TextStyle(
+                                fontSize: 11.5, color: _amber, height: 1.4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   const SizedBox(height: 14),
                   if (_steps.isEmpty)
                     Text(
@@ -738,7 +808,8 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
 
   void _addStep(String action) {
     if (_activeChar == null) return;
-    setState(() => _steps.add(RotationStep(_activeChar!, action)));
+    setState(() =>
+        _steps.add(RotationStep(_activeChar!, action, _atkCount)));
   }
 
   String _actionLabel(RotationStep s) => switch (s.action) {
@@ -760,9 +831,27 @@ void showSimInfoDialog(BuildContext context, L l) {
       title: Text(l.t("simHowTitle")),
       content: SizedBox(
         width: 460,
-        child: Text(
-          l.t("simHowBody"),
-          style: const TextStyle(fontSize: 13, height: 1.6),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l.t("simHowBody"),
+              style: const TextStyle(fontSize: 13, height: 1.6),
+            ),
+            const SizedBox(height: 12),
+            FutureBuilder<String>(
+              future: GcsimService.version(),
+              builder: (context, snap) => Text(
+                "${l.t("simEngineVersion")} : gcsim ${snap.data ?? "…"} "
+                "(${l.t("simEngineBuiltFromSource")})",
+                style: TextStyle(
+                  fontSize: 11.5,
+                  color: Colors.white.withValues(alpha: 0.5),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       actions: [

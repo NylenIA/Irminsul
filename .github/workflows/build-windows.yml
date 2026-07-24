@@ -46,10 +46,27 @@ jobs:
       - name: Build Windows (release)
         run: flutter build windows --release
 
-      - name: Bundle gcsim engine
+      - name: Setup Go (for gcsim engine)
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+
+      # Compilé depuis la DERNIÈRE source (persos plus récents que la release
+      # officielle, ex. Columbina). Repli : release officielle si le build casse.
+      - name: Build gcsim engine from latest source
+        shell: pwsh
         run: |
-          Invoke-WebRequest -Uri "https://github.com/genshinsim/gcsim/releases/latest/download/gcsim_windows_amd64.exe" -OutFile "build/windows/x64/runner/Release/gcsim.exe"
-          if ((Get-Item "build/windows/x64/runner/Release/gcsim.exe").Length -lt 1000000) { throw "gcsim.exe download failed" }
+          git clone --depth 1 https://github.com/genshinsim/gcsim gcsim-src
+          Push-Location gcsim-src
+          go build -o ../build/windows/x64/runner/Release/gcsim.exe ./cmd/gcsim
+          $ok = $LASTEXITCODE -eq 0
+          Pop-Location
+          if (-not $ok -or -not (Test-Path "build/windows/x64/runner/Release/gcsim.exe")) {
+            Write-Host "Build source KO -> repli sur la release officielle"
+            Invoke-WebRequest -Uri "https://github.com/genshinsim/gcsim/releases/latest/download/gcsim_windows_amd64.exe" -OutFile "build/windows/x64/runner/Release/gcsim.exe"
+          }
+          if ((Get-Item "build/windows/x64/runner/Release/gcsim.exe").Length -lt 1000000) { throw "gcsim.exe missing" }
 
       - name: Package (zip)
         run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath Irminsul-windows.zip -Force
