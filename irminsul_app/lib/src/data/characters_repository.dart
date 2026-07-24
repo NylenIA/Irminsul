@@ -31,6 +31,14 @@ class MatEntry {
   const MatEntry(this.name, this.qty, this.icon);
 }
 
+/// Variante d'élément du Voyageur / de la Voyageuse.
+class TravelerVariant {
+  final String element;
+  final List<TalentInfo> talents;
+  final List<ConstellationInfo> cons;
+  const TravelerVariant(this.element, this.talents, this.cons);
+}
+
 /// Archons jouables (+ Furina, archonne de fait pendant Fontaine).
 const archonIds = {
   "venti", "zhongli", "raidenshogun", "nahida", "furina", "mavuika",
@@ -51,8 +59,10 @@ class CharacterFull {
   final List<ConstellationInfo> cons;
   final List<MatEntry> matAscension;
   final List<MatEntry> matTalents;
+  final List<TravelerVariant> variants;
 
   bool get isArchon => archonIds.contains(id);
+  bool get isTraveler => id == "aether" || id == "lumine";
 
   const CharacterFull({
     required this.id,
@@ -69,8 +79,27 @@ class CharacterFull {
     required this.cons,
     required this.matAscension,
     required this.matTalents,
+    required this.variants,
   });
 }
+
+List<TalentInfo> _parseTalents(List raw) => raw
+    .map((t) => TalentInfo(
+          t["slot"] as String,
+          t["name"] as String,
+          t["icon"] as String? ?? "",
+          t["desc"] as String? ?? "",
+        ))
+    .toList();
+
+List<ConstellationInfo> _parseCons(List raw) => raw
+    .map((k) => ConstellationInfo(
+          k["n"] as int,
+          k["name"] as String,
+          k["icon"] as String? ?? "",
+          k["desc"] as String? ?? "",
+        ))
+    .toList();
 
 final charactersFullProvider =
     FutureProvider<List<CharacterFull>>((ref) async {
@@ -90,20 +119,13 @@ final charactersFullProvider =
       description: m["description"] as String? ?? "",
       icon: m["icon"] as String,
       splash: m["splash"] as String? ?? "",
-      talents: (m["talents"] as List)
-          .map((t) => TalentInfo(
-                t["slot"] as String,
-                t["name"] as String,
-                t["icon"] as String? ?? "",
-                t["desc"] as String? ?? "",
-              ))
-          .toList(),
-      cons: (m["cons"] as List)
-          .map((k) => ConstellationInfo(
-                k["n"] as int,
-                k["name"] as String,
-                k["icon"] as String? ?? "",
-                k["desc"] as String? ?? "",
+      talents: _parseTalents(m["talents"] as List),
+      cons: _parseCons(m["cons"] as List),
+      variants: (m["variants"] as List? ?? const [])
+          .map((v) => TravelerVariant(
+                v["el"] as String,
+                _parseTalents(v["talents"] as List),
+                _parseCons(v["cons"] as List),
               ))
           .toList(),
       matAscension: (m["matAscension"] as List)
@@ -231,7 +253,9 @@ class ConstellationNote {
 }
 
 class CuratedBuild {
-  final String id;
+  final String label;
+  final bool recommended; // le meilleur selon la méta actuelle
+  final String? metaNote;
   final String role;
   final String pitch;
   final List<String> talentPriority;
@@ -240,7 +264,9 @@ class CuratedBuild {
   final List<ConstellationNote> constellations;
 
   const CuratedBuild({
-    required this.id,
+    required this.label,
+    required this.recommended,
+    required this.metaNote,
     required this.role,
     required this.pitch,
     required this.talentPriority,
@@ -250,38 +276,47 @@ class CuratedBuild {
   });
 }
 
+/// id perso -> liste de builds curés (le recommandé en premier).
 final curatedBuildsProvider =
-    FutureProvider<Map<String, CuratedBuild>>((ref) async {
+    FutureProvider<Map<String, List<CuratedBuild>>>((ref) async {
   final raw = await rootBundle.loadString("assets/data/characters.json");
   final json = jsonDecode(raw) as Map<String, dynamic>;
-  final map = <String, CuratedBuild>{};
+  final map = <String, List<CuratedBuild>>{};
   for (final c in json["characters"] as List) {
     final m = c as Map<String, dynamic>;
-    final a = m["artifacts"] as Map<String, dynamic>;
-    map[m["id"] as String] = CuratedBuild(
-      id: m["id"] as String,
-      role: m["role"] as String,
-      pitch: m["pitch"] as String,
-      talentPriority: (m["talents"] as List).cast<String>(),
-      weapons: (m["weapons"] as List)
-          .map((w) => WeaponRec(
-                w["fr"] as String? ?? w["n"] as String,
-                w["r"] as String,
-                w["icon"] as String? ?? "",
-              ))
-          .toList(),
-      artifacts: ArtifactRec(
-        a["setfr"] as String? ?? a["set"] as String,
-        a["seticon"] as String? ?? "",
-        a["sands"] as String,
-        a["goblet"] as String,
-        a["circlet"] as String,
-        a["subs"] as String,
-      ),
-      constellations: (m["constellations"] as List)
-          .map((k) => ConstellationNote(k["c"] as String, k["t"] as String))
-          .toList(),
-    );
+    final builds = <CuratedBuild>[];
+    for (final b in m["builds"] as List) {
+      final bm = b as Map<String, dynamic>;
+      final a = bm["artifacts"] as Map<String, dynamic>;
+      builds.add(CuratedBuild(
+        label: bm["label"] as String,
+        recommended: bm["recommended"] as bool? ?? false,
+        metaNote: bm["metaNote"] as String?,
+        role: bm["role"] as String,
+        pitch: bm["pitch"] as String,
+        talentPriority: (bm["talents"] as List).cast<String>(),
+        weapons: (bm["weapons"] as List)
+            .map((w) => WeaponRec(
+                  w["fr"] as String? ?? w["n"] as String,
+                  w["r"] as String,
+                  w["icon"] as String? ?? "",
+                ))
+            .toList(),
+        artifacts: ArtifactRec(
+          a["setfr"] as String? ?? a["set"] as String,
+          a["seticon"] as String? ?? "",
+          a["sands"] as String,
+          a["goblet"] as String,
+          a["circlet"] as String,
+          a["subs"] as String,
+        ),
+        constellations: (bm["constellations"] as List)
+            .map((k) => ConstellationNote(k["c"] as String, k["t"] as String))
+            .toList(),
+      ));
+    }
+    builds.sort((x, y) => (y.recommended ? 1 : 0) - (x.recommended ? 1 : 0));
+    map[m["id"] as String] = builds;
   }
   return map;
 });

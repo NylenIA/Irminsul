@@ -10,52 +10,6 @@
       "element": "pyro",
       "rarity": 5,
       "weaponType": "Épée à deux mains",
-      "role": "DPS Pyro · moteur Nightsoul",
-      "pitch": "Fer de lance Pyro de Natlan : d'énormes dégâts de zone via sa moto Flamestrider et son ultime, alimentés par les points Nightsoul de l'équipe.",
-      "talents": [
-        "Ultime (Q)",
-        "Compétence (E)",
-        "Attaque normale"
-      ],
-      "weapons": [
-        {
-          "n": "A Thousand Blazing Suns",
-          "r": "5★ · signature",
-          "icon": "UI_EquipIcon_Claymore_RadianceSword",
-          "fr": "Mille soleils brûlants"
-        },
-        {
-          "n": "Serpent Spine",
-          "r": "4★ · excellent rapport",
-          "icon": "UI_EquipIcon_Claymore_Kione",
-          "fr": "Ossature du dragon"
-        },
-        {
-          "n": "Beacon of the Reed Sea",
-          "r": "5★ · alternative",
-          "icon": "UI_EquipIcon_Claymore_Deshret",
-          "fr": "Balise de la mer de roseaux"
-        }
-      ],
-      "artifacts": {
-        "set": "Obsidian Codex ×4",
-        "sands": "ATK % (EM en Vaporisation/Fusion)",
-        "goblet": "Dégâts Pyro %",
-        "circlet": "Taux Crit / Dégâts Crit",
-        "subs": "Crit > ATK % > EM",
-        "seticon": "UI_RelicIcon_15038_4",
-        "setfr": "Codex d'obsidienne ×4"
-      },
-      "constellations": [
-        {
-          "c": "C1",
-          "t": "Gros gain d'ATK et de dégâts sur le kit — premier palier fort."
-        },
-        {
-          "c": "C2",
-          "t": "Boost majeur (ATK de base + réductions) — le palier « confort + dégâts » par excellence."
-        }
-      ],
       "materials": {
         "gems": "Agate agnidus",
         "boss": "Noyau source aux motifs dorés secrets",
@@ -63,7 +17,110 @@
         "common": "Sifflets (sentinelle / guerrier / saurien)",
         "talent": "Compétition",
         "weekly": "Corne érodée"
-      }
+      },
+      "builds": [
+        {
+          "label": "MDPS Pyro (Fonte/Vapo)",
+          "recommended": true,
+          "metaNote": "Le meilleur usage selon la méta actuelle : carry principal, entourée de ses buffeuses Natlan.",
+          "role": "DPS Pyro · moteur Nightsoul",
+          "pitch": "Fer de lance Pyro de Natlan : d'énormes dégâts de zone via sa moto Flamestrider et son ultime, alimentés par les points Nightsoul de l'équipe.",
+          "talents": [
+            "Ultime (Q)",
+            "Compétence (E)",
+            "Attaque normale"
+          ],
+          "weapons": [
+            {
+              "n": "A Thousand Blazing Suns",
+              "r": "5★ · signature",
+              "icon": "UI_EquipIcon_Claymore_RadianceSword",
+              "fr": "Mille soleils brûlants"
+            },
+            {
+              "n": "Serpent Spine",
+              "r": "4★ · excellent rapport",
+              "icon": "UI_EquipIcon_Claymore_Kione",
+              "fr": "Ossature du dragon"
+            },
+            {
+              "n": "Beacon of the Reed Sea",
+              "r": "5★ · alternative",
+              "icon": "UI_EquipIcon_Claymore_Deshret",
+              "fr": "Balise de la mer de roseaux"
+            }
+          ],
+          "artifacts": {
+            "set": "Obsidian Codex ×4",
+            "sands": "ATK % (EM en Vaporisation/Fusion)",
+            "goblet": "Dégâts Pyro %",
+            "circlet": "Taux Crit / Dégâts Crit",
+            "subs": "Crit > ATK % > EM",
+            "seticon": "UI_RelicIcon_15038_4",
+            "setfr": "Codex d'obsidienne ×4"
+          },
+          "constellations": [
+            {
+              "c": "C1",
+              "t": "Gros gain d'ATK et de dégâts sur le kit — premier palier fort."
+            },
+            {
+              "c": "C2",
+              "t": "Boost majeur (ATK de base + réductions) — le palier « confort + dégâts » par excellence."
+            }
+          ]
+        },
+        {
+          "label": "Sub-DPS · Burst off-field",
+          "recommended": false,
+          "metaNote": null,
+          "role": "Sub-DPS Pyro · burst",
+          "pitch": "Variante où Mavuika n'occupe pas le terrain : elle entre, pose son ultime massif, et laisse la place. Moins de dégâts totaux que le MDPS, mais utile si ton vrai carry est un autre personnage.",
+          "talents": [
+            "Ultime (Q)",
+            "Compétence (E)"
+          ],
+          "weapons": [
+            {
+              "n": "A Thousand Blazing Suns",
+              "r": "5★ · signature",
+              "icon": "UI_EquipIcon_Claymore_RadianceSword",
+              "fr": "Mille soleils brûlants"
+            },
+            {
+              "n": "Serpent Spine",
+              "r": "4★ · excellent rapport",
+              "icon": "UI_EquipIcon_Claymore_Kione",
+              "fr": "Ossature du dragon"
+            },
+            {
+              "n": "Beacon of the Reed Sea",
+              "r": "5★ · alternative",
+              "icon": "UI_EquipIcon_Claymore_Deshret",
+              "fr": "Balise de la mer de roseaux"
+            }
+          ],
+          "artifacts": {
+            "set": "Emblem of Severed Fate ×4",
+            "setfr": "Emblème du destin brisé ×4",
+            "seticon": "UI_RelicIcon_15020_4",
+            "sands": "ATK % / Recharge",
+            "goblet": "Dégâts Pyro %",
+            "circlet": "Crit",
+            "subs": "Crit > Recharge > ATK %"
+          },
+          "constellations": [
+            {
+              "c": "C1",
+              "t": "Gros gain d'ATK et de dégâts sur le kit — premier palier fort."
+            },
+            {
+              "c": "C2",
+              "t": "Boost majeur (ATK de base + réductions) — le palier « confort + dégâts » par excellence."
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "nahida",
@@ -72,48 +129,6 @@
       "element": "dendro",
       "rarity": 5,
       "weaponType": "Catalyseur",
-      "role": "Sub-DPS / Applicateur Dendro",
-      "pitch": "La meilleure applicatrice Dendro du jeu : son E marque les ennemis et déclenche les réactions en continu, même hors du terrain.",
-      "talents": [
-        "Compétence (E)",
-        "Ultime (Q)",
-        "Attaque normale"
-      ],
-      "weapons": [
-        {
-          "n": "A Thousand Floating Dreams",
-          "r": "5★ · signature",
-          "icon": "UI_EquipIcon_Catalyst_Ayus",
-          "fr": "Mille rêves flottants"
-        },
-        {
-          "n": "Sacrificial Fragments",
-          "r": "4★ · très bon",
-          "icon": "UI_EquipIcon_Catalyst_Fossil",
-          "fr": "Mémoires de rituels"
-        },
-        {
-          "n": "Wandering Evenstar",
-          "r": "4★ · alternative",
-          "icon": "UI_EquipIcon_Catalyst_Pleroma",
-          "fr": "Étoile du soir errante"
-        }
-      ],
-      "artifacts": {
-        "set": "Deepwood Memories ×4",
-        "sands": "Maîtrise élémentaire",
-        "goblet": "Maîtrise élémentaire (ou Dendro %)",
-        "circlet": "Maîtrise élémentaire (ou Crit)",
-        "subs": "EM > Crit > Recharge",
-        "seticon": "UI_RelicIcon_15025_4",
-        "setfr": "Souvenir de forêt ×4"
-      },
-      "constellations": [
-        {
-          "c": "C2",
-          "t": "Réduction de défense + crits garantis pour Brûlure/Bourgeonnement — le palier clé."
-        }
-      ],
       "materials": {
         "gems": "Émeraude nagadus",
         "boss": "Liane d'oblitération",
@@ -121,7 +136,103 @@
         "common": "Spores de Fongus / Pollen fluorescent",
         "talent": "Ingénuité",
         "weekly": "Fils de marionnette"
-      }
+      },
+      "builds": [
+        {
+          "label": "Sub-DPS · Maîtrise élémentaire",
+          "recommended": true,
+          "metaNote": "Son meilleur rôle méta : applicatrice off-field dans les teams Dendro.",
+          "role": "Sub-DPS / Applicateur Dendro",
+          "pitch": "La meilleure applicatrice Dendro du jeu : son E marque les ennemis et déclenche les réactions en continu, même hors du terrain.",
+          "talents": [
+            "Compétence (E)",
+            "Ultime (Q)",
+            "Attaque normale"
+          ],
+          "weapons": [
+            {
+              "n": "A Thousand Floating Dreams",
+              "r": "5★ · signature",
+              "icon": "UI_EquipIcon_Catalyst_Ayus",
+              "fr": "Mille rêves flottants"
+            },
+            {
+              "n": "Sacrificial Fragments",
+              "r": "4★ · très bon",
+              "icon": "UI_EquipIcon_Catalyst_Fossil",
+              "fr": "Mémoires de rituels"
+            },
+            {
+              "n": "Wandering Evenstar",
+              "r": "4★ · alternative",
+              "icon": "UI_EquipIcon_Catalyst_Pleroma",
+              "fr": "Étoile du soir errante"
+            }
+          ],
+          "artifacts": {
+            "set": "Deepwood Memories ×4",
+            "sands": "Maîtrise élémentaire",
+            "goblet": "Maîtrise élémentaire (ou Dendro %)",
+            "circlet": "Maîtrise élémentaire (ou Crit)",
+            "subs": "EM > Crit > Recharge",
+            "seticon": "UI_RelicIcon_15025_4",
+            "setfr": "Souvenir de forêt ×4"
+          },
+          "constellations": [
+            {
+              "c": "C2",
+              "t": "Réduction de défense + crits garantis pour Brûlure/Bourgeonnement — le palier clé."
+            }
+          ]
+        },
+        {
+          "label": "On-field · Conductrice",
+          "recommended": false,
+          "metaNote": null,
+          "role": "DPS on-field Dendro",
+          "pitch": "Variante où Nahida reste sur le terrain (Catalyse/Quickbloom) et pilote la rotation elle-même. Solide, mais son rôle off-field reste le plus fort en méta.",
+          "talents": [
+            "Compétence (E)",
+            "Attaque normale",
+            "Ultime (Q)"
+          ],
+          "weapons": [
+            {
+              "n": "A Thousand Floating Dreams",
+              "r": "5★ · signature",
+              "icon": "UI_EquipIcon_Catalyst_Ayus",
+              "fr": "Mille rêves flottants"
+            },
+            {
+              "n": "Sacrificial Fragments",
+              "r": "4★ · très bon",
+              "icon": "UI_EquipIcon_Catalyst_Fossil",
+              "fr": "Mémoires de rituels"
+            },
+            {
+              "n": "Wandering Evenstar",
+              "r": "4★ · alternative",
+              "icon": "UI_EquipIcon_Catalyst_Pleroma",
+              "fr": "Étoile du soir errante"
+            }
+          ],
+          "artifacts": {
+            "set": "Deepwood Memories ×4",
+            "setfr": "Souvenir de forêt ×4",
+            "seticon": "UI_RelicIcon_15025_4",
+            "sands": "Maîtrise élémentaire",
+            "goblet": "Dendro % / EM",
+            "circlet": "Crit / EM",
+            "subs": "EM > Crit > Recharge"
+          },
+          "constellations": [
+            {
+              "c": "C2",
+              "t": "Réduction de défense + crits garantis pour Brûlure/Bourgeonnement — le palier clé."
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "furina",
@@ -130,48 +241,6 @@
       "element": "hydro",
       "rarity": 5,
       "weaponType": "Épée",
-      "role": "Sub-DPS / Buffeuse universelle",
-      "pitch": "Le meilleur buff de dégâts du jeu via son ultime, plus une application Hydro off-field constante. S'insère dans presque toutes les équipes.",
-      "talents": [
-        "Compétence (E)",
-        "Ultime (Q)",
-        "Attaque normale"
-      ],
-      "weapons": [
-        {
-          "n": "Splendor of Tranquil Waters",
-          "r": "5★ · signature",
-          "icon": "UI_EquipIcon_Sword_Regalis",
-          "fr": "Splendeur des eaux calmes"
-        },
-        {
-          "n": "Festering Desire",
-          "r": "4★ · très bon (événement)",
-          "icon": "UI_EquipIcon_Sword_Magnum",
-          "fr": "Croc suppurant"
-        },
-        {
-          "n": "Fleuve Cendre Ferryman",
-          "r": "4★ · recharge",
-          "icon": "UI_EquipIcon_Sword_Machination",
-          "fr": "Passeur du Fleuve cendré"
-        }
-      ],
-      "artifacts": {
-        "set": "Golden Troupe ×4",
-        "sands": "PV %",
-        "goblet": "PV % (ou Hydro %)",
-        "circlet": "Taux Crit / Dégâts Crit",
-        "subs": "Crit > Recharge (viser ~180-220 %) > PV %",
-        "seticon": "UI_RelicIcon_15032_4",
-        "setfr": "Troupe dorée ×4"
-      },
-      "constellations": [
-        {
-          "c": "C2",
-          "t": "La Fanfare monte bien plus haut → buff nettement plus fort. Palier le plus rentable."
-        }
-      ],
       "materials": {
         "gems": "Lazurite varunada",
         "boss": "Eau n'ayant pas transcendé",
@@ -179,7 +248,56 @@
         "common": "Nectars de Fleur mensongère",
         "talent": "Justice",
         "weekly": "Masse sans lumière"
-      }
+      },
+      "builds": [
+        {
+          "label": "Sub-DPS · Buffeuse (PV)",
+          "recommended": true,
+          "metaNote": "Son unique et meilleur rôle méta : buff universel + application Hydro.",
+          "role": "Sub-DPS / Buffeuse universelle",
+          "pitch": "Le meilleur buff de dégâts du jeu via son ultime, plus une application Hydro off-field constante. S'insère dans presque toutes les équipes.",
+          "talents": [
+            "Compétence (E)",
+            "Ultime (Q)",
+            "Attaque normale"
+          ],
+          "weapons": [
+            {
+              "n": "Splendor of Tranquil Waters",
+              "r": "5★ · signature",
+              "icon": "UI_EquipIcon_Sword_Regalis",
+              "fr": "Splendeur des eaux calmes"
+            },
+            {
+              "n": "Festering Desire",
+              "r": "4★ · très bon (événement)",
+              "icon": "UI_EquipIcon_Sword_Magnum",
+              "fr": "Croc suppurant"
+            },
+            {
+              "n": "Fleuve Cendre Ferryman",
+              "r": "4★ · recharge",
+              "icon": "UI_EquipIcon_Sword_Machination",
+              "fr": "Passeur du Fleuve cendré"
+            }
+          ],
+          "artifacts": {
+            "set": "Golden Troupe ×4",
+            "sands": "PV %",
+            "goblet": "PV % (ou Hydro %)",
+            "circlet": "Taux Crit / Dégâts Crit",
+            "subs": "Crit > Recharge (viser ~180-220 %) > PV %",
+            "seticon": "UI_RelicIcon_15032_4",
+            "setfr": "Troupe dorée ×4"
+          },
+          "constellations": [
+            {
+              "c": "C2",
+              "t": "La Fanfare monte bien plus haut → buff nettement plus fort. Palier le plus rentable."
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "bennett",
@@ -188,51 +306,6 @@
       "element": "pyro",
       "rarity": 4,
       "weaponType": "Épée",
-      "role": "Support · Soin + Buff ATK",
-      "pitch": "Le meilleur 4★ du jeu : son ultime soigne ET donne un énorme buff d'ATK dans sa zone. Pilier de la méta depuis toujours.",
-      "talents": [
-        "Ultime (Q)",
-        "Compétence (E)"
-      ],
-      "weapons": [
-        {
-          "n": "Aquila Favonia",
-          "r": "5★ · ATK de base",
-          "icon": "UI_EquipIcon_Sword_Falcon",
-          "fr": "Épée du faucon"
-        },
-        {
-          "n": "Festering Desire",
-          "r": "4★ · très bon (événement)",
-          "icon": "UI_EquipIcon_Sword_Magnum",
-          "fr": "Croc suppurant"
-        },
-        {
-          "n": "Favonius Sword",
-          "r": "4★ · énergie pour l'équipe",
-          "icon": "UI_EquipIcon_Sword_Zephyrus",
-          "fr": "Épée de Favonius"
-        }
-      ],
-      "artifacts": {
-        "set": "Noblesse Oblige ×4",
-        "sands": "Recharge (ou PV %)",
-        "goblet": "PV %",
-        "circlet": "Bonus de soin (ou PV %)",
-        "subs": "Recharge (viser ~180-220 %) > PV %",
-        "seticon": "UI_RelicIcon_15007_4",
-        "setfr": "Ancien rituel royal ×4"
-      },
-      "constellations": [
-        {
-          "c": "C1",
-          "t": "Le buff d'ATK ne dépend plus des PV — palier essentiel."
-        },
-        {
-          "c": "C6",
-          "t": "⚠️ Convertit les attaques des épéistes/lanciers en Pyro — à réserver aux équipes Pyro."
-        }
-      ],
       "materials": {
         "gems": "Agate agnidus",
         "boss": "Graine de feu",
@@ -240,7 +313,59 @@
         "common": "Insignes des Pilleurs / de corbeau",
         "talent": "Résistance",
         "weekly": "Plume de Stormterror"
-      }
+      },
+      "builds": [
+        {
+          "label": "Support · Soin + ATK",
+          "recommended": true,
+          "metaNote": "Son meilleur rôle méta depuis toujours : pilier soin/buff.",
+          "role": "Support · Soin + Buff ATK",
+          "pitch": "Le meilleur 4★ du jeu : son ultime soigne ET donne un énorme buff d'ATK dans sa zone. Pilier de la méta depuis toujours.",
+          "talents": [
+            "Ultime (Q)",
+            "Compétence (E)"
+          ],
+          "weapons": [
+            {
+              "n": "Aquila Favonia",
+              "r": "5★ · ATK de base",
+              "icon": "UI_EquipIcon_Sword_Falcon",
+              "fr": "Épée du faucon"
+            },
+            {
+              "n": "Festering Desire",
+              "r": "4★ · très bon (événement)",
+              "icon": "UI_EquipIcon_Sword_Magnum",
+              "fr": "Croc suppurant"
+            },
+            {
+              "n": "Favonius Sword",
+              "r": "4★ · énergie pour l'équipe",
+              "icon": "UI_EquipIcon_Sword_Zephyrus",
+              "fr": "Épée de Favonius"
+            }
+          ],
+          "artifacts": {
+            "set": "Noblesse Oblige ×4",
+            "sands": "Recharge (ou PV %)",
+            "goblet": "PV %",
+            "circlet": "Bonus de soin (ou PV %)",
+            "subs": "Recharge (viser ~180-220 %) > PV %",
+            "seticon": "UI_RelicIcon_15007_4",
+            "setfr": "Ancien rituel royal ×4"
+          },
+          "constellations": [
+            {
+              "c": "C1",
+              "t": "Le buff d'ATK ne dépend plus des PV — palier essentiel."
+            },
+            {
+              "c": "C6",
+              "t": "⚠️ Convertit les attaques des épéistes/lanciers en Pyro — à réserver aux équipes Pyro."
+            }
+          ]
+        }
+      ]
     }
   ]
 }

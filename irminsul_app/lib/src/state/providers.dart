@@ -8,6 +8,9 @@ final localeProvider = StateProvider<Locale>((ref) => const Locale("fr"));
 /// Identifiant de la palette d'accent (voir accentPalettes).
 final accentProvider = StateProvider<String>((ref) => "irminsul");
 
+/// Voyageur choisi : "aether" ou "lumine" (affiché dans la Gazette).
+final travelerProvider = StateProvider<String>((ref) => "aether");
+
 /// Sauvegarde d'un réglage (clé "lang" / "accent").
 Future<void> persistSetting(String key, String value) async {
   final prefs = await SharedPreferences.getInstance();

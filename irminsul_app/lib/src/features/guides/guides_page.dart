@@ -134,7 +134,11 @@ class GuidesPage extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => GlassCard(child: Text("Erreur fiches : $e")),
             data: (list) {
+              final traveler = ref.watch(travelerProvider);
               final filtered = list.where((c) {
+                // ne montre que le jumeau choisi (Réglages > Voyageur)
+                if (c.id == "aether" && traveler != "aether") return false;
+                if (c.id == "lumine" && traveler != "lumine") return false;
                 if (elementFilter != null && c.element != elementFilter) {
                   return false;
                 }

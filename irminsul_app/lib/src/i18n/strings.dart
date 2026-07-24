@@ -154,6 +154,17 @@ class L {
     "matAsc": {"fr": "Élévation du personnage", "en": "Character ascension"},
     "matTal": {"fr": "Amélioration des aptitudes", "en": "Talent upgrades"},
     "archonBadge": {"fr": "Archon", "en": "Archon"},
+    "settingsTraveler": {"fr": "Voyageur·se", "en": "Traveler"},
+    "settingsTravelerDesc": {
+      "fr":
+          "Choisis ton jumeau : c'est lui ou elle qui apparaît dans la Gazette, avec toutes ses variantes d'élément.",
+      "en":
+          "Pick your twin: they appear in the Gazette with all their element variants.",
+    },
+    "bestMetaBuild": {
+      "fr": "Meilleur build selon la méta actuelle",
+      "en": "Best build in the current meta",
+    },
     "leaksSection": {
       "fr": "Leaks · non confirmés",
       "en": "Leaks · unconfirmed",

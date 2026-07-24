@@ -29,6 +29,7 @@ class GuideDetailPage extends ConsumerStatefulWidget {
 
 class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
   int _tab = 0;
+  int _variant = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +45,20 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
         if (c == null) {
           return Center(child: Text(l.t("underConstruction")));
         }
-        final color = elementColor(c.element);
-        final build = builds.maybeWhen(
+        // Voyageur : la variante d'élément choisie pilote élément/talents/cons.
+        final hasVariants = c.variants.isNotEmpty;
+        final variant = hasVariants
+            ? c.variants[_variant.clamp(0, c.variants.length - 1)]
+            : null;
+        final effElement = variant?.element ?? c.element;
+        final effTalents = variant?.talents ?? c.talents;
+        final effCons = variant?.cons ?? c.cons;
+        final color = elementColor(effElement);
+        final buildList = builds.maybeWhen(
           data: (m) => m[c.id],
           orElse: () => null,
         );
+        final build = buildList?.firstOrNull;
 
         final tabs = [
           l.t("tabBuild"),
@@ -59,7 +69,8 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
 
         final nation = nationOf(c.region);
         return ElementBackdrop(
-          element: c.element,
+          key: ValueKey(effElement),
+          element: effElement,
           intensity: c.rarity == 5 ? 38 : 24,
           golden: c.isArchon,
           glowA: nation.a,
@@ -84,6 +95,66 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
                   child: _HeroHeader(c: c, curated: build, color: color, l: l),
                 ),
                 const SizedBox(height: 16),
+
+                // ---- variantes d'élément (Voyageur) ----
+                if (hasVariants) ...[
+                  Reveal(
+                    delayMs: 80,
+                    child: Row(
+                      children: [
+                        for (var i = 0; i < c.variants.length; i++)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () => setState(() => _variant = i),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 7),
+                                decoration: BoxDecoration(
+                                  color: elementColor(c.variants[i].element)
+                                      .withValues(
+                                          alpha: _variant == i ? 0.75 : 0.14),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: elementColor(c.variants[i].element)
+                                        .withValues(
+                                            alpha: _variant == i ? 1 : 0.4),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/elements/${c.variants[i].element}.png",
+                                      width: 16,
+                                      height: 16,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      c.variants[i].element[0].toUpperCase() +
+                                          c.variants[i].element.substring(1),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: _variant == i
+                                            ? FontWeight.w800
+                                            : FontWeight.w500,
+                                        color: _variant == i
+                                            ? Colors.black
+                                                .withValues(alpha: 0.8)
+                                            : Colors.white70,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                ],
 
                 // ---- sous-onglets ----
                 Reveal(
@@ -148,9 +219,18 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
                   switchInCurve: Curves.easeOutCubic,
                   child: switch (_tab) {
                     0 => _BuildTab(
-                        key: const ValueKey(0), c: c, curated: build, l: l),
-                    1 => _TalentsTab(key: const ValueKey(1), c: c, l: l),
-                    2 => _ConsTab(key: const ValueKey(2), c: c, l: l),
+                        key: const ValueKey(0),
+                        c: c,
+                        buildList: buildList,
+                        l: l),
+                    1 => _TalentsTab(
+                        key: ValueKey("t$effElement"),
+                        talents: effTalents,
+                        color: color),
+                    2 => _ConsTab(
+                        key: ValueKey("c$effElement"),
+                        cons: effCons,
+                        color: color),
                     _ => _MatsTab(key: const ValueKey(3), c: c, l: l),
                   },
                 ),
@@ -351,17 +431,30 @@ class _HeroHeader extends StatelessWidget {
 
 // ------------------------------------------------------------------ Build --
 
-class _BuildTab extends StatelessWidget {
+class _BuildTab extends StatefulWidget {
   final CharacterFull c;
-  final CuratedBuild? curated;
+  final List<CuratedBuild>? buildList;
   final L l;
   const _BuildTab(
-      {super.key, required this.c, required this.curated, required this.l});
+      {super.key, required this.c, required this.buildList, required this.l});
+
+  @override
+  State<_BuildTab> createState() => _BuildTabState();
+}
+
+class _BuildTabState extends State<_BuildTab> {
+  int _idx = 0;
+
+  CharacterFull get c => widget.c;
+  L get l => widget.l;
 
   @override
   Widget build(BuildContext context) {
     final color = elementColor(c.element);
-    final b = curated;
+    final list = widget.buildList;
+    final b = (list == null || list.isEmpty)
+        ? null
+        : list[_idx.clamp(0, list.length - 1)];
     if (b == null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -402,7 +495,93 @@ class _BuildTab extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ---- sélecteur de builds (si plusieurs) + badge MÉTA ----
+          if (list!.length > 1) ...[
+            Reveal(
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (var i = 0; i < list.length; i++)
+                    InkWell(
+                      borderRadius: BorderRadius.circular(11),
+                      onTap: () => setState(() => _idx = i),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: _idx == i
+                              ? color.withValues(alpha: 0.8)
+                              : Colors.white.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(11),
+                          border: _idx == i
+                              ? null
+                              : Border.all(
+                                  color:
+                                      Colors.white.withValues(alpha: 0.1)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (list[i].recommended) ...[
+                              const Text("⭐",
+                                  style: TextStyle(fontSize: 11)),
+                              const SizedBox(width: 5),
+                            ],
+                            Text(
+                              list[i].label,
+                              style: TextStyle(
+                                fontSize: 12.5,
+                                fontWeight: _idx == i
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                color: _idx == i
+                                    ? Colors.black.withValues(alpha: 0.85)
+                                    : Colors.white70,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
+          ],
+          // ---- bandeau « meilleur selon la méta » ----
+          if (b.recommended && b.metaNote != null) ...[
+            Reveal(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(13),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    color.withValues(alpha: 0.16),
+                    color.withValues(alpha: 0.06),
+                  ]),
+                  borderRadius: BorderRadius.circular(13),
+                  border: Border.all(color: color.withValues(alpha: 0.4)),
+                ),
+                child: Row(
+                  children: [
+                    const Text("⭐", style: TextStyle(fontSize: 15)),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        "${l.t("bestMetaBuild")} — ${b.metaNote!}",
+                        style: const TextStyle(fontSize: 12.5, height: 1.45),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+          ],
           Reveal(
+            delayMs: 30,
             child: GlassCard(
               child: Text(
                 b.pitch,
@@ -584,13 +763,13 @@ class _BuildTab extends StatelessWidget {
 // -------------------------------------------------------------- Aptitudes --
 
 class _TalentsTab extends StatelessWidget {
-  final CharacterFull c;
-  final L l;
-  const _TalentsTab({super.key, required this.c, required this.l});
+  final List<TalentInfo> talents;
+  final Color color;
+  const _TalentsTab({super.key, required this.talents, required this.color});
 
   @override
   Widget build(BuildContext context) {
-    final color = elementColor(c.element);
+    final c = (talents: talents);
     return Column(
       children: [
         for (var i = 0; i < c.talents.length; i++)
@@ -659,13 +838,13 @@ class _TalentsTab extends StatelessWidget {
 // --------------------------------------------------------- Constellations --
 
 class _ConsTab extends StatelessWidget {
-  final CharacterFull c;
-  final L l;
-  const _ConsTab({super.key, required this.c, required this.l});
+  final List<ConstellationInfo> cons;
+  final Color color;
+  const _ConsTab({super.key, required this.cons, required this.color});
 
   @override
   Widget build(BuildContext context) {
-    final color = elementColor(c.element);
+    final c = (cons: cons);
     return Column(
       children: [
         for (var i = 0; i < c.cons.length; i++)

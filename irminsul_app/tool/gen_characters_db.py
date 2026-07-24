@@ -131,6 +131,51 @@ def main() -> None:
         if tfile.exists():
             tal = mat_entries(load(tfile).get("costs", {}), fr_icon)
 
+        # ---- variantes d'élément du Voyageur / de la Voyageuse ----
+        variants: list[dict] = []
+        if cid in ("aether", "lumine"):
+            for el in ("anemo", "geo", "electro", "dendro", "hydro", "pyro",
+                       "cryo"):
+                vid = f"traveler{el}"
+                vt = talents_dir / f"{vid}.json"
+                if not vt.exists():
+                    continue
+                t = load(vt)
+                timg = img_talents.get(vid) or {}
+                vtal = []
+                for key, label in [
+                    ("combat1", "Attaque normale"), ("combat2", "Compétence (E)"),
+                    ("combat3", "Ultime (Q)"),
+                    ("passive1", "Passif — Élévation 1"),
+                    ("passive2", "Passif — Élévation 4"),
+                ]:
+                    node = t.get(key)
+                    if not node:
+                        continue
+                    vtal.append({
+                        "slot": label,
+                        "name": clean(node.get("name")),
+                        "icon": timg.get(f"filename_{key}", ""),
+                        "desc": clean(node.get("description")),
+                    })
+                vcons = []
+                vk = cons_dir / f"{vid}.json"
+                if vk.exists():
+                    k = load(vk)
+                    kimg = img_cons.get(vid) or {}
+                    for i in range(1, 7):
+                        node = k.get(f"c{i}")
+                        if not node:
+                            continue
+                        vcons.append({
+                            "n": i,
+                            "name": clean(node.get("name")),
+                            "icon": kimg.get(f"filename_c{i}", ""),
+                            "desc": clean(node.get("description")),
+                        })
+                if vtal:  # ignore les variantes vides (non sorties)
+                    variants.append({"el": el, "talents": vtal, "cons": vcons})
+
         out.append({
             "id": cid,
             "name": clean(c.get("name")),
@@ -146,6 +191,7 @@ def main() -> None:
             "cons": cons,
             "matAscension": asc,
             "matTalents": tal,
+            "variants": variants,
         })
 
     payload = {

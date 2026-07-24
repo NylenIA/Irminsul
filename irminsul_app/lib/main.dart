@@ -10,12 +10,14 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   final accent = prefs.getString("accent") ?? "irminsul";
   final lang = prefs.getString("lang") ?? "fr";
+  final traveler = prefs.getString("traveler") ?? "aether";
 
   runApp(
     ProviderScope(
       overrides: [
         accentProvider.overrideWith((ref) => accent),
         localeProvider.overrideWith((ref) => Locale(lang)),
+        travelerProvider.overrideWith((ref) => traveler),
       ],
       child: const IrminsulApp(),
     ),
