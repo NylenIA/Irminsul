@@ -4,8 +4,9 @@ import "package:go_router/go_router.dart";
 
 import "../../data/meta_repository.dart";
 import "../../i18n/strings.dart";
+import "../../services/patch_service.dart";
 import "../../state/providers.dart";
-import "../../theme.dart";
+import "../../widgets/char_icon.dart";
 import "../../widgets/glass_card.dart";
 import "../../widgets/hover_card.dart";
 import "../../widgets/reveal.dart";
@@ -58,6 +59,8 @@ class DashboardPage extends ConsumerWidget {
                     ],
                   ),
                 ),
+                _SyncChip(l: l),
+                const SizedBox(width: 10),
                 if (account != null)
                   _AccountChip(
                     text:
@@ -277,7 +280,12 @@ class _TeamCard extends StatelessWidget {
                 for (final c in team.chars)
                   Padding(
                     padding: const EdgeInsets.only(right: 14),
-                    child: _CharAvatar(c: c, dimmed: locked),
+                    child: CharIcon(
+                      name: c.name,
+                      icon: c.icon,
+                      element: c.element,
+                      dimmed: locked,
+                    ),
                   ),
                 const Spacer(),
                 Column(
@@ -398,52 +406,57 @@ class _Badge extends StatelessWidget {
   }
 }
 
-class _CharAvatar extends StatelessWidget {
-  final TeamChar c;
-  final bool dimmed;
-  const _CharAvatar({required this.c, required this.dimmed});
+class _SyncChip extends ConsumerWidget {
+  final L l;
+  const _SyncChip({required this.l});
 
   @override
-  Widget build(BuildContext context) {
-    final color = elementColor(c.element);
-    return Column(
-      children: [
-        Container(
-          width: 52,
-          height: 52,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: dimmed ? 0.03 : 0.06),
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-                color: color.withValues(alpha: dimmed ? 0.3 : 0.8),
-                width: 1.6),
-            boxShadow: dimmed
-                ? const []
-                : [
-                    BoxShadow(
-                        color: color.withValues(alpha: 0.18), blurRadius: 12),
-                  ],
-          ),
-          child: Center(
-            child: Text(
-              c.name.substring(0, 2).toUpperCase(),
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w800,
-                color: dimmed ? Colors.white38 : Colors.white,
-              ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sync = ref.watch(syncStatusProvider);
+    return sync.maybeWhen(
+      data: (s) {
+        final (color, text) = switch (s.state) {
+          SyncState.upToDate => (
+              const Color(0xFF8BE28B),
+              "${l.t("syncUpToDate")} · ${s.localVersion}"
             ),
+          SyncState.updateAvailable => (
+              const Color(0xFFF2C14E),
+              "${l.t("syncUpdate")} ${s.remoteVersion}"
+            ),
+          SyncState.offline => (
+              Colors.white38,
+              "${l.t("syncOffline")} · ${s.localVersion}"
+            ),
+        };
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.045),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.09)),
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          c.name,
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.white.withValues(alpha: dimmed ? 0.35 : 0.6),
+          child: Row(
+            children: [
+              Container(
+                width: 7,
+                height: 7,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                        color: color.withValues(alpha: 0.6), blurRadius: 7),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(text, style: const TextStyle(fontSize: 12)),
+            ],
           ),
-        ),
-      ],
+        );
+      },
+      orElse: () => const SizedBox.shrink(),
     );
   }
 }

@@ -107,5 +107,38 @@ class L {
           "Demo data (indicative theorycraft) — gcsim engine and curated meta DB coming.",
     },
     "enkaLoading": {"fr": "Récupération…", "en": "Fetching…"},
+    "guidesSubtitle": {
+      "fr": "La Gazette de Teyvat — builds, priorités et matériaux, vérifiés.",
+      "en": "The Teyvat Gazette — builds, priorities and materials, verified.",
+    },
+    "curatedNote": {
+      "fr":
+          "Fiches curées (démo) — matériaux vérifiés dans les données du jeu ; builds = standards communautaires. BDD complète via la synchro.",
+      "en":
+          "Curated sheets (demo) — materials verified against game data; builds follow community standards. Full DB comes with sync.",
+    },
+    "back": {"fr": "Retour", "en": "Back"},
+    "sectionTalents": {"fr": "Priorité d'aptitudes", "en": "Talent priority"},
+    "sectionWeapons": {"fr": "Armes recommandées", "en": "Recommended weapons"},
+    "sectionArtifacts": {"fr": "Artefacts", "en": "Artifacts"},
+    "sectionConstellations": {
+      "fr": "Constellations clés",
+      "en": "Key constellations",
+    },
+    "sectionMaterials": {"fr": "Matériaux", "en": "Materials"},
+    "artifactSet": {"fr": "Set", "en": "Set"},
+    "artifactSands": {"fr": "Sablier", "en": "Sands"},
+    "artifactGoblet": {"fr": "Coupe", "en": "Goblet"},
+    "artifactCirclet": {"fr": "Diadème", "en": "Circlet"},
+    "artifactSubs": {"fr": "Sous-stats", "en": "Substats"},
+    "matGems": {"fr": "Gemmes", "en": "Gems"},
+    "matBoss": {"fr": "Boss", "en": "Boss"},
+    "matLocal": {"fr": "Spécialité locale", "en": "Local specialty"},
+    "matCommon": {"fr": "Communs", "en": "Common"},
+    "matTalent": {"fr": "Livres d'aptitude", "en": "Talent books"},
+    "matWeekly": {"fr": "Boss hebdo", "en": "Weekly boss"},
+    "syncUpToDate": {"fr": "Données à jour", "en": "Data up to date"},
+    "syncUpdate": {"fr": "Màj méta dispo :", "en": "Meta update available:"},
+    "syncOffline": {"fr": "Hors-ligne", "en": "Offline"},
   };
 }

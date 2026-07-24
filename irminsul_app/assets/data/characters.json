@@ -1,0 +1,145 @@
+{
+  "metaVersion": "6.2",
+  "dataKind": "CURATED-DEMO",
+  "comment": "Fiches curées de démonstration. Matériaux VÉRIFIÉS dans les données du jeu (genshin-db). Builds = standards communautaires (KQM). La BDD complète arrive avec la synchro OTA.",
+  "characters": [
+    {
+      "id": "mavuika",
+      "name": "Mavuika",
+      "icon": "Mavuika",
+      "element": "pyro",
+      "rarity": 5,
+      "weaponType": "Épée à deux mains",
+      "role": "DPS Pyro · moteur Nightsoul",
+      "pitch": "Fer de lance Pyro de Natlan : d'énormes dégâts de zone via sa moto Flamestrider et son ultime, alimentés par les points Nightsoul de l'équipe.",
+      "talents": ["Ultime (Q)", "Compétence (E)", "Attaque normale"],
+      "weapons": [
+        {"n": "A Thousand Blazing Suns", "r": "5★ · signature"},
+        {"n": "Serpent Spine", "r": "4★ · excellent rapport"},
+        {"n": "Beacon of the Reed Sea", "r": "5★ · alternative"}
+      ],
+      "artifacts": {
+        "set": "Obsidian Codex ×4",
+        "sands": "ATK % (EM en Vaporisation/Fusion)",
+        "goblet": "Dégâts Pyro %",
+        "circlet": "Taux Crit / Dégâts Crit",
+        "subs": "Crit > ATK % > EM"
+      },
+      "constellations": [
+        {"c": "C1", "t": "Gros gain d'ATK et de dégâts sur le kit — premier palier fort."},
+        {"c": "C2", "t": "Boost majeur (ATK de base + réductions) — le palier « confort + dégâts » par excellence."}
+      ],
+      "materials": {
+        "gems": "Agate agnidus",
+        "boss": "Noyau source aux motifs dorés secrets",
+        "local": "Pourprinfleur fanée",
+        "common": "Sifflets (sentinelle / guerrier / saurien)",
+        "talent": "Compétition",
+        "weekly": "Corne érodée"
+      }
+    },
+    {
+      "id": "nahida",
+      "name": "Nahida",
+      "icon": "Nahida",
+      "element": "dendro",
+      "rarity": 5,
+      "weaponType": "Catalyseur",
+      "role": "Sub-DPS / Applicateur Dendro",
+      "pitch": "La meilleure applicatrice Dendro du jeu : son E marque les ennemis et déclenche les réactions en continu, même hors du terrain.",
+      "talents": ["Compétence (E)", "Ultime (Q)", "Attaque normale"],
+      "weapons": [
+        {"n": "A Thousand Floating Dreams", "r": "5★ · signature"},
+        {"n": "Sacrificial Fragments", "r": "4★ · très bon"},
+        {"n": "Wandering Evenstar", "r": "4★ · alternative"}
+      ],
+      "artifacts": {
+        "set": "Deepwood Memories ×4",
+        "sands": "Maîtrise élémentaire",
+        "goblet": "Maîtrise élémentaire (ou Dendro %)",
+        "circlet": "Maîtrise élémentaire (ou Crit)",
+        "subs": "EM > Crit > Recharge"
+      },
+      "constellations": [
+        {"c": "C2", "t": "Réduction de défense + crits garantis pour Brûlure/Bourgeonnement — le palier clé."}
+      ],
+      "materials": {
+        "gems": "Émeraude nagadus",
+        "boss": "Liane d'oblitération",
+        "local": "Kalpalotus",
+        "common": "Spores de Fongus / Pollen fluorescent",
+        "talent": "Ingénuité",
+        "weekly": "Fils de marionnette"
+      }
+    },
+    {
+      "id": "furina",
+      "name": "Furina",
+      "icon": "Furina",
+      "element": "hydro",
+      "rarity": 5,
+      "weaponType": "Épée",
+      "role": "Sub-DPS / Buffeuse universelle",
+      "pitch": "Le meilleur buff de dégâts du jeu via son ultime, plus une application Hydro off-field constante. S'insère dans presque toutes les équipes.",
+      "talents": ["Compétence (E)", "Ultime (Q)", "Attaque normale"],
+      "weapons": [
+        {"n": "Splendor of Tranquil Waters", "r": "5★ · signature"},
+        {"n": "Festering Desire", "r": "4★ · très bon (événement)"},
+        {"n": "Fleuve Cendre Ferryman", "r": "4★ · recharge"}
+      ],
+      "artifacts": {
+        "set": "Golden Troupe ×4",
+        "sands": "PV %",
+        "goblet": "PV % (ou Hydro %)",
+        "circlet": "Taux Crit / Dégâts Crit",
+        "subs": "Crit > Recharge (viser ~180-220 %) > PV %"
+      },
+      "constellations": [
+        {"c": "C2", "t": "La Fanfare monte bien plus haut → buff nettement plus fort. Palier le plus rentable."}
+      ],
+      "materials": {
+        "gems": "Lazurite varunada",
+        "boss": "Eau n'ayant pas transcendé",
+        "local": "Lys lacmineux",
+        "common": "Nectars de Fleur mensongère",
+        "talent": "Justice",
+        "weekly": "Masse sans lumière"
+      }
+    },
+    {
+      "id": "bennett",
+      "name": "Bennett",
+      "icon": "Bennett",
+      "element": "pyro",
+      "rarity": 4,
+      "weaponType": "Épée",
+      "role": "Support · Soin + Buff ATK",
+      "pitch": "Le meilleur 4★ du jeu : son ultime soigne ET donne un énorme buff d'ATK dans sa zone. Pilier de la méta depuis toujours.",
+      "talents": ["Ultime (Q)", "Compétence (E)"],
+      "weapons": [
+        {"n": "Aquila Favonia", "r": "5★ · ATK de base"},
+        {"n": "Festering Desire", "r": "4★ · très bon (événement)"},
+        {"n": "Favonius Sword", "r": "4★ · énergie pour l'équipe"}
+      ],
+      "artifacts": {
+        "set": "Noblesse Oblige ×4",
+        "sands": "Recharge (ou PV %)",
+        "goblet": "PV %",
+        "circlet": "Bonus de soin (ou PV %)",
+        "subs": "Recharge (viser ~180-220 %) > PV %"
+      },
+      "constellations": [
+        {"c": "C1", "t": "Le buff d'ATK ne dépend plus des PV — palier essentiel."},
+        {"c": "C6", "t": "⚠️ Convertit les attaques des épéistes/lanciers en Pyro — à réserver aux équipes Pyro."}
+      ],
+      "materials": {
+        "gems": "Agate agnidus",
+        "boss": "Graine de feu",
+        "local": "Chrysanthème à aubes",
+        "common": "Insignes des Pilleurs / de corbeau",
+        "talent": "Résistance",
+        "weekly": "Plume de Stormterror"
+      }
+    }
+  ]
+}

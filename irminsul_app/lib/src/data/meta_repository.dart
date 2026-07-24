@@ -7,7 +7,8 @@ import "package:flutter_riverpod/flutter_riverpod.dart";
 class TeamChar {
   final String name;
   final String element;
-  const TeamChar(this.name, this.element);
+  final String icon;
+  const TeamChar(this.name, this.element, this.icon);
 }
 
 /// Ce qui manque au joueur pour débloquer la team.
@@ -70,7 +71,8 @@ final metaDbProvider = FutureProvider<MetaDb>((ref) async {
       rotation: m["rotation"] as String? ?? "",
       note: m["note"] as String? ?? "",
       chars: (m["chars"] as List)
-          .map((c) => TeamChar(c["n"] as String, c["e"] as String))
+          .map((c) => TeamChar(
+              c["n"] as String, c["e"] as String, c["i"] as String? ?? ""))
           .toList(),
       missing: m["missing"] == null
           ? null

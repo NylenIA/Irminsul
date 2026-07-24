@@ -13,10 +13,26 @@
       "rotation": "~20 s",
       "note": "uptime 100 %",
       "chars": [
-        {"n": "Mavuika", "e": "pyro"},
-        {"n": "Citlali", "e": "cryo"},
-        {"n": "Bennett", "e": "pyro"},
-        {"n": "Xilonen", "e": "geo"}
+        {
+          "n": "Mavuika",
+          "e": "pyro",
+          "i": "Mavuika"
+        },
+        {
+          "n": "Citlali",
+          "e": "cryo",
+          "i": "Citlali"
+        },
+        {
+          "n": "Bennett",
+          "e": "pyro",
+          "i": "Bennett"
+        },
+        {
+          "n": "Xilonen",
+          "e": "geo",
+          "i": "Xilonen"
+        }
       ],
       "missing": null
     },
@@ -30,10 +46,26 @@
       "rotation": "~21 s",
       "note": "clear estimé 8★",
       "chars": [
-        {"n": "Nahida", "e": "dendro"},
-        {"n": "Furina", "e": "hydro"},
-        {"n": "Raiden", "e": "electro"},
-        {"n": "Xingqiu", "e": "hydro"}
+        {
+          "n": "Nahida",
+          "e": "dendro",
+          "i": "Nahida"
+        },
+        {
+          "n": "Furina",
+          "e": "hydro",
+          "i": "Furina"
+        },
+        {
+          "n": "Raiden",
+          "e": "electro",
+          "i": "Shougun"
+        },
+        {
+          "n": "Xingqiu",
+          "e": "hydro",
+          "i": "Xingqiu"
+        }
       ],
       "missing": null
     },
@@ -47,12 +79,31 @@
       "rotation": "~20 s",
       "note": "≈ +12 % vs ta version actuelle",
       "chars": [
-        {"n": "Mavuika", "e": "pyro"},
-        {"n": "Citlali", "e": "cryo"},
-        {"n": "Iansan", "e": "electro"},
-        {"n": "Bennett", "e": "pyro"}
+        {
+          "n": "Mavuika",
+          "e": "pyro",
+          "i": "Mavuika"
+        },
+        {
+          "n": "Citlali",
+          "e": "cryo",
+          "i": "Citlali"
+        },
+        {
+          "n": "Iansan",
+          "e": "electro",
+          "i": "Iansan"
+        },
+        {
+          "n": "Bennett",
+          "e": "pyro",
+          "i": "Bennett"
+        }
       ],
-      "missing": {"char": "Iansan", "gain": "+12 %"}
+      "missing": {
+        "char": "Iansan",
+        "gain": "+12 %"
+      }
     },
     {
       "id": "furina-mono",
@@ -64,10 +115,26 @@
       "rotation": "~18 s",
       "note": "valorise la largeur de roster",
       "chars": [
-        {"n": "Furina", "e": "hydro"},
-        {"n": "Barbara", "e": "hydro"},
-        {"n": "Fischl", "e": "electro"},
-        {"n": "Beidou", "e": "electro"}
+        {
+          "n": "Furina",
+          "e": "hydro",
+          "i": "Furina"
+        },
+        {
+          "n": "Barbara",
+          "e": "hydro",
+          "i": "Barbara"
+        },
+        {
+          "n": "Fischl",
+          "e": "electro",
+          "i": "Fischl"
+        },
+        {
+          "n": "Beidou",
+          "e": "electro",
+          "i": "Beidou"
+        }
       ],
       "missing": null
     },
@@ -81,10 +148,26 @@
       "rotation": "~22 s",
       "note": "survie assurée (Bennett)",
       "chars": [
-        {"n": "Mavuika", "e": "pyro"},
-        {"n": "Citlali", "e": "cryo"},
-        {"n": "Bennett", "e": "pyro"},
-        {"n": "Zhongli", "e": "geo"}
+        {
+          "n": "Mavuika",
+          "e": "pyro",
+          "i": "Mavuika"
+        },
+        {
+          "n": "Citlali",
+          "e": "cryo",
+          "i": "Citlali"
+        },
+        {
+          "n": "Bennett",
+          "e": "pyro",
+          "i": "Bennett"
+        },
+        {
+          "n": "Zhongli",
+          "e": "geo",
+          "i": "Zhongli"
+        }
       ],
       "missing": null
     }
