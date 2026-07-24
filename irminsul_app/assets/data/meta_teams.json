@@ -1,7 +1,7 @@
 {
   "metaVersion": "6.7",
   "dataKind": "DEMO",
-  "comment": "Données de DÉMONSTRATION (theorycraft indicatif) — remplacées par la BDD méta curée + moteur gcsim (Étape 3/4).",
+  "comment": "BDD meta alignee sur la version LIVE du jeu. metaVersion + lunaName mis a jour a chaque patch via la synchro.",
   "teams": [
     {
       "id": "mavuika-hc",
@@ -1155,5 +1155,6 @@
         }
       ]
     }
-  ]
+  ],
+  "lunaName": "Luna VIII"
 }

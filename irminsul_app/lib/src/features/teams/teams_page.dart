@@ -8,6 +8,7 @@ import "../../data/team_matcher.dart";
 import "../../i18n/strings.dart";
 import "../../services/gcsim_service.dart";
 import "../../state/providers.dart";
+import "team_creator_page.dart" show showSimInfoDialog;
 import "../../widgets/char_icon.dart";
 import "../../widgets/glass_card.dart";
 import "../../widgets/hover_card.dart";
@@ -48,9 +49,21 @@ class TeamsPage extends ConsumerWidget {
           const SizedBox(height: 4),
           Reveal(
             delayMs: 50,
-            child: Text(
-              l.t("teamsSubtitle"),
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l.t("teamsSubtitle"),
+                    style:
+                        TextStyle(color: Colors.white.withValues(alpha: 0.6)),
+                  ),
+                ),
+                FilledButton.icon(
+                  onPressed: () => context.go("/teams/create"),
+                  icon: const Icon(Icons.add, size: 18),
+                  label: Text(l.t("creatorOpen")),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 22),
@@ -665,6 +678,12 @@ class _SimSectionState extends State<_SimSection> {
                   ),
                 ],
               ),
+            ),
+            IconButton(
+              tooltip: l.t("simHowTitle"),
+              icon: Icon(Icons.info_outline,
+                  size: 18, color: Colors.white.withValues(alpha: 0.55)),
+              onPressed: () => showSimInfoDialog(context, l),
             ),
             TextButton(
               onPressed: _running ? null : _run,

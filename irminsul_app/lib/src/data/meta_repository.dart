@@ -75,9 +75,14 @@ class GcsimTemplateData {
 
 class MetaDb {
   final String metaVersion;
+  final String lunaName; // nom officiel en jeu (ex. « Luna VIII » pour 6.7)
   final String dataKind;
   final List<MetaTeam> teams;
-  const MetaDb(this.metaVersion, this.dataKind, this.teams);
+  const MetaDb(this.metaVersion, this.lunaName, this.dataKind, this.teams);
+
+  /// Libellé complet de version, côté jeu ET côté données.
+  String get versionLabel =>
+      lunaName.isEmpty ? metaVersion : "$metaVersion · $lunaName";
 
   List<MetaTeam> byMode(String mode) =>
       teams.where((t) => t.mode == mode).toList();
@@ -130,6 +135,7 @@ final metaDbProvider = FutureProvider<MetaDb>((ref) async {
   }).toList();
   return MetaDb(
     json["metaVersion"] as String,
+    json["lunaName"] as String? ?? "",
     json["dataKind"] as String? ?? "DEMO",
     teams,
   );

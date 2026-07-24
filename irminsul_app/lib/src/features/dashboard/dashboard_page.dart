@@ -59,7 +59,7 @@ class DashboardPage extends ConsumerWidget {
                       Text(
                         metaDb.maybeWhen(
                           data: (db) =>
-                              "${l.t("bestTeamsFor")} — patch ${db.metaVersion}",
+                              "${l.t("bestTeamsFor")} — ${l.t("dashAlignedWith")} ${db.versionLabel}",
                           orElse: () => l.t("dashboardSubtitle"),
                         ),
                         style: TextStyle(

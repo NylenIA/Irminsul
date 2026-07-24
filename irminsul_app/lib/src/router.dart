@@ -8,6 +8,7 @@ import "features/guides/leak_detail_page.dart";
 import "features/onboarding/onboarding_page.dart";
 import "features/placeholder/placeholder_page.dart";
 import "features/settings/settings_page.dart";
+import "features/teams/team_creator_page.dart";
 import "features/teams/teams_page.dart";
 import "shell/app_shell.dart";
 import "widgets/data_sweep.dart";
@@ -66,6 +67,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: "/teams",
           pageBuilder: (context, state) => _fade(const TeamsPage()),
+        ),
+        GoRoute(
+          path: "/teams/create",
+          pageBuilder: (context, state) => _fade(const TeamCreatorPage()),
         ),
         GoRoute(
           path: "/compare",

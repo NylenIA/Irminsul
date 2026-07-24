@@ -194,6 +194,57 @@ class L {
       "fr": "(artefacts + arme, depuis ton GOOD)",
       "en": "(artifacts + weapon, from your GOOD)",
     },
+    "dashAlignedWith": {
+      "fr": "à jour sur la version",
+      "en": "aligned with version",
+    },
+    "creatorOpen": {"fr": "Créer ma team", "en": "Create my team"},
+    "creatorTitle": {"fr": "Créer ma team", "en": "Create my team"},
+    "creatorSubtitle": {
+      "fr":
+          "Choisis 4 personnages de TA box, construis ta rotation, puis simule le vrai DPS avec gcsim.",
+      "en":
+          "Pick 4 characters from YOUR box, build your rotation, then simulate the real DPS with gcsim.",
+    },
+    "creatorStep1": {
+      "fr": "Choisis 4 personnages",
+      "en": "Pick 4 characters",
+    },
+    "creatorStep2": {
+      "fr": "Construis ta rotation (sélectionne un perso, ajoute ses actions)",
+      "en": "Build your rotation (select a character, add their actions)",
+    },
+    "creatorStep3": {
+      "fr": "Nomme, simule, sauvegarde",
+      "en": "Name, simulate, save",
+    },
+    "creatorSaved": {"fr": "Mes équipes créées", "en": "My created teams"},
+    "creatorDefaultName": {"fr": "Ma team", "en": "My team"},
+    "creatorNameHint": {"fr": "Nom de la team…", "en": "Team name…"},
+    "creatorSave": {"fr": "Sauvegarder la team", "en": "Save team"},
+    "creatorNoSteps": {
+      "fr":
+          "Aucune étape — sélectionne un perso ci-dessus puis clique E, Q, ATQ ou CHARGÉE.",
+      "en":
+          "No steps yet — select a character above then tap E, Q, ATK or CHARGED.",
+    },
+    "creatorActSkill": {"fr": "Compétence (E)", "en": "Skill (E)"},
+    "creatorActBurst": {"fr": "Ultime (Q)", "en": "Burst (Q)"},
+    "creatorActAttack": {
+      "fr": "2 attaques normales",
+      "en": "2 normal attacks",
+    },
+    "creatorActCharge": {"fr": "Attaque chargée", "en": "Charged attack"},
+    "simHowTitle": {
+      "fr": "Comment ce DPS est-il calculé ?",
+      "en": "How is this DPS computed?",
+    },
+    "simHowBody": {
+      "fr":
+          "La simulation utilise gcsim, le moteur open source de référence de la communauté theorycrafting : il reproduit les FORMULES DU JEU image par image (dégâts, réactions, ICD, énergie, buffs).\n\nCe qui vient de TOI (fichier GOOD) : niveaux, ascensions, constellations, talents, arme + raffinement + niveau, sets d'artefacts et toutes leurs stats.\n\nHypothèses affichées : cible niveau 100 (10 % de résistances), 90 s de combat, 100 itérations (le min/max montre la variance des crits), rotation standard simplifiée — pas un plafond théorique parfait.\n\nLimite connue : la valeur des main stats d'artefacts non montés au max est approximée linéairement. Les rotations s'affinent patch après patch via la synchro.",
+      "en":
+          "The simulation uses gcsim, the community's reference open-source engine: it reproduces the GAME'S FORMULAS frame by frame (damage, reactions, ICD, energy, buffs).\n\nWhat comes from YOU (GOOD file): levels, ascensions, constellations, talents, weapon + refinement + level, artifact sets and all their stats.\n\nStated assumptions: level 100 target (10% res), 90 s fight, 100 iterations (min/max shows crit variance), simplified standard rotation — not a perfect theoretical ceiling.\n\nKnown limit: main stat values of non-maxed artifacts are linearly approximated. Rotations get refined patch after patch via sync.",
+    },
     "simButton": {
       "fr": "Simuler mon vrai DPS (gcsim)",
       "en": "Simulate my real DPS (gcsim)",

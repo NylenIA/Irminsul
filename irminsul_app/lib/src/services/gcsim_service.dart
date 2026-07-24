@@ -102,6 +102,9 @@ class GcsimService {
   static String _g(String goodKey) =>
       _charMap[goodKey] ?? goodKey.toLowerCase();
 
+  /// Nom gcsim public d'une clé GOOD (pour le créateur de rotations).
+  static String gcsimName(String goodKey) => _g(goodKey);
+
   /// Construit la config gcsim complète depuis le GOOD brut.
   static String buildConfig(
       Map<String, dynamic> good, GcsimTemplate template) {
