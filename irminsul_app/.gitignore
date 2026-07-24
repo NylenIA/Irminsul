@@ -1,0 +1,20 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+
+# Généré par `flutter create` en CI (plateformes + outils)
+/windows/
+/linux/
+/macos/
+/android/
+/ios/
+/web/
+.metadata
+
+# IDE
+.idea/
+*.iml

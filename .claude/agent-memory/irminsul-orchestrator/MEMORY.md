@@ -7,3 +7,5 @@
 - [Niveau compte & méta](feedback_account_level_meta.md) — joueur avancé et calé méta ; importer l'Enka, ne pas présumer le roster
 - [Créateurs de référence](reference_trusted_creators.md) — chaînes YT Nokapt / AlexYukiii / Aiynao (non scrapables, demander liens vidéos)
 - [Rigueur méta "meilleure team"](feedback_meta_research_rigor.md) — calculer le buff-math, croiser créateurs ; Mavuika BiS = Citlali·Iansan·Bennett (pas Xilonen)
+- [Vision produit réelle](project_product_vision.md) — veut un théorycrafteur-dans-une-app (méta, DPS d'équipe, meilleure team) ; déçu de l'impl, envisage repartir de zéro
+- [Discuter avant refonte](feedback_discuss_before_rebuild.md) — décisions produit/archi majeures : spec courte + questions d'abord, code ensuite
