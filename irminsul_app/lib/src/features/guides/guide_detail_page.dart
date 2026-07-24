@@ -200,7 +200,7 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
                   switchInCurve: Curves.easeOutCubic,
                   child: switch (_tab) {
                     0 => _BuildTab(
-                        key: const ValueKey(0), c: c, build: build, l: l),
+                        key: const ValueKey(0), c: c, curated: build, l: l),
                     1 => _TalentsTab(key: const ValueKey(1), c: c, l: l),
                     2 => _ConsTab(key: const ValueKey(2), c: c, l: l),
                     _ => _MatsTab(key: const ValueKey(3), c: c, l: l),
@@ -219,14 +219,15 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
 
 class _BuildTab extends StatelessWidget {
   final CharacterFull c;
-  final CuratedBuild? build;
+  final CuratedBuild? curated;
   final L l;
-  const _BuildTab({super.key, required this.c, required this.build, required this.l});
+  const _BuildTab(
+      {super.key, required this.c, required this.curated, required this.l});
 
   @override
   Widget build(BuildContext context) {
     final color = elementColor(c.element);
-    final b = this.build;
+    final b = curated;
     if (b == null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
