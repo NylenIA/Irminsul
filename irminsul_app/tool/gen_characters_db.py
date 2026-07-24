@@ -37,20 +37,37 @@ def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def mat_names(costs: dict) -> list[str]:
-    seen: list[str] = []
+def mat_entries(costs: dict, fr_icon: dict[str, str]) -> list[dict]:
+    """Agrège {nom -> quantité totale} en gardant l'ordre d'apparition."""
+    order: list[str] = []
+    totals: dict[str, int] = {}
     for items in costs.values():
         for it in items:
             n = it.get("name", "")
-            if n and n != "Mora" and n not in seen:
-                seen.append(n)
-    return seen
+            if not n or n == "Mora":
+                continue
+            if n not in totals:
+                order.append(n)
+                totals[n] = 0
+            totals[n] += int(it.get("count", 0))
+    return [
+        {"n": n, "q": totals[n], "i": fr_icon.get(n, "")} for n in order
+    ]
 
 
 def main() -> None:
     img_chars = load(SRC / "image" / "characters.json")
     img_talents = load(SRC / "image" / "talents.json")
     img_cons = load(SRC / "image" / "constellations.json")
+    img_mats = load(SRC / "image" / "materials.json")
+
+    # nom FR de matériau -> icône (UI_ItemIcon_…)
+    fr_icon: dict[str, str] = {}
+    for mf in (SRC / "French" / "materials").glob("*.json"):
+        m = load(mf)
+        icon = (img_mats.get(mf.stem) or {}).get("filename_icon", "")
+        if m.get("name") and icon:
+            fr_icon[m["name"]] = icon
 
     chars_dir = SRC / "French" / "characters"
     talents_dir = SRC / "French" / "talents"
@@ -108,11 +125,11 @@ def main() -> None:
                     "desc": clean(node.get("description")),
                 })
 
-        # ---- matériaux ----
-        asc = mat_names(c.get("costs", {}))
-        tal: list[str] = []
+        # ---- matériaux (avec quantités totales + icônes) ----
+        asc = mat_entries(c.get("costs", {}), fr_icon)
+        tal: list[dict] = []
         if tfile.exists():
-            tal = mat_names(load(tfile).get("costs", {}))
+            tal = mat_entries(load(tfile).get("costs", {}), fr_icon)
 
         out.append({
             "id": cid,
@@ -124,6 +141,7 @@ def main() -> None:
             "region": clean(c.get("region")),
             "description": clean(c.get("description"))[:400],
             "icon": icon,
+            "splash": (img_chars.get(cid) or {}).get("filename_gachaSplash", ""),
             "talents": talents,
             "cons": cons,
             "matAscension": asc,

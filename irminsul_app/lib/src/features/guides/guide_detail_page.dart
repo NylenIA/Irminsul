@@ -1,15 +1,19 @@
+import "dart:io";
+
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 
 import "../../data/characters_repository.dart";
 import "../../i18n/strings.dart";
+import "../../services/icon_cache.dart";
 import "../../state/providers.dart";
 import "../../theme.dart";
 import "../../widgets/char_icon.dart";
 import "../../widgets/element_backdrop.dart";
 import "../../widgets/game_icon.dart";
 import "../../widgets/glass_card.dart";
+import "../../widgets/gold_shimmer.dart";
 import "../../widgets/reveal.dart";
 
 /// Fiche perso complète : thème + animation de l'élément, sous-onglets
@@ -54,6 +58,8 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
 
         return ElementBackdrop(
           element: c.element,
+          intensity: c.rarity == 5 ? 38 : 24,
+          golden: c.isArchon,
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(30),
             child: Column(
@@ -68,72 +74,10 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
                 ),
                 const SizedBox(height: 8),
 
-                // ---- entête ----
+                // ---- entête héroïque (splash art + reflet 5★) ----
                 Reveal(
                   delayMs: 50,
-                  child: GlassCard(
-                    child: Row(
-                      children: [
-                        CharIcon(
-                          name: c.name,
-                          icon: c.icon,
-                          element: c.element,
-                          size: 88,
-                          showName: false,
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    c.name,
-                                    style: const TextStyle(
-                                        fontSize: 26,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    "★" * c.rarity,
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFFF2C14E)),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                [
-                                  if (c.title.isNotEmpty) c.title,
-                                  c.weaponType,
-                                  if (c.region.isNotEmpty) c.region,
-                                ].join(" · "),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: color,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              if (build != null) ...[
-                                const SizedBox(height: 6),
-                                Text(
-                                  build.role,
-                                  style: TextStyle(
-                                    fontSize: 12.5,
-                                    color:
-                                        Colors.white.withValues(alpha: 0.75),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: _HeroHeader(c: c, curated: build, color: color, l: l),
                 ),
                 const SizedBox(height: 16),
 
@@ -212,6 +156,160 @@ class _GuideDetailPageState extends ConsumerState<GuideDetailPage> {
         );
       },
     );
+  }
+}
+
+// ------------------------------------------------------------ Entête héro --
+
+class _HeroHeader extends StatelessWidget {
+  final CharacterFull c;
+  final CuratedBuild? curated;
+  final Color color;
+  final L l;
+  const _HeroHeader({
+    required this.c,
+    required this.curated,
+    required this.color,
+    required this.l,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final core = Container(
+      height: 168,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.045),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: c.rarity == 5
+              ? const Color(0xFFF6D27A).withValues(alpha: 0.35)
+              : Colors.white.withValues(alpha: 0.09),
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // splash art gacha en fond (fondu vers la gauche)
+          if (c.splash.isNotEmpty)
+            Positioned.fill(
+              child: FutureBuilder<File?>(
+                future: IconCache.get(c.splash),
+                builder: (context, snap) {
+                  if (snap.data == null) return const SizedBox.shrink();
+                  return ShaderMask(
+                    shaderCallback: (r) => const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black45,
+                        Colors.black,
+                      ],
+                      stops: [0.15, 0.45, 0.8],
+                    ).createShader(r),
+                    blendMode: BlendMode.dstIn,
+                    child: Image.file(
+                      snap.data!,
+                      fit: BoxFit.cover,
+                      alignment: const Alignment(0.4, -0.4),
+                      opacity: const AlwaysStoppedAnimation(0.55),
+                    ),
+                  );
+                },
+              ),
+            ),
+          // contenu
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                CharIcon(
+                  name: c.name,
+                  icon: c.icon,
+                  element: c.element,
+                  size: 92,
+                  showName: false,
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            c.name,
+                            style: const TextStyle(
+                                fontSize: 27, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            "★" * c.rarity,
+                            style: const TextStyle(
+                                fontSize: 12, color: Color(0xFFF2C14E)),
+                          ),
+                          if (c.isArchon) ...[
+                            const SizedBox(width: 10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(colors: [
+                                  Color(0xFFF6D27A),
+                                  Color(0xFFE9B84C),
+                                ]),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Text(
+                                "👑 ${l.t("archonBadge")}",
+                                style: const TextStyle(
+                                  fontSize: 10.5,
+                                  fontWeight: FontWeight.w800,
+                                  color: Color(0xFF3A2C08),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        [
+                          if (c.title.isNotEmpty) c.title,
+                          c.weaponType,
+                          if (c.region.isNotEmpty) c.region,
+                        ].join(" · "),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: color,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (curated != null) ...[
+                        const SizedBox(height: 6),
+                        Text(
+                          curated!.role,
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            color: Colors.white.withValues(alpha: 0.8),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    // 5★ : reflet doré qui balaye la carte.
+    return c.rarity == 5 ? GoldShimmer(child: core) : core;
   }
 }
 
@@ -611,33 +709,46 @@ class _MatsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = elementColor(c.element);
-    Widget chips(List<String> items) => Wrap(
-          spacing: 8,
-          runSpacing: 8,
+    Widget chips(List<MatEntry> items) => Wrap(
+          spacing: 10,
+          runSpacing: 10,
           children: [
             for (final m in items)
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                width: 220,
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(13),
                   border:
                       Border.all(color: Colors.white.withValues(alpha: 0.10)),
                 ),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: color.withValues(alpha: 0.8),
-                        shape: BoxShape.circle,
+                    GameIcon(
+                      filename: m.icon,
+                      size: 40,
+                      fallback: Icons.category_outlined,
+                      tint: color,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        m.name,
+                        style: const TextStyle(fontSize: 12, height: 1.3),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Text(m, style: const TextStyle(fontSize: 12.5)),
+                    const SizedBox(width: 6),
+                    Text(
+                      "×${m.qty}",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        color: color,
+                      ),
+                    ),
                   ],
                 ),
               ),

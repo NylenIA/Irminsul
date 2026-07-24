@@ -4,6 +4,7 @@ import "package:go_router/go_router.dart";
 import "features/dashboard/dashboard_page.dart";
 import "features/guides/guide_detail_page.dart";
 import "features/guides/guides_page.dart";
+import "features/guides/leak_detail_page.dart";
 import "features/onboarding/onboarding_page.dart";
 import "features/placeholder/placeholder_page.dart";
 import "features/settings/settings_page.dart";
@@ -74,6 +75,11 @@ final appRouter = GoRouter(
         GoRoute(
           path: "/guides",
           pageBuilder: (context, state) => _fade(const GuidesPage()),
+        ),
+        GoRoute(
+          path: "/guides/leaks/:id",
+          pageBuilder: (context, state) =>
+              _fade(LeakDetailPage(id: state.pathParameters["id"] ?? "")),
         ),
         GoRoute(
           path: "/guides/:id",

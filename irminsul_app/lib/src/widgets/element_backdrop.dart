@@ -33,23 +33,27 @@ const _presets = <String, _MotionPreset>{
   "none": _MotionPreset([kPurple, kCyan, Color(0xFFE9D5FF)], -1, 14, 0.7),
 };
 
+const _gold = Color(0xFFF6D27A);
+
 class _Mote {
   final double x0, y0, size, phase, speedVar;
   const _Mote(this.x0, this.y0, this.size, this.phase, this.speedVar);
 }
 
-/// Fond animé thématique par élément : particules bien visibles (braises qui
-/// montent, gouttes qui tombent, flocons qui dérivent, étincelles qui
-/// crépitent, feuilles portées par le vent…), boucle 12 s.
+/// Fond animé thématique par élément : SYMBOLE de l'élément en filigrane
+/// (rotation/pulsation lentes) + particules bien visibles. L'intensité suit
+/// la rareté ; les Archons reçoivent des éclats dorés.
 class ElementBackdrop extends StatefulWidget {
   final String element;
   final Widget child;
-  final int count;
+  final int intensity; // nombre de particules
+  final bool golden; // éclats dorés (Archons)
   const ElementBackdrop({
     super.key,
     required this.element,
     required this.child,
-    this.count = 30,
+    this.intensity = 30,
+    this.golden = false,
   });
 
   @override
@@ -68,7 +72,7 @@ class _ElementBackdropState extends State<ElementBackdrop>
         vsync: this, duration: const Duration(seconds: 12))
       ..repeat();
     final rnd = Random(widget.element.hashCode);
-    _motes = List.generate(widget.count, (_) {
+    _motes = List.generate(widget.intensity, (_) {
       return _Mote(
         rnd.nextDouble(),
         rnd.nextDouble(),
@@ -87,8 +91,19 @@ class _ElementBackdropState extends State<ElementBackdrop>
 
   @override
   Widget build(BuildContext context) {
-    final preset = _presets[widget.element] ?? _presets["none"]!;
+    var preset = _presets[widget.element] ?? _presets["none"]!;
+    if (widget.golden) {
+      preset = _MotionPreset(
+        [...preset.colors, _gold, _gold],
+        preset.dy,
+        preset.wiggle,
+        preset.speed,
+        jitter: preset.jitter,
+      );
+    }
     final glow = elementColor(widget.element);
+    final hasSymbol = widget.element != "none";
+
     return Stack(
       children: [
         // lueur d'ambiance de l'élément (haut de page)
@@ -109,6 +124,34 @@ class _ElementBackdropState extends State<ElementBackdrop>
             ),
           ),
         ),
+        // SYMBOLE de l'élément en filigrane (respiration + rotation lente)
+        if (hasSymbol)
+          Positioned(
+            right: -70,
+            bottom: -50,
+            child: IgnorePointer(
+              child: AnimatedBuilder(
+                animation: _c,
+                builder: (context, _) {
+                  final t = _c.value;
+                  final pulse = 0.06 + 0.035 * sin(t * 2 * pi);
+                  return Transform.rotate(
+                    angle: sin(t * 2 * pi) * 0.06,
+                    child: Opacity(
+                      opacity: pulse + (widget.golden ? 0.02 : 0),
+                      child: Image.asset(
+                        "assets/elements/${widget.element}.png",
+                        width: 440,
+                        height: 440,
+                        color: glow,
+                        colorBlendMode: BlendMode.srcIn,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
         Positioned.fill(
           child: IgnorePointer(
             child: AnimatedBuilder(
@@ -139,7 +182,6 @@ class _BackdropPainter extends CustomPainter {
 
       double x, y;
       if (p.dy == 0) {
-        // dérive horizontale (anémo)
         x = size.width * ((m.x0 + prog) % 1.0);
         y = size.height * m.y0 +
             sin(prog * 2 * pi + m.phase * 6) * p.wiggle;
@@ -153,19 +195,16 @@ class _BackdropPainter extends CustomPainter {
         y += cos(t * 52 * pi + i * 5) * 2.2;
       }
 
-      // fondu entrée/sortie sur le cycle + scintillement léger
       final vis = sin(prog * pi) *
           (0.55 + 0.45 * sin(t * 8 * pi + m.phase * 9)).clamp(0.35, 1.0);
       if (vis <= 0.02) continue;
 
       final color = p.colors[i % p.colors.length];
-      // halo
       canvas.drawCircle(
         Offset(x, y),
         m.size * 3.0,
         Paint()..color = color.withValues(alpha: 0.10 * vis),
       );
-      // cœur
       canvas.drawCircle(
         Offset(x, y),
         m.size,

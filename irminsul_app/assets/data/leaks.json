@@ -1,0 +1,38 @@
+{
+  "dataKind": "LEAK",
+  "disclaimer": "Contenu NON OFFICIEL et NON CONFIRMÉ, issu de leaks publics de bêta. Tout peut changer ou être annulé avant la sortie. Jamais présenté comme information officielle.",
+  "updated": "2026-07-24",
+  "characters": [
+    {
+      "id": "odette",
+      "name": "Odette",
+      "element": "cryo",
+      "rarity": 5,
+      "weaponType": "Épée (rapporté)",
+      "expected": "v7.0 (estimée ~12 août 2026, selon leaks)",
+      "kitVersion": "V3 (bêta)",
+      "score": 67,
+      "grade": "C · plausible, confirmation insuffisante",
+      "summary": "5★ Cryo de Snezhnaya (rapporté). Danseuse qui invoque son double « Solo Reflection » : il alterne des pas de danse (Feather Step / Wing Step) infligeant des DGT Cryo autour de lui.",
+      "kit": [
+        {
+          "t": "Compétence (rapportée)",
+          "d": "Danse gracieuse : DGT Cryo de zone + invocation du Solo Reflection, qui attaque en alternant Feather Step et Wing Step."
+        },
+        {
+          "t": "Ultime (rapporté)",
+          "d": "Danse rapide multi-coups, réinvoque le Solo Reflection et accorde le buff « Dream of the Snow Swan » (augmente les dégâts de réaction)."
+        },
+        {
+          "t": "Mécanique d'équipe (rapportée)",
+          "d": "Convertit pour toute l'équipe Supraconducteur → « Stellar-Conduct » et Tourbillon Cryo → « Stellar-Swirl » (réactions améliorées)."
+        }
+      ],
+      "sources": [
+        {"n": "Sportskeeda (repost leaks bêta)", "d": "juillet 2026"},
+        {"n": "ThePhraseMaker — analyse kit V3", "d": "14 juillet 2026"},
+        {"n": "EnjoyGM — récap leaks 7.0", "d": "juillet 2026"}
+      ]
+    }
+  ]
+}

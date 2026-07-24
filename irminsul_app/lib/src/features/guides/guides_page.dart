@@ -87,6 +87,49 @@ class GuidesPage extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
 
+          // ---- LEAKS (non confirmés, étiquetés) ----
+          ref.watch(leaksProvider).maybeWhen(
+                data: (db) => db.characters.isEmpty
+                    ? const SizedBox.shrink()
+                    : Padding(
+                        padding: const EdgeInsets.only(bottom: 22),
+                        child: Reveal(
+                          delayMs: 70,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.warning_amber_rounded,
+                                      size: 16, color: Color(0xFFFF7B9C)),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    l.t("leaksSection").toUpperCase(),
+                                    style: const TextStyle(
+                                      fontSize: 11.5,
+                                      letterSpacing: 1.4,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFFFF7B9C),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Wrap(
+                                spacing: 14,
+                                runSpacing: 14,
+                                children: [
+                                  for (final lc in db.characters)
+                                    _LeakCard(c: lc),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                orElse: () => const SizedBox.shrink(),
+              ),
+
           chars.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => GlassCard(child: Text("Erreur fiches : $e")),
@@ -173,6 +216,101 @@ class _ElementDot extends StatelessWidget {
             boxShadow: active
                 ? [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 10)]
                 : const [],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LeakCard extends StatelessWidget {
+  final LeakCharacter c;
+  const _LeakCard({required this.c});
+
+  @override
+  Widget build(BuildContext context) {
+    const leakColor = Color(0xFFFF7B9C);
+    final color = elementColor(c.element);
+    return HoverCard(
+      glow: leakColor,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: () => context.go("/guides/leaks/${c.id}"),
+        child: Container(
+          width: 240,
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: leakColor.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: leakColor.withValues(alpha: 0.35)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(15),
+                  border:
+                      Border.all(color: leakColor.withValues(alpha: 0.6)),
+                ),
+                child: Center(
+                  child: Text(
+                    "?",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          c.name,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: leakColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Text(
+                            "LEAK",
+                            style: TextStyle(
+                              fontSize: 8.5,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xFF3A0A18),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "${"★" * c.rarity} · ${c.expected}",
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        color: Colors.white.withValues(alpha: 0.5),
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

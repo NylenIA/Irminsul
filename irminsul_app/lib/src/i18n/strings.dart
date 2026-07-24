@@ -153,6 +153,16 @@ class L {
     },
     "matAsc": {"fr": "Élévation du personnage", "en": "Character ascension"},
     "matTal": {"fr": "Amélioration des aptitudes", "en": "Talent upgrades"},
+    "archonBadge": {"fr": "Archon", "en": "Archon"},
+    "leaksSection": {
+      "fr": "Leaks · non confirmés",
+      "en": "Leaks · unconfirmed",
+    },
+    "leakBadge": {"fr": "LEAK", "en": "LEAK"},
+    "leakExpected": {"fr": "Attendue", "en": "Expected"},
+    "leakScore": {"fr": "Fiabilité estimée", "en": "Estimated reliability"},
+    "leakSources": {"fr": "Sources publiques", "en": "Public sources"},
+    "leakUpdated": {"fr": "Dernière mise à jour :", "en": "Last updated:"},
     "gameDataNote": {
       "fr":
           "Données du jeu (genshin-db, FR officiel) — noms et descriptions exacts, 120 personnages.",

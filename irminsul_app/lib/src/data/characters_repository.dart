@@ -24,6 +24,18 @@ class ConstellationInfo {
   const ConstellationInfo(this.n, this.name, this.icon, this.desc);
 }
 
+class MatEntry {
+  final String name;
+  final int qty;
+  final String icon;
+  const MatEntry(this.name, this.qty, this.icon);
+}
+
+/// Archons jouables (+ Furina, archonne de fait pendant Fontaine).
+const archonIds = {
+  "venti", "zhongli", "raidenshogun", "nahida", "furina", "mavuika",
+};
+
 class CharacterFull {
   final String id;
   final String name;
@@ -34,10 +46,13 @@ class CharacterFull {
   final String region;
   final String description;
   final String icon; // nom d'asset complet (UI_AvatarIcon_…)
+  final String splash; // splash art gacha (UI_Gacha_AvatarImg_…)
   final List<TalentInfo> talents;
   final List<ConstellationInfo> cons;
-  final List<String> matAscension;
-  final List<String> matTalents;
+  final List<MatEntry> matAscension;
+  final List<MatEntry> matTalents;
+
+  bool get isArchon => archonIds.contains(id);
 
   const CharacterFull({
     required this.id,
@@ -49,6 +64,7 @@ class CharacterFull {
     required this.region,
     required this.description,
     required this.icon,
+    required this.splash,
     required this.talents,
     required this.cons,
     required this.matAscension,
@@ -73,6 +89,7 @@ final charactersFullProvider =
       region: m["region"] as String? ?? "",
       description: m["description"] as String? ?? "",
       icon: m["icon"] as String,
+      splash: m["splash"] as String? ?? "",
       talents: (m["talents"] as List)
           .map((t) => TalentInfo(
                 t["slot"] as String,
@@ -89,10 +106,99 @@ final charactersFullProvider =
                 k["desc"] as String? ?? "",
               ))
           .toList(),
-      matAscension: (m["matAscension"] as List).cast<String>(),
-      matTalents: (m["matTalents"] as List).cast<String>(),
+      matAscension: (m["matAscension"] as List)
+          .map((x) => MatEntry(
+              x["n"] as String, x["q"] as int, x["i"] as String? ?? ""))
+          .toList(),
+      matTalents: (m["matTalents"] as List)
+          .map((x) => MatEntry(
+              x["n"] as String, x["q"] as int, x["i"] as String? ?? ""))
+          .toList(),
     );
   }).toList();
+});
+
+// ---------------------------------------------------------------------------
+// LEAKS — contenu NON confirmé, toujours étiqueté (docs/LEAK_POLICY).
+// ---------------------------------------------------------------------------
+
+class LeakKitPart {
+  final String title;
+  final String desc;
+  const LeakKitPart(this.title, this.desc);
+}
+
+class LeakSource {
+  final String name;
+  final String date;
+  const LeakSource(this.name, this.date);
+}
+
+class LeakCharacter {
+  final String id;
+  final String name;
+  final String element;
+  final int rarity;
+  final String weaponType;
+  final String expected;
+  final String kitVersion;
+  final int score;
+  final String grade;
+  final String summary;
+  final List<LeakKitPart> kit;
+  final List<LeakSource> sources;
+
+  const LeakCharacter({
+    required this.id,
+    required this.name,
+    required this.element,
+    required this.rarity,
+    required this.weaponType,
+    required this.expected,
+    required this.kitVersion,
+    required this.score,
+    required this.grade,
+    required this.summary,
+    required this.kit,
+    required this.sources,
+  });
+}
+
+class LeaksDb {
+  final String disclaimer;
+  final String updated;
+  final List<LeakCharacter> characters;
+  const LeaksDb(this.disclaimer, this.updated, this.characters);
+}
+
+final leaksProvider = FutureProvider<LeaksDb>((ref) async {
+  final raw = await rootBundle.loadString("assets/data/leaks.json");
+  final json = jsonDecode(raw) as Map<String, dynamic>;
+  return LeaksDb(
+    json["disclaimer"] as String,
+    json["updated"] as String,
+    (json["characters"] as List).map((c) {
+      final m = c as Map<String, dynamic>;
+      return LeakCharacter(
+        id: m["id"] as String,
+        name: m["name"] as String,
+        element: m["element"] as String,
+        rarity: m["rarity"] as int,
+        weaponType: m["weaponType"] as String,
+        expected: m["expected"] as String,
+        kitVersion: m["kitVersion"] as String,
+        score: m["score"] as int,
+        grade: m["grade"] as String,
+        summary: m["summary"] as String,
+        kit: (m["kit"] as List)
+            .map((k) => LeakKitPart(k["t"] as String, k["d"] as String))
+            .toList(),
+        sources: (m["sources"] as List)
+            .map((s) => LeakSource(s["n"] as String, s["d"] as String))
+            .toList(),
+      );
+    }).toList(),
+  );
 });
 
 // ---------------------------------------------------------------------------
