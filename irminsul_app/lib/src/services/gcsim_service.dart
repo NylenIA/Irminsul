@@ -68,6 +68,28 @@ class GcsimService {
 
   static const _ascMax = [20, 40, 50, 60, 70, 80, 90];
 
+  /// Personnages dont des attaques utilisent une hitbox MOBILE autour du
+  /// joueur (anneau), et qui ne touchent donc rien si l'ennemi est collé.
+  /// Mavuika : attaque chargée en Flamestrider — hitbox de rayon 3 m tournant
+  /// sur un cercle de rayon 4 m (doc gcsim) => anneau utile [1 m ; 7 m].
+  /// Sans distance : « no valid targets within flamestrider area ».
+  static const _needStandoff = {"mavuika"};
+
+  /// Distance joueur-cible, mesurée sur le moteur réel :
+  ///   0 m  -> Mavuika ne touche jamais (erreur) ;
+  ///   3 m  -> Mavuika touche, coût des autres persos ~1,7 % ;
+  ///   4 m  -> -33 % (les zones des supports ne portent plus) ;
+  ///   5 m  -> -81 %.
+  /// On ne l'applique donc QUE si l'équipe en a besoin.
+  static const _standoffDistance = 3;
+
+  static String _targetLine(List<String> teamGoodKeys) {
+    final needs = teamGoodKeys.any((k) => _needStandoff.contains(_g(k)));
+    return needs
+        ? "target lvl=100 resist=0.1 pos=0,$_standoffDistance radius=1;"
+        : "target lvl=100 resist=0.1;";
+  }
+
   // stat GOOD -> (clé gcsim, est un pourcentage)
   static const _statMap = <String, (String, bool)>{
     "hp": ("hp", false), "hp_": ("hp%", true),
@@ -223,7 +245,7 @@ class GcsimService {
     buf.writeln("active ${_g(template.chars.first)};");
     buf.writeln(
         "options iteration=$_iterations duration=90 swap_delay=12;");
-    buf.writeln("target lvl=100 resist=0.1;");
+    buf.writeln(_targetLine(template.chars));
     buf.writeln("energy every interval=480,720 amount=1;");
     buf.writeln();
     buf.writeln(template.rotation);

@@ -204,16 +204,45 @@ while 1 {
 """,
 }
 
-OPTIONS = """
-options iteration=100 duration=90 swap_delay=12;
-target lvl=100 resist=0.1;
-energy every interval=480,720 amount=1;
-"""
+TEAMS["mavuika-test"] = {
+    "chars": ["Mavuika", "Bennett", "Xilonen", "Xingqiu"],
+    "rotation": """
+while 1 {
+    bennett skill, burst;
+    xilonen skill;
+    xingqiu skill, burst;
+    mavuika skill;
+    mavuika charge;
+    mavuika charge;
+    mavuika burst;
+}
+""",
+}
+
+# Placement ADAPTATIF de la cible (miroir de GcsimService._targetLine).
+# Mavuika : attaque chargee en Flamestrider = hitbox mobile en anneau
+# [1 m ; 7 m] autour du joueur -> a distance 0 elle ne touche rien.
+# Mesure sur le moteur reel : 3 m = OK (-1,7 % pour les autres), 4 m = -33 %,
+# 5 m = -81 %. On n'ecarte donc la cible que si l'equipe en a besoin.
+NEED_STANDOFF = {"mavuika"}
+STANDOFF = 3
+
+
+def options_for(team_good_keys):
+    needs = any(gcsim_char(k) in NEED_STANDOFF for k in team_good_keys)
+    target = (f"target lvl=100 resist=0.1 pos=0,{STANDOFF} radius=1;"
+              if needs else "target lvl=100 resist=0.1;")
+    return (
+        "\noptions iteration=100 duration=90 swap_delay=12;\n"
+        f"{target}\n"
+        "energy every interval=480,720 amount=1;\n"
+    )
 
 if __name__ == "__main__":
     good = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     team = TEAMS[sys.argv[2]]
-    cfg = build_config(good, team["chars"], team["rotation"], OPTIONS)
+    cfg = build_config(good, team["chars"], team["rotation"],
+                       options_for(team["chars"]))
     out = Path(sys.argv[3]) if len(sys.argv) > 3 else HERE / "build_gcsim.txt"
     out.write_text(cfg, encoding="utf-8")
     print(f"OK -> {out}")
