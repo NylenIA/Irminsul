@@ -33,10 +33,50 @@ class SimBreakdown extends ConsumerWidget {
     final maxDps = result.perChar
         .map((c) => c.dps)
         .fold<double>(1, (a, b) => a > b ? a : b);
+    final energy = result.energyIssues;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // ---- alerte n°1 des DPS trop bas : ultimes impossibles à charger ----
+        if (energy.isNotEmpty)
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(11),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF2C14E).withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                  color: const Color(0xFFF2C14E).withValues(alpha: 0.35)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "⚡ ${l.t("simEnergyTitle")}",
+                  style: const TextStyle(
+                      fontSize: 12.5, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 5),
+                for (final e in energy)
+                  Text(
+                    "• ${find(e.gcsimName)?.name ?? e.gcsimName} — "
+                    "${l.t("simEnergyBurstFail")} ${e.count.round()}×",
+                    style: const TextStyle(fontSize: 12, height: 1.45),
+                  ),
+                const SizedBox(height: 5),
+                Text(
+                  l.t("simEnergyAdvice"),
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    height: 1.45,
+                    color: Colors.white.withValues(alpha: 0.65),
+                  ),
+                ),
+              ],
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.only(bottom: 8, top: 4),
           child: Text(

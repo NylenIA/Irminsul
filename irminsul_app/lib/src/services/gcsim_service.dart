@@ -15,6 +15,17 @@ class CharContribution {
   });
 }
 
+/// Action impossible pendant la simulation (le moteur ATTEND, ce qui écrase
+/// le DPS sans rien dire — on le remonte à l'utilisateur).
+class ActionIssue {
+  final String gcsimName;
+  final String kind; // insufficient_energy | skill_cd | swap_cd | ...
+  final double count; // moyenne par itération
+  const ActionIssue(this.gcsimName, this.kind, this.count);
+
+  bool get isEnergy => kind == "insufficient_energy";
+}
+
 /// Résultat d'une simulation gcsim.
 class SimResult {
   final int dps;
@@ -22,13 +33,20 @@ class SimResult {
   final double dpsMax;
   final int iterations;
   final List<CharContribution> perChar;
+  final List<ActionIssue> issues;
   const SimResult({
     required this.dps,
     required this.dpsMin,
     required this.dpsMax,
     required this.iterations,
     this.perChar = const [],
+    this.issues = const [],
   });
+
+  /// Personnages dont l'ultime n'a pas pu être lancé assez souvent : la
+  /// simulation a perdu du temps à attendre -> DPS sous-estimé.
+  List<ActionIssue> get energyIssues =>
+      issues.where((i) => i.isEnergy && i.count >= 3).toList();
 }
 
 class GcsimException implements Exception {
@@ -288,8 +306,10 @@ class GcsimService {
             "Simulation échouée : ${err.isEmpty ? "sortie vide" : err.substring(0, err.length.clamp(0, 220))}");
       }
 
-      // Détail par perso (comprendre QUI fait les dégâts et le temps de terrain).
+      // Détail par perso (comprendre QUI fait les dégâts et le temps de terrain)
+      // + actions impossibles (la cause n°1 des DPS anormalement bas).
       var perChar = <CharContribution>[];
+      var issues = <ActionIssue>[];
       try {
         final j = jsonDecode(await File(outJson).readAsString())
             as Map<String, dynamic>;
@@ -297,6 +317,7 @@ class GcsimService {
         final st = j["statistics"] as Map<String, dynamic>? ?? const {};
         final dpsList = st["character_dps"] as List? ?? const [];
         final fieldList = st["field_time"] as List? ?? const [];
+        final failed = st["failed_actions"] as List? ?? const [];
         double meanOf(dynamic x) =>
             x is Map ? ((x["mean"] as num?)?.toDouble() ?? 0) : 0;
         perChar = [
@@ -311,6 +332,15 @@ class GcsimService {
                   i < fieldList.length ? meanOf(fieldList[i]) : 0,
             ),
         ];
+        for (var i = 0; i < details.length && i < failed.length; i++) {
+          final name = (details[i] as Map)["name"] as String? ?? "?";
+          final fa = failed[i];
+          if (fa is! Map) continue;
+          fa.forEach((k, v) {
+            final c = meanOf(v);
+            if (c > 0.5) issues.add(ActionIssue(name, k as String, c));
+          });
+        }
       } catch (_) {
         // le détail est un bonus — le DPS global reste valable sans lui
       }
@@ -321,6 +351,7 @@ class GcsimService {
         dpsMax: double.parse(m.group(3)!),
         iterations: _iterations,
         perChar: perChar,
+        issues: issues,
       );
     } finally {
       await tmp.delete(recursive: true);

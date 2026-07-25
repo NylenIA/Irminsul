@@ -262,6 +262,20 @@ class L {
       "fr": "Saut (annulation d'animation)",
       "en": "Jump (animation cancel)",
     },
+    "simEnergyTitle": {
+      "fr": "Ton DPS est sous-estimé : des ultimes n'ont pas pu être lancés",
+      "en": "Your DPS is underestimated: some bursts could not be cast",
+    },
+    "simEnergyBurstFail": {
+      "fr": "ultime impossible (énergie insuffisante)",
+      "en": "burst impossible (not enough energy)",
+    },
+    "simEnergyAdvice": {
+      "fr":
+          "Pendant ces tentatives, la simulation ATTEND sur ce personnage : le temps de terrain est gâché et le DPS chute. Retire son Q de la rotation, espace-le, ou monte sa recharge d'énergie — puis relance.",
+      "en":
+          "During those attempts the simulation WAITS on that character: field time is wasted and DPS drops. Remove their burst from the rotation, space it out, or raise their Energy Recharge — then run again.",
+    },
     "simBreakdown": {
       "fr": "Détail par personnage",
       "en": "Per-character breakdown",
