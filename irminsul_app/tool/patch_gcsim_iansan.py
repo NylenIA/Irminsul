@@ -173,6 +173,15 @@ def append_map_entry(path: Path, entry: str, guard: str) -> None:
 
 def main() -> None:
     gcsim = Path(sys.argv[1])
+
+    # GARDE-FOU D'AVENIR : si l'équipe gcsim merge officiellement Iansan
+    # (PR #2374 ou autre), leur version sera plus récente et mieux testée que
+    # ce portage — on s'efface au lieu de l'écraser.
+    if (gcsim / f"internal/characters/{CHAR}").exists():
+        print(f"{CHAR} existe deja dans la source officielle : "
+              "portage ignore (version upstream conservee)")
+        return
+
     patch_text = Path(sys.argv[2]).read_text(encoding="utf-8",
                                              errors="replace")
 
