@@ -1,0 +1,10 @@
+{
+  "engine": "gcsim",
+  "commit": "local",
+  "shortCommit": "local",
+  "builtAt": "1970-01-01T00:00:00Z",
+  "latestRelease": "?",
+  "releasePublished": "1970-01-01T00:00:00Z",
+  "builtFromSource": true,
+  "extraPRs": ["#2374 Iansan", "#2668 Varka"]
+}

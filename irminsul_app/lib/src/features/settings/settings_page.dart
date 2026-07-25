@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "../../i18n/strings.dart";
+import "../../services/engine_info_service.dart";
 import "../../state/providers.dart";
 import "../../theme.dart";
 import "../../widgets/char_icon.dart";
@@ -65,6 +66,10 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           ),
+          const SizedBox(height: 18),
+
+          // --- Moteur de simulation (fraîcheur vérifiée en direct) ---
+          const _EngineCard(),
           const SizedBox(height: 18),
 
           // --- Voyageur / Voyageuse ---
@@ -151,6 +156,140 @@ class SettingsPage extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Carte « moteur de simulation » : version embarquée, fraîcheur vérifiée
+/// en direct contre les releases officielles de gcsim.
+class _EngineCard extends ConsumerWidget {
+  const _EngineCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = L(ref.watch(localeProvider));
+    final status = ref.watch(engineStatusProvider);
+
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.t("settingsEngine"),
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            l.t("settingsEngineDesc"),
+            style: TextStyle(
+              fontSize: 13,
+              height: 1.45,
+              color: Colors.white.withValues(alpha: 0.6),
+            ),
+          ),
+          const SizedBox(height: 14),
+          status.when(
+            loading: () => const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            error: (e, _) => Text("—",
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.5))),
+            data: (s) {
+              final (color, label) = switch (s.state) {
+                EngineFreshness.upToDate => (
+                    const Color(0xFF8BE28B),
+                    l.t("engineUpToDate")
+                  ),
+                EngineFreshness.outdated => (
+                    const Color(0xFFF2C14E),
+                    l.t("engineOutdated")
+                  ),
+                EngineFreshness.localDev => (
+                    Colors.white38,
+                    l.t("engineLocalDev")
+                  ),
+                EngineFreshness.offline => (
+                    Colors.white38,
+                    l.t("engineOffline")
+                  ),
+              };
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                                color: color.withValues(alpha: 0.6),
+                                blurRadius: 8),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 9),
+                      Text(
+                        label,
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: color),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  _kv(l.t("engineBuild"),
+                      "gcsim ${s.info.shortCommit} · ${_fmtDate(s.info.builtAt)}"),
+                  if (s.liveRelease != null)
+                    _kv(l.t("engineLatestRelease"),
+                        "${s.liveRelease} (${_fmtDate(s.livePublished!)})"),
+                  if (s.info.extraPRs.isNotEmpty)
+                    _kv(l.t("engineExtras"), s.info.extraPRs.join(" · ")),
+                  const SizedBox(height: 8),
+                  Text(
+                    l.t("engineDaily"),
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      height: 1.4,
+                      color: Colors.white.withValues(alpha: 0.45),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  static String _fmtDate(DateTime d) =>
+      "${d.day.toString().padLeft(2, "0")}/${d.month.toString().padLeft(2, "0")}/${d.year}";
+
+  static Widget _kv(String k, String v) => Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 140,
+              child: Text(k,
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w600)),
+            ),
+            Expanded(
+              child: Text(v,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white.withValues(alpha: 0.6))),
+            ),
+          ],
+        ),
+      );
 }
 
 class _TravelerTile extends StatelessWidget {

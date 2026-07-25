@@ -6,6 +6,11 @@ on:
     paths:
       - "irminsul_app/**"
       - ".github/workflows/build-windows.yml"
+  # Reconstruction AUTOMATIQUE quotidienne : le moteur gcsim est recompilé
+  # depuis la source du jour, donc l'app suit les correctifs de la commu
+  # (nouveaux persos, fixes de réactions) sans aucune action de notre part.
+  schedule:
+    - cron: "30 6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -32,6 +37,28 @@ jobs:
 
       - name: Enable Windows desktop
         run: flutter config --enable-windows-desktop
+
+      # Trace de version EMBARQUÉE dans l'app (affichée dans Réglages) :
+      # commit gcsim compilé, date de build, dernière release publiée.
+      - name: Record engine info
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $commit = (git ls-remote https://github.com/genshinsim/gcsim HEAD).Split("`t")[0]
+          $rel = gh api repos/genshinsim/gcsim/releases/latest | ConvertFrom-Json
+          $info = [ordered]@{
+            engine          = "gcsim"
+            commit          = $commit
+            shortCommit     = $commit.Substring(0,7)
+            builtAt         = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+            latestRelease   = $rel.tag_name
+            releasePublished= $rel.published_at
+            builtFromSource = $true
+            extraPRs        = @("#2374 Iansan", "#2668 Varka")
+          }
+          $info | ConvertTo-Json -Depth 3 | Out-File -Encoding utf8 assets/data/engine_info.json
+          Get-Content assets/data/engine_info.json
 
       - name: Generate platform folders (windows/)
         run: flutter create --platforms=windows --project-name irminsul --org com.nylenia .

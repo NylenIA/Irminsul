@@ -262,6 +262,47 @@ class L {
       "fr": "Saut (annulation d'animation)",
       "en": "Jump (animation cancel)",
     },
+    "settingsEngine": {
+      "fr": "Moteur de simulation",
+      "en": "Simulation engine",
+    },
+    "settingsEngineDesc": {
+      "fr":
+          "Irminsul compile gcsim depuis sa source à chaque build — tu as donc les correctifs et les nouveaux personnages avant même les versions publiées.",
+      "en":
+          "Irminsul builds gcsim from source on every build — you get fixes and new characters even before published releases.",
+    },
+    "engineUpToDate": {
+      "fr": "À jour (plus récent que la dernière version publiée)",
+      "en": "Up to date (newer than the latest published release)",
+    },
+    "engineOutdated": {
+      "fr": "Une version plus récente existe — relance un build",
+      "en": "A newer version exists — trigger a new build",
+    },
+    "engineOffline": {
+      "fr": "Vérification impossible (hors-ligne)",
+      "en": "Check unavailable (offline)",
+    },
+    "engineLocalDev": {
+      "fr": "Build local (non compilé par la CI)",
+      "en": "Local build (not built by CI)",
+    },
+    "engineBuild": {"fr": "Moteur embarqué", "en": "Bundled engine"},
+    "engineLatestRelease": {
+      "fr": "Dernière version publiée",
+      "en": "Latest published release",
+    },
+    "engineExtras": {
+      "fr": "Persos ajoutés par nous",
+      "en": "Characters we added",
+    },
+    "engineDaily": {
+      "fr":
+          "L'app est reconstruite automatiquement chaque jour : le moteur suit les correctifs de la communauté sans rien faire.",
+      "en":
+          "The app is rebuilt automatically every day: the engine follows community fixes with no action needed.",
+    },
     "simEnergyTitle": {
       "fr": "Ton DPS est sous-estimé : des ultimes n'ont pas pu être lancés",
       "en": "Your DPS is underestimated: some bursts could not be cast",
