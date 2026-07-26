@@ -39,9 +39,11 @@ Spec autoritative : `docs/project/MASTER_SPEC.md`. Politique recherche/rigueur :
   Sources · Hypothèses · Confiance · Ce qui pourrait changer.
 
 ## Délégation (sous-agents `.claude/agents/`)
-`live-data-researcher` (patch/annonces) · `theorycrafter` (mécaniques/équipes) · `dps-analyst` (formules/gcsim) ·
+`live-data-researcher` (patch/annonces) · `theorycrafter` (mécaniques/équipes) · `team-architect` (règles de
+composition embarquées dans l'app : tags, poids du score, règles de contenu) · `dps-analyst` (formules/gcsim) ·
 `account-optimizer` (UID/roster/artefacts) · `lore-archivist` (lore) · `leak-analyst` (leaks) ·
 `source-auditor` (vérif finale). Ne délègue pas tout ; au moins `source-auditor` pour meta/calculs importants.
+Routage détaillé (qui fait quoi, dans quel ordre, ce qui atterrit dans l'app) : `docs/AI_PIPELINE.md`.
 
 ## Règles par domaine (chargées au besoin)
 DPS/réactions/équipes → `.claude/rules/dps.md` · Compte GOOD/Enka → `.claude/rules/account.md` ·
