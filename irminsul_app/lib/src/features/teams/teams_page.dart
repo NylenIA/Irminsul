@@ -90,9 +90,17 @@ class TeamsPage extends ConsumerWidget {
                     final byId = {for (final c in list) c.id: c};
                     final all = matchTeams(
                         meta: db, box: playerBox, characters: list);
-                    final shown = mode == null
+                    final mc =
+                        mode == null ? null : db.content?.byMode[mode];
+                    final forMode = mode == null
                         ? all
-                        : all.where((m) => m.team.mode == mode).toList();
+                        : all
+                            .where((m) => m.team.servesMode(mode))
+                            .toList();
+                    // Théâtre : on masque ce que la saison interdit.
+                    final shown = filterBySeason<TeamMatch>(
+                        forMode, mc, (m) => m.team.chars);
+                    final hidden = forMode.length - shown.length;
                     final ready = all.where((m) => m.ready).length;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,6 +159,29 @@ class TeamsPage extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
+                        ],
+
+                        if (hidden > 0) ...[
+                          Reveal(
+                            delayMs: 55,
+                            child: Row(
+                              children: [
+                                Icon(Icons.filter_alt_outlined,
+                                    size: 14, color: _amber),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    "$hidden ${l.t("seasonHidden")}",
+                                    style: TextStyle(
+                                        fontSize: 11.5,
+                                        color:
+                                            _amber.withValues(alpha: 0.85)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
                         ],
 
                         // ---- tes équipes créées (créateur) ----

@@ -9,7 +9,7 @@
       "name": "Mavuika Hypercarry",
       "half": "1ʳᵉ moitié",
       "badge": "meta",
-      "dps": 214800,
+      "dps": 12952,
       "note": "uptime 100 %",
       "chars": [
         {
@@ -89,7 +89,11 @@
           "Xilonen"
         ],
         "rotation": "while 1 {\n    citlali skill;\n    xilonen skill;\n    bennett skill, burst;\n    mavuika skill;\n    mavuika burst;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    bennett skill;\n    mavuika charge;\n    mavuika charge;\n}"
-      }
+      },
+      "modes": [
+        "abyss",
+        "theater"
+      ]
     },
     {
       "id": "nahida-hb",
@@ -97,7 +101,7 @@
       "name": "Nahida Hyperbloom",
       "half": "2ᵉ moitié",
       "badge": "viable",
-      "dps": 168400,
+      "dps": 16967,
       "note": "clear estimé 8★",
       "chars": [
         {
@@ -172,7 +176,10 @@
           "RaidenShogun"
         ],
         "rotation": "while 1 {\n    nahida skill, burst;\n    furina skill;\n    xingqiu skill, burst;\n    raiden skill;\n    raiden attack:10;\n    nahida skill;\n    furina attack:2;\n    xingqiu attack:2;\n    raiden attack:8;\n}"
-      }
+      },
+      "modes": [
+        "abyss"
+      ]
     },
     {
       "id": "mavuika-bis",
@@ -180,7 +187,7 @@
       "name": "Mavuika BiS — Citlali · Iansan · Bennett",
       "half": "Ta meilleure version possible",
       "badge": "locked",
-      "dps": 240500,
+      "dps": 14877,
       "note": "≈ +12 % vs ta version actuelle",
       "chars": [
         {
@@ -261,7 +268,11 @@
           "Bennett"
         ],
         "rotation": "while 1 {\n    iansan skill;\n    citlali skill;\n    bennett skill, burst;\n    mavuika skill;\n    mavuika burst;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    bennett skill;\n    mavuika charge;\n    mavuika charge;\n}"
-      }
+      },
+      "modes": [
+        "abyss",
+        "theater"
+      ]
     },
     {
       "id": "furina-mono",
@@ -269,7 +280,7 @@
       "name": "Furina Flex Hydro",
       "half": "Acte flexible",
       "badge": "viable",
-      "dps": 152300,
+      "dps": 9971,
       "note": "valorise la largeur de roster",
       "chars": [
         {
@@ -352,7 +363,10 @@
           "Beidou"
         ],
         "rotation": "while 1 {\n    furina skill;\n    fischl skill;\n    beidou skill, burst;\n    barbara skill;\n    furina burst;\n    furina attack:6;\n    fischl burst;\n    furina attack:8;\n}"
-      }
+      },
+      "modes": [
+        "theater"
+      ]
     },
     {
       "id": "mavuika-onslaught",
@@ -360,7 +374,7 @@
       "name": "Mavuika Burst — boss unique",
       "half": "Tenue + burst",
       "badge": "meta",
-      "dps": 198700,
+      "dps": 14051,
       "note": "survie assurée (Bennett)",
       "chars": [
         {
@@ -441,7 +455,10 @@
           "Zhongli"
         ],
         "rotation": "while 1 {\n    zhongli skill;\n    citlali skill;\n    bennett skill, burst;\n    mavuika skill;\n    mavuika burst;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    bennett skill;\n    mavuika charge;\n    mavuika charge;\n}"
-      }
+      },
+      "modes": [
+        "onslaught"
+      ]
     },
     {
       "id": "neuvillette-hyper",
@@ -449,7 +466,7 @@
       "name": "Neuvillette Hypercarry",
       "half": "1ʳᵉ moitié",
       "badge": "meta",
-      "dps": 205000,
+      "dps": 10270,
       "rotation": "~18 s",
       "note": "mono-cible & AoE",
       "missing": null,
@@ -527,7 +544,10 @@
           "Baizhu"
         ],
         "rotation": "while 1 {\n    furina skill;\n    kazuha skill;\n    baizhu skill;\n    neuvillette skill;\n    neuvillette charge;\n    furina burst;\n    kazuha burst;\n    baizhu burst;\n    neuvillette charge;\n    neuvillette charge;\n}"
-      }
+      },
+      "modes": [
+        "abyss"
+      ]
     },
     {
       "id": "raiden-national",
@@ -535,7 +555,7 @@
       "name": "Raiden National",
       "half": "2ᵉ moitié",
       "badge": "meta",
-      "dps": 190000,
+      "dps": 16467,
       "rotation": "~24 s",
       "note": "la valeur sûre depuis des années",
       "missing": null,
@@ -608,7 +628,10 @@
           "RaidenShogun"
         ],
         "rotation": "while 1 {\n    bennett skill, burst;\n    xiangling burst, skill;\n    xingqiu skill, burst;\n    raiden skill;\n    raiden burst;\n    raiden attack:8;\n    raiden skill;\n    bennett attack, skill;\n    xiangling attack, skill;\n    xingqiu attack:2;\n}"
-      }
+      },
+      "modes": [
+        "abyss"
+      ]
     },
     {
       "id": "hutao-double-hydro",
@@ -616,7 +639,7 @@
       "name": "Hu Tao Double Hydro",
       "half": "1ʳᵉ moitié",
       "badge": "meta",
-      "dps": 195000,
+      "dps": 9364,
       "rotation": "~20 s",
       "note": "vaporisation en continu",
       "missing": null,
@@ -692,7 +715,10 @@
           "Zhongli"
         ],
         "rotation": "while 1 {\n    yelan skill;\n    xingqiu skill, burst;\n    yelan burst;\n    zhongli skill;\n    hutao skill;\n    hutao attack:2;\n    hutao charge;\n    hutao jump;\n    hutao attack:2;\n    hutao charge;\n    hutao jump;\n    hutao attack:2;\n    hutao charge;\n    hutao burst;\n}"
-      }
+      },
+      "modes": [
+        "abyss"
+      ]
     },
     {
       "id": "ayaka-freeze",
@@ -700,7 +726,7 @@
       "name": "Ayaka Freeze",
       "half": "2ᵉ moitié",
       "badge": "viable",
-      "dps": 175000,
+      "dps": 7553,
       "rotation": "~21 s",
       "note": "contrôle total par le gel",
       "missing": null,
@@ -775,7 +801,11 @@
           "KaedeharaKazuha"
         ],
         "rotation": "while 1 {\n    kokomi skill;\n    kazuha skill;\n    shenhe skill;\n    ayaka dash;\n    ayaka attack:4;\n    shenhe burst;\n    kazuha burst;\n    ayaka skill;\n    ayaka burst;\n    ayaka dash;\n    ayaka attack:4;\n}"
-      }
+      },
+      "modes": [
+        "abyss",
+        "theater"
+      ]
     },
     {
       "id": "xiao-premium",
@@ -783,7 +813,7 @@
       "name": "Xiao Hyper (Xianyun)",
       "half": "1ʳᵉ moitié",
       "badge": "meta",
-      "dps": 185000,
+      "dps": 8225,
       "rotation": "~22 s",
       "note": "pluie de piqués",
       "missing": null,
@@ -854,7 +884,10 @@
           "Xianyun"
         ],
         "rotation": "while 1 {\n    furina skill;\n    faruzan skill;\n    xianyun skill;\n    faruzan burst;\n    xianyun burst;\n    xiao skill;\n    xiao burst;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n}"
-      }
+      },
+      "modes": [
+        "abyss"
+      ]
     },
     {
       "id": "arlecchino-vape",
@@ -862,7 +895,7 @@
       "name": "Arlecchino Vaporisation",
       "half": "Boss unique",
       "badge": "meta",
-      "dps": 200000,
+      "dps": 13601,
       "rotation": "~25 s",
       "note": "burst massif sur boss",
       "missing": null,
@@ -940,7 +973,10 @@
           "Bennett"
         ],
         "rotation": "while 1 {\n    bennett skill;\n    yelan skill, burst;\n    zhongli skill;\n    bennett burst;\n    arlecchino skill;\n    arlecchino attack:2;\n    arlecchino charge;\n    arlecchino attack:4;\n    arlecchino charge;\n    arlecchino attack:4;\n}"
-      }
+      },
+      "modes": [
+        "onslaught"
+      ]
     },
     {
       "id": "nilou-bloom",
@@ -948,7 +984,7 @@
       "name": "Nilou Bloom",
       "half": "Acte Dendro/Hydro",
       "badge": "viable",
-      "dps": 160000,
+      "dps": 8584,
       "rotation": "~19 s",
       "note": "explosions de Cœurs de rosée",
       "missing": null,
@@ -1023,7 +1059,10 @@
           "Collei"
         ],
         "rotation": "while 1 {\n    nahida skill;\n    collei skill;\n    nilou skill;\n    nilou attack:3;\n    kokomi skill;\n    nahida burst;\n    nilou burst;\n    kokomi attack:3;\n    collei burst;\n    nahida attack:2;\n}"
-      }
+      },
+      "modes": [
+        "theater"
+      ]
     },
     {
       "id": "skirk-premium",
@@ -1031,7 +1070,7 @@
       "name": "Skirk Premium",
       "half": "1ʳᵉ moitié",
       "badge": "meta",
-      "dps": 230000,
+      "dps": 36728,
       "rotation": "~20 s",
       "note": "le plafond Cryo actuel",
       "missing": null,
@@ -1105,7 +1144,10 @@
           "Furina"
         ],
         "rotation": "while 1 {\n    citlali skill;\n    furina skill;\n    escoffier skill, burst;\n    skirk skill;\n    skirk attack:5;\n    skirk burst;\n    skirk attack:5;\n    furina burst;\n    skirk attack:5;\n}"
-      }
+      },
+      "modes": [
+        "abyss"
+      ]
     },
     {
       "id": "mualani-vape",
@@ -1113,7 +1155,7 @@
       "name": "Mualani Vaporisation",
       "half": "Boss unique",
       "badge": "viable",
-      "dps": 175000,
+      "dps": 6543,
       "rotation": "~18 s",
       "note": "morsures requin mono-cible",
       "missing": null,
@@ -1187,7 +1229,10 @@
           "Furina"
         ],
         "rotation": "while 1 {\n    citlali skill;\n    xilonen skill;\n    furina skill;\n    mualani skill;\n    mualani attack:3;\n    mualani skill;\n    mualani attack:3;\n    furina burst;\n    mualani burst;\n    mualani skill;\n    mualani attack:3;\n}"
-      }
+      },
+      "modes": [
+        "onslaught"
+      ]
     },
     {
       "id": "fischl-taser",
@@ -1195,7 +1240,7 @@
       "name": "Taser Électro-charge",
       "half": "Acte flexible",
       "badge": "viable",
-      "dps": 150000,
+      "dps": 8934,
       "rotation": "~18 s",
       "note": "très flexible, zéro 5★ requis",
       "missing": null,
@@ -1270,28 +1315,142 @@
           "Sucrose"
         ],
         "rotation": "while 1 {\n    fischl skill;\n    beidou skill, burst;\n    xingqiu skill, burst;\n    sucrose skill;\n    sucrose attack:6;\n    fischl burst;\n    sucrose attack:6;\n    sucrose skill;\n    sucrose attack:4;\n}"
-      }
+      },
+      "modes": [
+        "theater"
+      ]
+    },
+    {
+      "id": "chevreuse-overload",
+      "mode": "abyss",
+      "name": "Surcharge Chevreuse — Xiangling · Bennett · Fischl",
+      "half": "Pyro/Électro pur",
+      "badge": "meta",
+      "dps": 10901,
+      "note": "F2P, et légale quand le Théâtre interdit Hydro/Dendro",
+      "chars": [
+        {
+          "n": "Chevreuse",
+          "e": "pyro",
+          "i": "Chevreuse"
+        },
+        {
+          "n": "Xiangling",
+          "e": "pyro",
+          "i": "Xiangling"
+        },
+        {
+          "n": "Bennett",
+          "e": "pyro",
+          "i": "Bennett"
+        },
+        {
+          "n": "Fischl",
+          "e": "electro",
+          "i": "Fischl"
+        }
+      ],
+      "missing": null,
+      "slots": [
+        {
+          "id": "chevreuse",
+          "alts": [],
+          "er": 200,
+          "role": "Buff ATK/RÉS + soin (Surcharge)",
+          "pool": []
+        },
+        {
+          "id": "xiangling",
+          "alts": [],
+          "er": 200,
+          "role": "DPS Pyro hors terrain",
+          "pool": [
+            "dehya"
+          ]
+        },
+        {
+          "id": "bennett",
+          "alts": [],
+          "er": 190,
+          "role": "Soin + buff ATK",
+          "pool": []
+        },
+        {
+          "id": "fischl",
+          "alts": [],
+          "er": 130,
+          "role": "Application Électro hors terrain",
+          "pool": [
+            "beidou",
+            "lisa",
+            "dori"
+          ]
+        }
+      ],
+      "combos": "Chevreuse n'accepte QUE du Pyro/Électro : chaque Surcharge déclenchée rend de la vie et convertit sa RÉS en ATK pour toute l'équipe. Fischl entretient l'Électro, Xiangling le Pyro.",
+      "rotationSteps": [
+        "Fischl E",
+        "Xiangling E → Q",
+        "Bennett E → Q",
+        "Chevreuse E → Q",
+        "Attaques normales de Chevreuse (Surcharges à répétition)"
+      ],
+      "rotation": "~21 s",
+      "gcsim": {
+        "chars": [
+          "Chevreuse",
+          "Xiangling",
+          "Bennett",
+          "Fischl"
+        ],
+        "rotation": "while 1 {\n    fischl skill;\n    xiangling skill, burst;\n    bennett skill, burst;\n    chevreuse skill, burst;\n    chevreuse attack:6;\n    fischl attack:2;\n    chevreuse attack:6;\n}"
+      },
+      "modes": [
+        "abyss",
+        "theater"
+      ]
     }
   ],
   "lunaName": "Luna VIII",
   "content": {
-    "updated": "2026-07-25",
+    "updated": "2026-07-27",
     "abyss": {
+      "from": "2026-07-16",
+      "to": "2026-08-15",
       "cycle": "16 juillet – 15 août 2026",
-      "blessing": "Lune des glaces déferlantes : les DGT Cryo infligés par attaque chargée déclenchent une onde de choc (DGT réels) sur la cible.",
-      "floor12": "Étage 12 · 1ʳᵉ moitié : Supraconducteur +200 %, Stellar-Conduct +75 % · 2ᵉ moitié : Électro-chargé +200 %, Lunar-Charged +75 %.",
-      "strategy": "Le cycle amplifie massivement Cryo/Électro : Supraconducteur, Stellar-Conduct et Lunar-Charged. Tes équipes Électro (Flins/Columbina, Taser) et Hyperbloom sont favorisées ; une team Cryo à attaques chargées profite à fond de la bénédiction."
+      "blessing": "Lune des glaces déferlantes : quand le personnage actif inflige des DGT Cryo avec une attaque chargée, une onde de choc de DGT réels frappe la cible.",
+      "floor12": "Étage 12 · 1ʳᵉ moitié : DGT Supraconducteur +200 %, Stellar-Conduct +75 % · 2ᵉ moitié : DGT Électro-chargé +200 %, Lunar-Charged +75 %.",
+      "strategy": "1ʳᵉ moitié : Cryo/Électro pour le Supraconducteur — garde un Électro pour la salle 1 (Rejeton de la nuit glacée). 2ᵉ moitié : il te FAUT de l'Électro-chargé en salle 3 (l'Idole Pipilpan n'est vulnérable qu'à cette réaction) : prévois Hydro + Électro. La bénédiction récompense en plus une équipe Cryo à attaques chargées.",
+      "source": "Game8 — Spiral Abyss 6.7 (vérifié le 27/07/2026)"
     },
     "theater": {
-      "cycle": "saison du 1ᵉʳ août 2026",
-      "elements": "Cryo · Hydro · Électro",
-      "opening": "Ouverture : Yelan, Aino, Flins, Ororon, Skirk, Layla · invités : Arlecchino, Chevreuse, Kazuha, Tighnari",
-      "strategy": "Prépare la LARGEUR Cryo/Hydro/Électro : plusieurs supports montés de ces éléments. Taser et les noyaux Hydro/Électro s'adaptent très bien ; profite des invités (Arlecchino, Kazuha) pour les actes durs."
+      "from": "2026-07-01",
+      "to": "2026-07-30",
+      "cycle": "Saison 25 · 1ᵉʳ – 30 juillet 2026",
+      "elements": "Pyro · Cryo · Électro",
+      "allowedElements": [
+        "pyro",
+        "cryo",
+        "electro"
+      ],
+      "guests": [
+        "Columbina",
+        "Kinich",
+        "Yumemizuki Mizuki",
+        "Jahoda"
+      ],
+      "opening": "Ouverture imposée : Arlecchino, Cyno, Ganyu, Bennett, Beidou, Diona · Invités : Columbina, Kinich, Mizuki, Jahoda · Boss : Terreur jadeplume (acte 3), Primo-vishap Géo (acte 6), Landrover super-lourd (acte 8), Drake Aeonblight (acte 10)",
+      "strategy": "Hors invités, SEULS Pyro, Cryo et Électro sont jouables : monte de la largeur dans ces trois éléments (Surcharge Pyro/Électro et un noyau Cryo). Les équipes Hydro/Dendro sont interdites ce mois-ci — l'app les masque au lieu de te les proposer. La saison se termine le 30/07 ; la suivante arrivera par la synchro.",
+      "source": "Game8 — Théâtre imaginaire 6.7 / Saison 25 + Genshin Impact Wiki (vérifié le 27/07/2026)"
     },
     "onslaught": {
+      "from": "2026-07-08",
+      "to": "2026-08-11",
       "cycle": "8 juillet – 11 août 2026",
-      "bosses": "① Ombre de la Matrice de source secrète · ② Seigneur des Profondeurs cachées · ③ Automate de source secrète",
-      "strategy": "3 équipes SANS partage de personnages : ① Cryo/Électro (Supraconducteur ou Stellar-Conduct) · ② réactions Lunaires (Lunar-Charged / Bloom / Crystallize) · ③ team Nightsoul menée par Natlan — ta Mavuika est taillée pour la 3ᵉ arène."
+      "bosses": "① Matrice de source secrète du Réseau du Superviseur : Volonté de la Ruche · ② Seigneur des Profondeurs cachées : Murmureur de cauchemars · ③ Automate de source secrète : Dispositif de configuration",
+      "strategy": "① détruis vite les 4 drones Hydro (Cryo, Hydro, Dendro ou Pyro) sinon le boss se protège d'un bouclier · ② casse le Bouclier des profondeurs en 15 s : les réactions Lunaires lui infligent +300 % de DGT (Lunar-Charged / Lunar-Bloom) · ③ détruis les piliers avec des personnages Nightsoul (déclenchés à 15 s au lieu de 40) avant l'AoE fatale — ta Mavuika est taillée pour cette arène. À partir de la difficulté 4 (Menaçant), aucun personnage ne peut servir dans deux arènes.",
+      "source": "Game8 — Stygian Onslaught 6.7 + GamingOnPhone (vérifié le 27/07/2026)"
     }
-  }
+  },
+  "dpsRef": "synth-standard"
 }

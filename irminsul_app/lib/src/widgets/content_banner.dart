@@ -31,6 +31,27 @@ class ContentBanner extends StatelessWidget {
       _ => l.t("modeOnslaught"),
     };
 
+    // État réel du cycle, calculé sur les dates — pas sur une phrase figée.
+    final now = DateTime.now();
+    final status = mc.statusAt(now);
+    final days = mc.daysLeftAt(now);
+    final (stateText, stateColor) = switch (status) {
+      0 => (
+          days == null
+              ? l.t("contentOngoing")
+              : "${l.t("contentOngoing")} · ${l.t("contentEndsIn")} $days ${l.t("contentDays")}",
+          const Color(0xFF8BE28B)
+        ),
+      -1 => (
+          days == null
+              ? l.t("contentUpcoming")
+              : "${l.t("contentUpcoming")} · $days ${l.t("contentDays")}",
+          const Color(0xFFF2C14E)
+        ),
+      1 => (l.t("contentEnded"), const Color(0xFFF2C14E)),
+      _ => ("", Colors.transparent),
+    };
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -70,6 +91,24 @@ class ContentBanner extends StatelessWidget {
               ),
             ],
           ),
+          if (stateText.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+              decoration: BoxDecoration(
+                color: stateColor.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                stateText,
+                style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: stateColor),
+              ),
+            ),
+          ],
           const SizedBox(height: 10),
           Text(
             mc.headline,
@@ -106,6 +145,25 @@ class ContentBanner extends StatelessWidget {
               ),
             ],
           ),
+          if (mc.source.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.verified_outlined,
+                    size: 13, color: Colors.white.withValues(alpha: 0.35)),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    mc.source,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      color: Colors.white.withValues(alpha: 0.38),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
           if (bestTeamName != null) ...[
             const SizedBox(height: 10),
             Container(

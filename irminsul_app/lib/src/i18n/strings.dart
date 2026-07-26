@@ -102,9 +102,9 @@ class L {
     },
     "demoDataNote": {
       "fr":
-          "DPS en vert = simulation gcsim sur TA box (rotation validée). DPS grisé = repère indicatif tant que tu n'as pas lancé la simulation depuis Équipes.",
+          "DPS en vert = simulation gcsim sur TA box. DPS grisé = même rotation simulée sur une box standard (Nv 90, talents 9, Favonius, artefacts 5★ génériques) : ça sert à COMPARER les équipes entre elles, pas à prévoir tes chiffres.",
       "en":
-          "Green DPS = gcsim simulation on YOUR box (validated rotation). Greyed DPS = indicative benchmark until you run the simulation from Teams.",
+          "Green DPS = gcsim simulation on YOUR box. Greyed DPS = same rotation simulated on a standard box (Lv 90, talents 9, Favonius, generic 5★ artifacts): use it to COMPARE teams, not to predict your numbers.",
     },
     "enkaLoading": {"fr": "Récupération…", "en": "Fetching…"},
     "guidesSubtitle": {
@@ -397,10 +397,26 @@ class L {
       "en": "simulated on your box on",
     },
     "dashDemoTag": {
-      "fr": "estimation démo — lance la simulation dans Équipes",
-      "en": "demo estimate — run the simulation in Teams",
+      "fr": "repère box standard — simule pour TA box",
+      "en": "standard-box benchmark — simulate for YOUR box",
     },
     "contentCurrent": {"fr": "Contenu actuel", "en": "Current content"},
+    "contentOngoing": {"fr": "En cours", "en": "Ongoing"},
+    "contentUpcoming": {"fr": "À venir dans", "en": "Starts in"},
+    "contentEnded": {
+      "fr": "Cycle terminé — le suivant arrivera par la synchro",
+      "en": "Cycle over — the next one will arrive via sync",
+    },
+    "contentEndsIn": {"fr": "fin dans", "en": "ends in"},
+    "contentDays": {"fr": "j", "en": "d"},
+    "seasonHidden": {
+      "fr": "équipe(s) masquée(s) : leurs éléments sont interdits par la saison en cours",
+      "en": "team(s) hidden: their elements are banned by the current season",
+    },
+    "seasonAllHidden": {
+      "fr": "Aucune équipe curée n'est jouable avec les éléments imposés :",
+      "en": "No curated team is playable with the enforced elements:",
+    },
     "contentUpdated": {"fr": "màj", "en": "updated"},
     "contentBestForYou": {
       "fr": "Meilleure option de ta box :",
@@ -432,9 +448,9 @@ class L {
     "teamsToBuild": {"fr": "à monter", "en": "needs building"},
     "teamsDemoNote": {
       "fr":
-          "15 équipes curées, chaque rotation validée par simulation. Le croisement avec ta box, les substitutions et les DPS simulés sont réels ; la méta et les contenus de cycle se mettent à jour sans réinstaller l'app.",
+          "16 équipes curées, chaque rotation validée par simulation (16/16). Le croisement avec ta box, les substitutions et les DPS simulés sont réels ; la méta et les contenus de cycle se mettent à jour sans réinstaller l'app.",
       "en":
-          "15 curated teams, every rotation validated by simulation. Box matching, substitutions and simulated DPS are real; meta and cycle content update without reinstalling the app.",
+          "16 curated teams, every rotation validated by simulation (16/16). Box matching, substitutions and simulated DPS are real; meta and cycle content update without reinstalling the app.",
     },
     "leaksSection": {
       "fr": "Leaks · non confirmés",

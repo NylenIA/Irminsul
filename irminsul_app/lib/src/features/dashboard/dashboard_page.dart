@@ -121,13 +121,21 @@ class DashboardPage extends ConsumerWidget {
                   ),
                   error: (e, _) => GlassCard(child: Text("Erreur : $e")),
                   data: (list) {
-                    final matches =
+                    final mc = db.content?.byMode[mode];
+                    final forMode =
                         matchTeams(meta: db, box: playerBox, characters: list)
-                            .where((m) => m.team.mode == mode)
+                            .where((m) => m.team.servesMode(mode))
                             .toList();
+                    // Théâtre : une équipe dont un élément est interdit ce
+                    // mois-ci est injouable — on ne la propose pas.
+                    final matches = filterBySeason<TeamMatch>(
+                        forMode, mc, (m) => m.team.chars);
+                    final hidden = forMode.length - matches.length;
                     if (matches.isEmpty) {
                       return GlassCard(
-                        child: Text(l.t("dashNoTeamForMode")),
+                        child: Text(hidden > 0
+                            ? "${l.t("seasonAllHidden")} ${mc?.headline ?? ""}"
+                            : l.t("dashNoTeamForMode")),
                       );
                     }
                     final top = matches.take(3).toList();
@@ -153,6 +161,28 @@ class DashboardPage extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(height: 14),
+                          ],
+                          if (hidden > 0) ...[
+                            Reveal(
+                              delayMs: 70,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.filter_alt_outlined,
+                                      size: 14, color: _amber),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
+                                      "$hidden ${l.t("seasonHidden")}",
+                                      style: TextStyle(
+                                          fontSize: 11.5,
+                                          color: _amber.withValues(
+                                              alpha: 0.85)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 10),
                           ],
                           for (var i = 0; i < top.length; i++) ...[
                             Reveal(

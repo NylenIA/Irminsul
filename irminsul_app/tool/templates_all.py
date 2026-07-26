@@ -231,6 +231,20 @@ TEMPLATES = {
     skirk attack:5;
 }""",
     },
+    # Pyro/Electro pur : legal au Theatre imaginaire quand la saison impose
+    # Pyro/Cryo/Electro, et solide en Abime (Surcharge + buff Chevreuse).
+    "chevreuse-overload": {
+        "chars": ["Chevreuse", "Xiangling", "Bennett", "Fischl"],
+        "rotation": """while 1 {
+    fischl skill;
+    xiangling skill, burst;
+    bennett skill, burst;
+    chevreuse skill, burst;
+    chevreuse attack:6;
+    fischl attack:2;
+    chevreuse attack:6;
+}""",
+    },
     "mualani-vape": {
         "chars": ["Mualani", "Xilonen", "Citlali", "Furina"],
         "rotation": """while 1 {

@@ -62,13 +62,26 @@ def synth_good(good_keys):
 
 
 def main():
-    exe = sys.argv[1]
-    real = (json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
-            if len(sys.argv) > 2 else None)
+    argv = [a for a in sys.argv[1:]]
+    only = None
+    if "--only" in argv:
+        i = argv.index("--only")
+        only = {s.strip() for s in argv[i + 1].split(",")}
+        del argv[i:i + 2]
+    out_json = None
+    if "--json" in argv:
+        i = argv.index("--json")
+        out_json = Path(argv[i + 1])
+        del argv[i:i + 2]
+    exe = argv[0]
+    real = (json.loads(Path(argv[1]).read_text(encoding="utf-8"))
+            if len(argv) > 1 else None)
     owned = ({c["key"] for c in real["characters"]} if real else set())
 
     ok, ko = [], []
     for tid, tpl in TEMPLATES.items():
+        if only and tid not in only:
+            continue
         use_real = real is not None and all(k in owned for k in tpl["chars"])
         good = real if use_real else synth_good(tpl["chars"])
         src = "REEL" if use_real else "synth"
@@ -96,6 +109,11 @@ def main():
             print(f"KO  {tid:22s} [{src:5s}] {msg}")
 
     print(f"\n=== {len(ok)} OK / {len(ko)} KO ===")
+    if out_json:
+        out_json.write_text(
+            json.dumps({tid: {"dps": dps, "src": src} for tid, src, dps in ok},
+                       ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"-> {out_json}")
     sys.exit(1 if ko else 0)
 
 

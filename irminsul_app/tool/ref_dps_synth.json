@@ -1,0 +1,66 @@
+{
+  "raiden-national": {
+    "dps": 16467,
+    "src": "synth"
+  },
+  "nahida-hb": {
+    "dps": 16967,
+    "src": "synth"
+  },
+  "fischl-taser": {
+    "dps": 8934,
+    "src": "synth"
+  },
+  "furina-mono": {
+    "dps": 9971,
+    "src": "synth"
+  },
+  "mavuika-hc": {
+    "dps": 12952,
+    "src": "synth"
+  },
+  "mavuika-bis": {
+    "dps": 14877,
+    "src": "synth"
+  },
+  "mavuika-onslaught": {
+    "dps": 14051,
+    "src": "synth"
+  },
+  "neuvillette-hyper": {
+    "dps": 10270,
+    "src": "synth"
+  },
+  "hutao-double-hydro": {
+    "dps": 9364,
+    "src": "synth"
+  },
+  "ayaka-freeze": {
+    "dps": 7553,
+    "src": "synth"
+  },
+  "xiao-premium": {
+    "dps": 8225,
+    "src": "synth"
+  },
+  "arlecchino-vape": {
+    "dps": 13601,
+    "src": "synth"
+  },
+  "nilou-bloom": {
+    "dps": 8584,
+    "src": "synth"
+  },
+  "skirk-premium": {
+    "dps": 36728,
+    "src": "synth"
+  },
+  "chevreuse-overload": {
+    "dps": 10901,
+    "src": "synth"
+  },
+  "mualani-vape": {
+    "dps": 6543,
+    "src": "synth"
+  }
+}

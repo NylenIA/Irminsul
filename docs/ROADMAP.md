@@ -83,9 +83,16 @@
   gcsim même à HEAD (pas une question de version — travail de l'équipe gcsim).
 - **4.3.2 — Templates partout + dashboard réel + contenus actuels** ✅ livrée
   le 2026-07-27 (périmètre étendu le 2026-07-25 sur demande) :
-  * rotations gcsim pour les **15 équipes**, **15/15 validées par simulation**
+  * rotations gcsim pour les **16 équipes**, **16/16 validées par simulation**
     avant embarquement (`tool/templates_all.py` + `tool/validate_templates.py`)
     — optimales mais jouables à la main ;
+  * DPS de repère **re-simulés sur une box standard identique pour toutes**
+    (Nv 90, talents 9, Favonius, artefacts 5★ génériques) : comparables entre
+    équipes et honnêtement étiquetés, à la place des chiffres de démo ;
+  * **filtre de saison** au Théâtre : une équipe dont un élément est interdit
+    ce mois-ci n'est plus proposée (elle est comptée comme masquée) ;
+  * contenus **vérifiés sur sources datées** le 2026-07-27 avec bornes de
+    cycle ISO — l'app calcule elle-même « en cours / à venir / terminé » ;
   * DPS de démo du dashboard remplacés par les **résultats simulés réels**
     (cache lié au libellé de box : changer de box invalide le chiffre) ;
   * **équipes créées sauvegardables dans « Équipes »** avec un mode
