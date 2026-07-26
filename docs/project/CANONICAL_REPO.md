@@ -7,7 +7,7 @@
 
 | Élément | Valeur (vérifiée) |
 |---|---|
-| Chemin racine (`git rev-parse --show-toplevel`) | `C:/Users/akuon/IA Genshin/Irminsul-AI-Claude-Code` |
+| Chemin racine (`git rev-parse --show-toplevel`) | `<racine locale>/Irminsul-AI-Claude-Code` |
 | Remote `origin` | `https://github.com/NylenIA/Irminsul.git` ✓ (= `NylenIA/Irminsul` attendu) |
 | `main` local | `bfb6a04` = `origin/main` (Phase 0-3 #2) |
 | Branche de travail créée | `feat/irminsul-complete-redesign` (basée sur `main`) |
@@ -16,7 +16,7 @@ C'est le **seul** dépôt git local pointant sur `NylenIA/Irminsul` → canoniqu
 
 ## Copies NON canoniques (à ne pas utiliser)
 
-- `C:/Users/akuon/IA Genshin/duo-agents-fork` — **fork Duo, interdit par la mission**. Aucune écriture.
+- `<racine locale>/duo-agents-fork` — **fork Duo, interdit par la mission**. Aucune écriture.
 - `E:/Bureau/Irminsul-main` — **pas un dépôt git** (snapshot/copie ; source du `RAPPORT_SESSION_2026-06-29.md`). Non canonique, potentiellement périmé.
 
 ## Stratégie de branche + arbitrage documenté

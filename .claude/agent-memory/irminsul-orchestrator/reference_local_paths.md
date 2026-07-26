@@ -8,8 +8,9 @@ metadata:
 Ressources **hors dépôt** (gitignorées ou temporaires) utilisées pour valider
 sur données réelles :
 
-- **Export GOOD du joueur** : `E:\Bureau\genshinData_GOOD_2026_07_24_16_44.json`
-  (Inventory Kamera). C'est la vérité terrain pour tout test de matcher, d'ER
+- **Export GOOD du joueur** : dossier Bureau du disque secondaire, fichier
+  `genshinData_GOOD_<date>.json` (Inventory Kamera) — chemin exact demandé au
+  joueur si besoin, pas écrit ici (dépôt public). C'est la vérité terrain pour tout test de matcher, d'ER
   ou de simulation « sur SA box ». Vérifier la date du fichier : il en produit
   de nouveaux à chaque scan.
 - **Moteur gcsim de validation** :

@@ -4,7 +4,7 @@
 > Ne pas transformer en journal géant — archiver périodiquement.
 
 ## Entrée 2026-06-30
-- **Dépôt** : `C:/Users/akuon/IA Genshin/Irminsul-AI-Claude-Code` · remote `NylenIA/Irminsul`.
+- **Dépôt** : `<racine locale>/Irminsul-AI-Claude-Code` · remote `NylenIA/Irminsul`.
 - **Branche** : `feat/irminsul-complete-redesign` (basée sur `main` bfb6a04). Ne pas toucher `main`, `feat/combat-engine-phase3`, ni `duo-agents-fork`.
 - **Dernier commit** : `ce0a355` feat(web): Next.js 16 shell.
 - **Objectif courant** : architecture hybride (desktop Tauri préservé + nouvelle app web Next.js) + audit + continuité. Supabase/Prisma **non retenus** sans besoin produit (voir blocages).

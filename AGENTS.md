@@ -3,7 +3,7 @@
 > Compact. Mêmes règles fondamentales que `CLAUDE.md`, sans le recopier. Détail : `docs/project/`.
 
 ## Dépôt & branche
-- Canonique : `C:/Users/akuon/IA Genshin/Irminsul-AI-Claude-Code` · remote `NylenIA/Irminsul`.
+- Canonique : `<racine locale>/Irminsul-AI-Claude-Code` · remote `NylenIA/Irminsul`.
 - Branche de travail : `feat/irminsul-complete-redesign`. **Ne pas toucher** `main`, `feat/combat-engine-phase3`, `duo-agents-fork`.
 
 ## Architecture (local-first)
