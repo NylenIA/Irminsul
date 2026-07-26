@@ -402,7 +402,7 @@ class L {
     },
     "contentCurrent": {"fr": "Contenu actuel", "en": "Current content"},
     "contentOngoing": {"fr": "En cours", "en": "Ongoing"},
-    "contentUpcoming": {"fr": "À venir dans", "en": "Starts in"},
+    "contentUpcoming": {"fr": "À venir", "en": "Upcoming"},
     "contentEnded": {
       "fr": "Cycle terminé — le suivant arrivera par la synchro",
       "en": "Cycle over — the next one will arrive via sync",
