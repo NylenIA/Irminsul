@@ -37,12 +37,14 @@ class CustomTeam {
   final List<String> chars; // clés GOOD (4)
   final List<RotationStep> steps;
   final int? lastDps;
+  final String mode; // abyss | theater | onslaught
 
   const CustomTeam({
     required this.name,
     required this.chars,
     required this.steps,
     this.lastDps,
+    this.mode = "abyss",
   });
 
   Map<String, dynamic> toJson() => {
@@ -50,6 +52,7 @@ class CustomTeam {
         "chars": chars,
         "steps": steps.map((s) => s.toJson()).toList(),
         "lastDps": lastDps,
+        "mode": mode,
       };
   static CustomTeam fromJson(Map<String, dynamic> m) => CustomTeam(
         name: m["name"] as String,
@@ -58,8 +61,14 @@ class CustomTeam {
             .map((s) => RotationStep.fromJson(s as Map<String, dynamic>))
             .toList(),
         lastDps: (m["lastDps"] as num?)?.toInt(),
+        mode: m["mode"] as String? ?? "abyss",
       );
 }
+
+/// Équipes créées par le joueur (rechargées à la demande ; invalider après
+/// sauvegarde/suppression).
+final customTeamsProvider =
+    FutureProvider<List<CustomTeam>>((ref) => loadCustomTeams());
 
 Future<List<CustomTeam>> loadCustomTeams() async {
   final prefs = await SharedPreferences.getInstance();
@@ -111,6 +120,7 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
   String _search = "";
   String? _activeChar; // perso sélectionné pour ajouter des étapes
   int _atkCount = 2; // nombre d'attaques normales par étape (1..8)
+  String _mode = "abyss"; // mode visé (abyss | theater | onslaught)
   final _nameCtrl = TextEditingController();
 
   bool _running = false;
@@ -162,9 +172,11 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
       chars: List.of(_picked),
       steps: List.of(_steps),
       lastDps: _result?.dps,
+      mode: _mode,
     );
     final updated = [..._saved.where((t) => t.name != name), team];
     await saveCustomTeams(updated);
+    ref.invalidate(customTeamsProvider);
     if (mounted) setState(() => _saved = updated);
   }
 
@@ -178,6 +190,7 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
         ..addAll(t.steps);
       _nameCtrl.text = t.name;
       _activeChar = t.chars.first;
+      _mode = t.mode;
       _result = null;
       _error = null;
     });
@@ -310,13 +323,15 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
                                     style: const TextStyle(
                                         fontSize: 12.5,
                                         fontWeight: FontWeight.w700)),
-                                if (t.lastDps != null)
-                                  Text(
-                                    "${t.lastDps} DPS",
-                                    style: TextStyle(
-                                        fontSize: 10.5,
-                                        color: cs.primary),
-                                  ),
+                                Text(
+                                  "${switch (t.mode) {
+                                    "abyss" => l.t("modeAbyss"),
+                                    "theater" => l.t("modeTheater"),
+                                    _ => l.t("modeOnslaught"),
+                                  }}${t.lastDps != null ? " · ${t.lastDps} DPS" : ""}",
+                                  style: TextStyle(
+                                      fontSize: 10.5, color: cs.primary),
+                                ),
                               ],
                             ),
                             IconButton(
@@ -326,6 +341,7 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
                                     .where((x) => x.name != t.name)
                                     .toList();
                                 await saveCustomTeams(updated);
+                                ref.invalidate(customTeamsProvider);
                                 if (mounted) {
                                   setState(() => _saved = updated);
                                 }
@@ -705,6 +721,34 @@ class _TeamCreatorPageState extends ConsumerState<TeamCreatorPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // mode visé — la team sauvegardée apparaîtra dans « Équipes »
+                  Row(
+                    children: [
+                      Text(
+                        l.t("creatorModeLabel"),
+                        style: TextStyle(
+                            fontSize: 12.5,
+                            color: Colors.white.withValues(alpha: 0.6)),
+                      ),
+                      const SizedBox(width: 10),
+                      for (final (id, label) in [
+                        ("abyss", l.t("modeAbyss")),
+                        ("theater", l.t("modeTheater")),
+                        ("onslaught", l.t("modeOnslaught")),
+                      ])
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            label: Text(label,
+                                style: const TextStyle(fontSize: 12)),
+                            selected: _mode == id,
+                            onSelected: (_) =>
+                                setState(() => _mode = id),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       SizedBox(

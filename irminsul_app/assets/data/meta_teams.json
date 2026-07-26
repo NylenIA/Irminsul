@@ -1,6 +1,6 @@
 {
   "metaVersion": "6.7",
-  "dataKind": "DEMO",
+  "dataKind": "CURATED",
   "comment": "BDD meta alignee sur la version LIVE du jeu. metaVersion + lunaName mis a jour a chaque patch via la synchro.",
   "teams": [
     {
@@ -80,7 +80,16 @@
         "Xilonen E (shred résistances)",
         "Mavuika E maintenu → Q, puis enchaîne en Flamestrider"
       ],
-      "rotation": "~20 s"
+      "rotation": "~20 s",
+      "gcsim": {
+        "chars": [
+          "Mavuika",
+          "Citlali",
+          "Bennett",
+          "Xilonen"
+        ],
+        "rotation": "while 1 {\n    citlali skill;\n    xilonen skill;\n    bennett skill, burst;\n    mavuika skill;\n    mavuika burst;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    bennett skill;\n    mavuika charge;\n    mavuika charge;\n}"
+      }
     },
     {
       "id": "nahida-hb",
@@ -243,7 +252,16 @@
         "Bennett Q",
         "Mavuika E → Q, enchaîne en Flamestrider"
       ],
-      "rotation": "~20 s"
+      "rotation": "~20 s",
+      "gcsim": {
+        "chars": [
+          "Mavuika",
+          "Citlali",
+          "Iansan",
+          "Bennett"
+        ],
+        "rotation": "while 1 {\n    iansan skill;\n    citlali skill;\n    bennett skill, burst;\n    mavuika skill;\n    mavuika burst;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    bennett skill;\n    mavuika charge;\n    mavuika charge;\n}"
+      }
     },
     {
       "id": "furina-mono",
@@ -414,7 +432,16 @@
         "Bennett Q",
         "Mavuika E → Q, burst prolongé sur le boss"
       ],
-      "rotation": "~22 s"
+      "rotation": "~22 s",
+      "gcsim": {
+        "chars": [
+          "Mavuika",
+          "Citlali",
+          "Bennett",
+          "Zhongli"
+        ],
+        "rotation": "while 1 {\n    zhongli skill;\n    citlali skill;\n    bennett skill, burst;\n    mavuika skill;\n    mavuika burst;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    mavuika charge;\n    bennett skill;\n    mavuika charge;\n    mavuika charge;\n}"
+      }
     },
     {
       "id": "neuvillette-hyper",
@@ -491,7 +518,16 @@
           "e": "dendro",
           "i": "Baizhuer"
         }
-      ]
+      ],
+      "gcsim": {
+        "chars": [
+          "Neuvillette",
+          "Furina",
+          "KaedeharaKazuha",
+          "Baizhu"
+        ],
+        "rotation": "while 1 {\n    furina skill;\n    kazuha skill;\n    baizhu skill;\n    neuvillette skill;\n    neuvillette charge;\n    furina burst;\n    kazuha burst;\n    baizhu burst;\n    neuvillette charge;\n    neuvillette charge;\n}"
+      }
     },
     {
       "id": "raiden-national",
@@ -647,7 +683,16 @@
           "e": "geo",
           "i": "Zhongli"
         }
-      ]
+      ],
+      "gcsim": {
+        "chars": [
+          "HuTao",
+          "Xingqiu",
+          "Yelan",
+          "Zhongli"
+        ],
+        "rotation": "while 1 {\n    yelan skill;\n    xingqiu skill, burst;\n    yelan burst;\n    zhongli skill;\n    hutao skill;\n    hutao attack:2;\n    hutao charge;\n    hutao jump;\n    hutao attack:2;\n    hutao charge;\n    hutao jump;\n    hutao attack:2;\n    hutao charge;\n    hutao burst;\n}"
+      }
     },
     {
       "id": "ayaka-freeze",
@@ -721,7 +766,16 @@
           "e": "anemo",
           "i": "Kazuha"
         }
-      ]
+      ],
+      "gcsim": {
+        "chars": [
+          "KamisatoAyaka",
+          "Shenhe",
+          "SangonomiyaKokomi",
+          "KaedeharaKazuha"
+        ],
+        "rotation": "while 1 {\n    kokomi skill;\n    kazuha skill;\n    shenhe skill;\n    ayaka dash;\n    ayaka attack:4;\n    shenhe burst;\n    kazuha burst;\n    ayaka skill;\n    ayaka burst;\n    ayaka dash;\n    ayaka attack:4;\n}"
+      }
     },
     {
       "id": "xiao-premium",
@@ -791,7 +845,16 @@
           "e": "anemo",
           "i": "Liuyun"
         }
-      ]
+      ],
+      "gcsim": {
+        "chars": [
+          "Xiao",
+          "Faruzan",
+          "Furina",
+          "Xianyun"
+        ],
+        "rotation": "while 1 {\n    furina skill;\n    faruzan skill;\n    xianyun skill;\n    faruzan burst;\n    xianyun burst;\n    xiao skill;\n    xiao burst;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n    xiao jump;\n    xiao high_plunge;\n}"
+      }
     },
     {
       "id": "arlecchino-vape",
@@ -868,7 +931,16 @@
           "e": "pyro",
           "i": "Bennett"
         }
-      ]
+      ],
+      "gcsim": {
+        "chars": [
+          "Arlecchino",
+          "Yelan",
+          "Zhongli",
+          "Bennett"
+        ],
+        "rotation": "while 1 {\n    bennett skill;\n    yelan skill, burst;\n    zhongli skill;\n    bennett burst;\n    arlecchino skill;\n    arlecchino attack:2;\n    arlecchino charge;\n    arlecchino attack:4;\n    arlecchino charge;\n    arlecchino attack:4;\n}"
+      }
     },
     {
       "id": "nilou-bloom",
@@ -942,7 +1014,16 @@
           "e": "dendro",
           "i": "Collei"
         }
-      ]
+      ],
+      "gcsim": {
+        "chars": [
+          "Nilou",
+          "Nahida",
+          "SangonomiyaKokomi",
+          "Collei"
+        ],
+        "rotation": "while 1 {\n    nahida skill;\n    collei skill;\n    nilou skill;\n    nilou attack:3;\n    kokomi skill;\n    nahida burst;\n    nilou burst;\n    kokomi attack:3;\n    collei burst;\n    nahida attack:2;\n}"
+      }
     },
     {
       "id": "skirk-premium",
@@ -1015,7 +1096,16 @@
           "e": "hydro",
           "i": "Furina"
         }
-      ]
+      ],
+      "gcsim": {
+        "chars": [
+          "Skirk",
+          "Escoffier",
+          "Citlali",
+          "Furina"
+        ],
+        "rotation": "while 1 {\n    citlali skill;\n    furina skill;\n    escoffier skill, burst;\n    skirk skill;\n    skirk attack:5;\n    skirk burst;\n    skirk attack:5;\n    furina burst;\n    skirk attack:5;\n}"
+      }
     },
     {
       "id": "mualani-vape",
@@ -1088,7 +1178,16 @@
           "e": "hydro",
           "i": "Furina"
         }
-      ]
+      ],
+      "gcsim": {
+        "chars": [
+          "Mualani",
+          "Xilonen",
+          "Citlali",
+          "Furina"
+        ],
+        "rotation": "while 1 {\n    citlali skill;\n    xilonen skill;\n    furina skill;\n    mualani skill;\n    mualani attack:3;\n    mualani skill;\n    mualani attack:3;\n    furina burst;\n    mualani burst;\n    mualani skill;\n    mualani attack:3;\n}"
+      }
     },
     {
       "id": "fischl-taser",
@@ -1174,5 +1273,25 @@
       }
     }
   ],
-  "lunaName": "Luna VIII"
+  "lunaName": "Luna VIII",
+  "content": {
+    "updated": "2026-07-25",
+    "abyss": {
+      "cycle": "16 juillet – 15 août 2026",
+      "blessing": "Lune des glaces déferlantes : les DGT Cryo infligés par attaque chargée déclenchent une onde de choc (DGT réels) sur la cible.",
+      "floor12": "Étage 12 · 1ʳᵉ moitié : Supraconducteur +200 %, Stellar-Conduct +75 % · 2ᵉ moitié : Électro-chargé +200 %, Lunar-Charged +75 %.",
+      "strategy": "Le cycle amplifie massivement Cryo/Électro : Supraconducteur, Stellar-Conduct et Lunar-Charged. Tes équipes Électro (Flins/Columbina, Taser) et Hyperbloom sont favorisées ; une team Cryo à attaques chargées profite à fond de la bénédiction."
+    },
+    "theater": {
+      "cycle": "saison du 1ᵉʳ août 2026",
+      "elements": "Cryo · Hydro · Électro",
+      "opening": "Ouverture : Yelan, Aino, Flins, Ororon, Skirk, Layla · invités : Arlecchino, Chevreuse, Kazuha, Tighnari",
+      "strategy": "Prépare la LARGEUR Cryo/Hydro/Électro : plusieurs supports montés de ces éléments. Taser et les noyaux Hydro/Électro s'adaptent très bien ; profite des invités (Arlecchino, Kazuha) pour les actes durs."
+    },
+    "onslaught": {
+      "cycle": "8 juillet – 11 août 2026",
+      "bosses": "① Ombre de la Matrice de source secrète · ② Seigneur des Profondeurs cachées · ③ Automate de source secrète",
+      "strategy": "3 équipes SANS partage de personnages : ① Cryo/Électro (Supraconducteur ou Stellar-Conduct) · ② réactions Lunaires (Lunar-Charged / Bloom / Crystallize) · ③ team Nightsoul menée par Natlan — ta Mavuika est taillée pour la 3ᵉ arène."
+    }
+  }
 }

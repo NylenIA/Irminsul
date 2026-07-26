@@ -7,8 +7,11 @@ import "../../data/meta_repository.dart";
 import "../../data/team_matcher.dart";
 import "../../i18n/strings.dart";
 import "../../services/gcsim_service.dart";
+import "../../services/sim_cache.dart";
 import "../../state/providers.dart";
-import "team_creator_page.dart" show showSimInfoDialog;
+import "../../widgets/content_banner.dart";
+import "team_creator_page.dart"
+    show showSimInfoDialog, CustomTeam, customTeamsProvider;
 import "../../widgets/char_icon.dart";
 import "../../widgets/glass_card.dart";
 import "../../widgets/hover_card.dart";
@@ -133,11 +136,34 @@ class TeamsPage extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 18),
+
+                        // ---- contenu ACTUEL du mode sélectionné ----
+                        if (mode != null && db.content != null) ...[
+                          Reveal(
+                            delayMs: 50,
+                            child: ContentBanner(
+                              mode: mode,
+                              content: db.content!,
+                              bestTeamName: shown.isNotEmpty
+                                  ? shown.first.team.name
+                                  : null,
+                              l: l,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+
+                        // ---- tes équipes créées (créateur) ----
+                        _CustomTeamsSection(l: l, mode: mode),
+
                         for (var i = 0; i < shown.length; i++) ...[
                           Reveal(
                             delayMs: 60 + (i.clamp(0, 8)) * 70,
                             child: _TeamMatchCard(
-                                match: shown[i], l: l, byId: byId),
+                                match: shown[i],
+                                l: l,
+                                byId: byId,
+                                boxLabel: playerBox.label),
                           ),
                           const SizedBox(height: 16),
                         ],
@@ -318,12 +344,138 @@ class _ModeFilter extends ConsumerWidget {
 
 // ------------------------------------------------------------------- card --
 
+/// Tes équipes créées dans le créateur, classées par mode.
+class _CustomTeamsSection extends ConsumerWidget {
+  final L l;
+  final String? mode;
+  const _CustomTeamsSection({required this.l, required this.mode});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cs = Theme.of(context).colorScheme;
+    final chars = ref.watch(charactersFullProvider).maybeWhen(
+          data: (list) => {for (final c in list) c.good: c},
+          orElse: () => <String, CharacterFull>{},
+        );
+    final teams = ref.watch(customTeamsProvider).maybeWhen(
+          data: (t) => t,
+          orElse: () => const <CustomTeam>[],
+        );
+    final shown =
+        mode == null ? teams : teams.where((t) => t.mode == mode).toList();
+    if (shown.isEmpty) return const SizedBox.shrink();
+
+    String modeLabel(String m) => switch (m) {
+          "abyss" => l.t("modeAbyss"),
+          "theater" => l.t("modeTheater"),
+          _ => l.t("modeOnslaught"),
+        };
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Reveal(
+        child: GlassCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.bookmark, size: 16, color: cs.secondary),
+                  const SizedBox(width: 8),
+                  Text(
+                    l.t("teamsMyCreated").toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 11,
+                      letterSpacing: 1.3,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white.withValues(alpha: 0.55),
+                    ),
+                  ),
+                  const Spacer(),
+                  TextButton.icon(
+                    onPressed: () => context.go("/teams/create"),
+                    icon: const Icon(Icons.edit, size: 15),
+                    label: Text(l.t("creatorOpenIn")),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: [
+                  for (final t in shown)
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(13),
+                        border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.10)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (final k in t.chars)
+                            if (chars[k] != null)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: CharIcon(
+                                  name: chars[k]!.name,
+                                  icon: chars[k]!.icon,
+                                  element: chars[k]!.element,
+                                  size: 28,
+                                  showName: false,
+                                ),
+                              ),
+                          const SizedBox(width: 8),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 170),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(t.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w700)),
+                                Text(
+                                  "${modeLabel(t.mode)}${t.lastDps != null ? " · ${t.lastDps} DPS" : ""}",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 10.5,
+                                    color: cs.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _TeamMatchCard extends StatelessWidget {
   final TeamMatch match;
   final L l;
   final Map<String, CharacterFull> byId;
+  final String boxLabel;
   const _TeamMatchCard(
-      {required this.match, required this.l, required this.byId});
+      {required this.match,
+      required this.l,
+      required this.byId,
+      required this.boxLabel});
 
   /// Adapte le template gcsim à la BOX : si un slot est pourvu par une
   /// ALTERNATIVE, on substitue le perso dans la liste ET dans la rotation.
@@ -445,7 +597,11 @@ class _TeamMatchCard extends StatelessWidget {
               Builder(builder: (context) {
                 final (tpl, adaptNote) = _effectiveTemplate(t.gcsim!);
                 return _SimSection(
-                    template: tpl, l: l, adaptNote: adaptNote);
+                    template: tpl,
+                    l: l,
+                    adaptNote: adaptNote,
+                    teamId: t.id,
+                    boxLabel: boxLabel);
               }),
             ],
 
@@ -610,18 +766,24 @@ class _InfoBlock extends StatelessWidget {
 }
 
 /// Bouton + résultat de la simulation gcsim sur les builds réels du joueur.
-class _SimSection extends StatefulWidget {
+class _SimSection extends ConsumerStatefulWidget {
   final GcsimTemplateData template;
   final L l;
   final String? adaptNote; // substitutions box (ex. « Xingqiu → Yelan »)
+  final String teamId;
+  final String boxLabel;
   const _SimSection(
-      {required this.template, required this.l, this.adaptNote});
+      {required this.template,
+      required this.l,
+      this.adaptNote,
+      required this.teamId,
+      required this.boxLabel});
 
   @override
-  State<_SimSection> createState() => _SimSectionState();
+  ConsumerState<_SimSection> createState() => _SimSectionState();
 }
 
-class _SimSectionState extends State<_SimSection> {
+class _SimSectionState extends ConsumerState<_SimSection> {
   bool _running = false;
   SimResult? _result;
   String? _error;
@@ -635,6 +797,9 @@ class _SimSectionState extends State<_SimSection> {
       final r = await GcsimService.run(
         GcsimTemplate(widget.template.chars, widget.template.rotation),
       );
+      // mémorise le VRAI résultat pour cette box → le dashboard l'affiche
+      await SimCache.put(widget.teamId, r, widget.boxLabel);
+      ref.invalidate(simCacheProvider);
       if (mounted) setState(() => _result = r);
     } catch (e) {
       if (mounted) setState(() => _error = e.toString());

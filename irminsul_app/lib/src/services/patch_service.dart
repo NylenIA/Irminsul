@@ -1,9 +1,7 @@
-import "dart:convert";
-
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:http/http.dart" as http;
 
 import "../data/meta_repository.dart";
+import "meta_ota.dart";
 
 /// État de synchronisation des données méta (principe OTA : le code est séparé
 /// des données ; la référence vit sur GitHub et l'app compare au démarrage).
@@ -13,35 +11,51 @@ class SyncStatus {
   final SyncState state;
   final String localVersion;
   final String? remoteVersion;
-  const SyncStatus(this.state, this.localVersion, this.remoteVersion);
-}
 
-/// Source de vérité distante : la BDD méta de la branche de l'app sur GitHub.
-const _remoteMetaUrl =
-    "https://raw.githubusercontent.com/NylenIA/Irminsul/flutter-app/irminsul_app/assets/data/meta_teams.json";
+  /// Date du contenu de cycle côté distant (ex. « 2026-07-25 »), utile quand
+  /// la version du jeu ne change pas mais que l'Abîme, lui, tourne.
+  final String? remoteUpdated;
+
+  /// « embedded » ou « ota » : d'où viennent les données actuellement lues.
+  final String source;
+
+  const SyncStatus(
+    this.state,
+    this.localVersion,
+    this.remoteVersion, {
+    this.remoteUpdated,
+    this.source = "embedded",
+  });
+}
 
 final syncStatusProvider = FutureProvider<SyncStatus>((ref) async {
   final local = await ref.watch(metaDbProvider.future);
-  try {
-    final resp = await http
-        .get(Uri.parse(_remoteMetaUrl))
-        .timeout(const Duration(seconds: 10));
-    if (resp.statusCode != 200) {
-      return SyncStatus(SyncState.offline, local.metaVersion, null);
-    }
-    final remote = (jsonDecode(resp.body)
-        as Map<String, dynamic>)["metaVersion"] as String?;
-    if (remote == null) {
-      return SyncStatus(SyncState.offline, local.metaVersion, null);
-    }
-    return SyncStatus(
-      remote == local.metaVersion
-          ? SyncState.upToDate
-          : SyncState.updateAvailable,
-      local.metaVersion,
-      remote,
-    );
-  } catch (_) {
-    return SyncStatus(SyncState.offline, local.metaVersion, null);
+  final remote = await MetaOta.download();
+  if (remote == null) {
+    return SyncStatus(SyncState.offline, local.metaVersion, null,
+        source: local.dataSource);
   }
+  final remoteVersion = remote["metaVersion"] as String;
+  final remoteContent = remote["content"] as Map<String, dynamic>?;
+  final newer =
+      MetaOta.freshness(remote).compareTo(local.freshness) > 0;
+  return SyncStatus(
+    newer ? SyncState.updateAvailable : SyncState.upToDate,
+    local.metaVersion,
+    remoteVersion,
+    remoteUpdated: remoteContent?["updated"] as String?,
+    source: local.dataSource,
+  );
 });
+
+/// Applique la mise à jour méta : télécharge, installe, recharge l'app.
+/// Retourne true si les données affichées ont réellement changé.
+Future<bool> applyMetaUpdate(WidgetRef ref) async {
+  final local = await ref.read(metaDbProvider.future);
+  final changed = await MetaOta.update(localFreshness: local.freshness);
+  if (changed) {
+    ref.invalidate(metaDbProvider);
+    ref.invalidate(syncStatusProvider);
+  }
+  return changed;
+}

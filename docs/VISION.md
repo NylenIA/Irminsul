@@ -145,6 +145,16 @@ navigation, graphes épurés et animés) — **version Genshin**. *(réfs Pinter
 
 ## 11. Journal des décisions
 
+- **2026-07-24 (soir)** — **DA par NATION** actée (moodboards fournis) : chaque
+  nation a son identité (Mondstadt·Liberté, Liyue·Contrat, Inazuma·Éternité,
+  Sumeru·Sagesse, Fontaine·Justice, Natlan·Guerre, Nod-Krai·Lune,
+  Snezhnaya·Amour) — appliquée aux fiches persos (lueurs + badge principe) et
+  aux thèmes de l'app. **Leaks intégrés et étiquetés** (Odette 67/100 ;
+  Tsaritsa/Alyosha 55/100, « aucun kit fiable » affiché). Patch live corrigé :
+  **6.7**. **À FAIRE PLUS TARD (demande utilisateur)** : mise à jour
+  **quotidienne automatique** de la méta/leaks via OTA (veille auto) — après
+  les étapes en cours ; pour l'instant on suit la roadmap (design d'abord).
+
 - **2026-07-24** — Pivot : abandon de l'app web/Tauri. Cap sur un **vrai app natif**,
   gratuit, code+build **cloud** (GitHub), moteur **gcsim**, rigueur **grade simu**.
   Méthode : **doc d'abord, code ensuite**.

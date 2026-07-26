@@ -3,6 +3,8 @@ import "dart:convert";
 import "package:flutter/services.dart" show rootBundle;
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
+import "../services/meta_ota.dart";
+
 /// Un personnage d'une équipe méta.
 class TeamChar {
   final String name;
@@ -73,12 +75,36 @@ class GcsimTemplateData {
   const GcsimTemplateData(this.chars, this.rotation);
 }
 
+/// Contenu ACTUEL d'un mode de fin de jeu (cycle en cours, stratégie).
+class ModeContent {
+  final String cycle;
+  final String headline; // bénédiction / éléments / boss
+  final String detail; // étage 12 / ouverture / (vide)
+  final String strategy;
+  const ModeContent(this.cycle, this.headline, this.detail, this.strategy);
+}
+
+class CurrentContent {
+  final String updated;
+  final Map<String, ModeContent> byMode; // abyss | theater | onslaught
+  const CurrentContent(this.updated, this.byMode);
+}
+
 class MetaDb {
   final String metaVersion;
   final String lunaName; // nom officiel en jeu (ex. « Luna VIII » pour 6.7)
   final String dataKind;
   final List<MetaTeam> teams;
-  const MetaDb(this.metaVersion, this.lunaName, this.dataKind, this.teams);
+  final CurrentContent? content;
+
+  /// « embedded » = livrée avec le build · « ota » = téléchargée depuis GitHub.
+  final String dataSource;
+
+  /// Clé de fraîcheur (date de contenu | version) — sert à la comparaison OTA.
+  final String freshness;
+
+  const MetaDb(this.metaVersion, this.lunaName, this.dataKind, this.teams,
+      this.content, this.dataSource, this.freshness);
 
   /// Libellé complet de version, côté jeu ET côté données.
   String get versionLabel =>
@@ -88,10 +114,19 @@ class MetaDb {
       teams.where((t) => t.mode == mode).toList();
 }
 
-/// Charge la BDD méta embarquée (assets/data/meta_teams.json).
+/// Charge la BDD méta : celle téléchargée (OTA) si elle est plus fraîche que
+/// celle embarquée dans le build, sinon l'asset. Un build plus récent gagne
+/// toujours sur un vieux cache — la comparaison porte sur la date de contenu.
 final metaDbProvider = FutureProvider<MetaDb>((ref) async {
   final raw = await rootBundle.loadString("assets/data/meta_teams.json");
-  final json = jsonDecode(raw) as Map<String, dynamic>;
+  var json = jsonDecode(raw) as Map<String, dynamic>;
+  var source = "embedded";
+  final ota = await MetaOta.cached();
+  if (ota != null &&
+      MetaOta.freshness(ota).compareTo(MetaOta.freshness(json)) > 0) {
+    json = ota;
+    source = "ota";
+  }
   final teams = (json["teams"] as List).map((t) {
     final m = t as Map<String, dynamic>;
     return MetaTeam(
@@ -133,10 +168,36 @@ final metaDbProvider = FutureProvider<MetaDb>((ref) async {
             ),
     );
   }).toList();
+  CurrentContent? content;
+  final rawContent = json["content"] as Map<String, dynamic>?;
+  if (rawContent != null) {
+    ModeContent parseMode(String key, String h, String d) {
+      final m = rawContent[key] as Map<String, dynamic>? ?? const {};
+      return ModeContent(
+        m["cycle"] as String? ?? "",
+        m[h] as String? ?? "",
+        m[d] as String? ?? "",
+        m["strategy"] as String? ?? "",
+      );
+    }
+
+    content = CurrentContent(
+      rawContent["updated"] as String? ?? "",
+      {
+        "abyss": parseMode("abyss", "blessing", "floor12"),
+        "theater": parseMode("theater", "elements", "opening"),
+        "onslaught": parseMode("onslaught", "bosses", ""),
+      },
+    );
+  }
+
   return MetaDb(
     json["metaVersion"] as String,
     json["lunaName"] as String? ?? "",
     json["dataKind"] as String? ?? "DEMO",
     teams,
+    content,
+    source,
+    MetaOta.freshness(json),
   );
 });

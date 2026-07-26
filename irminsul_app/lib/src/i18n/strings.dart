@@ -102,9 +102,9 @@ class L {
     },
     "demoDataNote": {
       "fr":
-          "Données de démonstration (theorycraft indicatif) — moteur gcsim et BDD méta curée à venir.",
+          "DPS en vert = simulation gcsim sur TA box (rotation validée). DPS grisé = repère indicatif tant que tu n'as pas lancé la simulation depuis Équipes.",
       "en":
-          "Demo data (indicative theorycraft) — gcsim engine and curated meta DB coming.",
+          "Green DPS = gcsim simulation on YOUR box (validated rotation). Greyed DPS = indicative benchmark until you run the simulation from Teams.",
     },
     "enkaLoading": {"fr": "Récupération…", "en": "Fetching…"},
     "guidesSubtitle": {
@@ -140,6 +140,19 @@ class L {
     "syncUpToDate": {"fr": "Données à jour", "en": "Data up to date"},
     "syncUpdate": {"fr": "Màj méta dispo :", "en": "Meta update available:"},
     "syncOffline": {"fr": "Hors-ligne", "en": "Offline"},
+    "syncApply": {
+      "fr": "Cliquer pour télécharger la nouvelle méta",
+      "en": "Click to download the new meta",
+    },
+    "syncApplied": {
+      "fr": "Méta mise à jour — équipes et contenus rafraîchis",
+      "en": "Meta updated — teams and content refreshed",
+    },
+    "syncFailed": {
+      "fr": "Mise à jour impossible (hors-ligne ou données invalides) — rien n'a changé",
+      "en": "Update failed (offline or invalid data) — nothing changed",
+    },
+    "syncSourceOta": {"fr": "téléchargée", "en": "downloaded"},
     "searchHint": {"fr": "Rechercher un personnage…", "en": "Search a character…"},
     "tabBuild": {"fr": "Build", "en": "Build"},
     "tabTalents": {"fr": "Aptitudes", "en": "Talents"},
@@ -379,6 +392,29 @@ class L {
       "fr": "DPS si complète",
       "en": "DPS if complete",
     },
+    "dashSimulated": {
+      "fr": "simulé sur ta box le",
+      "en": "simulated on your box on",
+    },
+    "dashDemoTag": {
+      "fr": "estimation démo — lance la simulation dans Équipes",
+      "en": "demo estimate — run the simulation in Teams",
+    },
+    "contentCurrent": {"fr": "Contenu actuel", "en": "Current content"},
+    "contentUpdated": {"fr": "màj", "en": "updated"},
+    "contentBestForYou": {
+      "fr": "Meilleure option de ta box :",
+      "en": "Best option from your box:",
+    },
+    "teamsMyCreated": {
+      "fr": "Mes équipes créées",
+      "en": "My created teams",
+    },
+    "creatorOpenIn": {
+      "fr": "Ouvrir le créateur",
+      "en": "Open the creator",
+    },
+    "creatorModeLabel": {"fr": "Mode visé :", "en": "Target mode:"},
     "dashReadyClean": {
       "fr": "Jouable tout de suite, rien à corriger",
       "en": "Playable right now, nothing to fix",
@@ -396,9 +432,9 @@ class L {
     "teamsToBuild": {"fr": "à monter", "en": "needs building"},
     "teamsDemoNote": {
       "fr":
-          "BDD méta de démonstration (5 équipes curées) — elle s'étoffera via la synchro. Le croisement avec ta box, lui, est réel.",
+          "15 équipes curées, chaque rotation validée par simulation. Le croisement avec ta box, les substitutions et les DPS simulés sont réels ; la méta et les contenus de cycle se mettent à jour sans réinstaller l'app.",
       "en":
-          "Demo meta DB (5 curated teams) — it will grow via sync. The matching with your box is real.",
+          "15 curated teams, every rotation validated by simulation. Box matching, substitutions and simulated DPS are real; meta and cycle content update without reinstalling the app.",
     },
     "leaksSection": {
       "fr": "Leaks · non confirmés",

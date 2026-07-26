@@ -81,19 +81,26 @@
   « ulti en début de rotation = 0 énergie ».
   Constat vérifié : Zibai/Sandrone/Iansan/Varka/Nefer **pas implémentés** dans
   gcsim même à HEAD (pas une question de version — travail de l'équipe gcsim).
-- **4.3.2 — Templates partout + dashboard réel + contenus actuels** ⏳
-  (attend validation) — périmètre étendu le 2026-07-25 sur demande :
-  * rotations gcsim validées pour les 15 équipes — **optimales mais jouables
-    à la main** ;
-  * DPS de démo du dashboard remplacés par les résultats simulés réels (cache) ;
+- **4.3.2 — Templates partout + dashboard réel + contenus actuels** ✅ livrée
+  le 2026-07-27 (périmètre étendu le 2026-07-25 sur demande) :
+  * rotations gcsim pour les **15 équipes**, **15/15 validées par simulation**
+    avant embarquement (`tool/templates_all.py` + `tool/validate_templates.py`)
+    — optimales mais jouables à la main ;
+  * DPS de démo du dashboard remplacés par les **résultats simulés réels**
+    (cache lié au libellé de box : changer de box invalide le chiffre) ;
   * **équipes créées sauvegardables dans « Équipes »** avec un mode
     (Abîme / Théâtre / Carnage) ;
-  * **contenus ACTUELS du patch** affichés et maintenus : boss/bénédiction de
-    l'Abîme, éléments du Théâtre, boss du Carnage — avec la **stratégie
-    adéquate** indiquée dans l'app ;
+  * **contenus ACTUELS du patch** affichés (cycle + date de fraîcheur) :
+    bénédiction/étage 12 de l'Abîme, éléments et ouverture du Théâtre, boss du
+    Carnage stygien — avec la **stratégie adéquate** dans l'app ;
   * meilleure team par contenu, et si persos manquants → **version adaptée à
-    la box** (le moteur de substitution existe déjà : slots alts/pool +
-    rotations auto-adaptées).
+    la box** (slots alts/pool + rotations auto-adaptées) ;
+  * **méta réellement OTA** : `MetaOta` télécharge et installe la BDD distante
+    (validée avant écriture, repli sur l'asset embarqué) — un nouveau cycle
+    d'Abîme n'oblige plus à réinstaller l'app. La puce de synchro applique la
+    mise à jour d'un clic.
+  * outil `tool/dart_sanity.py` : contrôle syntaxique Dart local (pas de
+    Flutter sur la machine) avant chaque push.
 - **4.3.3 — Persos absents & leaks** ⏳ (attend validation) : calcul théorique
   étiqueté SPÉCULATION pour les kits leakés documentés (Odette V3) via nos
   propres formules ; suivi auto des nouveaux persos ajoutés à gcsim.

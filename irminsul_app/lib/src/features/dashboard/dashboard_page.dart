@@ -7,8 +7,10 @@ import "../../data/meta_repository.dart";
 import "../../data/team_matcher.dart";
 import "../../i18n/strings.dart";
 import "../../services/patch_service.dart";
+import "../../services/sim_cache.dart";
 import "../../state/providers.dart";
 import "../../widgets/char_icon.dart";
+import "../../widgets/content_banner.dart";
 import "../../widgets/glass_card.dart";
 import "../../widgets/hover_card.dart";
 import "../../widgets/reveal.dart";
@@ -129,6 +131,10 @@ class DashboardPage extends ConsumerWidget {
                       );
                     }
                     final top = matches.take(3).toList();
+                    final cache = ref
+                            .watch(simCacheProvider)
+                            .maybeWhen(data: (c) => c, orElse: () => null) ??
+                        const <String, CachedSim>{};
                     return AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       switchInCurve: Curves.easeOutCubic,
@@ -136,10 +142,28 @@ class DashboardPage extends ConsumerWidget {
                         key: ValueKey(mode),
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          if (db.content != null) ...[
+                            Reveal(
+                              delayMs: 60,
+                              child: ContentBanner(
+                                mode: mode,
+                                content: db.content!,
+                                bestTeamName: top.first.team.name,
+                                l: l,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                          ],
                           for (var i = 0; i < top.length; i++) ...[
                             Reveal(
                               delayMs: 80 + i * 90,
-                              child: _TeamRow(match: top[i], l: l, rank: i + 1),
+                              child: _TeamRow(
+                                match: top[i],
+                                l: l,
+                                rank: i + 1,
+                                cached: _validCache(
+                                    cache[top[i].team.id], playerBox.label),
+                              ),
                             ),
                             const SizedBox(height: 14),
                           ],
@@ -198,6 +222,10 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 }
+
+/// Un résultat de cache n'est valable que pour la MÊME box importée.
+CachedSim? _validCache(CachedSim? c, String boxLabel) =>
+    (c != null && c.boxLabel == boxLabel) ? c : null;
 
 // ---------------------------------------------------------------- widgets --
 
@@ -265,53 +293,102 @@ class _AccountChip extends StatelessWidget {
   }
 }
 
-class _SyncChip extends ConsumerWidget {
+/// Puce de synchro méta — cliquable quand une mise à jour existe : elle
+/// TÉLÉCHARGE réellement la nouvelle BDD (nouveau cycle d'Abîme, correction
+/// méta) sans réinstaller l'app.
+class _SyncChip extends ConsumerStatefulWidget {
   final L l;
   const _SyncChip({required this.l});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_SyncChip> createState() => _SyncChipState();
+}
+
+class _SyncChipState extends ConsumerState<_SyncChip> {
+  bool _busy = false;
+
+  Future<void> _apply() async {
+    setState(() => _busy = true);
+    final ok = await applyMetaUpdate(ref);
+    if (!mounted) return;
+    setState(() => _busy = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            ok ? widget.l.t("syncApplied") : widget.l.t("syncFailed")),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = widget.l;
     final sync = ref.watch(syncStatusProvider);
     return sync.maybeWhen(
       data: (s) {
+        final ota = s.source == "ota";
         final (color, text) = switch (s.state) {
           SyncState.upToDate => (
               _green,
-              "${l.t("syncUpToDate")} · ${s.localVersion}"
+              "${l.t("syncUpToDate")} · ${s.localVersion}${ota ? " · ${l.t("syncSourceOta")}" : ""}"
             ),
           SyncState.updateAvailable => (
               _amber,
               "${l.t("syncUpdate")} ${s.remoteVersion}"
+              "${s.remoteUpdated != null ? " · ${s.remoteUpdated}" : ""}"
             ),
           SyncState.offline => (
               Colors.white38,
               "${l.t("syncOffline")} · ${s.localVersion}"
             ),
         };
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.045),
+        final actionable = s.state == SyncState.updateAvailable && !_busy;
+        return Tooltip(
+          message: actionable ? l.t("syncApply") : text,
+          child: InkWell(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.09)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 7,
-                height: 7,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                        color: color.withValues(alpha: 0.6), blurRadius: 7),
-                  ],
-                ),
+            onTap: actionable ? _apply : null,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.045),
+                borderRadius: BorderRadius.circular(12),
+                border:
+                    Border.all(color: Colors.white.withValues(alpha: 0.09)),
               ),
-              const SizedBox(width: 8),
-              Text(text, style: const TextStyle(fontSize: 12)),
-            ],
+              child: Row(
+                children: [
+                  if (_busy)
+                    const SizedBox(
+                      width: 11,
+                      height: 11,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  else
+                    Container(
+                      width: 7,
+                      height: 7,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              color: color.withValues(alpha: 0.6),
+                              blurRadius: 7),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(width: 8),
+                  Text(text, style: const TextStyle(fontSize: 12)),
+                  if (actionable) ...[
+                    const SizedBox(width: 6),
+                    Icon(Icons.download, size: 14, color: color),
+                  ],
+                ],
+              ),
+            ),
           ),
         );
       },
@@ -374,11 +451,17 @@ class _ModeTab extends ConsumerWidget {
 }
 
 /// Ligne compacte : rang, persos (état réel), verdict, DPS honnête.
+/// Si une simulation gcsim a été faite pour CETTE box : vrai DPS affiché.
 class _TeamRow extends StatelessWidget {
   final TeamMatch match;
   final L l;
   final int rank;
-  const _TeamRow({required this.match, required this.l, required this.rank});
+  final CachedSim? cached;
+  const _TeamRow(
+      {required this.match,
+      required this.l,
+      required this.rank,
+      this.cached});
 
   @override
   Widget build(BuildContext context) {
@@ -458,27 +541,34 @@ class _TeamRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              // DPS : honnête (indicatif, et « si complète » si des slots manquent)
+              // DPS : le VRAI résultat simulé si disponible pour cette box,
+              // sinon le chiffre indicatif grisé avec son étiquette honnête.
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    _fmt(t.dps),
+                    _fmt(cached?.dps ?? t.dps),
                     style: TextStyle(
                       fontSize: 19,
                       fontWeight: FontWeight.w800,
-                      color: match.complete
-                          ? cs.primary
-                          : Colors.white.withValues(alpha: 0.35),
+                      color: cached != null
+                          ? _green
+                          : match.complete
+                              ? cs.primary.withValues(alpha: 0.55)
+                              : Colors.white.withValues(alpha: 0.35),
                     ),
                   ),
                   Text(
-                    match.complete
-                        ? l.t("dpsPerRotation")
-                        : l.t("dashDpsIfComplete"),
+                    cached != null
+                        ? "${l.t("dashSimulated")} ${cached!.at.day.toString().padLeft(2, "0")}/${cached!.at.month.toString().padLeft(2, "0")}"
+                        : match.complete
+                            ? l.t("dashDemoTag")
+                            : l.t("dashDpsIfComplete"),
                     style: TextStyle(
                       fontSize: 10,
-                      color: Colors.white.withValues(alpha: 0.4),
+                      color: cached != null
+                          ? _green.withValues(alpha: 0.8)
+                          : Colors.white.withValues(alpha: 0.4),
                     ),
                   ),
                 ],
