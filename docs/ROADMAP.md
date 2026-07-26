@@ -102,10 +102,18 @@
     Carnage stygien — avec la **stratégie adéquate** dans l'app ;
   * meilleure team par contenu, et si persos manquants → **version adaptée à
     la box** (slots alts/pool + rotations auto-adaptées) ;
-  * **méta réellement OTA** : `MetaOta` télécharge et installe la BDD distante
-    (validée avant écriture, repli sur l'asset embarqué) — un nouveau cycle
-    d'Abîme n'oblige plus à réinstaller l'app. La puce de synchro applique la
-    mise à jour d'un clic.
+  * **méta OTA** : `MetaOta` télécharge, valide puis installe la BDD distante
+    (repli sur l'asset embarqué), avec application **automatique au
+    démarrage** + clic manuel sur la puce de synchro.
+    ⚠️ **Bloqué par un choix à faire** : le dépôt `NylenIA/Irminsul` est
+    **privé**, donc `raw.githubusercontent.com` répond **404** sans token —
+    la synchro (y compris l'ancien simple contrôle de version) n'a jamais pu
+    aboutir depuis l'app. L'app le dit maintenant clairement (« Source méta
+    inaccessible (dépôt privé) ») au lieu d'afficher « Hors-ligne ».
+    Options : (a) rendre le dépôt public — cohérent avec « app gratuite, code
+    et builds sur GitHub » ; (b) publier `meta_teams.json` dans un petit dépôt
+    public dédié (`irminsul-data`) poussé par la CI ; (c) Gist public.
+    À trancher par l'utilisateur.
   * outil `tool/dart_sanity.py` : contrôle syntaxique Dart local (pas de
     Flutter sur la machine) avant chaque push.
 - **4.3.3 — Persos absents & leaks** ⏳ (attend validation) : calcul théorique
