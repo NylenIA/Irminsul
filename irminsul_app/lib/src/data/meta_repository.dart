@@ -104,6 +104,16 @@ class ModeContent {
   /// D'où vient l'info + date de vérification (affiché tel quel).
   final String source;
 
+  /// Réactions amplifiées par le cycle → bonus décimal (0.75 = +75 %).
+  /// C'est ce qui rend une équipe PERTINENTE pour le contenu du moment.
+  final Map<String, double> boostedReactions;
+
+  /// Éléments exigés par une mécanique (salle, boss) : leur absence coûte cher.
+  final List<String> requiredElements;
+
+  /// Rôles favorisés par le contenu (bouclier, soin, nightsoul…).
+  final List<String> favoredTags;
+
   const ModeContent(
     this.cycle,
     this.headline,
@@ -114,6 +124,9 @@ class ModeContent {
     this.allowedElements = const [],
     this.guests = const [],
     this.source = "",
+    this.boostedReactions = const {},
+    this.requiredElements = const [],
+    this.favoredTags = const [],
   });
 
   DateTime? get startsAt => DateTime.tryParse(from);
@@ -265,6 +278,12 @@ final metaDbProvider = FutureProvider<MetaDb>((ref) async {
             (m["allowedElements"] as List? ?? const []).cast<String>(),
         guests: (m["guests"] as List? ?? const []).cast<String>(),
         source: m["source"] as String? ?? "",
+        boostedReactions:
+            ((m["boostedReactions"] as Map?) ?? const {}).map(
+                (k, v) => MapEntry(k as String, (v as num).toDouble())),
+        requiredElements:
+            (m["requiredElements"] as List? ?? const []).cast<String>(),
+        favoredTags: (m["favoredTags"] as List? ?? const []).cast<String>(),
       );
     }
 

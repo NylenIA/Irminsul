@@ -1421,7 +1421,17 @@
       "blessing": "Lune des glaces déferlantes : quand le personnage actif inflige des DGT Cryo avec une attaque chargée, une onde de choc de DGT réels frappe la cible.",
       "floor12": "Étage 12 · 1ʳᵉ moitié : DGT Supraconducteur +200 %, Stellar-Conduct +75 % · 2ᵉ moitié : DGT Électro-chargé +200 %, Lunar-Charged +75 %.",
       "strategy": "1ʳᵉ moitié : Cryo/Électro pour le Supraconducteur — garde un Électro pour la salle 1 (Rejeton de la nuit glacée). 2ᵉ moitié : il te FAUT de l'Électro-chargé en salle 3 (l'Idole Pipilpan n'est vulnérable qu'à cette réaction) : prévois Hydro + Électro. La bénédiction récompense en plus une équipe Cryo à attaques chargées.",
-      "source": "Game8 — Spiral Abyss 6.7 (vérifié le 27/07/2026)"
+      "source": "Game8 — Spiral Abyss 6.7 (vérifié le 27/07/2026)",
+      "boostedReactions": {
+        "superconduct": 2.0,
+        "stellar-conduct": 0.75,
+        "electro-charged": 2.0,
+        "lunar-charged": 0.75
+      },
+      "requiredElements": [
+        "electro"
+      ],
+      "favoredTags": []
     },
     "theater": {
       "from": "2026-07-01",
@@ -1441,7 +1451,13 @@
       ],
       "opening": "Ouverture imposée : Arlecchino, Cyno, Ganyu, Bennett, Beidou, Diona · Invités : Columbina, Kinich, Mizuki, Jahoda · Boss : Terreur jadeplume (acte 3), Primo-vishap Géo (acte 6), Landrover super-lourd (acte 8), Drake Aeonblight (acte 10)",
       "strategy": "Hors invités, SEULS Pyro, Cryo et Électro sont jouables : monte de la largeur dans ces trois éléments (Surcharge Pyro/Électro et un noyau Cryo). Les équipes Hydro/Dendro sont interdites ce mois-ci — l'app les masque au lieu de te les proposer. La saison se termine le 30/07 ; la suivante arrivera par la synchro.",
-      "source": "Game8 — Théâtre imaginaire 6.7 / Saison 25 + Genshin Impact Wiki (vérifié le 27/07/2026)"
+      "source": "Game8 — Théâtre imaginaire 6.7 / Saison 25 + Genshin Impact Wiki (vérifié le 27/07/2026)",
+      "boostedReactions": {},
+      "requiredElements": [],
+      "favoredTags": [
+        "heal",
+        "shield"
+      ]
     },
     "onslaught": {
       "from": "2026-07-08",
@@ -1449,7 +1465,17 @@
       "cycle": "8 juillet – 11 août 2026",
       "bosses": "① Matrice de source secrète du Réseau du Superviseur : Volonté de la Ruche · ② Seigneur des Profondeurs cachées : Murmureur de cauchemars · ③ Automate de source secrète : Dispositif de configuration",
       "strategy": "① détruis vite les 4 drones Hydro (Cryo, Hydro, Dendro ou Pyro) sinon le boss se protège d'un bouclier · ② casse le Bouclier des profondeurs en 15 s : les réactions Lunaires lui infligent +300 % de DGT (Lunar-Charged / Lunar-Bloom) · ③ détruis les piliers avec des personnages Nightsoul (déclenchés à 15 s au lieu de 40) avant l'AoE fatale — ta Mavuika est taillée pour cette arène. À partir de la difficulté 4 (Menaçant), aucun personnage ne peut servir dans deux arènes.",
-      "source": "Game8 — Stygian Onslaught 6.7 + GamingOnPhone (vérifié le 27/07/2026)"
+      "source": "Game8 — Stygian Onslaught 6.7 + GamingOnPhone (vérifié le 27/07/2026)",
+      "boostedReactions": {
+        "lunar-charged": 3.0,
+        "lunar-bloom": 3.0
+      },
+      "requiredElements": [],
+      "favoredTags": [
+        "nightsoul",
+        "shield",
+        "heal"
+      ]
     }
   },
   "dpsRef": "synth-standard"

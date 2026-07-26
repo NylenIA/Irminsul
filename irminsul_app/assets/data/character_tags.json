@@ -1,0 +1,1985 @@
+{
+ "Traveler": {
+  "element": "none",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [],
+  "carry": false,
+  "reactions": [],
+  "sourced": false
+ },
+ "Aino": {
+  "element": "hydro",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Albedo": {
+  "element": "geo",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [],
+  "carry": false,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Alhaitham": {
+  "element": "dendro",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "em_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Aloy": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "atk_buff",
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Amber": {
+  "element": "pyro",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [
+   "atk_buff",
+   "crowd"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "AratakiItto": {
+  "element": "geo",
+  "rarity": 5,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "atk_buff",
+   "crowd",
+   "dmg_buff",
+   "res_shred"
+  ],
+  "carry": false,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Arlecchino": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff",
+   "dmg_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Baizhu": {
+  "element": "dendro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff",
+   "heal",
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Barbara": {
+  "element": "hydro",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Beidou": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "dmg_buff",
+   "res_shred",
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Bennett": {
+  "element": "pyro",
+  "rarity": 4,
+  "weapon": "Épée à une main",
+  "tags": [
+   "atk_buff",
+   "energy",
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Candace": {
+  "element": "hydro",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "dmg_buff",
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Charlotte": {
+  "element": "cryo",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff",
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Chasca": {
+  "element": "anemo",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [],
+  "carry": true,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Chevreuse": {
+  "element": "pyro",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff",
+   "heal",
+   "res_shred"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Chiori": {
+  "element": "geo",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Chongyun": {
+  "element": "cryo",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "res_shred"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Citlali": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "em_buff",
+   "res_shred",
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Clorinde": {
+  "element": "electro",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "atk_buff",
+   "heal"
+  ],
+  "carry": true,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Collei": {
+  "element": "dendro",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [],
+  "carry": false,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Columbina": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Cyno": {
+  "element": "electro",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "em_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Dahlia": {
+  "element": "hydro",
+  "rarity": 4,
+  "weapon": "Épée à une main",
+  "tags": [
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Dehya": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Épée à deux mains",
+  "tags": [],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Diluc": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Épée à deux mains",
+  "tags": [],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Diona": {
+  "element": "cryo",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [
+   "heal",
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Dori": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "energy"
+  ],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Durin": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "atk_buff",
+   "dmg_buff",
+   "energy",
+   "res_shred"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Emilie": {
+  "element": "dendro",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff",
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Escoffier": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "energy"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Eula": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "res_shred"
+  ],
+  "carry": true,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Faruzan": {
+  "element": "anemo",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [
+   "atk_buff",
+   "crowd",
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Fischl": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [
+   "offfield"
+  ],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Flins": {
+  "element": "electro",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff",
+   "dmg_buff",
+   "em_buff",
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Freminet": {
+  "element": "cryo",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Furina": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "dmg_buff",
+   "heal",
+   "offfield"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Gaming": {
+  "element": "pyro",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Ganyu": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "dmg_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Gorou": {
+  "element": "geo",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [
+   "crowd",
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "HuTao": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff",
+   "dmg_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Iansan": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff",
+   "nightsoul"
+  ],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Ifa": {
+  "element": "anemo",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [
+   "crowd",
+   "em_buff",
+   "heal"
+  ],
+  "carry": true,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Illuga": {
+  "element": "geo",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "em_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Ineffa": {
+  "element": "electro",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff",
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Jahoda": {
+  "element": "anemo",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [
+   "em_buff",
+   "energy",
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Jean": {
+  "element": "anemo",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "crowd",
+   "energy",
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Kachina": {
+  "element": "geo",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "KaedeharaKazuha": {
+  "element": "anemo",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "crowd",
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Kaeya": {
+  "element": "cryo",
+  "rarity": 4,
+  "weapon": "Épée à une main",
+  "tags": [
+   "energy"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "KamisatoAyaka": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "KamisatoAyato": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "energy"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Kaveh": {
+  "element": "dendro",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "em_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Keqing": {
+  "element": "electro",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [],
+  "carry": true,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Kinich": {
+  "element": "dendro",
+  "rarity": 5,
+  "weapon": "Épée à deux mains",
+  "tags": [],
+  "carry": true,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Kirara": {
+  "element": "dendro",
+  "rarity": 4,
+  "weapon": "Épée à une main",
+  "tags": [
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Klee": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "KujouSara": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [
+   "atk_buff",
+   "energy"
+  ],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "KukiShinobu": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Épée à une main",
+  "tags": [
+   "em_buff",
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "LanYan": {
+  "element": "anemo",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff",
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Lauma": {
+  "element": "dendro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff",
+   "em_buff",
+   "offfield",
+   "res_shred"
+  ],
+  "carry": false,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Layla": {
+  "element": "cryo",
+  "rarity": 4,
+  "weapon": "Épée à une main",
+  "tags": [
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Linnea": {
+  "element": "geo",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "dmg_buff",
+   "em_buff",
+   "heal",
+   "res_shred"
+  ],
+  "carry": true,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Lisa": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Lohen": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Lynette": {
+  "element": "anemo",
+  "rarity": 4,
+  "weapon": "Épée à une main",
+  "tags": [
+   "atk_buff",
+   "crowd"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Lyney": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "atk_buff",
+   "crowd",
+   "dmg_buff",
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Manekin": {
+  "element": "none",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "energy"
+  ],
+  "carry": false,
+  "reactions": [],
+  "sourced": true
+ },
+ "Manekina": {
+  "element": "none",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "energy"
+  ],
+  "carry": false,
+  "reactions": [],
+  "sourced": true
+ },
+ "Mavuika": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "atk_buff",
+   "dmg_buff",
+   "energy",
+   "nightsoul"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Mika": {
+  "element": "cryo",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Mona": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "crowd",
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Mualani": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "nightsoul"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Nahida": {
+  "element": "dendro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "em_buff",
+   "offfield"
+  ],
+  "carry": false,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Navia": {
+  "element": "geo",
+  "rarity": 5,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "atk_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Nefer": {
+  "element": "dendro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff",
+   "em_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Neuvillette": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff",
+   "heal"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Nicole": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "atk_buff",
+   "shield"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Nilou": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "dmg_buff",
+   "em_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Ningguang": {
+  "element": "geo",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Noelle": {
+  "element": "geo",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "atk_buff",
+   "heal",
+   "shield"
+  ],
+  "carry": true,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Ororon": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [
+   "crowd",
+   "energy",
+   "nightsoul",
+   "offfield"
+  ],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Prune": {
+  "element": "anemo",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Qiqi": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "RaidenShogun": {
+  "element": "electro",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "dmg_buff",
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Razor": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Rosaria": {
+  "element": "cryo",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Sandrone": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "atk_buff",
+   "dmg_buff",
+   "em_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "SangonomiyaKokomi": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff",
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Sayu": {
+  "element": "anemo",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Sethos": {
+  "element": "electro",
+  "rarity": 4,
+  "weapon": "Arc",
+  "tags": [
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Shenhe": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff",
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "ShikanoinHeizou": {
+  "element": "anemo",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [
+   "crowd"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Sigewinne": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "dmg_buff",
+   "energy",
+   "heal",
+   "res_shred"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Skirk": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Sucrose": {
+  "element": "anemo",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [
+   "crowd",
+   "dmg_buff",
+   "em_buff",
+   "res_shred"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Tartaglia": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Thoma": {
+  "element": "pyro",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Tighnari": {
+  "element": "dendro",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "crowd",
+   "dmg_buff",
+   "em_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Varesa": {
+  "element": "electro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "atk_buff",
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Varka": {
+  "element": "anemo",
+  "rarity": 5,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Venti": {
+  "element": "anemo",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "crowd",
+   "dmg_buff",
+   "energy"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Wanderer": {
+  "element": "anemo",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "atk_buff",
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Wriothesley": {
+  "element": "cryo",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "atk_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "melt",
+   "frozen",
+   "superconduct",
+   "stellar-conduct"
+  ],
+  "sourced": true
+ },
+ "Xiangling": {
+  "element": "pyro",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "atk_buff",
+   "offfield"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Xianyun": {
+  "element": "anemo",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "atk_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Xiao": {
+  "element": "anemo",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [],
+  "carry": true,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "Xilonen": {
+  "element": "geo",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "heal",
+   "nightsoul",
+   "res_shred"
+  ],
+  "carry": false,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Xingqiu": {
+  "element": "hydro",
+  "rarity": 4,
+  "weapon": "Épée à une main",
+  "tags": [
+   "dmg_buff",
+   "offfield"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Xinyan": {
+  "element": "pyro",
+  "rarity": 4,
+  "weapon": "Épée à deux mains",
+  "tags": [
+   "shield"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "YaeMiko": {
+  "element": "electro",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "crowd",
+   "em_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "overloaded",
+   "electro-charged",
+   "superconduct",
+   "aggravate",
+   "hyperbloom",
+   "quicken",
+   "lunar-charged"
+  ],
+  "sourced": true
+ },
+ "Yanfei": {
+  "element": "pyro",
+  "rarity": 4,
+  "weapon": "Catalyseur",
+  "tags": [
+   "dmg_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "Yaoyao": {
+  "element": "dendro",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "bloom",
+   "burning",
+   "quicken",
+   "aggravate",
+   "spread",
+   "hyperbloom",
+   "burgeon",
+   "lunar-bloom"
+  ],
+  "sourced": true
+ },
+ "Yelan": {
+  "element": "hydro",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "dmg_buff"
+  ],
+  "carry": false,
+  "reactions": [
+   "vaporize",
+   "electro-charged",
+   "frozen",
+   "bloom"
+  ],
+  "sourced": true
+ },
+ "Yoimiya": {
+  "element": "pyro",
+  "rarity": 5,
+  "weapon": "Arc",
+  "tags": [
+   "atk_buff",
+   "dmg_buff"
+  ],
+  "carry": true,
+  "reactions": [
+   "vaporize",
+   "melt",
+   "overloaded",
+   "burning",
+   "burgeon"
+  ],
+  "sourced": true
+ },
+ "YumemizukiMizuki": {
+  "element": "anemo",
+  "rarity": 5,
+  "weapon": "Catalyseur",
+  "tags": [
+   "crowd",
+   "em_buff",
+   "heal"
+  ],
+  "carry": false,
+  "reactions": [
+   "swirl"
+  ],
+  "sourced": true
+ },
+ "YunJin": {
+  "element": "geo",
+  "rarity": 4,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "dmg_buff",
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Zhongli": {
+  "element": "geo",
+  "rarity": 5,
+  "weapon": "Arme d'hast",
+  "tags": [
+   "res_shred",
+   "shield"
+  ],
+  "carry": false,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ },
+ "Zibai": {
+  "element": "geo",
+  "rarity": 5,
+  "weapon": "Épée à une main",
+  "tags": [
+   "dmg_buff",
+   "em_buff",
+   "energy"
+  ],
+  "carry": true,
+  "reactions": [
+   "crystallize"
+  ],
+  "sourced": true
+ }
+}

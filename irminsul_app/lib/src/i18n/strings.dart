@@ -451,6 +451,20 @@ class L {
     },
     "teamsToBuild": {"fr": "à monter", "en": "needs building"},
     "teamsReplaces": {"fr": "à la place de", "en": "in place of"},
+    "optimizedTitle": {
+      "fr": "Construites pour ce contenu, depuis ta box",
+      "en": "Built for this content, from your box",
+    },
+    "optimizedSubtitle": {
+      "fr": "Le moteur combine TES persos et applique les règles du cycle. Chaque facteur du calcul est affiché : si tu n'es pas d'accord, tu vois exactement pourquoi.",
+      "en": "The engine combines YOUR characters and applies this cycle's rules. Every factor is shown: if you disagree, you can see exactly why.",
+    },
+    "optimizedPlayable": {
+      "fr": "jouable maintenant",
+      "en": "playable right now",
+    },
+    "optimizedMissing": {"fr": "il te manque :", "en": "you're missing:"},
+    "optimizedToBuild": {"fr": "à monter :", "en": "to build:"},
     "teamsDemoNote": {
       "fr":
           "16 équipes curées, chaque rotation validée par simulation (16/16). Le croisement avec ta box, les substitutions et les DPS simulés sont réels ; la méta et les contenus de cycle se mettent à jour sans réinstaller l'app.",

@@ -4,6 +4,7 @@ import "package:go_router/go_router.dart";
 
 import "../../data/characters_repository.dart";
 import "../../data/meta_repository.dart";
+import "../../data/team_builder.dart";
 import "../../data/team_matcher.dart";
 import "../../i18n/strings.dart";
 import "../../services/gcsim_service.dart";
@@ -160,6 +161,12 @@ class TeamsPage extends ConsumerWidget {
                           ),
                           const SizedBox(height: 16),
                         ],
+
+                        // ---- équipes CONSTRUITES depuis ta box pour ce
+                        // contenu (moteur d'optimisation, pas une liste) ----
+                        if (mode != null)
+                          _OptimizedSection(
+                              mode: mode, box: playerBox, l: l, db: db),
 
                         if (hidden > 0) ...[
                           Reveal(
@@ -374,6 +381,187 @@ class _ModeFilter extends ConsumerWidget {
 }
 
 // ------------------------------------------------------------------- card --
+
+/// Équipes CONSTRUITES à partir de ta box pour le contenu sélectionné.
+/// Ce n'est pas une liste curée : le moteur combine tes persos, applique les
+/// règles du cycle (réactions amplifiées, éléments imposés) et affiche le
+/// détail du calcul pour que tu puisses le contredire.
+class _OptimizedSection extends ConsumerWidget {
+  final String mode;
+  final PlayerBox box;
+  final L l;
+  final MetaDb db;
+  const _OptimizedSection(
+      {required this.mode,
+      required this.box,
+      required this.l,
+      required this.db});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cs = Theme.of(context).colorScheme;
+    final tags = ref.watch(charTagsProvider);
+    final chars = ref.watch(charactersFullProvider);
+    return tags.maybeWhen(
+      data: (tagMap) => chars.maybeWhen(
+        data: (list) {
+          final builder = TeamBuilder(
+            byGood: {for (final c in list) c.good: c},
+            tags: tagMap,
+            box: box,
+            rules: ContentRules.from(db.content?.byMode[mode]),
+          );
+          final teams = builder.build(limit: 3);
+          if (teams.isEmpty) return const SizedBox.shrink();
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Reveal(
+              child: GlassCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.auto_awesome, size: 16, color: cs.primary),
+                        const SizedBox(width: 8),
+                        Text(
+                          l.t("optimizedTitle").toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 11,
+                            letterSpacing: 1.3,
+                            fontWeight: FontWeight.w800,
+                            color: cs.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l.t("optimizedSubtitle"),
+                      style: TextStyle(
+                          fontSize: 11.5,
+                          color: Colors.white.withValues(alpha: 0.5)),
+                    ),
+                    const SizedBox(height: 12),
+                    for (final t in teams) ...[
+                      _OptimizedTeamRow(team: t, l: l),
+                      const SizedBox(height: 12),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        orElse: () => const SizedBox.shrink(),
+      ),
+      orElse: () => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _OptimizedTeamRow extends StatelessWidget {
+  final BuiltTeam team;
+  final L l;
+  const _OptimizedTeamRow({required this.team, required this.l});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final color = team.playableNow
+        ? _green
+        : (team.missing.isEmpty ? _cyan : _amber);
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withValues(alpha: 0.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              for (final c in team.chars)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: CharIcon(
+                    name: c.name,
+                    icon: c.icon,
+                    element: c.element,
+                    size: 40,
+                    dimmed: team.missing.contains(c.name),
+                    showName: false,
+                  ),
+                ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      team.chars.map((c) => c.name).join(" · "),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.w700),
+                    ),
+                    Text(
+                      team.playableNow
+                          ? l.t("optimizedPlayable")
+                          : team.missing.isNotEmpty
+                              ? "${l.t("optimizedMissing")} ${team.missing.join(", ")}"
+                              : "${l.t("optimizedToBuild")} ${team.toBuild.join(", ")}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: color),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                team.score.toStringAsFixed(2),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: cs.primary),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // le calcul, ligne par ligne : le joueur doit pouvoir le vérifier
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final line in team.lines)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: (line.factor >= 1 ? _green : _amber)
+                        .withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: Text(
+                    "${line.label} ×${line.factor.toStringAsFixed(2)}",
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      color: line.factor >= 1 ? _green : _amber,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 /// Tes équipes créées dans le créateur, classées par mode.
 class _CustomTeamsSection extends ConsumerWidget {

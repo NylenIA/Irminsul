@@ -43,6 +43,14 @@ CONTENT = {
             "chargées."
         ),
         "source": "Game8 — Spiral Abyss 6.7 (vérifié le 27/07/2026)",
+        # Regles LUES PAR L'OPTIMISEUR (pas seulement du texte) : ce sont
+        # elles qui font qu'une equipe « colle » au contenu du moment.
+        "boostedReactions": {
+            "superconduct": 2.0, "stellar-conduct": 0.75,
+            "electro-charged": 2.0, "lunar-charged": 0.75,
+        },
+        "requiredElements": ["electro"],
+        "favoredTags": [],
     },
     "theater": {
         "from": "2026-07-01",
@@ -68,6 +76,11 @@ CONTENT = {
             "Game8 — Théâtre imaginaire 6.7 / Saison 25 + Genshin Impact Wiki "
             "(vérifié le 27/07/2026)"
         ),
+        # Actes longs, pas de bonus de reaction : ce qui compte est de tenir
+        # la distance (soin/bouclier) avec seulement 3 elements autorises.
+        "boostedReactions": {},
+        "requiredElements": [],
+        "favoredTags": ["heal", "shield"],
     },
     "onslaught": {
         "from": "2026-07-08",
@@ -93,6 +106,12 @@ CONTENT = {
             "Game8 — Stygian Onslaught 6.7 + GamingOnPhone (vérifié le "
             "27/07/2026)"
         ),
+        # Boss ② : le bouclier prend +300 % des reactions Lunaires.
+        # Boss ③ : les piliers ne tombent vite qu'avec du Nightsoul.
+        # Boss unique => bouclier/soin evitent les interruptions.
+        "boostedReactions": {"lunar-charged": 3.0, "lunar-bloom": 3.0},
+        "requiredElements": [],
+        "favoredTags": ["nightsoul", "shield", "heal"],
     },
 }
 
