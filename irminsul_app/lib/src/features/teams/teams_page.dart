@@ -7,6 +7,7 @@ import "../../data/meta_repository.dart";
 import "../../data/team_builder.dart";
 import "../../data/team_matcher.dart";
 import "../../i18n/strings.dart";
+import "../../services/box_service.dart" show PlayerBox;
 import "../../services/gcsim_service.dart";
 import "../../services/sim_cache.dart";
 import "../../state/providers.dart";
