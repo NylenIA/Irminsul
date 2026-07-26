@@ -316,9 +316,9 @@ class L {
     },
     "engineDaily": {
       "fr":
-          "L'app est reconstruite automatiquement chaque jour : le moteur suit les correctifs de la communauté sans rien faire.",
+          "gcsim est un moteur open-source : ce sont des joueurs qui codent chaque personnage et corrigent les formules. Chaque nuit (06 h 30 UTC), la CI recompile l'app à partir de leur code du jour — tu récupères donc leurs correctifs et leurs nouveaux personnages sans rien télécharger toi-même, avant même qu'ils publient une version officielle. Un personnage qu'ils n'ont pas encore codé reste absent : c'est pour ça que nous en ajoutons nous-mêmes (ci-dessus).",
       "en":
-          "The app is rebuilt automatically every day: the engine follows community fixes with no action needed.",
+          "gcsim is open source: players code each character and fix the formulas. Every night (06:30 UTC) CI rebuilds the app from their latest code — you get their fixes and new characters without downloading anything, even before they cut a release. A character they haven't coded yet stays missing: that's why we add some ourselves (above).",
     },
     "simEnergyTitle": {
       "fr": "Ton DPS est sous-estimé : des ultimes n'ont pas pu être lancés",
@@ -450,6 +450,7 @@ class L {
       "en": "no valid replacement in your box",
     },
     "teamsToBuild": {"fr": "à monter", "en": "needs building"},
+    "teamsReplaces": {"fr": "à la place de", "en": "in place of"},
     "teamsDemoNote": {
       "fr":
           "16 équipes curées, chaque rotation validée par simulation (16/16). Le croisement avec ta box, les substitutions et les DPS simulés sont réels ; la méta et les contenus de cycle se mettent à jour sans réinstaller l'app.",

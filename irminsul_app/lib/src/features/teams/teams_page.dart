@@ -533,6 +533,24 @@ class _TeamMatchCard extends StatelessWidget {
     );
   }
 
+  /// Substitutions réellement appliquées (titulaire → remplaçant joué).
+  Map<String, String> get _substitutions => {
+        for (final s in match.slots)
+          if (byId[s.slot.id] != null && s.character.id != s.slot.id)
+            byId[s.slot.id]!.name: s.character.name,
+      };
+
+  /// Réécrit un texte de rotation/combo avec les persos RÉELLEMENT joués.
+  /// Sans ça l'app disait « Zhongli E » alors que Zhongli n'est pas dans
+  /// l'équipe affichée (il est remplacé par Xilonen) : conseil injouable.
+  String _adaptText(String text, Map<String, String> subs) {
+    var out = text;
+    subs.forEach((from, to) {
+      out = out.replaceAll(RegExp("\\b${RegExp.escape(from)}\\b"), to);
+    });
+    return out;
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -575,7 +593,11 @@ class _TeamMatchCard extends StatelessWidget {
               spacing: 16,
               runSpacing: 12,
               children: [
-                for (final s in match.slots) _SlotView(s: s, l: l),
+                for (final s in match.slots)
+                  _SlotView(
+                      s: s,
+                      l: l,
+                      replaces: s.viaAlt ? byId[s.slot.id]?.name : null),
               ],
             ),
 
@@ -684,7 +706,8 @@ class _TeamMatchCard extends StatelessWidget {
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                t.rotationSteps[i],
+                                _adaptText(
+                                    t.rotationSteps[i], _substitutions),
                                 style: TextStyle(
                                   fontSize: 12.5,
                                   height: 1.5,
@@ -707,7 +730,7 @@ class _TeamMatchCard extends StatelessWidget {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                t.combos,
+                                _adaptText(t.combos, _substitutions),
                                 style: TextStyle(
                                   fontSize: 12,
                                   height: 1.5,
@@ -976,7 +999,12 @@ class _SimSectionState extends ConsumerState<_SimSection> {
 class _SlotView extends StatelessWidget {
   final SlotMatch s;
   final L l;
-  const _SlotView({required this.s, required this.l});
+
+  /// Nom du titulaire quand ce slot est joué par une alternative — affiché
+  /// pour qu'on sache QUI est remplacé (sinon la rotation semble parler d'un
+  /// perso absent de l'équipe).
+  final String? replaces;
+  const _SlotView({required this.s, required this.l, this.replaces});
 
   @override
   Widget build(BuildContext context) {
@@ -1064,6 +1092,19 @@ class _SlotView extends StatelessWidget {
                   !owned || flagged ? FontWeight.w700 : FontWeight.normal,
             ),
           ),
+          if (replaces != null)
+            Text(
+              "${l.t("teamsReplaces")} $replaces",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 9.5,
+                height: 1.3,
+                fontWeight: FontWeight.w700,
+                color: _cyan,
+              ),
+            ),
           Text(
             s.slot.role,
             maxLines: 2,
