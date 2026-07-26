@@ -20,12 +20,22 @@ class MetaOta {
     return File("${dir.path}${Platform.pathSeparator}$_fileName");
   }
 
-  /// Clé de fraîcheur d'un JSON méta : la date du contenu de cycle (ISO), qui
-  /// bouge à chaque Abîme/Théâtre même quand la version du jeu ne bouge pas.
+  /// Clé de fraîcheur d'un JSON méta, **comparable telle quelle** avec
+  /// `compareTo` : date du contenu de cycle (ISO — elle bouge à chaque
+  /// Abîme/Théâtre même quand la version du jeu ne bouge pas), puis la version
+  /// zéro-paddée pour que 6.10 passe bien après 6.7.
+  /// Une méta sans date de contenu vaut « 0000-00-00 » : elle ne peut donc
+  /// jamais écraser une méta datée.
   static String freshness(Map<String, dynamic> json) {
     final c = json["content"] as Map<String, dynamic>?;
-    final updated = c?["updated"] as String? ?? "";
-    return "$updated|${json["metaVersion"] as String? ?? ""}";
+    final raw = (c?["updated"] as String? ?? "").trim();
+    final updated = raw.isEmpty ? "0000-00-00" : raw;
+    final version = (json["metaVersion"] as String? ?? "0").trim();
+    final padded = version
+        .split(".")
+        .map((p) => (int.tryParse(p.trim()) ?? 0).toString().padLeft(4, "0"))
+        .join(".");
+    return "$updated|$padded";
   }
 
   /// Valide la structure minimale avant d'accepter un JSON distant.
