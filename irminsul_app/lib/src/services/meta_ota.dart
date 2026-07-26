@@ -67,19 +67,28 @@ class MetaOta {
     }
   }
 
-  /// Télécharge la méta distante. Retourne le JSON validé, ou null (offline,
-  /// HTTP != 200, JSON invalide) — dans ce cas l'app garde ce qu'elle a.
-  static Future<Map<String, dynamic>?> download() async {
+  /// Télécharge la méta distante en gardant le CODE HTTP : un 404/401/403
+  /// (dépôt privé, fichier déplacé) n'est pas la même chose qu'un vrai
+  /// hors-ligne, et l'app doit le dire au lieu d'afficher « Hors-ligne ».
+  /// status : 0 = pas de réseau · 200 + json null = JSON invalide.
+  static Future<({Map<String, dynamic>? json, int status})> fetch() async {
     try {
       final resp = await http
           .get(Uri.parse(metaRemoteUrl))
           .timeout(const Duration(seconds: 15));
-      if (resp.statusCode != 200) return null;
-      return validate(utf8.decode(resp.bodyBytes));
+      if (resp.statusCode != 200) {
+        return (json: null, status: resp.statusCode);
+      }
+      return (json: validate(utf8.decode(resp.bodyBytes)), status: 200);
     } catch (_) {
-      return null;
+      return (json: null, status: 0);
     }
   }
+
+  /// Télécharge la méta distante. Retourne le JSON validé, ou null (offline,
+  /// HTTP != 200, JSON invalide) — dans ce cas l'app garde ce qu'elle a.
+  static Future<Map<String, dynamic>?> download() async =>
+      (await fetch()).json;
 
   /// Télécharge ET installe si le distant est plus frais que l'installé.
   /// Retourne true si le cache local a effectivement changé.

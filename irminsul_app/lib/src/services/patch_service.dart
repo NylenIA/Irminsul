@@ -22,21 +22,32 @@ class SyncStatus {
   /// « embedded » ou « ota » : d'où viennent les données actuellement lues.
   final String source;
 
+  /// Pourquoi la synchro ne marche pas : « network » (pas de réseau) ou
+  /// « unreachable » (la source répond mais refuse : dépôt privé, 404…).
+  final String? reason;
+
   const SyncStatus(
     this.state,
     this.localVersion,
     this.remoteVersion, {
     this.remoteUpdated,
     this.source = "embedded",
+    this.reason,
   });
 }
 
 final syncStatusProvider = FutureProvider<SyncStatus>((ref) async {
   final local = await ref.watch(metaDbProvider.future);
-  final remote = await MetaOta.download();
+  final res = await MetaOta.fetch();
+  final remote = res.json;
   if (remote == null) {
-    return SyncStatus(SyncState.offline, local.metaVersion, null,
-        source: local.dataSource);
+    return SyncStatus(
+      SyncState.offline,
+      local.metaVersion,
+      null,
+      source: local.dataSource,
+      reason: res.status == 0 ? "network" : "unreachable",
+    );
   }
   final remoteVersion = remote["metaVersion"] as String;
   final remoteContent = remote["content"] as Map<String, dynamic>?;

@@ -153,6 +153,10 @@ class L {
       "en": "Update failed (offline or invalid data) — nothing changed",
     },
     "syncSourceOta": {"fr": "téléchargée", "en": "downloaded"},
+    "syncUnreachable": {
+      "fr": "Source méta inaccessible (dépôt privé) — données du build",
+      "en": "Meta source unreachable (private repo) — build data",
+    },
     "searchHint": {"fr": "Rechercher un personnage…", "en": "Search a character…"},
     "tabBuild": {"fr": "Build", "en": "Build"},
     "tabTalents": {"fr": "Aptitudes", "en": "Talents"},

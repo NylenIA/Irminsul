@@ -370,7 +370,9 @@ class _SyncChipState extends ConsumerState<_SyncChip> {
             ),
           SyncState.offline => (
               Colors.white38,
-              "${l.t("syncOffline")} · ${s.localVersion}"
+              s.reason == "unreachable"
+                  ? "${l.t("syncUnreachable")} · ${s.localVersion}"
+                  : "${l.t("syncOffline")} · ${s.localVersion}"
             ),
         };
         final actionable = s.state == SyncState.updateAvailable && !_busy;
