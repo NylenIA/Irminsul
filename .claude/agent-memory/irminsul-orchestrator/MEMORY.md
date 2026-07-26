@@ -9,3 +9,5 @@
 - [Rigueur méta "meilleure team"](feedback_meta_research_rigor.md) — calculer le buff-math, croiser créateurs ; Mavuika BiS = Citlali·Iansan·Bennett (pas Xilonen)
 - [Vision produit réelle](project_product_vision.md) — veut un théorycrafteur-dans-une-app (méta, DPS d'équipe, meilleure team) ; déçu de l'impl, envisage repartir de zéro
 - [Discuter avant refonte](feedback_discuss_before_rebuild.md) — décisions produit/archi majeures : spec courte + questions d'abord, code ensuite
+- [Contenus actuels : rigueur](feedback_current_content_rigor.md) — vérifier la période EN COURS avec ses dates (Théâtre change chaque mois) avant de l'afficher
+- [Chemins locaux](reference_local_paths.md) — GOOD réel du joueur + gcsim de validation (hors dépôt) et commandes de validation

@@ -5,6 +5,7 @@ import "package:go_router/go_router.dart";
 // (couleurs de teinte par onglet définies dans _tintFor)
 
 import "../i18n/strings.dart";
+import "../services/patch_service.dart";
 import "../state/providers.dart";
 import "../widgets/aurora_background.dart";
 import "../widgets/irminsul_logo.dart";
@@ -35,6 +36,9 @@ class AppShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L(ref.watch(localeProvider));
+    // Méta à jour toute seule (OTA) dès l'ouverture, comme le moteur gcsim.
+    // Silencieux : aucun effet visible si on est déjà à jour ou hors-ligne.
+    ref.watch(metaAutoSyncProvider);
     final (tintA, tintB) = _tintFor(location);
     return Scaffold(
       body: AuroraBackground(

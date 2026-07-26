@@ -31,7 +31,8 @@ Builds réels notables (vitrine, 2026-06-26) :
 
 **Import GOOD complet (Inventory Kamera v1.4.3, snapshot 2026-06-26, SHA `f42d7054…`)** : 83 persos, 350 armes, 397 artéfacts, 529 matériaux. Pipeline `irminsul.account` → vérité normalisée dans `data/account/current/*.json` (gitignored). Rapports : `data/account/reports/` + `data/account/recommendations/initial-account-analysis.md`.
 - **Possédés confirmés** : YaeMiko, Ayaka, HuTao, Raiden, Skirk (tous lvl90), Neuvillette (lvl70, **sous-investi à fort potentiel**), Nahida, Kazuha (R5 Iron Sting), **Bennett C6**, Furina, Xilonen, Lyney, Sucrose C6, Fischl C6, Columbina C2, Lohen, Flins, Ineffa.
-- **NON possédés** (ne jamais supposer) : **Citlali, Xiangling, Mualani, Kinich, Chasca, Clorinde, Arlecchino, Navia, Wriothesley, Nilou, Escoffier**.
+- **NON possédés** (ne jamais supposer) : **Citlali, Mualani, Kinich, Chasca, Clorinde, Arlecchino, Navia, Wriothesley, Nilou, Escoffier**.
+  ⚠️ *Corrigé le 2026-07-27* : **Xiangling EST possédée** (C6 Nv80, Favonius Lance R5) — l'ancienne liste, issue du snapshot de juin, était fausse. Vérifié aussi dans le GOOD du 2026-07-24 : **Fischl C6 Nv80, Beidou, Cyno, Diona, Skirk, Raiden C0 Nv90 possédés** ; **Chevreuse possédée mais Nv1, talents 1/1/1, 0 artefact, arme de départ** (donc toute team Surcharge Chevreuse est « complète mais à monter ») ; **Ganyu non possédée**.
 - **Pièges build scannés** : **Iansan lvl40 T1/1/1** (pas prête, mais Calamity Queller dessus) ; Furina/Shenhe/Yelan/Diona = **arme lvl1** ; Ayaka/HuTao/Bennett/Nahida = armes sous-montées. **Goulot = XP perso/Mora** (Hero's Wit 1, Mora 224k) ; 16 Couronnes dispo.
 - `Traveler` = `unresolvedCharacter` (Amenoma + 5 artéfacts) → exclu des recos.
 

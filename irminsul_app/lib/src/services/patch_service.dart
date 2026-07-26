@@ -1,3 +1,6 @@
+import "dart:convert";
+
+import "package:flutter/services.dart" show rootBundle;
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "../data/meta_repository.dart";
@@ -46,6 +49,29 @@ final syncStatusProvider = FutureProvider<SyncStatus>((ref) async {
     remoteUpdated: remoteContent?["updated"] as String?,
     source: local.dataSource,
   );
+});
+
+/// Mise à jour AUTOMATIQUE au démarrage (même principe que le moteur gcsim,
+/// qui est recompilé chaque jour) : si la méta distante est plus fraîche que
+/// tout ce qu'on a en local, on l'installe et on recharge — sans réinstaller
+/// l'app, et sans rien casser si le réseau est absent.
+/// Ne dépend PAS de metaDbProvider : pas de boucle d'invalidation.
+final metaAutoSyncProvider = FutureProvider<bool>((ref) async {
+  final asset = jsonDecode(
+      await rootBundle.loadString("assets/data/meta_teams.json"))
+      as Map<String, dynamic>;
+  final cached = await MetaOta.cached();
+  var local = MetaOta.freshness(asset);
+  if (cached != null) {
+    final c = MetaOta.freshness(cached);
+    if (c.compareTo(local) > 0) local = c;
+  }
+  final changed = await MetaOta.update(localFreshness: local);
+  if (changed) {
+    ref.invalidate(metaDbProvider);
+    ref.invalidate(syncStatusProvider);
+  }
+  return changed;
 });
 
 /// Applique la mise à jour méta : télécharge, installe, recharge l'app.
