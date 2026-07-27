@@ -148,6 +148,20 @@ jobs:
           }
           if ((Get-Item $out).Length -lt 1000000) { throw "gcsim.exe missing" }
 
+          # La liste des persos simulables doit décrire le moteur QU'ON VIENT
+          # DE COMPILER, pas une liste écrite à la main qui vieillit. On la
+          # régénère et on écrase l'asset déjà empaqueté par Flutter, sinon
+          # l'app affiche « pas encore simulable » pour des persos qu'elle
+          # sait jouer (c'est arrivé pour Sandrone, Zibai, Illuga et Linnea).
+          python tool/gen_gcsim_chars_list.py gcsim-src 2>&1
+          $bundled = "build/windows/x64/runner/Release/data/flutter_assets/assets/data/gcsim_chars.json"
+          if (Test-Path $bundled) {
+            Copy-Item assets/data/gcsim_chars.json $bundled -Force
+            Write-Host "liste des persos simulables mise a jour dans le bundle"
+          } else {
+            Write-Host "ATTENTION: asset empaquete introuvable ($bundled)"
+          }
+
       - name: Package (zip)
         run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath Irminsul-windows.zip -Force
 
