@@ -69,10 +69,27 @@ def insert_before_close(path: Path, entry: str, guard: str) -> None:
     print(f"  {path.name}: entrée ajoutée")
 
 
+def require_symbol(src: Path, symbol: str, what: str) -> None:
+    """Refuse d'installer un dossier qui ne compilera pas.
+
+    Vécu : un fichier de données référençait `NewWeapon` qui n'existait pas ;
+    le build Go cassait, le repli retirait TOUT le lot, et l'app livrée
+    n'avait ni le perso ni l'arme — alors que la CI affichait « success ».
+    Mieux vaut échouer ici, en clair, qu'après huit minutes de compilation.
+    """
+    for f in src.glob("*.go"):
+        if f"func {symbol}(" in f.read_text(encoding="utf-8"):
+            return
+    raise SystemExit(
+        f"{src.name}: aucun « func {symbol} » dans {what} — "
+        "le fichier de données ne compilerait pas")
+
+
 def install(gcsim: Path, key: str) -> bool:
     src = CHARS / key
     if not src.is_dir():
         raise SystemExit(f"perso inconnu dans {CHARS}: {key}")
+    require_symbol(src, "NewChar", "le kit du personnage")
     pretty = key.capitalize()
 
     dest = gcsim / "internal/characters" / key
@@ -111,6 +128,7 @@ WEAPONS = TOOL / "gcsim_weapon"
 def install_weapon(gcsim: Path, key: str) -> bool:
     """Même principe pour une arme : sans elle, la sim du perso échoue."""
     src = WEAPONS / key
+    require_symbol(src, "NewWeapon", "l'implémentation de l'arme")
     cls = (src / "_class").read_text(encoding="utf-8").strip()
     pretty = (src / "_ident").read_text(encoding="utf-8").strip()
     dest = gcsim / "internal/weapons" / cls / key

@@ -30,6 +30,35 @@ CLASS_DIR = {
     "WEAPON_CATALYST": "catalyst",
 }
 
+IMPL_TEMPLATE = '''// {name} — arme absente de gcsim, ajoutée par Irminsul.
+//
+// EXACT (tables du jeu, fichier généré à côté) : ATQ de base, courbe de
+// croissance, statistique secondaire et paliers d'ascension. C'est ce qui
+// pesait dans les calculs et manquait : sans cette arme, la simulation du
+// personnage qui la porte échouait (« invalid weapon »).
+//
+// NON MODÉLISÉ : le passif. Les statistiques s'appliquent, pas son effet —
+// le porteur est donc SOUS-estimé tant que ce fichier n'est pas complété.
+package {key}
+
+import (
+	"github.com/genshinsim/gcsim/pkg/core"
+	"github.com/genshinsim/gcsim/pkg/core/info"
+	"github.com/genshinsim/gcsim/pkg/core/player/character"
+)
+
+type Weapon struct {{
+	Index int
+}}
+
+func (w *Weapon) SetIndex(idx int) {{ w.Index = idx }}
+func (w *Weapon) Init() error      {{ return nil }}
+
+func NewWeapon(c *core.Core, char *character.CharWrapper, p info.WeaponProfile) (info.Weapon, error) {{
+	return &Weapon{{}}, nil
+}}
+'''
+
 
 def main() -> int:
     if len(sys.argv) < 2:
@@ -116,6 +145,17 @@ def main() -> int:
     # nom Go exact (ATeaspoonOfTranscendence) : l'installeur doit l'utiliser
     # tel quel, sinon la clé ne correspond pas au fichier généré.
     (out_dir / "_ident").write_text(pretty, encoding="utf-8")
+
+    # Implémentation minimale si elle n'existe pas encore : sans un NewWeapon,
+    # le fichier de données ne compile pas (« undefined: NewWeapon ») et TOUT
+    # le lot de persos maison saute au repli. On l'écrit donc d'office ; le
+    # passif se code ensuite dans ce même fichier.
+    impl = out_dir / f"{key}.go"
+    if not impl.exists():
+        impl.write_text(IMPL_TEMPLATE.format(name=name, key=key),
+                        encoding="utf-8")
+        print(f"   implémentation minimale écrite : {impl.name} "
+              "(passif à coder)")
     print(f"OK {name} -> tool/gcsim_weapon/{key}/ "
           f"({len(props)} stats, {len(promotes)} paliers, classe {CLASS_DIR[cls]})")
     return 0
