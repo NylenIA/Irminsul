@@ -53,3 +53,7 @@ scripts/repair-resume-duo-script.ps1
 app/src-tauri/web/
 app/src-tauri/web-template.db
 src/irminsul/_buildinfo.py
+
+# Memoire de l assistant : elle decrit la box et le compte du joueur.
+# Elle vit desormais dans le depot PRIVE NylenIA/irminsul-prive (dossier memoire/).
+.claude/agent-memory/
