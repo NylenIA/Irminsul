@@ -32,7 +32,15 @@ type char struct {
 	// tables du jeu), infligés en Cryo.
 	// Limite assumée : les effets qui réagissent au TYPE de réaction
 	// (artefacts lunaires, bonus de cycle) ne se déclenchent pas.
-	// Activation : paramètre `radiance=1` sur l'action.
+	// Activation : `sandrone charge[radiance=1];` (crochets).
+	//
+	// MESURÉ le 2026-07-27 sur une box réelle : avec radiance=1 la sim rend
+	// MOINS (2 345 dps contre 2 469). C'est normal et c'est le signe de la
+	// limite ci-dessus : les multiplicateurs Stellar-Conduct sont plus bas
+	// que les normaux (faisceau 161,5 % contre 242,3 %) parce qu'en jeu ils
+	// sont compensés par les bonus de réaction lunaire — que le moteur ne
+	// connaît pas. Donc : NE PAS utiliser ce mode pour comparer des équipes
+	// tant que Stellar-Conduct n'est pas implémenté dans le cœur du moteur.
 	radiance bool
 }
 
