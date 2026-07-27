@@ -779,20 +779,46 @@ class _TeamMatchCard extends StatelessWidget {
   }
 
   /// Substitutions réellement appliquées (titulaire → remplaçant joué).
-  Map<String, String> get _substitutions => {
-        for (final s in match.slots)
-          if (byId[s.slot.id] != null && s.character.id != s.slot.id)
-            byId[s.slot.id]!.name: s.character.name,
-      };
+  /// Substitutions à appliquer aux textes, ALIAS COMPRIS : les rotations sont
+  /// écrites avec le nom court (« Kokomi E », « Raiden Q ») alors que la BDD
+  /// connaît « Sangonomiya Kokomi ». Sans les alias, le texte gardait le nom
+  /// d'un perso absent de l'équipe.
+  Map<String, String> get _substitutions {
+    final subs = <String, String>{};
+    // un jeton (mot) n'est utilisable que s'il ne désigne qu'un seul titulaire
+    final tokenCount = <String, int>{};
+    for (final s in match.slots) {
+      final titular = byId[s.slot.id];
+      if (titular == null) continue;
+      for (final w in titular.name.split(RegExp(r"[\s-]+"))) {
+        if (w.length >= 4) tokenCount[w] = (tokenCount[w] ?? 0) + 1;
+      }
+    }
+    for (final s in match.slots) {
+      final titular = byId[s.slot.id];
+      if (titular == null || s.character.id == s.slot.id) continue;
+      subs[titular.name] = s.character.name;
+      for (final w in titular.name.split(RegExp(r"[\s-]+"))) {
+        if (w.length >= 4 && (tokenCount[w] ?? 0) == 1) {
+          subs[w] = s.character.name;
+        }
+      }
+    }
+    return subs;
+  }
 
   /// Réécrit un texte de rotation/combo avec les persos RÉELLEMENT joués.
   /// Sans ça l'app disait « Zhongli E » alors que Zhongli n'est pas dans
   /// l'équipe affichée (il est remplacé par Xilonen) : conseil injouable.
   String _adaptText(String text, Map<String, String> subs) {
     var out = text;
-    subs.forEach((from, to) {
-      out = out.replaceAll(RegExp("\\b${RegExp.escape(from)}\\b"), to);
-    });
+    // du plus long au plus court : « Sangonomiya Kokomi » avant « Kokomi »
+    final keys = subs.keys.toList()
+      ..sort((a, b) => b.length.compareTo(a.length));
+    for (final from in keys) {
+      out = out.replaceAll(
+          RegExp("\\b${RegExp.escape(from)}\\b"), subs[from]!);
+    }
     return out;
   }
 

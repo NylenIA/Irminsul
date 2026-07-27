@@ -56,6 +56,49 @@ go run ./pipeline -s github:iam-akuzihs/excel/live
 3. Les autres au fil des besoins (Ifa, Illuga, Lohen, Linnea, Prune, Jahoda,
    Kachina, Manekin·a)
 
+## Extraction des données SANS Go (2026-07-27)
+
+La machine n'a pas Go : impossible de lancer `go run ./pipeline` en local.
+`irminsul_app/tool/datamine.py` fait le même travail côté données, en Python,
+en tapant directement les tables du jeu du dépôt public utilisé par le
+pipeline (`iam-akuzihs/excel`, branche `live`, cache dans
+`data/sources/datamine/`, gitignoré) :
+
+```bash
+python tool/datamine.py Sandrone            # résumé lisible
+python tool/datamine.py Sandrone --json out.json
+```
+
+Chaîne : `genshin-db` (local) donne l'**avatarId** → `AvatarExcelConfigData`
+donne stats de base, courbes et `skillDepotId` → `AvatarSkillDepotExcelConfigData`
+donne les 3 talents → `AvatarSkillExcelConfigData` donne CD et coût d'ulti →
+`ProudSkillExcelConfigData` donne les **multiplicateurs par niveau (1→15)**.
+Les libellés de `genshin-db` (`combat1/2/3.attributes.labels`) disent ce que
+chaque paramètre signifie, donc rien n'est deviné.
+
+### Exemple vérifié : Sandrone (id 10000133)
+
+5★ · claymore · Cryo · base HP 1029,6 / ATQ 26,6 / DÉF 58,6
+
+| Talent | Valeurs (niveau 10) |
+|---|---|
+| Normale | 3 coups 150,8 % · 132,8 % · 203,2 % |
+| Chargée | balayage 85 % · rayon condensé 242,3 % (+ Stellar-Conduct 161,5 %) |
+| Plongeon | 147,4 % · bas/haut 294,8 % / 368,3 % |
+| Compétence | tir prismatique 58,3 % (+ Stellar-Conduct 38,9 %) · CD 4 s |
+| Ultime | bombardement 158,8 % ×3 · rayon 595,4 % (+ Stellar-Conduct 397 %) · CD 15 s · 60 énergie |
+
+À noter : son kit tourne autour du **Stellar-Conduct**, précisément la
+réaction que la 1ʳᵉ moitié de l'Abîme 6.7 amplifie (+75 %).
+
+### Ce qui reste approximé (à étiqueter dans l'app)
+
+Multiplicateurs, CD, coût d'énergie, stats : **exacts**. En revanche les
+**frames d'animation**, les **particules générées** et le détail des passifs
+et constellations ne sont pas dans ces tables : ils sont approchés à partir de
+persos comparables (même arme, même rôle) et doivent être signalés comme tels
+tant qu'un test in-game ne les confirme pas.
+
 ## État vérifié le 2026-07-25
 
 - Iansan : ✅ portée par nous (PR #2374 modernisée), buff validé A/B (+24 %
