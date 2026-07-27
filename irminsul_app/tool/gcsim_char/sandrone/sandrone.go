@@ -23,6 +23,25 @@ import (
 
 type char struct {
 	*tmpl.Character
+
+	// État « Radiance : Stellar-Conduct ». Le moteur ne connaît PAS la
+	// réaction Stellar-Conduct (il gère Lunar-Charged / Lunar-Bloom /
+	// Lunar-Crystallize, pas celle-ci). On modélise donc ce qui est exact :
+	// dans cet état, ses faisceaux, son 2ᵉ tir prismatique et son rayon
+	// d'ultime utilisent LEURS PROPRES multiplicateurs (présents dans les
+	// tables du jeu), infligés en Cryo.
+	// Limite assumée : les effets qui réagissent au TYPE de réaction
+	// (artefacts lunaires, bonus de cycle) ne se déclenchent pas.
+	// Activation : paramètre `radiance=1` sur l'action.
+	radiance bool
+}
+
+// radianceOn lit le paramètre d'action et mémorise l'état.
+func (c *char) radianceOn(p map[string]int) bool {
+	if v, ok := p["radiance"]; ok {
+		c.radiance = v != 0
+	}
+	return c.radiance
 }
 
 func NewChar(s *core.Core, w *character.CharWrapper, _ info.CharacterProfile) error {

@@ -54,10 +54,15 @@ func (c *char) ChargeAttack(p map[string]int) (action.Info, error) {
 			0, 0)
 	}, chargeHitmarks[0])
 
-	// 2) faisceau condensé
+	// 2) faisceau condensé — en Radiance, le multiplicateur Stellar-Conduct
+	// (exact, table du jeu) remplace celui du faisceau normal.
 	beam := sweep
 	beam.Abil = "Charged Attack (Condensed Beam)"
 	beam.Mult = normalP5[c.TalentLvlAttack()]
+	if c.radianceOn(p) {
+		beam.Abil = "Charged Attack (Condensed Beam, Stellar-Conduct)"
+		beam.Mult = normalP6[c.TalentLvlAttack()]
+	}
 	c.QueueCharTask(func() {
 		c.Core.QueueAttack(
 			beam,

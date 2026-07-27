@@ -34,10 +34,13 @@ func init() {
 }
 
 func (c *char) Skill(p map[string]int) (action.Info, error) {
-	mults := []float64{
-		skillP1[c.TalentLvlSkill()],
-		skillP2[c.TalentLvlSkill()],
+	// 2 tirs prismatiques. En Radiance, le SECOND compte comme
+	// Stellar-Conduct et utilise son propre multiplicateur (exact).
+	second := skillP1[c.TalentLvlSkill()]
+	if c.radianceOn(p) {
+		second = skillP2[c.TalentLvlSkill()]
 	}
+	mults := []float64{skillP1[c.TalentLvlSkill()], second}
 	for i, m := range mults {
 		ai := info.AttackInfo{
 			ActorIndex: c.Index(),

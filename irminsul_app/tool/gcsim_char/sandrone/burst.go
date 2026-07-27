@@ -55,17 +55,23 @@ func (c *char) Burst(p map[string]int) (action.Info, error) {
 		}, hit)
 	}
 
-	// rayon final
+	// rayon final — en Radiance, multiplicateur Stellar-Conduct (exact)
+	rayMult := burstP2[c.TalentLvlBurst()]
+	rayName := "Convective Inhibition Ray"
+	if c.radianceOn(p) {
+		rayMult = burstP3[c.TalentLvlBurst()]
+		rayName += " (Stellar-Conduct)"
+	}
 	ray := info.AttackInfo{
 		ActorIndex: c.Index(),
-		Abil:       "Convective Inhibition Ray",
+		Abil:       rayName,
 		AttackTag:  attacks.AttackTagElementalBurst,
 		ICDTag:     attacks.ICDTagElementalBurst,
 		ICDGroup:   attacks.ICDGroupDefault,
 		StrikeType: attacks.StrikeTypeDefault,
 		Element:    attributes.Cryo,
 		Durability: 25,
-		Mult:       burstP2[c.TalentLvlBurst()],
+		Mult:       rayMult,
 	}
 	c.QueueCharTask(func() {
 		c.Core.QueueAttack(
