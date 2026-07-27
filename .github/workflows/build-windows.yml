@@ -102,7 +102,7 @@ jobs:
           gh pr diff 2374 --repo genshinsim/gcsim 2>&1 | Out-File -Encoding utf8 iansan.diff
           python tool/patch_gcsim_iansan.py gcsim-src iansan.diff 2>&1
           $iansanOk = $LASTEXITCODE -eq 0
-          if ($iansanOk) { python tool/check_keys_alignment.py gcsim-src 2>&1; $iansanOk = $LASTEXITCODE -eq 0 }
+          if ($iansanOk) { python tool/check_keys_alignment.py gcsim-src iansan 2>&1; $iansanOk = $LASTEXITCODE -eq 0 }
           if (-not $iansanOk) {
             Write-Host "iansan: patch/alignement KO, retrait"
             Push-Location gcsim-src; git checkout -- .; git clean -fd internal/characters/iansan; Pop-Location
@@ -112,7 +112,7 @@ jobs:
           # Le script s'efface tout seul si la commu publie le perso.
           python tool/patch_gcsim_chars.py gcsim-src 2>&1
           $ourCharsOk = $LASTEXITCODE -eq 0
-          if ($ourCharsOk) { python tool/check_keys_alignment.py gcsim-src 2>&1; $ourCharsOk = $LASTEXITCODE -eq 0 }
+          if ($ourCharsOk) { python tool/check_keys_alignment.py gcsim-src sandrone ateaspoonoftranscendence 2>&1; $ourCharsOk = $LASTEXITCODE -eq 0 }
           if (-not $ourCharsOk) { Write-Host "persos maison: patch KO, on continue sans" }
           # --- build, avec replis ---
           Push-Location gcsim-src

@@ -98,6 +98,43 @@ def install(gcsim: Path, key: str) -> bool:
     return True
 
 
+WEAPONS = TOOL / "gcsim_weapon"
+
+
+def install_weapon(gcsim: Path, key: str) -> bool:
+    """Même principe pour une arme : sans elle, la sim du perso échoue."""
+    src = WEAPONS / key
+    cls = (src / "_class").read_text(encoding="utf-8").strip()
+    pretty = (src / "_ident").read_text(encoding="utf-8").strip()
+    dest = gcsim / "internal/weapons" / cls / key
+    if dest.exists():
+        print(f"{key}: arme déjà dans gcsim — on garde leur version")
+        return False
+
+    print(f"{key}: installation (arme {cls})")
+    dest.mkdir(parents=True)
+    for f in sorted(src.glob("*.go")):
+        shutil.copy2(f, dest / f.name)
+
+    insert_sorted_triple(gcsim / "pkg/core/keys/weapon.dm.go", key, pretty)
+    insert_before_close(
+        gcsim / "pkg/shortcut/weapon.dm.go",
+        f'\t"{key}":                       keys.{pretty},',
+        f'"{key}":',
+    )
+    insert_before_close(
+        gcsim / "internal/services/assets/weapon.dm.go",
+        f'\t"{key}":                       "UI_EquipIcon_{pretty}",',
+        f'"{key}":',
+    )
+    insert_before_close(
+        gcsim / "pkg/simulation/imports.weapon.dm.go",
+        f'\t_ "github.com/genshinsim/gcsim/internal/weapons/{cls}/{key}"',
+        f"/weapons/{cls}/{key}\"",
+    )
+    return True
+
+
 def main() -> int:
     if len(sys.argv) < 2:
         print(__doc__)
@@ -110,6 +147,12 @@ def main() -> int:
     done = [k for k in wanted if install(gcsim, k)]
     print(f"\n{len(done)}/{len(wanted)} perso(s) installé(s) : "
           + (", ".join(done) if done else "aucun"))
+
+    if WEAPONS.is_dir():
+        wkeys = sorted(p.name for p in WEAPONS.iterdir() if p.is_dir())
+        wdone = [k for k in wkeys if install_weapon(gcsim, k)]
+        print(f"{len(wdone)}/{len(wkeys)} arme(s) installée(s) : "
+              + (", ".join(wdone) if wdone else "aucune"))
     return 0
 
 
