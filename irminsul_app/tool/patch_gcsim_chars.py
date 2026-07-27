@@ -37,8 +37,8 @@ def insert_sorted_triple(keys_file: Path, key: str, pretty: str) -> None:
         anchor = "invalidchar" if "invalidchar" in text else None
         if anchor is None:
             raise SystemExit(f"keys: pas d'ancre pour {key}")
-        print(f"  keys: {key} passe après toutes les clés → insertion "
-              f"avant la sentinelle")
+        print(f"  keys: {key} passe apres toutes les cles, "
+              f"insertion avant la sentinelle")
     m = re.search(rf"^\t(\w+)\s+// {anchor}$", text, re.M)
     if not m:
         raise SystemExit(f"keys: const de l'ancre {anchor} introuvable")

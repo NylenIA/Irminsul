@@ -87,6 +87,11 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
+          # La console Windows de la CI est en cp1252 : sans ça, un simple
+          # caractère accentué dans un message de log fait planter un script
+          # Python et fait perdre les persos maison (déjà arrivé).
+          PYTHONIOENCODING: utf-8
+          PYTHONUTF8: "1"
         run: |
           $out = "build/windows/x64/runner/Release/gcsim.exe"
           git clone --depth 50 https://github.com/genshinsim/gcsim gcsim-src
