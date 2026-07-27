@@ -99,6 +99,29 @@ et constellations ne sont pas dans ces tables : ils sont approchés à partir de
 persos comparables (même arme, même rôle) et doivent être signalés comme tels
 tant qu'un test in-game ne les confirme pas.
 
+## Sandrone livrée le 2026-07-27 — et le trou suivant
+
+Sandrone est installée dans le moteur par `tool/patch_gcsim_chars.py`, la CI
+compile, et une simulation sur la box réelle tourne (2 469 dps avec une
+rotation naïve — normal : son moteur de dégâts, le cumul de « Decoding Power »
+et la conversion Stellar-Conduct, n'est pas encore modélisé).
+
+**Découverte au passage** : les ARMES récentes manquent aussi. Sur la box du
+joueur, 3 armes équipées sont inconnues de gcsim (232 armes connues) — et ce
+sont précisément les signatures des persos qu'on ajoute :
+
+| Arme | Porteur | Niveau |
+|---|---|---|
+| A Teaspoon of Transcendence | Sandrone | 90 |
+| Lightbearing Moonshard | Zibai | 90 |
+| Disaster and Remorse | Lohen | 90 |
+
+Conséquence : la simulation échoue (`invalid weapon …`) tant que l'arme n'est
+pas ajoutée. Même méthode que pour les persos (tables du jeu →
+`WeaponExcelConfigData` + courbes + passif), à faire en même temps que chaque
+personnage. En attendant, l'app doit **retomber sur une arme équivalente** et
+le dire, plutôt que de renvoyer une erreur brute.
+
 ## État vérifié le 2026-07-25
 
 - Iansan : ✅ portée par nous (PR #2374 modernisée), buff validé A/B (+24 %
