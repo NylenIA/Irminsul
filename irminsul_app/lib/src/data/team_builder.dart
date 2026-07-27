@@ -4,6 +4,7 @@ import "package:flutter/services.dart" show rootBundle;
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "../services/box_service.dart";
+import "../services/gcsim_service.dart";
 import "characters_repository.dart";
 import "meta_repository.dart";
 
@@ -13,15 +14,13 @@ class CharTags {
   final String element;
   final int rarity;
   final List<String> tags; // heal, shield, atk_buff, res_shred, offfield…
-  final bool carry; // peut porter une équipe
-  final List<String> reactions; // réactions rendues possibles par l'élément
+  final bool carry;
 
   const CharTags({
     required this.element,
     required this.rarity,
     required this.tags,
     required this.carry,
-    required this.reactions,
   });
 
   bool has(String t) => tags.contains(t);
@@ -39,62 +38,149 @@ final charTagsProvider = FutureProvider<Map<String, CharTags>>((ref) async {
         rarity: (m["rarity"] as num?)?.toInt() ?? 4,
         tags: (m["tags"] as List? ?? const []).cast<String>(),
         carry: m["carry"] as bool? ?? false,
-        reactions: (m["reactions"] as List? ?? const []).cast<String>(),
       ),
     );
   });
 });
 
-/// Une ligne du calcul, affichée telle quelle dans l'app : le joueur doit
-/// pouvoir vérifier POURQUOI une équipe est proposée.
-class ScoreLine {
-  final String label;
-  final double factor; // multiplicateur appliqué (1.0 = neutre)
-  final String kind; // "content" | "box" | "team"
-  const ScoreLine(this.label, this.factor, this.kind);
+/// Un poste d'un archétype : ce qu'il faut y mettre, et les choix reconnus.
+class ArchSlot {
+  final String role;
+  final List<String> elements; // vide = libre
+  final List<String> tags; // au moins un de ces rôles
+  final List<String> prefer; // titulaires puis alternatives reconnues
+  final List<String> actions; // pour générer la rotation gcsim
+  final bool carry;
+
+  const ArchSlot({
+    required this.role,
+    required this.elements,
+    required this.tags,
+    required this.prefer,
+    required this.actions,
+    required this.carry,
+  });
 }
 
-/// Une équipe proposée par le moteur, avec son score détaillé.
+/// Un ARCHÉTYPE d'équipe réel (Hyperbloom, Vaporisation, Lunar-Charged…).
+/// C'est ce qui empêche le moteur d'inventer des combinaisons : on remplit
+/// des postes définis, on n'assemble pas des persos au hasard.
+class Archetype {
+  final String id;
+  final String name;
+  final String reaction;
+  final List<String> gate; // sans eux, la réaction n'existe pas
+  final List<String> requiredElements;
+  final double procs; // cadence estimée de la réaction transformative
+  final String note;
+  final List<ArchSlot> slots;
+
+  const Archetype({
+    required this.id,
+    required this.name,
+    required this.reaction,
+    required this.gate,
+    required this.requiredElements,
+    required this.procs,
+    required this.note,
+    required this.slots,
+  });
+}
+
+final archetypesProvider = FutureProvider<List<Archetype>>((ref) async {
+  final raw = await rootBundle.loadString("assets/data/team_archetypes.json");
+  final list = jsonDecode(raw) as List;
+  return list.map((e) {
+    final m = e as Map<String, dynamic>;
+    return Archetype(
+      id: m["id"] as String,
+      name: m["name"] as String,
+      reaction: m["reaction"] as String? ?? "",
+      gate: (m["gate"] as List? ?? const []).cast<String>(),
+      requiredElements:
+          (m["requiredElements"] as List? ?? const []).cast<String>(),
+      procs: (m["procs"] as num?)?.toDouble() ?? 0,
+      note: m["note"] as String? ?? "",
+      slots: (m["slots"] as List).map((s) {
+        final sm = s as Map<String, dynamic>;
+        return ArchSlot(
+          role: sm["role"] as String,
+          elements: (sm["elements"] as List? ?? const []).cast<String>(),
+          tags: (sm["tags"] as List? ?? const []).cast<String>(),
+          prefer: (sm["prefer"] as List? ?? const []).cast<String>(),
+          actions: (sm["actions"] as List? ?? const ["skill"]).cast<String>(),
+          carry: sm["carry"] as bool? ?? false,
+        );
+      }).toList(),
+    );
+  }).toList();
+});
+
+/// Une ligne du calcul, affichée telle quelle : le joueur doit pouvoir
+/// vérifier POURQUOI une équipe est proposée.
+class ScoreLine {
+  final String label;
+  final double factor;
+  const ScoreLine(this.label, this.factor);
+}
+
+/// Un poste pourvu.
+class FilledSlot {
+  final ArchSlot slot;
+  final CharacterFull character;
+  final String why; // titulaire · alternative reconnue · meilleur de ta box
+  final bool owned;
+  const FilledSlot(this.slot, this.character, this.why, this.owned);
+}
+
+/// Une équipe proposée : un archétype réel, rempli avec TA box.
 class BuiltTeam {
-  final List<CharacterFull> chars;
-  final CharacterFull carry;
+  final Archetype archetype;
+  final List<FilledSlot> filled;
   final double score;
-  final double basePower; // puissance brute avant contenu/box
   final List<ScoreLine> lines;
-
-  /// Persos à monter pour que l'équipe soit vraiment jouable (Nv/artefacts).
   final List<String> toBuild;
-
-  /// Persos non possédés (variante « si tu l'obtiens »).
   final List<String> missing;
 
   const BuiltTeam({
-    required this.chars,
-    required this.carry,
+    required this.archetype,
+    required this.filled,
     required this.score,
-    required this.basePower,
     required this.lines,
     required this.toBuild,
     required this.missing,
   });
 
+  List<CharacterFull> get chars => filled.map((f) => f.character).toList();
   bool get playableNow => missing.isEmpty && toBuild.isEmpty;
-  String get id => (chars.map((c) => c.id).toList()..sort()).join("+");
+  String get id => "${archetype.id}:${chars.map((c) => c.id).join("+")}";
+
+  /// Rotation gcsim jouable à la main : supports d'abord, porteur ensuite.
+  GcsimTemplateData get template {
+    final buf = StringBuffer("while 1 {\n");
+    final ordered = [...filled]..sort((a, b) {
+        final ac = a.slot.carry ? 1 : 0;
+        final bc = b.slot.carry ? 1 : 0;
+        return ac.compareTo(bc);
+      });
+    for (final f in ordered) {
+      final n = GcsimService.gcsimName(f.character.good);
+      for (final a in f.slot.actions) {
+        buf.writeln("    $n $a;");
+      }
+    }
+    buf.write("}");
+    return GcsimTemplateData(
+        filled.map((f) => f.character.good).toList(), buf.toString());
+  }
 }
 
 /// Contraintes et bonus du contenu en cours, lus depuis meta_teams.json.
 class ContentRules {
-  /// Éléments autorisés (Théâtre) — vide = pas de restriction.
   final List<String> allowedElements;
   final List<String> guests;
-
-  /// Réactions amplifiées par le cycle → bonus (0.75 = +75 %).
   final Map<String, double> boostedReactions;
-
-  /// Éléments dont l'absence coûte cher (mécanique de salle/boss).
   final List<String> requiredElements;
-
-  /// Rôles favorisés (ex. bouclier/soin contre un boss unique).
   final List<String> favoredTags;
 
   const ContentRules({
@@ -105,50 +191,41 @@ class ContentRules {
     this.favoredTags = const [],
   });
 
-  static ContentRules from(ModeContent? c) {
-    if (c == null) return const ContentRules();
-    return ContentRules(
-      allowedElements: c.allowedElements,
-      guests: c.guests,
-      boostedReactions: c.boostedReactions,
-      requiredElements: c.requiredElements,
-      favoredTags: c.favoredTags,
-    );
-  }
+  static ContentRules from(ModeContent? c) => c == null
+      ? const ContentRules()
+      : ContentRules(
+          allowedElements: c.allowedElements,
+          guests: c.guests,
+          boostedReactions: c.boostedReactions,
+          requiredElements: c.requiredElements,
+          favoredTags: c.favoredTags,
+        );
 }
 
-/// Réactions réalisables par un ensemble d'éléments présents dans l'équipe.
-const _reactionPairs = <String, List<String>>{
-  "vaporize": ["pyro", "hydro"],
-  "melt": ["pyro", "cryo"],
-  "overloaded": ["pyro", "electro"],
-  "superconduct": ["cryo", "electro"],
-  "electro-charged": ["hydro", "electro"],
-  "frozen": ["hydro", "cryo"],
-  "bloom": ["hydro", "dendro"],
-  "hyperbloom": ["hydro", "dendro", "electro"],
-  "burgeon": ["hydro", "dendro", "pyro"],
-  "burning": ["pyro", "dendro"],
-  "aggravate": ["dendro", "electro"],
-  "quicken": ["dendro", "electro"],
-  "spread": ["dendro", "electro"],
-  "swirl": ["anemo"],
-  "crystallize": ["geo"],
-  // réactions lunaires : mêmes paires, activées par les unités « Lune »
-  "lunar-charged": ["hydro", "electro"],
-  "lunar-bloom": ["hydro", "dendro"],
-  "stellar-conduct": ["cryo", "electro"],
+/// Multiplicateurs de base des réactions transformatives (KQM/TCL).
+const _transformative = <String, double>{
+  "superconduct": 1.5,
+  "electro-charged": 2.0,
+  "lunar-charged": 2.0,
+  "lunar-bloom": 2.0,
+  "hyperbloom": 3.0,
+  "burgeon": 3.0,
+  "overloaded": 2.75,
+  "bloom": 2.0,
+  "swirl": 0.6,
 };
+const _levelMultiplier = 1446.85; // niveau 90
+const _baselineDps = 22000.0; // référence pour convertir des DGT en facteur
 
-bool _canTrigger(String reaction, Set<String> elements) {
-  final need = _reactionPairs[reaction];
-  if (need == null) return false;
-  return need.every(elements.contains);
+double _reactionDamage(String reaction, double em, double bonus) {
+  final base = _transformative[reaction];
+  if (base == null) return 0;
+  final emBonus = 16 * em / (em + 2000);
+  return base * _levelMultiplier * (1 + emBonus + bonus) * 0.9;
 }
 
-/// Qualité de montage d'un perso, 0 → 1. Un Nv 1 sans artefacts ne peut pas
-/// être proposé comme s'il valait un Nv 90 équipé : c'est ce facteur qui
-/// empêche l'app de conseiller l'injouable.
+/// Qualité de montage d'un perso, 0 → 1 : un Nv 1 sans artefacts ne peut pas
+/// être proposé comme s'il valait un Nv 90 équipé.
 double buildQuality(OwnedChar? c, BuildInfo? b) {
   if (c == null) return 0;
   final lvl = (c.level / 90).clamp(0.15, 1.0);
@@ -163,263 +240,173 @@ double buildQuality(OwnedChar? c, BuildInfo? b) {
   return lvl * 0.35 + talents * 0.25 + art * 0.25 + weapon * 0.15;
 }
 
-/// Poids des rôles de support : ce que chaque étiquette apporte à l'équipe.
-/// Rendements décroissants : un 2ᵉ buff d'ATQ vaut moins que le premier.
-const _tagValue = <String, double>{
-  "atk_buff": 0.26,
-  "dmg_buff": 0.24,
-  "res_shred": 0.22,
-  "em_buff": 0.14,
-  "heal": 0.12,
-  "shield": 0.12,
-  "offfield": 0.16,
-  "energy": 0.10,
-  "crowd": 0.06,
-  "interrupt": 0.05,
-  "nightsoul": 0.04,
-};
-
-/// Construit et classe des équipes DEPUIS LA BOX pour un contenu donné.
-/// Déterministe et explicable : aucune magie, chaque facteur est affiché.
+/// Construit des équipes RÉELLES à partir de ta box : on part d'archétypes
+/// reconnus et on pourvoit chaque poste avec le meilleur perso que tu as.
 class TeamBuilder {
   final Map<String, CharacterFull> byGood;
   final Map<String, CharTags> tags;
+  final List<Archetype> archetypes;
   final PlayerBox box;
   final ContentRules rules;
 
-  /// true = on propose aussi des équipes avec des persos non possédés ou pas
-  /// montés (variante « si tu montes / si tu l'obtiens »).
+  /// true = proposer aussi la version « si tu obtiens / si tu montes ».
   final bool includeAspirational;
 
   TeamBuilder({
     required this.byGood,
     required this.tags,
+    required this.archetypes,
     required this.box,
     required this.rules,
     this.includeAspirational = true,
   });
 
-  bool _elementAllowed(CharacterFull c) =>
-      rules.allowedElements.isEmpty ||
-      rules.allowedElements.contains(c.element.toLowerCase()) ||
-      rules.guests.any((g) => g.toLowerCase() == c.name.toLowerCase());
-
-  double _supportValue(CharacterFull c, Map<String, int> seen) {
-    final t = tags[c.good];
-    if (t == null) return 0;
-    var v = 0.0;
-    for (final tag in t.tags) {
-      final w = _tagValue[tag];
-      if (w == null) continue;
-      final n = seen[tag] ?? 0;
-      v += w / (1 + n); // 2ᵉ occurrence : moitié moins utile
-      seen[tag] = n + 1;
-    }
-    return v;
+  bool _allowedByContent(String good) {
+    if (rules.allowedElements.isEmpty) return true;
+    final t = tags[good];
+    final c = byGood[good];
+    if (t == null || c == null) return false;
+    return rules.allowedElements.contains(t.element) ||
+        rules.guests.any((g) => g.toLowerCase() == c.name.toLowerCase());
   }
 
-  /// Score de contenu : c'est ICI que « l'équipe colle au contenu » se décide.
-  (double, List<ScoreLine>) _contentScore(List<CharacterFull> team) {
-    final lines = <ScoreLine>[];
-    final elements = team.map((c) => c.element.toLowerCase()).toSet();
-    var mult = 1.0;
+  bool _fits(String good, ArchSlot slot, Set<String> used) {
+    if (used.contains(good)) return false;
+    final t = tags[good];
+    if (t == null || byGood[good] == null) return false;
+    if (!_allowedByContent(good)) return false;
+    if (slot.elements.isNotEmpty && !slot.elements.contains(t.element)) {
+      return false;
+    }
+    if (slot.tags.isNotEmpty && !slot.tags.any(t.has)) return false;
+    return true;
+  }
 
-    // Réactions amplifiées par le cycle.
-    // On ne cumule PAS toutes les réactions possibles : une équipe ne
-    // déclenche vraiment que celle qu'elle applique en boucle. On prend donc
-    // la MEILLEURE réaction réellement soutenue (le porteur en fait partie,
-    // ou un applicateur hors terrain la nourrit), + une petite prime si une
-    // seconde est jouable en secours.
-    final carryElement = team.first.element.toLowerCase();
-    final appliers = <String>{
-      for (final c in team)
-        if ((tags[c.good]?.has("offfield") ?? false) ||
-            (tags[c.good]?.carry ?? false))
-          c.element.toLowerCase(),
-    };
-    var best = 0.0;
-    var bestName = "";
-    var second = 0.0;
-    rules.boostedReactions.forEach((reaction, boost) {
-      if (!_canTrigger(reaction, elements)) return;
-      final need = _reactionPairs[reaction]!;
-      // le porteur participe à la réaction → plein effet
-      // sinon il faut au moins que les deux éléments soient appliqués
-      final carried = need.contains(carryElement);
-      final fed = need.every(appliers.contains);
-      if (!carried && !fed) return;
-      final f = 1 + boost * (carried ? 0.30 : 0.15);
-      if (f > best) {
-        second = best;
-        best = f;
-        bestName = reaction;
-      } else if (f > second) {
-        second = f;
+  /// Pourvoit chaque poste : titulaire reconnu > alternative reconnue >
+  /// meilleur de la box > (si autorisé) perso non possédé.
+  List<FilledSlot>? _fill(Archetype a, {required bool aspirational}) {
+    final used = <String>{};
+    final out = <FilledSlot>[];
+    for (final slot in a.slots) {
+      String? pick;
+      var why = "";
+      for (var i = 0; i < slot.prefer.length; i++) {
+        final k = slot.prefer[i];
+        if (box.chars.containsKey(k) && _fits(k, slot, used)) {
+          pick = k;
+          why = i == 0 ? "titulaire" : "alternative reconnue";
+          break;
+        }
       }
-    });
-    if (best > 0) {
-      mult *= best;
-      lines.add(ScoreLine("$bestName amplifié ce cycle", best, "content"));
-      if (second > 0) {
-        mult *= 1.05;
-        lines.add(const ScoreLine(
-            "seconde réaction boostée jouable", 1.05, "content"));
+      if (pick == null) {
+        final cands = box.chars.keys.where((k) => _fits(k, slot, used)).toList()
+          ..sort((x, y) => buildQuality(box.chars[y], box.buildByChar[y])
+              .compareTo(buildQuality(box.chars[x], box.buildByChar[x])));
+        if (cands.isNotEmpty) {
+          pick = cands.first;
+          why = "meilleur de ta box";
+        }
       }
+      if (pick == null && aspirational) {
+        for (final k in slot.prefer) {
+          if (_fits(k, slot, used)) {
+            pick = k;
+            why = "à obtenir";
+            break;
+          }
+        }
+      }
+      if (pick == null) return null; // poste impossible → pas de bricolage
+      used.add(pick);
+      out.add(FilledSlot(
+          slot, byGood[pick]!, why, box.chars.containsKey(pick)));
+    }
+    return out;
+  }
+
+  BuiltTeam? _score(Archetype a, List<FilledSlot> filled) {
+    final keys = filled.map((f) => f.character.good).toSet();
+    // condition de réaction (ex. Lunar-Charged sans Moonsign = impossible)
+    if (a.gate.isNotEmpty && !a.gate.any(keys.contains)) return null;
+
+    final lines = <ScoreLine>[];
+    var mult = 1.0;
+    final elements = filled.map((f) => f.character.element.toLowerCase()).toSet();
+
+    final boost = rules.boostedReactions[a.reaction];
+    if (boost != null && a.procs > 0) {
+      final added = _reactionDamage(a.reaction, 200, boost) * a.procs;
+      final f = 1 + added / _baselineDps;
+      mult *= f;
+      lines.add(ScoreLine(
+          "${a.reaction} amplifié (≈ +${added.round()} DGT/s)", f));
+    } else if (boost != null) {
+      mult *= 1.15;
+      lines.add(ScoreLine("${a.reaction} favorisé par le cycle", 1.15));
     } else if (rules.boostedReactions.isNotEmpty) {
-      mult *= 0.80;
-      lines.add(const ScoreLine(
-          "ne profite d'aucune réaction amplifiée du cycle", 0.80, "content"));
+      mult *= 0.92;
+      lines.add(const ScoreLine("hors réactions amplifiées du cycle", 0.92));
     }
 
-    // éléments imposés par une mécanique (salle, boss)
     for (final e in rules.requiredElements) {
       if (!elements.contains(e)) {
-        mult *= 0.45;
-        lines.add(ScoreLine("il manque du $e exigé par le contenu", 0.45,
-            "content"));
+        mult *= 0.5;
+        lines.add(ScoreLine("pas de $e exigé par le contenu", 0.5));
       }
     }
-
-    // rôles favorisés (bouclier/soin sur boss unique…)
-    for (final tag in rules.favoredTags) {
-      if (team.any((c) => tags[c.good]?.has(tag) ?? false)) {
-        mult *= 1.08;
-        lines.add(ScoreLine("$tag utile sur ce contenu", 1.08, "content"));
+    for (final tg in rules.favoredTags) {
+      if (filled.any((f) => tags[f.character.good]?.has(tg) ?? false)) {
+        mult *= 1.06;
+        lines.add(ScoreLine("$tg utile sur ce contenu", 1.06));
       }
     }
-    return (mult, lines);
-  }
-
-  List<BuiltTeam> build({int limit = 6}) {
-    final owned = box.chars;
-    final pool = byGood.values.where(_elementAllowed).toList();
-
-    // --- carries candidats : possédés d'abord, triés par montage ----------
-    final carries = pool
-        .where((c) => tags[c.good]?.carry ?? false)
-        .map((c) => (
-              c,
-              buildQuality(owned[c.good], box.buildByChar[c.good]),
-              owned.containsKey(c.good)
-            ))
-        .toList()
-      ..sort((a, b) {
-        if (a.$3 != b.$3) return a.$3 ? -1 : 1;
-        return b.$2.compareTo(a.$2);
-      });
-
-    // --- supports candidats : les plus utiles d'abord ---------------------
-    final supports = pool
-        .where((c) => !(tags[c.good]?.carry ?? false) || !owned.containsKey(c.good))
-        .map((c) {
-          final q = buildQuality(owned[c.good], box.buildByChar[c.good]);
-          final t = tags[c.good];
-          final util = t == null
-              ? 0.0
-              : t.tags
-                  .map((x) => _tagValue[x] ?? 0)
-                  .fold<double>(0, (a, b) => a + b);
-          return (c, util * (owned.containsKey(c.good) ? (0.4 + q) : 0.35));
-        })
-        .toList()
-      ..sort((a, b) => b.$2.compareTo(a.$2));
-
-    final shortSupports =
-        supports.take(includeAspirational ? 18 : 14).map((e) => e.$1).toList();
-
-    final out = <String, BuiltTeam>{};
-    for (final (carry, cq, carryOwned) in carries.take(8)) {
-      if (!carryOwned && !includeAspirational) continue;
-      final cand = shortSupports.where((s) => s.id != carry.id).toList();
-      for (var i = 0; i < cand.length; i++) {
-        for (var j = i + 1; j < cand.length; j++) {
-          for (var k = j + 1; k < cand.length; k++) {
-            final team = [carry, cand[i], cand[j], cand[k]];
-            final built = _score(team, carry, cq);
-            if (built == null) continue;
-            final prev = out[built.id];
-            if (prev == null || built.score > prev.score) out[built.id] = built;
-          }
-        }
-      }
-    }
-
-    final list = out.values.toList()
-      ..sort((a, b) {
-        // jouable maintenant d'abord, à score comparable (−15 % de marge)
-        if (a.playableNow != b.playableNow) {
-          final better = a.playableNow ? a : b;
-          final other = a.playableNow ? b : a;
-          if (better.score >= other.score * 0.85) {
-            return a.playableNow ? -1 : 1;
-          }
-        }
-        return b.score.compareTo(a.score);
-      });
-    return list.take(limit).toList();
-  }
-
-  BuiltTeam? _score(
-      List<CharacterFull> team, CharacterFull carry, double carryQuality) {
-    final owned = box.chars;
-    final missing = <String>[];
-    final toBuild = <String>[];
-    final lines = <ScoreLine>[];
 
     var boxFactor = 1.0;
-    for (final c in team) {
-      final oc = owned[c.good];
+    final missing = <String>[];
+    final toBuild = <String>[];
+    for (final f in filled) {
+      final good = f.character.good;
+      final oc = box.chars[good];
       if (oc == null) {
-        missing.add(c.name);
-        boxFactor *= 0.55;
+        missing.add(f.character.name);
+        boxFactor *= 0.5;
         continue;
       }
-      final q = buildQuality(oc, box.buildByChar[c.good]);
-      if (oc.level < 70 || (box.buildByChar[c.good]?.artifactCount ?? 0) < 5) {
-        toBuild.add(c.name);
+      final q = buildQuality(oc, box.buildByChar[good]);
+      if (oc.level < 70 || (box.buildByChar[good]?.artifactCount ?? 0) < 5) {
+        toBuild.add(f.character.name);
       }
-      boxFactor *= (0.55 + 0.45 * q);
+      boxFactor *= 0.55 + 0.45 * q;
     }
-    if (missing.isNotEmpty && !includeAspirational) return null;
-
-    // recharge d'énergie : un support qui ne peut pas lancer son ultime
-    // n'apporte pas son buff — on le paye dans le score.
-    var erPenalty = 1.0;
-    for (final c in team) {
-      final er = box.erByChar[c.good];
-      final t = tags[c.good];
-      if (er != null && t != null && !t.carry && er < 140) {
-        erPenalty *= 0.94;
-      }
-    }
-    if (erPenalty < 1) {
-      lines.add(ScoreLine("recharge d'énergie juste sur un support",
-          erPenalty, "box"));
-    }
-
-    // puissance d'équipe : porteur + apports des supports
-    final seen = <String, int>{};
-    var support = 0.0;
-    for (final c in team) {
-      if (c.id == carry.id) continue;
-      support += _supportValue(c, seen);
-    }
-    final rarityBonus = carry.rarity >= 5 ? 1.12 : 1.0;
-    final base = (0.55 + carryQuality) * rarityBonus * (1 + support);
-
-    final (contentMult, contentLines) = _contentScore(team);
-    lines.addAll(contentLines);
-    lines.add(ScoreLine("montage réel de tes persos", boxFactor, "box"));
-    lines.add(ScoreLine("apport des supports", 1 + support, "team"));
+    lines.add(ScoreLine("montage réel de ta box", boxFactor));
 
     return BuiltTeam(
-      chars: team,
-      carry: carry,
-      score: base * contentMult * boxFactor * erPenalty,
-      basePower: base,
+      archetype: a,
+      filled: filled,
+      score: mult * boxFactor,
       lines: lines,
       toBuild: toBuild,
       missing: missing,
     );
+  }
+
+  List<BuiltTeam> build({int limit = 5}) {
+    final out = <BuiltTeam>[];
+    for (final a in archetypes) {
+      var team = _fill(a, aspirational: false);
+      var built = team == null ? null : _score(a, team);
+      if (built == null && includeAspirational) {
+        team = _fill(a, aspirational: true);
+        built = team == null ? null : _score(a, team);
+      }
+      if (built != null) out.add(built);
+    }
+    out.sort((x, y) {
+      if (x.missing.isEmpty != y.missing.isEmpty) {
+        return x.missing.isEmpty ? -1 : 1;
+      }
+      return y.score.compareTo(x.score);
+    });
+    return out.take(limit).toList();
   }
 }

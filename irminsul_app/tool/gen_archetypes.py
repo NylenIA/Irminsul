@@ -1,0 +1,348 @@
+# Genere assets/data/team_archetypes.json : les ARCHETYPES d'equipe reconnus.
+#
+# Pourquoi : un optimiseur qui additionne des roles produit des combinaisons
+# qui n'existent pas en jeu. Une equipe Genshin, c'est un archetype (qui
+# declenche quoi, qui applique quoi, a quelle cadence) dont on remplit les
+# postes avec les persos qu'on possede. C'est ce fichier qui porte ce savoir.
+#
+# Chaque archetype declare :
+#   gate            : personnages SANS lesquels la reaction n'existe pas
+#   slots           : postes ordonnes (role, elements/tags acceptes, prefer)
+#   requiredElements: elements indispensables a l'archetype
+#   procs           : cadence estimee de la reaction transformative (par s)
+#   rotation        : actions par poste, pour generer une rotation gcsim
+#
+#   python tool/gen_archetypes.py
+import json
+from pathlib import Path
+
+APP = Path(__file__).resolve().parents[1]
+
+# Sources des conditions Lunaires (verifiees le 2026-07-27) :
+#  - Lunar-Charged : Hydro+Electro ET Ineffa / Columbina / Flins dans l'equipe
+#    (Moonsign Benediction) — Game8, Fandom, GameWith.
+#  - Lunar-Bloom   : Lauma / Nefer / Columbina — Game8, Fandom, KQM (Lauma).
+ARCHETYPES = [
+    {
+        "id": "lunar-bloom",
+        "name": "Lunar-Bloom",
+        "reaction": "lunar-bloom",
+        "gate": ["Lauma", "Nefer", "Columbina"],
+        "requiredElements": ["dendro", "hydro"],
+        "procs": 0.55,
+        "note": ("Lunar-Bloom exige Lauma, Nefer ou Columbina : sans eux la "
+                 "réaction n'existe pas, ce n'est pas un Bloom classique."),
+        "slots": [
+            {"role": "Porteur Dendro", "elements": ["dendro"],
+             "prefer": ["Lauma", "Nefer", "Nahida"], "actions": ["skill", "burst"]},
+            {"role": "Application Hydro", "elements": ["hydro"],
+             "prefer": ["Xingqiu", "Yelan", "Furina", "Kokomi", "Barbara"],
+             "actions": ["skill", "burst"]},
+            {"role": "Moonsign / DGT", "elements": [],
+             "prefer": ["Columbina", "Flins", "Ineffa", "Durin", "Nicole"],
+             "actions": ["skill", "burst", "attack:4"]},
+            {"role": "Soutien", "tags": ["heal", "shield", "res_shred", "dmg_buff"],
+             "prefer": ["Xilonen", "Zhongli", "Kazuha", "Layla", "Bennett"],
+             "actions": ["skill"]},
+        ],
+    },
+    {
+        "id": "lunar-charged",
+        "name": "Lunar-Charged",
+        "reaction": "lunar-charged",
+        "gate": ["Ineffa", "Columbina", "Flins"],
+        "requiredElements": ["hydro", "electro"],
+        "procs": 0.8,
+        "note": ("Lunar-Charged exige Ineffa, Columbina ou Flins (Moonsign) "
+                 "en plus du couple Hydro/Électro."),
+        "slots": [
+            {"role": "Porteur Électro", "elements": ["electro"],
+             "prefer": ["Flins", "Ineffa", "RaidenShogun", "Clorinde", "Fischl"],
+             "actions": ["skill", "burst", "attack:5"]},
+            {"role": "Application Hydro", "elements": ["hydro"],
+             "prefer": ["Columbina", "Xingqiu", "Yelan", "Furina", "Kokomi"],
+             "actions": ["skill", "burst"]},
+            {"role": "Moonsign / soutien", "elements": [],
+             "prefer": ["Ineffa", "Columbina", "Flins", "Durin"],
+             "actions": ["skill", "burst"]},
+            {"role": "Buff / protection",
+             "tags": ["heal", "shield", "res_shred", "dmg_buff", "atk_buff"],
+             "prefer": ["Xilonen", "Zhongli", "Kazuha", "Bennett", "Layla"],
+             "actions": ["skill"]},
+        ],
+    },
+    {
+        "id": "hyperbloom",
+        "name": "Hyperbloom",
+        "reaction": "hyperbloom",
+        "gate": [],
+        "requiredElements": ["dendro", "hydro", "electro"],
+        "procs": 0.9,
+        "note": "Les graines Dendro sont détonées par l'Électro : la MÉ du déclencheur fait tous les dégâts.",
+        "slots": [
+            {"role": "Noyau Dendro", "elements": ["dendro"],
+             "prefer": ["Nahida", "Baizhu", "Yaoyao", "Collei"],
+             "actions": ["skill", "burst"]},
+            {"role": "Noyau Hydro", "elements": ["hydro"],
+             "prefer": ["Xingqiu", "Yelan", "Furina", "Kokomi"],
+             "actions": ["skill", "burst"]},
+            {"role": "Déclencheur Électro (MÉ)", "elements": ["electro"],
+             "prefer": ["RaidenShogun", "KukiShinobu", "Fischl", "Ororon", "Sethos"],
+             "actions": ["skill", "burst", "attack:6"]},
+            {"role": "Soutien", "tags": ["heal", "shield", "res_shred", "dmg_buff"],
+             "prefer": ["Zhongli", "Xilonen", "Kazuha", "Layla"],
+             "actions": ["skill"]},
+        ],
+    },
+    {
+        "id": "aggravate",
+        "name": "Aggravation",
+        "reaction": "aggravate",
+        "gate": [],
+        "requiredElements": ["dendro", "electro"],
+        "procs": 0.0,
+        "note": "Le Dendro place Catalyse ; chaque coup Électro du porteur en profite.",
+        "slots": [
+            {"role": "Porteur Électro", "elements": ["electro"], "carry": True,
+             "prefer": ["Cyno", "Clorinde", "Keqing", "RaidenShogun", "Sethos"],
+             "actions": ["skill", "burst", "attack:6"]},
+            {"role": "Application Dendro", "elements": ["dendro"],
+             "prefer": ["Nahida", "Baizhu", "Yaoyao", "Collei"],
+             "actions": ["skill", "burst"]},
+            {"role": "Renfort Électro", "elements": ["electro"],
+             "prefer": ["Fischl", "Ororon", "KujouSara", "Beidou"],
+             "actions": ["skill"]},
+            {"role": "Buff / regroupement",
+             "tags": ["res_shred", "dmg_buff", "heal", "shield"],
+             "prefer": ["Kazuha", "Sucrose", "Zhongli", "Xilonen"],
+             "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "vaporize-pyro",
+        "name": "Vaporisation Pyro",
+        "reaction": "vaporize",
+        "gate": [],
+        "requiredElements": ["pyro", "hydro"],
+        "procs": 0.0,
+        "note": "Le porteur Pyro vaporise sur une application Hydro constante (×1,5 par coup).",
+        "slots": [
+            {"role": "Porteur Pyro", "elements": ["pyro"], "carry": True,
+             "prefer": ["HuTao", "Arlecchino", "Lyney", "Diluc", "Yoimiya"],
+             "actions": ["skill", "attack:6", "charge"]},
+            {"role": "Application Hydro", "elements": ["hydro"],
+             "prefer": ["Xingqiu", "Yelan", "Furina", "Kokomi"],
+             "actions": ["skill", "burst"]},
+            {"role": "Protection / buff", "tags": ["shield", "heal", "atk_buff"],
+             "prefer": ["Zhongli", "Bennett", "Layla", "Xilonen"],
+             "actions": ["skill", "burst"]},
+            {"role": "Amplification", "tags": ["dmg_buff", "res_shred", "atk_buff"],
+             "prefer": ["Furina", "Kazuha", "Xianyun", "Sucrose", "Xilonen"],
+             "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "melt-cryo",
+        "name": "Fonte Cryo",
+        "reaction": "melt",
+        "gate": [],
+        "requiredElements": ["cryo", "pyro"],
+        "procs": 0.0,
+        "note": "Le porteur Cryo fond sur une application Pyro (×2 par coup).",
+        "slots": [
+            {"role": "Porteur Cryo", "elements": ["cryo"], "carry": True,
+             "prefer": ["Ganyu", "Ayaka", "Wriothesley", "Skirk", "Rosaria"],
+             "actions": ["skill", "burst", "attack:5"]},
+            {"role": "Application Pyro", "elements": ["pyro"],
+             "prefer": ["Xiangling", "Bennett", "Thoma"],
+             "actions": ["skill", "burst"]},
+            {"role": "Buff ATQ / soin", "tags": ["atk_buff", "heal"],
+             "prefer": ["Bennett", "Shenhe", "Xilonen"],
+             "actions": ["skill", "burst"]},
+            {"role": "Regroupement / shred",
+             "tags": ["res_shred", "dmg_buff", "crowd", "shield"],
+             "prefer": ["Kazuha", "Zhongli", "Sucrose", "Xilonen"],
+             "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "freeze",
+        "name": "Gel",
+        "reaction": "frozen",
+        "gate": [],
+        "requiredElements": ["cryo", "hydro"],
+        "procs": 0.0,
+        "note": "Gel permanent : les ennemis ne ripostent pas, le porteur Cryo frappe librement.",
+        "slots": [
+            {"role": "Porteur Cryo", "elements": ["cryo"], "carry": True,
+             "prefer": ["Ayaka", "Ganyu", "Skirk", "Wriothesley"],
+             "actions": ["skill", "burst", "attack:6"]},
+            {"role": "Application Hydro", "elements": ["hydro"],
+             "prefer": ["Kokomi", "Mona", "Furina", "Xingqiu", "Barbara"],
+             "actions": ["skill", "burst"]},
+            {"role": "Soutien Cryo", "elements": ["cryo"],
+             "prefer": ["Shenhe", "Charlotte", "Diona", "Layla", "Rosaria"],
+             "actions": ["skill", "burst"]},
+            {"role": "Regroupement", "tags": ["crowd", "res_shred", "dmg_buff"],
+             "prefer": ["Kazuha", "Venti", "Sucrose", "Xilonen"],
+             "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "superconduct-cryo-electro",
+        "name": "Supraconducteur",
+        "reaction": "superconduct",
+        "gate": [],
+        "requiredElements": ["cryo", "electro"],
+        "procs": 0.45,
+        "note": ("Supraconducteur réduit la RÉS Physique et, quand le cycle "
+                 "l'amplifie, devient une vraie source de dégâts."),
+        "slots": [
+            {"role": "Porteur", "elements": ["electro", "cryo"], "carry": True,
+             "prefer": ["Clorinde", "RaidenShogun", "Keqing", "Eula", "Skirk"],
+             "actions": ["skill", "burst", "attack:6"]},
+            {"role": "Application Cryo", "elements": ["cryo"],
+             "prefer": ["Shenhe", "Rosaria", "Charlotte", "Diona", "Layla"],
+             "actions": ["skill", "burst"]},
+            {"role": "Application Électro", "elements": ["electro"],
+             "prefer": ["Fischl", "Ororon", "Beidou", "KujouSara"],
+             "actions": ["skill"]},
+            {"role": "Buff / protection",
+             "tags": ["atk_buff", "heal", "shield", "res_shred"],
+             "prefer": ["Bennett", "Zhongli", "Xilonen", "Kazuha"],
+             "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "national",
+        "name": "National (Raiden)",
+        "reaction": "vaporize",
+        "gate": [],
+        "requiredElements": ["pyro", "hydro", "electro"],
+        "procs": 0.0,
+        "note": "La valeur sûre : Xiangling vaporise en continu, Raiden recharge tout le monde.",
+        "slots": [
+            {"role": "Batterie / DGT", "elements": ["electro"], "carry": True,
+             "prefer": ["RaidenShogun"], "actions": ["skill", "burst", "attack:8"]},
+            {"role": "DGT Pyro hors terrain", "elements": ["pyro"],
+             "prefer": ["Xiangling"], "actions": ["burst", "skill"]},
+            {"role": "Application Hydro", "elements": ["hydro"],
+             "prefer": ["Xingqiu", "Yelan"], "actions": ["skill", "burst"]},
+            {"role": "Soin + buff ATQ", "tags": ["atk_buff", "heal"],
+             "prefer": ["Bennett"], "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "chevreuse-overload",
+        "name": "Surcharge Chevreuse",
+        "reaction": "overloaded",
+        "gate": ["Chevreuse"],
+        "requiredElements": ["pyro", "electro"],
+        "procs": 0.5,
+        "note": "Chevreuse n'accepte QUE du Pyro/Électro : chaque Surcharge soigne et convertit sa RÉS en ATQ.",
+        "slots": [
+            {"role": "Porteur Pyro", "elements": ["pyro"], "carry": True,
+             "prefer": ["Arlecchino", "HuTao", "Lyney", "Xiangling", "Diluc"],
+             "actions": ["skill", "burst", "attack:6"]},
+            {"role": "Application Électro", "elements": ["electro"],
+             "prefer": ["Fischl", "Beidou", "Ororon"], "actions": ["skill"]},
+            {"role": "Buff Surcharge", "elements": ["pyro"],
+             "prefer": ["Chevreuse"], "actions": ["skill", "burst"]},
+            {"role": "Soin + buff ATQ", "tags": ["atk_buff", "heal"],
+             "prefer": ["Bennett", "Xiangling", "Thoma"],
+             "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "nightsoul-natlan",
+        "name": "Nightsoul (Natlan)",
+        "reaction": "",
+        "gate": [],
+        "requiredElements": ["pyro"],
+        "procs": 0.0,
+        "note": "Noyau Natlan : le Nightsoul alimente le burst prolongé de Mavuika.",
+        "slots": [
+            {"role": "DPS principal", "elements": ["pyro"], "carry": True,
+             "prefer": ["Mavuika"], "actions": ["skill", "burst", "charge", "charge", "charge"]},
+            {"role": "Buff ATQ Nightsoul", "tags": ["atk_buff", "nightsoul"],
+             "prefer": ["Iansan", "Xilonen", "Kachina"], "actions": ["skill"]},
+            {"role": "Shred / bouclier", "tags": ["res_shred", "shield"],
+             "prefer": ["Citlali", "Xilonen", "Zhongli", "Layla"],
+             "actions": ["skill"]},
+            {"role": "Soin + buff ATQ", "tags": ["atk_buff", "heal"],
+             "prefer": ["Bennett"], "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "neuvillette-hyper",
+        "name": "Neuvillette Hypercarry",
+        "reaction": "",
+        "gate": ["Neuvillette"],
+        "requiredElements": ["hydro"],
+        "procs": 0.0,
+        "note": "Attaque chargée continue : on empile buff, soin et regroupement autour d'elle.",
+        "slots": [
+            {"role": "DPS principal", "elements": ["hydro"], "carry": True,
+             "prefer": ["Neuvillette"], "actions": ["skill", "charge", "charge", "charge"]},
+            {"role": "Buff universel", "elements": ["hydro"],
+             "prefer": ["Furina", "Kokomi"], "actions": ["skill", "burst"]},
+            {"role": "Regroupement / shred", "tags": ["crowd", "res_shred", "dmg_buff"],
+             "prefer": ["Kazuha", "Xilonen", "Sucrose"], "actions": ["skill", "burst"]},
+            {"role": "Soin / bouclier", "tags": ["heal", "shield"],
+             "prefer": ["Baizhu", "Zhongli", "Layla", "Jean"], "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "xiao-plunge",
+        "name": "Xiao Plongeon",
+        "reaction": "",
+        "gate": ["Xiao"],
+        "requiredElements": ["anemo"],
+        "procs": 0.0,
+        "note": "Plongeons enchaînés sous burst : Faruzan et Xianyun sont quasi obligatoires.",
+        "slots": [
+            {"role": "DPS principal", "elements": ["anemo"], "carry": True,
+             "prefer": ["Xiao"], "actions": ["burst", "skill", "jump", "high_plunge"]},
+            {"role": "Buff Anémo", "elements": ["anemo"],
+             "prefer": ["Faruzan", "Jean"], "actions": ["skill", "burst"]},
+            {"role": "Plongeon / soin", "elements": ["anemo"],
+             "prefer": ["Xianyun", "Sucrose"], "actions": ["skill", "burst"]},
+            {"role": "Buff universel", "tags": ["dmg_buff", "heal", "shield"],
+             "prefer": ["Furina", "Zhongli", "Bennett"], "actions": ["skill", "burst"]},
+        ],
+    },
+    {
+        "id": "mono-cryo",
+        "name": "Mono-Cryo",
+        "reaction": "",
+        "gate": [],
+        "requiredElements": ["cryo"],
+        "procs": 0.0,
+        "note": "Résonance Cryo (+15 % TCC sur cible gelée/affectée) quand les autres éléments sont interdits.",
+        "slots": [
+            {"role": "DPS principal", "elements": ["cryo"], "carry": True,
+             "prefer": ["Skirk", "Ayaka", "Ganyu", "Wriothesley"],
+             "actions": ["skill", "burst", "attack:6"]},
+            {"role": "Soutien Cryo", "elements": ["cryo"],
+             "prefer": ["Escoffier", "Shenhe", "Charlotte", "Diona"],
+             "actions": ["skill", "burst"]},
+            {"role": "Shred / buff Cryo", "elements": ["cryo"],
+             "prefer": ["Citlali", "Rosaria", "Layla", "Kaeya"],
+             "actions": ["skill", "burst"]},
+            {"role": "Soutien libre", "tags": ["heal", "shield", "dmg_buff", "atk_buff"],
+             "prefer": ["Bennett", "Xilonen", "Zhongli"], "actions": ["skill"]},
+        ],
+    },
+]
+
+
+def main() -> int:
+    p = APP / "assets/data/team_archetypes.json"
+    p.write_text(json.dumps(ARCHETYPES, ensure_ascii=False, indent=1) + "\n",
+                 encoding="utf-8")
+    print(f"OK {len(ARCHETYPES)} archetypes -> {p.relative_to(APP)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

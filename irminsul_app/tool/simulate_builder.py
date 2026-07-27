@@ -1,30 +1,34 @@
-# Miroir Python de lib/src/data/team_builder.dart : rejoue l'optimiseur sur
-# le GOOD REEL avant de livrer, pour voir ce que le joueur verra vraiment.
-# (Meme methode que simulate_match.py : elle a trouve tous les bugs jusqu'ici.)
+# Miroir Python du moteur d'equipes : remplit les ARCHETYPES avec TA box,
+# puis (optionnel) simule les meilleures avec le vrai gcsim.
 #
-#   python tool/simulate_builder.py <GOOD.json> [abyss|theater|onslaught]
+#   python tool/simulate_builder.py <GOOD.json> [mode] [--sim <gcsim.exe>]
+#
+# Sert a verifier AVANT de livrer que les equipes proposees sont des equipes
+# reelles (pas des combinaisons), et qu'elles tournent vraiment.
 import json
+import re
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 APP = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(APP / "tool"))
 
-TAG_VALUE = {
-    "atk_buff": 0.26, "dmg_buff": 0.24, "res_shred": 0.22, "em_buff": 0.14,
-    "heal": 0.12, "shield": 0.12, "offfield": 0.16, "energy": 0.10,
-    "crowd": 0.06, "interrupt": 0.05, "nightsoul": 0.04,
-}
-PAIRS = {
-    "vaporize": ["pyro", "hydro"], "melt": ["pyro", "cryo"],
-    "overloaded": ["pyro", "electro"], "superconduct": ["cryo", "electro"],
-    "electro-charged": ["hydro", "electro"], "frozen": ["hydro", "cryo"],
-    "bloom": ["hydro", "dendro"], "hyperbloom": ["hydro", "dendro", "electro"],
-    "burgeon": ["hydro", "dendro", "pyro"], "burning": ["pyro", "dendro"],
-    "aggravate": ["dendro", "electro"], "quicken": ["dendro", "electro"],
-    "spread": ["dendro", "electro"], "swirl": ["anemo"],
-    "crystallize": ["geo"], "lunar-charged": ["hydro", "electro"],
-    "lunar-bloom": ["hydro", "dendro"], "stellar-conduct": ["cryo", "electro"],
-}
+BASELINE_DPS = 22000.0  # reference pour convertir des DGT ajoutes en facteur
+LEVEL_MULT = 1446.85
+TRANSFORMATIVE = {"superconduct": 1.5, "electro-charged": 2.0,
+                  "lunar-charged": 2.0, "lunar-bloom": 2.0,
+                  "hyperbloom": 3.0, "burgeon": 3.0, "overloaded": 2.75,
+                  "bloom": 2.0, "swirl": 0.6, "shattered": 1.5}
+
+
+def reaction_damage(reaction, em, bonus):
+    base = TRANSFORMATIVE.get(reaction)
+    if base is None:
+        return 0.0
+    em_bonus = 16 * em / (em + 2000)
+    return base * LEVEL_MULT * (1 + em_bonus + bonus) * 0.9
 
 
 def build_quality(oc, b):
@@ -37,15 +41,8 @@ def build_quality(oc, b):
     return lvl * 0.35 + tal * 0.25 + art * 0.25 + wep * 0.15
 
 
-def main():
-    good = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-    mode = sys.argv[2] if len(sys.argv) > 2 else "abyss"
-    tags = json.loads((APP / "assets/data/character_tags.json").read_text(encoding="utf-8"))
-    full = json.loads((APP / "assets/data/characters_full.json").read_text(encoding="utf-8"))["characters"]
-    meta = json.loads((APP / "assets/data/meta_teams.json").read_text(encoding="utf-8"))
-    rules = meta["content"][mode]
-
-    by_good = {c["good"]: c for c in full}
+def load_box(path):
+    good = json.loads(Path(path).read_text(encoding="utf-8"))
     owned = {c["key"]: c for c in good["characters"]}
     builds = {}
     for w in good["weapons"]:
@@ -54,115 +51,189 @@ def main():
     for a in good["artifacts"]:
         if a.get("location"):
             builds.setdefault(a["location"], {"artifacts": 0, "weaponLevel": 0})["artifacts"] += 1
+    return good, owned, builds
 
+
+def fill(arch, tags, by_good, owned, builds, allowed, guests, aspirational):
+    """Remplit chaque poste de l'archetype avec le meilleur perso possible."""
+    used, team, notes = set(), [], []
+    for slot in arch["slots"]:
+        want_el = [e.lower() for e in slot.get("elements", [])]
+        want_tags = slot.get("tags", [])
+        prefer = slot.get("prefer", [])
+
+        def ok(key):
+            if key in used or key not in tags:
+                return False
+            t = tags[key]
+            c = by_good.get(key)
+            if not c:
+                return False
+            if allowed and t["element"] not in allowed and c["name"].lower() not in guests:
+                return False
+            if want_el and t["element"] not in want_el:
+                return False
+            if want_tags and not any(x in t["tags"] for x in want_tags):
+                return False
+            return True
+
+        pick, why = None, ""
+        for i, key in enumerate(prefer):
+            if ok(key) and key in owned:
+                pick, why = key, ("titulaire" if i == 0 else "alternative reconnue")
+                break
+        if not pick:
+            cands = [k for k in owned if ok(k)]
+            cands.sort(key=lambda k: -build_quality(owned.get(k), builds.get(k)))
+            if cands:
+                pick, why = cands[0], "meilleur de ta box pour ce poste"
+        if not pick and aspirational:
+            for key in prefer:
+                if ok(key):
+                    pick, why = key, "NON POSSEDE"
+                    break
+        if not pick:
+            return None, f"poste « {slot['role']} » impossible a pourvoir"
+        used.add(pick)
+        team.append({"key": pick, "slot": slot, "why": why})
+    return team, ""
+
+
+def score(arch, team, tags, owned, builds, rules):
+    lines, mult = [], 1.0
+    elements = {tags[m["key"]]["element"] for m in team}
+    keys = {m["key"] for m in team}
+
+    # 1) la reaction de l'archetype est-elle possible ?
+    gate = arch.get("gate", [])
+    if gate and not (keys & set(gate)):
+        return None, ["condition de reaction absente"]
+
+    # 2) bonus du cycle, converti en DGT reels puis en facteur
+    boosted = rules.get("boostedReactions", {})
+    r = arch.get("reaction")
+    if r and r in boosted and arch.get("procs", 0) > 0:
+        dmg = reaction_damage(r, 200, boosted[r])
+        added = dmg * arch["procs"]
+        f = 1 + added / BASELINE_DPS
+        mult *= f
+        lines.append((f"{r} amplifie ce cycle (~{int(added)} DGT/s ajoutes)", f))
+    elif r and r in boosted:
+        f = 1.15
+        mult *= f
+        lines.append((f"{r} favorise par le cycle", f))
+    elif boosted:
+        mult *= 0.92
+        lines.append(("ne profite pas des reactions amplifiees", 0.92))
+
+    for e in rules.get("requiredElements", []):
+        if e not in elements:
+            mult *= 0.5
+            lines.append((f"pas de {e} exige par le contenu", 0.5))
+    for tg in rules.get("favoredTags", []):
+        if any(tg in tags[m["key"]]["tags"] for m in team):
+            mult *= 1.06
+            lines.append((f"{tg} utile ici", 1.06))
+
+    boxf, missing, tobuild = 1.0, [], []
+    for m in team:
+        oc = owned.get(m["key"])
+        if not oc:
+            missing.append(m["key"])
+            boxf *= 0.5
+            continue
+        q = build_quality(oc, builds.get(m["key"]))
+        if oc["level"] < 70 or builds.get(m["key"], {}).get("artifacts", 0) < 5:
+            tobuild.append(m["key"])
+        boxf *= 0.55 + 0.45 * q
+    lines.append(("montage reel de ta box", boxf))
+    return mult * boxf, lines, missing, tobuild
+
+
+def rotation_for(team, gname):
+    """Rotation gcsim : supports d'abord, porteur ensuite (jouable a la main)."""
+    order = sorted(team, key=lambda m: 0 if not m["slot"].get("carry") and m is not team[0] else 1)
+    out = ["while 1 {"]
+    for m in order:
+        n = gname(m["key"])
+        for a in m["slot"].get("actions", ["skill"]):
+            out.append(f"    {n} {a};")
+    out.append("}")
+    return "\n".join(out)
+
+
+def main():
+    good_path = sys.argv[1]
+    mode = sys.argv[2] if len(sys.argv) > 2 and not sys.argv[2].startswith("--") else "abyss"
+    exe = None
+    if "--sim" in sys.argv:
+        exe = sys.argv[sys.argv.index("--sim") + 1]
+
+    good, owned, builds = load_box(good_path)
+    tags = json.loads((APP / "assets/data/character_tags.json").read_text(encoding="utf-8"))
+    full = json.loads((APP / "assets/data/characters_full.json").read_text(encoding="utf-8"))["characters"]
+    by_good = {c["good"]: c for c in full}
+    meta = json.loads((APP / "assets/data/meta_teams.json").read_text(encoding="utf-8"))
+    arches = json.loads((APP / "assets/data/team_archetypes.json").read_text(encoding="utf-8"))
+    rules = meta["content"][mode]
     allowed = {e.lower() for e in rules.get("allowedElements", [])}
     guests = {g.lower() for g in rules.get("guests", [])}
-    boosted = rules.get("boostedReactions", {})
-    required = rules.get("requiredElements", [])
-    favored = rules.get("favoredTags", [])
 
-    def ok_elem(c):
-        t = tags.get(c["good"])
-        return (not allowed) or (t and t["element"] in allowed) or c["name"].lower() in guests
+    results = []
+    for arch in arches:
+        for aspi in (False, True):
+            team, err = fill(arch, tags, by_good, owned, builds, allowed, guests, aspi)
+            if not team:
+                if not aspi:
+                    continue
+                break
+            sc = score(arch, team, tags, owned, builds, rules)
+            if sc is None or sc[0] is None:
+                break
+            s, lines, missing, tobuild = sc
+            results.append((s, arch, team, lines, missing, tobuild))
+            if not missing:
+                break  # version jouable trouvee : pas besoin de l'aspirationnelle
 
-    pool = [c for c in full if c["good"] in tags and ok_elem(c)]
-    carries = sorted(
-        [(c, build_quality(owned.get(c["good"]), builds.get(c["good"])), c["good"] in owned)
-         for c in pool if tags[c["good"]]["carry"]],
-        key=lambda x: (not x[2], -x[1]))
-    supports = sorted(
-        [(c, sum(TAG_VALUE.get(t, 0) for t in tags[c["good"]]["tags"]) *
-          ((0.4 + build_quality(owned.get(c["good"]), builds.get(c["good"]))) if c["good"] in owned else 0.35))
-         for c in pool if not tags[c["good"]]["carry"] or c["good"] not in owned],
-        key=lambda x: -x[1])[:18]
+    results.sort(key=lambda r: (bool(r[4]), -r[0]))
+    print(f"=== {mode.upper()} · {len(results)} archétypes jouables ===")
+    for s, arch, team, lines, missing, tobuild in results[:5]:
+        names = " · ".join(by_good[m["key"]]["name"] for m in team)
+        state = ("manque " + ",".join(missing)) if missing else (
+            ("à monter " + ",".join(tobuild)) if tobuild else "JOUABLE")
+        print(f"\n{s:6.2f}  [{arch['name']}]  {names}   ({state})")
+        for m in team:
+            print(f"          {m['slot']['role']:28s} {by_good[m['key']]['name']:16s} ({m['why']})")
+        print("          " + " · ".join(f"{lb} ×{f:.2f}" for lb, f in lines))
 
-    results = {}
-    for carry, cq, cowned in carries[:8]:
-        cand = [s for s, _ in supports if s["id"] != carry["id"]]
-        for i in range(len(cand)):
-            for j in range(i + 1, len(cand)):
-                for k in range(j + 1, len(cand)):
-                    team = [carry, cand[i], cand[j], cand[k]]
-                    elements = {tags[c["good"]]["element"] for c in team}
-                    mult, why = 1.0, []
-                    carry_el = tags[carry["good"]]["element"]
-                    appliers = {tags[c["good"]]["element"] for c in team
-                                if "offfield" in tags[c["good"]]["tags"]
-                                or tags[c["good"]]["carry"]}
-                    best, best_name, second = 0.0, "", 0.0
-                    for r, boost in boosted.items():
-                        need = PAIRS.get(r, [])
-                        if not need or not all(e in elements for e in need):
-                            continue
-                        carried = carry_el in need
-                        fed = all(e in appliers for e in need)
-                        if not carried and not fed:
-                            continue
-                        f = 1 + boost * (0.30 if carried else 0.15)
-                        if f > best:
-                            best, best_name, second = f, r, best
-                        elif f > second:
-                            second = f
-                    if best:
-                        mult *= best
-                        why.append(f"{best_name} amplifie")
-                        if second:
-                            mult *= 1.05
-                            why.append("2e reaction dispo")
-                    elif boosted:
-                        mult *= 0.80
-                        why.append("aucune reaction du cycle")
-                    for e in required:
-                        if e not in elements:
-                            mult *= 0.45
-                            why.append(f"pas de {e}")
-                    for tg in favored:
-                        if any(tg in tags[c["good"]]["tags"] for c in team):
-                            mult *= 1.08
-                            why.append(f"{tg} ok")
-                    boxf, missing, tobuild = 1.0, [], []
-                    for c in team:
-                        oc = owned.get(c["good"])
-                        if not oc:
-                            missing.append(c["name"])
-                            boxf *= 0.55
-                            continue
-                        q = build_quality(oc, builds.get(c["good"]))
-                        if oc["level"] < 70 or builds.get(c["good"], {}).get("artifacts", 0) < 5:
-                            tobuild.append(c["name"])
-                        boxf *= 0.55 + 0.45 * q
-                    seen, support = {}, 0.0
-                    for c in team:
-                        if c["id"] == carry["id"]:
-                            continue
-                        for t in tags[c["good"]]["tags"]:
-                            w = TAG_VALUE.get(t)
-                            if w:
-                                support += w / (1 + seen.get(t, 0))
-                                seen[t] = seen.get(t, 0) + 1
-                    base = (0.55 + cq) * (1.12 if carry["rarity"] >= 5 else 1.0) * (1 + support)
-                    score = base * mult * boxf
-                    tid = "+".join(sorted(c["id"] for c in team))
-                    if tid not in results or score > results[tid][0]:
-                        results[tid] = (score, team, why, missing, tobuild)
-
-    ranked = sorted(results.values(), key=lambda r: -r[0])
-
-    def playable(r):
-        return not r[3] and not r[4]
-
-    ranked.sort(key=lambda r: (not playable(r), -r[0]))
-    print(f"=== MODE {mode.upper()} · {len(results)} équipes évaluées ===")
-    for score, team, why, missing, tobuild in ranked[:6]:
-        names = " · ".join(f"{c['name']}({tags[c['good']]['element'][:3]})" for c in team)
-        if missing:
-            state = "manque: " + ",".join(missing)
-        elif tobuild:
-            state = "à monter: " + ",".join(tobuild)
-        else:
-            state = "JOUABLE MAINTENANT"
-        print(f"{score:6.2f}  {names}")
-        print(f"        {state} | {' · '.join(why) if why else 'aucun bonus de contenu'}")
+    if exe:
+        import gen_gcsim_config as g
+        print("\n=== SIMULATION RÉELLE (gcsim, tes builds) ===")
+        for s, arch, team, lines, missing, tobuild in results[:3]:
+            if missing:
+                print(f"  [{arch['name']}] non simulable : perso non possédé")
+                continue
+            keys = [m["key"] for m in team]
+            rot = rotation_for(team, g.gcsim_name if hasattr(g, "gcsim_name") else
+                               (lambda k: g.CHAR_MAP.get(k, k.lower())))
+            try:
+                cfg = g.build_config(good, keys, rot, g.options_for(keys))
+            except SystemExit as e:
+                print(f"  [{arch['name']}] config impossible : {e}")
+                continue
+            with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False,
+                                             encoding="utf-8") as f:
+                f.write(cfg)
+                path = f.name
+            r = subprocess.run([exe, "-c", path], capture_output=True, text=True, timeout=300)
+            out = (r.stdout or "") + (r.stderr or "")
+            m = re.search(r"resulting in (\d+) dps", out)
+            err = re.search(r"error encountered.*|can't execute.*|panic.*", out)
+            if m and not err:
+                print(f"  [{arch['name']:22s}] {m.group(1):>7} dps réels")
+            else:
+                msg = (err.group(0) if err else out.strip().split(chr(10))[-1])[:120]
+                print(f"  [{arch['name']:22s}] ÉCHEC : {msg}")
 
 
 if __name__ == "__main__":

@@ -406,9 +406,15 @@ class _OptimizedSection extends ConsumerWidget {
     return tags.maybeWhen(
       data: (tagMap) => chars.maybeWhen(
         data: (list) {
+          final arches = ref.watch(archetypesProvider).maybeWhen(
+                data: (a) => a,
+                orElse: () => const <Archetype>[],
+              );
+          if (arches.isEmpty) return const SizedBox.shrink();
           final builder = TeamBuilder(
             byGood: {for (final c in list) c.good: c},
             tags: tagMap,
+            archetypes: arches,
             box: box,
             rules: ContentRules.from(db.content?.byMode[mode]),
           );
@@ -445,7 +451,8 @@ class _OptimizedSection extends ConsumerWidget {
                     ),
                     const SizedBox(height: 12),
                     for (final t in teams) ...[
-                      _OptimizedTeamRow(team: t, l: l),
+                      _OptimizedTeamRow(
+                          team: t, l: l, boxLabel: box.label),
                       const SizedBox(height: 12),
                     ],
                   ],
@@ -464,7 +471,9 @@ class _OptimizedSection extends ConsumerWidget {
 class _OptimizedTeamRow extends StatelessWidget {
   final BuiltTeam team;
   final L l;
-  const _OptimizedTeamRow({required this.team, required this.l});
+  final String boxLabel;
+  const _OptimizedTeamRow(
+      {required this.team, required this.l, required this.boxLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -484,65 +493,102 @@ class _OptimizedTeamRow extends StatelessWidget {
         children: [
           Row(
             children: [
-              for (final c in team.chars)
-                Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: CharIcon(
-                    name: c.name,
-                    icon: c.icon,
-                    element: c.element,
-                    size: 40,
-                    dimmed: team.missing.contains(c.name),
-                    showName: false,
-                  ),
-                ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      team.chars.map((c) => c.name).join(" · "),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w700),
-                    ),
-                    Text(
-                      team.playableNow
-                          ? l.t("optimizedPlayable")
-                          : team.missing.isNotEmpty
-                              ? "${l.t("optimizedMissing")} ${team.missing.join(", ")}"
-                              : "${l.t("optimizedToBuild")} ${team.toBuild.join(", ")}",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: color),
-                    ),
-                  ],
+              Text(
+                team.archetype.name.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 11,
+                  letterSpacing: 1.1,
+                  fontWeight: FontWeight.w800,
+                  color: cs.secondary,
                 ),
               ),
+              const Spacer(),
               Text(
-                team.score.toStringAsFixed(2),
+                team.playableNow
+                    ? l.t("optimizedPlayable")
+                    : team.missing.isNotEmpty
+                        ? "${l.t("optimizedMissing")} ${team.missing.join(", ")}"
+                        : "${l.t("optimizedToBuild")} ${team.toBuild.join(", ")}",
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: cs.primary),
+                    fontSize: 11, fontWeight: FontWeight.w700, color: color),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          // le calcul, ligne par ligne : le joueur doit pouvoir le vérifier
+          // chaque poste : qui le tient, et pourquoi lui
+          Wrap(
+            spacing: 14,
+            runSpacing: 10,
+            children: [
+              for (final f in team.filled)
+                SizedBox(
+                  width: 112,
+                  child: Column(
+                    children: [
+                      CharIcon(
+                        name: f.character.name,
+                        icon: f.character.icon,
+                        element: f.character.element,
+                        size: 44,
+                        dimmed: !f.owned,
+                        showName: false,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        f.character.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 11.5, fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        f.slot.role,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 9.5,
+                          height: 1.2,
+                          color: Colors.white.withValues(alpha: 0.45),
+                        ),
+                      ),
+                      Text(
+                        f.why,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontStyle: FontStyle.italic,
+                          color: f.owned
+                              ? cs.primary.withValues(alpha: 0.8)
+                              : _amber,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          if (team.archetype.note.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              team.archetype.note,
+              style: TextStyle(
+                fontSize: 11.5,
+                height: 1.4,
+                fontStyle: FontStyle.italic,
+                color: Colors.white.withValues(alpha: 0.55),
+              ),
+            ),
+          ],
+          const SizedBox(height: 8),
           Wrap(
             spacing: 6,
             runSpacing: 6,
             children: [
               for (final line in team.lines)
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: (line.factor >= 1 ? _green : _amber)
                         .withValues(alpha: 0.12),
@@ -558,6 +604,16 @@ class _OptimizedTeamRow extends StatelessWidget {
                 ),
             ],
           ),
+          // le vrai chiffre : simulation gcsim sur TES builds
+          if (team.missing.isEmpty) ...[
+            const SizedBox(height: 6),
+            _SimSection(
+              template: team.template,
+              l: l,
+              teamId: team.id,
+              boxLabel: boxLabel,
+            ),
+          ],
         ],
       ),
     );
