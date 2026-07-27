@@ -107,9 +107,25 @@ jobs:
             Write-Host "iansan: patch/alignement KO, retrait"
             Push-Location gcsim-src; git checkout -- .; git clean -fd internal/characters/iansan; Pop-Location
           }
+          # --- persos écrits par nous (absents de gcsim) ---
+          # Données exactes issues des tables du jeu, kit approximé et étiqueté.
+          # Le script s'efface tout seul si la commu publie le perso.
+          python tool/patch_gcsim_chars.py gcsim-src 2>&1
+          $ourCharsOk = $LASTEXITCODE -eq 0
+          if ($ourCharsOk) { python tool/check_keys_alignment.py gcsim-src 2>&1; $ourCharsOk = $LASTEXITCODE -eq 0 }
+          if (-not $ourCharsOk) { Write-Host "persos maison: patch KO, on continue sans" }
           # --- build, avec replis ---
           Push-Location gcsim-src
           go build -o ../$out ./cmd/gcsim
+          if ($LASTEXITCODE -ne 0 -and $ourCharsOk) {
+            Write-Host "build KO avec nos persos -> retrait et retry"
+            git checkout -- .
+            Get-ChildItem ../tool/gcsim_char -Directory | ForEach-Object {
+              git clean -fd "internal/characters/$($_.Name)"
+            }
+            go build -o ../$out ./cmd/gcsim
+            $ourCharsOk = $false
+          }
           if ($LASTEXITCODE -ne 0 -and $iansanOk) {
             Write-Host "build KO avec iansan -> retrait et retry"
             git checkout -- .; git clean -fd internal/characters/iansan
