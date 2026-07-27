@@ -29,9 +29,16 @@ def insert_sorted_triple(keys_file: Path, key: str, pretty: str) -> None:
         print(f"  keys: {key} déjà présent")
         return
     names = re.findall(r'^\t"([a-z0-9]+)",$', text, re.M)
+    # ancre = première clé alphabétiquement APRÈS la nôtre. Pour une clé qui
+    # passe après tout le monde (« zibai » après « zhongli »), on se rabat sur
+    # la sentinelle de fin de liste, qui existe toujours.
     anchor = next((n for n in names if n > key), None)
     if anchor is None:
-        raise SystemExit(f"keys: pas d'ancre pour {key}")
+        anchor = "invalidchar" if "invalidchar" in text else None
+        if anchor is None:
+            raise SystemExit(f"keys: pas d'ancre pour {key}")
+        print(f"  keys: {key} passe après toutes les clés → insertion "
+              f"avant la sentinelle")
     m = re.search(rf"^\t(\w+)\s+// {anchor}$", text, re.M)
     if not m:
         raise SystemExit(f"keys: const de l'ancre {anchor} introuvable")

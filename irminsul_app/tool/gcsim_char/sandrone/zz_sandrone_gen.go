@@ -171,7 +171,7 @@ var base = &model.AvatarData{
 
 var (
 	// --- normal : Formule Phenomenale: Self-Evident Proposition
-	// 1-Hit DMG
+	// 1-Hit DMG (param1)
 	normalP1 = []float64{
 		0.762863,
 		0.824957,
@@ -189,7 +189,7 @@ var (
 		1.93377,
 		2.04021,
 	}
-	// 2-Hit DMG
+	// 2-Hit DMG (param2)
 	normalP2 = []float64{
 		0.67197,
 		0.726665,
@@ -207,7 +207,7 @@ var (
 		1.70337,
 		1.79713,
 	}
-	// 3-Hit DMG
+	// 3-Hit DMG (param3)
 	normalP3 = []float64{
 		1.02804,
 		1.11171,
@@ -225,7 +225,7 @@ var (
 		2.60595,
 		2.7494,
 	}
-	// Charged Attack Sweeping Fire DMG
+	// Charged Attack Sweeping Fire DMG (param4)
 	normalP4 = []float64{
 		0.43,
 		0.465,
@@ -243,7 +243,7 @@ var (
 		1.09,
 		1.15,
 	}
-	// Charged Attack Condensed Beam DMG
+	// Charged Attack Condensed Beam DMG (param5)
 	normalP5 = []float64{
 		1.2255,
 		1.32525,
@@ -261,7 +261,7 @@ var (
 		3.1065,
 		3.2775,
 	}
-	// Charged Attack Condensed Beam Stellar-Conduct DMG
+	// Charged Attack Condensed Beam Stellar-Conduct DMG (param6)
 	normalP6 = []float64{
 		0.817,
 		0.8835,
@@ -279,7 +279,7 @@ var (
 		2.071,
 		2.185,
 	}
-	// DMG When in Power Overdrive
+	// DMG When in Power Overdrive (param7)
 	normalP7 = []float64{
 		0.43,
 		0.465,
@@ -297,7 +297,7 @@ var (
 		1.09,
 		1.15,
 	}
-	// Plunge DMG
+	// Plunge DMG (param8)
 	normalP8 = []float64{
 		0.745878,
 		0.806589,
@@ -315,7 +315,7 @@ var (
 		1.89071,
 		1.99479,
 	}
-	// Low/High Plunge DMG
+	// Low/High Plunge DMG (param9)
 	normalP9 = []float64{
 		1.49144,
 		1.61284,
@@ -333,8 +333,26 @@ var (
 		3.78063,
 		3.98874,
 	}
+	// Low/High Plunge DMG (param10)
+	normalP10 = []float64{
+		1.86289,
+		2.01452,
+		2.16615,
+		2.38277,
+		2.5344,
+		2.70769,
+		2.94596,
+		3.18424,
+		3.42252,
+		3.68246,
+		3.94239,
+		4.20233,
+		4.46227,
+		4.72221,
+		4.98215,
+	}
 	// --- skill : Formule Phenomenale: Differential Analysis
-	// Prism Shot DMG
+	// Prism Shot DMG (param1)
 	skillP1 = []float64{
 		0.324,
 		0.3483,
@@ -352,7 +370,7 @@ var (
 		0.729,
 		0.7695,
 	}
-	// Prism Shot Stellar-Conduct DMG
+	// Prism Shot Stellar-Conduct DMG (param2)
 	skillP2 = []float64{
 		0.216,
 		0.2322,
@@ -370,7 +388,7 @@ var (
 		0.486,
 		0.513,
 	}
-	// CD
+	// CD (param3)
 	skillP3 = []float64{
 		4,
 		4,
@@ -389,7 +407,7 @@ var (
 		4,
 	}
 	// --- burst : Formule Phenomenale: Q.E.D.
-	// Bombardment DMG
+	// Bombardment DMG (param1)
 	burstP1 = []float64{
 		0.88216,
 		0.948322,
@@ -407,7 +425,7 @@ var (
 		1.98486,
 		2.09513,
 	}
-	// Convective Inhibition Ray DMG
+	// Convective Inhibition Ray DMG (param2)
 	burstP2 = []float64{
 		3.308,
 		3.5561,
@@ -425,7 +443,7 @@ var (
 		7.443,
 		7.8565,
 	}
-	// Convective Inhibition Ray Stellar-Conduct DMG
+	// Convective Inhibition Ray Stellar-Conduct DMG (param3)
 	burstP3 = []float64{
 		2.20533,
 		2.37073,
@@ -443,7 +461,7 @@ var (
 		4.962,
 		5.23767,
 	}
-	// CD
+	// CD (param4)
 	burstP4 = []float64{
 		15,
 		15,
@@ -461,7 +479,7 @@ var (
 		15,
 		15,
 	}
-	// Energy Cost
+	// Energy Cost (param5)
 	burstP5 = []float64{
 		60,
 		60,

@@ -18,6 +18,7 @@ Le fichier généré contient :
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -186,16 +187,25 @@ def main() -> int:
         labels = talents[combat]["attributes"]["labels"]
         t = d["talents"][role]
         lines.append(f"\t// --- {role} : {talents[combat]['name']}")
-        for i, lab in enumerate(labels):
+        # IMPORTANT : on nomme chaque tableau d'après le NUMÉRO DE PARAMÈTRE
+        # cité dans le libellé ({param6}), pas d'après la position du libellé.
+        # Les deux diffèrent (Zibai : le libellé n°1 du mode lunaire pointe
+        # vers param6) et confondre les deux ferait jouer les mauvais chiffres.
+        seen: set[int] = set()
+        for lab in labels:
             title = lab.split("|")[0]
-            series = param_series(t, i)
-            if not any(series):
-                continue
-            var = f"{role}P{i + 1}"
-            lines.append(f"\t// {title}")
-            lines.append(f"\t{var} = []float64{{")
-            lines.append(go_floats(series))
-            lines.append("\t}")
+            for num in sorted({int(n) for n in
+                               re.findall(r"\{param(\d+)", lab)}):
+                if num in seen:
+                    continue
+                seen.add(num)
+                series = param_series(t, num - 1)
+                if not any(series):
+                    continue
+                lines.append(f"\t// {title} (param{num})")
+                lines.append(f"\t{role}P{num} = []float64{{")
+                lines.append(go_floats(series))
+                lines.append("\t}")
     lines.append(")")
 
     out_dir = OUT / key

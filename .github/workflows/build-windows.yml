@@ -112,7 +112,7 @@ jobs:
           # Le script s'efface tout seul si la commu publie le perso.
           python tool/patch_gcsim_chars.py gcsim-src 2>&1
           $ourCharsOk = $LASTEXITCODE -eq 0
-          if ($ourCharsOk) { python tool/check_keys_alignment.py gcsim-src sandrone ateaspoonoftranscendence 2>&1; $ourCharsOk = $LASTEXITCODE -eq 0 }
+          if ($ourCharsOk) { python tool/check_keys_alignment.py gcsim-src sandrone zibai ateaspoonoftranscendence lightbearingmoonshard 2>&1; $ourCharsOk = $LASTEXITCODE -eq 0 }
           if (-not $ourCharsOk) { Write-Host "persos maison: patch KO, on continue sans" }
           # --- build, avec replis ---
           Push-Location gcsim-src
