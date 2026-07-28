@@ -46,6 +46,9 @@ func (c *char) Skill(p map[string]int) (action.Info, error) {
 		skillP1[c.TalentLvlSkill()],
 		skillP2[c.TalentLvlSkill()],
 	}
+	// A1 : le 2ᵉ coup de la chevauchée gagne 60 % de la DÉF pendant 4 s
+	c.AddStatus(a1Key, 4*60, true)
+
 	for i, m := range mults {
 		ai := info.AttackInfo{
 			ActorIndex: c.Index(),
@@ -58,6 +61,9 @@ func (c *char) Skill(p map[string]int) (action.Info, error) {
 			Durability: 25,
 			UseDef:     true,
 			Mult:       m,
+		}
+		if i == 1 {
+			ai.FlatDmg = c.a1Bonus()
 		}
 		c.QueueCharTask(func() {
 			c.Core.QueueAttack(
