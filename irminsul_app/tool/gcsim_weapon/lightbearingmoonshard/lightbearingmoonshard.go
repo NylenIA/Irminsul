@@ -62,12 +62,12 @@ func NewWeapon(c *core.Core, char *character.CharWrapper, p info.WeaponProfile) 
 		},
 	})
 
-	c.Events.Subscribe(event.OnSkill, func(args ...any) bool {
-		if c.Player.ActiveChar().Index() != char.Index() {
-			return false
+	// Note : dans cette version de gcsim, un hook d'événement ne renvoie rien.
+	c.Events.Subscribe(event.OnSkill, func(args ...any) {
+		if c.Player.Active() != char.Index() {
+			return
 		}
 		char.AddStatus(buffKey, 5*60, true)
-		return false
 	}, fmt.Sprintf("lightbearing-skill-%v", char.Base.Key.String()))
 
 	return w, nil
