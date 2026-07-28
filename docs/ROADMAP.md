@@ -153,3 +153,19 @@
 2. **GitHub Actions** compile un **`.exe` Windows** à chaque étape.
 3. Tu le **télécharges depuis l'onglet Releases/Actions** et tu testes visuellement.
 4. Tu me dis ce qui va / ne va pas → j'itère. Rien de lourd sur ton PC.
+
+## Demandes en attente (2026-07-28)
+
+- **4.3.9 — Kit COMPLET pour tout perso qu'on ajoute** (règle posée par
+  l'utilisateur) : multiplicateurs *et* passifs *et* constellations *et*
+  passif d'arme. Fait pour les passifs de Zibai (Moonsign, A1, A4) ; restent
+  ses constellations (il est C2), le passif de Lightbearing Moonshard, puis
+  les passifs et constellations d'Illuga, Linnea et Sandrone.
+- **4.3.10 — Rotations pré-faites par équipe** : proposer dans le créateur la
+  rotation méta correspondant à l'équipe détectée (les archétypes portent déjà
+  les actions par poste), plutôt que de laisser tout construire à la main.
+  Objectif : que la rotation simulée ressemble à ce qui est joué en jeu.
+- **4.3.11 — Mises à jour directement dans l'app** : aujourd'hui seules les
+  DONNÉES se mettent à jour toutes seules (méta OTA) ; le binaire, lui, se
+  retélécharge à la main depuis la release. À faire : détection de version,
+  téléchargement et remplacement depuis l'app.
