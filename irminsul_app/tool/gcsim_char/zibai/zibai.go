@@ -47,6 +47,7 @@ func NewChar(s *core.Core, w *character.CharWrapper, _ info.CharacterProfile) er
 func (c *char) Init() error {
 	c.innate()
 	c.a4()
+	c.c2()
 	return nil
 }
 

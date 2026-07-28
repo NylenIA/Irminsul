@@ -63,7 +63,8 @@ func (c *char) Skill(p map[string]int) (action.Info, error) {
 			Mult:       m,
 		}
 		if i == 1 {
-			ai.FlatDmg = c.a1Bonus()
+			// A1, renforcé par C2 si l'équipe est en Ascendant Gleam
+			ai.FlatDmg = c.a1Bonus() + c.c2A1Bonus()
 		}
 		c.QueueCharTask(func() {
 			c.Core.QueueAttack(
