@@ -83,6 +83,10 @@ func (c *char) Skill(p map[string]int) (action.Info, error) {
 		}, d3)
 	}
 
+	// A1 : -15 % RÉS Geo tant que Lumi est là · C2 : +40 % DGT CRIT
+	c.a1Shred(dur)
+	c.c2(c2Dur)
+
 	c.QueueCharTask(c.particleCB, skillHitmark)
 	c.SetCDWithDelay(action.ActionSkill, skillCD, 12)
 

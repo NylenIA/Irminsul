@@ -92,6 +92,8 @@ func (c *char) burstBuffHook() {
 		default:
 			return
 		}
+		// A4 : supplément selon le nombre d'alliés Hydro ou Geo
+		added += c.a4Bonus()
 		ae.Info.FlatDmg += added
 		c.Core.Log.NewEvent("illuga burst flat dmg", glog.LogPreDamageMod,
 			ae.Info.ActorIndex).
