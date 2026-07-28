@@ -14,9 +14,9 @@ Légende : ✅ fait et vérifié · 🟡 partiel · ⬜ pas commencé
 |---|---|---|
 | A1 | Ajouter à gcsim **tous** les persos manquants | 🟡 4/11 : Sandrone, Zibai, Illuga, Linnea. Restent Lohen, Nefer, Kachina, Ifa, Jahoda, Prune, + Iansan (déjà via PR commu) |
 | A2 | Ajouter les **armes** manquantes | 🟡 2/3 : A Teaspoon of Transcendence, Lightbearing Moonshard. Reste Disaster and Remorse (Lohen) |
-| A3 | **Kit COMPLET** pour chaque perso ajouté : multiplicateurs + passifs + constellations + passif d'arme | 🟡 Zibai ✅ (passifs, C2, arme ; C1 tronquée dans les données) · Illuga ✅ (Moonsign, A4 ; A1 tronqué) · Linnea ✅ (Moonsign, A1, A4, C2 ; C1 tronquée) · **Sandrone : reste à faire** |
+| A3 | **Kit COMPLET** pour chaque perso ajouté : multiplicateurs + passifs + constellations + passif d'arme | 🟡 Zibai ✅ (passifs, C2, arme ; C1 tronquée dans les données) · Illuga ✅ (Moonsign, A4 ; A1 tronqué) · Linnea ✅ (Moonsign, A1, A4, C2 ; C1 tronquée) · Sandrone 🟡 (A4 ✅, C2 ✅ ; son passif innée dépend de A5) |
 | A4 | Persos **pas encore sortis** (assez d'infos pour calculer la méta) | ⬜ à faire en mode SPÉCULATION séparé |
-| A5 | Réaction **Stellar-Conduct** dans le cœur du moteur | ⬜ gcsim connaît Lunar-Charged/Bloom/Crystallize, pas Stellar-Conduct |
+| A5 | Réaction **Stellar-Conduct** dans le cœur du moteur | ⬜ **bloquant pour Sandrone** : son passif innée convertit Supraconducteur en Stellar-Conduct, et le cycle d'Abîme en cours amplifie justement ces deux réactions. Les seules valeurs qui circulent sont des articles de leak → à obtenir d'une source vérifiable (tables du jeu ou KQM) avant d'écrire quoi que ce soit |
 | A6 | Afficher aussi le **régime établi** (DPS après la 2ᵉ rotation), pas seulement la moyenne 90 s | ⬜ c'est ce que mesure le compteur en jeu (UGC) |
 
 ## B. Équipes et calculs
